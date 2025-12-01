@@ -1,1 +1,2 @@
 ส่วนของการตั้งค่าพื้นฐาน เช่น config, database setup, security ที่จะใช้
+Database ใช้ PostgreSQL
