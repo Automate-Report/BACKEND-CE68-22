@@ -1,0 +1,27 @@
+# --- Core Framework ---
+fastapi>=0.100.0
+uvicorn[standard]>=0.20.0  # Server รัน FastAPI
+
+# --- Database (PostgreSQL + Async) ---
+sqlalchemy>=2.0.0          # ORM
+asyncpg>=0.27.0            # Driver สำหรับคุยกับ Postgres แบบ Async (เร็วมาก)
+alembic>=1.10.0            # ตัวจัดการ Migration (แก้ Table ไม่ให้ข้อมูลหาย)
+
+# --- Authentication & Security ---
+python-jose[cryptography]  # สร้าง/แกะ JWT Token
+passlib[bcrypt]            # Hash Password
+python-multipart           # รับ Form Data (Login) และ Upload File
+
+# --- Configuration ---
+pydantic-settings>=2.0.0   # โหลดค่าจาก .env
+
+# --- Queue & Scheduling ---
+redis>=4.5.0               # คุยกับ Redis (Job Queue / Heartbeat)
+apscheduler>=3.10.0        # ตัวตั้งเวลา (Cron Job) สำหรับสร้าง Job อัตโนมัติ
+
+# --- Reporting (PDF) ---
+jinja2                     # Template Engine (สร้าง HTML ก่อนแปลงเป็น PDF)
+weasyprint                 # แปลง HTML เป็น PDF (ง่ายกว่า ReportLab)
+
+# --- Utils ---
+requests                   # เผื่อใช้ยิง Notification ภายนอก (Line/Email)
