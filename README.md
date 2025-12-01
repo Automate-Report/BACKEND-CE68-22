@@ -4,3 +4,4 @@
 ใช้ env เข้าด้วย .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 การ run ใช้ fastapi dev main.py -> test
+ช่วงแรก ๆ ทำ dummy data ที่ฝั่ง backend ก่อน
