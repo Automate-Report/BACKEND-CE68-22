@@ -78,6 +78,16 @@ class ProjectService:
                 self._save_json(projects)
                 return proj
         return None
+    
+    def delete_project(self, project_id: int, user_id: int) -> bool:
+        """Service: ลบโปรเจกต์"""
+        projects = self._read_json()
+        for i, proj in enumerate(projects):
+            if proj["id"] == project_id and proj["user_id"] == user_id:
+                del projects[i]
+                self._save_json(projects)
+                return True
+        return False
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 project_service = ProjectService()
