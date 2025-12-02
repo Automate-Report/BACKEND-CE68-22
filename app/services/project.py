@@ -34,6 +34,13 @@ class ProjectService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
+    def get_all_projects(self, user_id: int) -> List[dict]:
+        """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
+        projects = self._read_json()
+        if user_id is not None:
+            projects = [proj for proj in projects if proj["user_id"] == user_id]
+        return projects
+
     def create_project(self, project_in: ProjectCreate, user_id: int) -> dict:
         """Service: สร้างโปรเจกต์ใหม่"""
         projects = self._read_json()
