@@ -11,7 +11,7 @@ router = APIRouter()
 async def get_all_projects():
     # ในอนาคตต้องดึง user_id จาก Token (Auth) 
     # แต่ตอนนี้ Mock เป็น user_id = 1 ไปก่อน
-    fake_current_user_id = 2
+    fake_current_user_id = 1
 
     projects = project_service.get_all_projects(
         user_id=fake_current_user_id
@@ -32,3 +32,15 @@ async def create_project(project_in: ProjectCreate):
     )
 
     return new_project
+
+# PUT /projects/{project_id} : อัพเดตโปรเจกต์
+@router.put("/{project_id}", response_model=ProjectResponse)
+async def update_project(project_id: int, project_in: ProjectCreate, user_id: int):
+    updated_project = project_service.update_project(
+        project_id=project_id,
+        project_in=project_in,
+        user_id=user_id
+    )
+    if not updated_project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return updated_project
