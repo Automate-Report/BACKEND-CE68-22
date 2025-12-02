@@ -44,3 +44,14 @@ async def update_project(project_id: int, project_in: ProjectCreate, user_id: in
     if not updated_project:
         raise HTTPException(status_code=404, detail="Project not found")
     return updated_project
+
+# DELETE /projects/{project_id} : ลบโปรเจกต์
+@router.delete("/{project_id}")
+async def delete_project(project_id: int, user_id: int):
+    success = project_service.delete_project(
+        project_id=project_id,
+        user_id=user_id
+    )
+    if not success:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return {"detail": "Project deleted successfully"}
