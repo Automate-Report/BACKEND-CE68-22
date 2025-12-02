@@ -5,6 +5,7 @@ from datetime import datetime
 class ProjectCreate(BaseModel):
     name: str
     description: Optional[str] = None
+    user_id: int
 
 class ProjectResponse(BaseModel):
     id: int
