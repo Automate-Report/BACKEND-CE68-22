@@ -66,6 +66,18 @@ class ProjectService:
         self._save_json(projects)
         
         return new_project
+    
+    def update_project(self, project_id: int, project_in: ProjectCreate, user_id: int) -> Optional[dict]:
+        """Service: อัปเดตโปรเจกต์"""
+        projects = self._read_json()
+        for proj in projects:
+            if proj["id"] == project_id and proj["user_id"] == user_id:
+                proj["name"] = project_in.name
+                proj["description"] = project_in.description
+                proj["updated_at"] = datetime.now().isoformat()
+                self._save_json(projects)
+                return proj
+        return None
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 project_service = ProjectService()
