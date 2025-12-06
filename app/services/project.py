@@ -34,7 +34,7 @@ class ProjectService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def get_all_projects(self, user_id: int, page: int, size: int):
+    def get_all_projects(self, user_id: int, page: int, size: int, sort_by: str = None, order: str = "asc"):
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
         projects = self._read_json()
         
@@ -43,9 +43,16 @@ class ProjectService:
         for proj in projects:
             if proj["user_id"] == user_id:
                 all_matches.append(proj)
+
+        if sort_by:
+            reverse = (order == "desc")
+            # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
+            all_matches.sort(key=lambda x: x.get(sort_by, ""), reverse=reverse)
         
         # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
         total_count = len(all_matches)
+
+
             
         # 3. คำนวณ Pagination Logic
         import math
@@ -64,6 +71,7 @@ class ProjectService:
             "total_pages": total_pages,
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
+    
 
     def create_project(self, project_in: ProjectCreate, user_id: int) -> dict:
         """Service: สร้างโปรเจกต์ใหม่"""
