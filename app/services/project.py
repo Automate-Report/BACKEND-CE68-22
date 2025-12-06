@@ -51,8 +51,6 @@ class ProjectService:
         
         # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
         total_count = len(all_matches)
-
-
             
         # 3. คำนวณ Pagination Logic
         import math
