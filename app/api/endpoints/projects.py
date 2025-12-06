@@ -44,7 +44,7 @@ async def get_project_by_id(project_id: int):
     return project
 
 # POST /projects/ : สร้างโปรเจกต์ใหม่
-@router.post("/", response_model=ProjectResponse)
+@router.post("", response_model=ProjectResponse)
 async def create_project(project_in: ProjectCreate):
     # ในอนาคตต้องดึง user_id จาก Token (Auth) 
     # แต่ตอนนี้ Mock เป็น user_id = 1 ไปก่อน
