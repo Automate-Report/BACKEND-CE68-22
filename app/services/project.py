@@ -38,9 +38,12 @@ class ProjectService:
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
         projects = self._read_json()
         total_count = 0
-        if user_id is not None:
-            projects = [proj for proj in projects if proj["user_id"] == user_id]
-            total_count += 1
+        result = []
+        for proj in projects:
+            if proj["user_id"] == user_id:
+                total_count += 1
+                result.append(proj)
+            
         offset = (page - 1) * size
         import math
         total_pages = math.ceil(total_count / size)
@@ -50,7 +53,7 @@ class ProjectService:
             "page": page,
             "size": size,
             "total_pages": total_pages,
-            "items": projects
+            "items": result
         }
 
     def create_project(self, project_in: ProjectCreate, user_id: int) -> dict:
