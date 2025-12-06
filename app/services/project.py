@@ -34,26 +34,35 @@ class ProjectService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def get_all_projects(self, user_id: int, page:int, size:int):
+    def get_all_projects(self, user_id: int, page: int, size: int):
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
         projects = self._read_json()
-        total_count = 0
-        result = []
+        
+        # 1. กรอง User
+        all_matches = []
         for proj in projects:
             if proj["user_id"] == user_id:
-                total_count += 1
-                result.append(proj)
+                all_matches.append(proj)
+        
+        # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
+        total_count = len(all_matches)
             
-        offset = (page - 1) * size
+        # 3. คำนวณ Pagination Logic
         import math
         total_pages = math.ceil(total_count / size)
+        
+        offset = (page - 1) * size
+        
+        # --- จุดที่ต้องแก้: ตัดข้อมูล (Slicing) ---
+        # ใช้ Python Slice [start : end]
+        paginated_items = all_matches[offset : offset + size]
 
         return {
-            "total": total_count,
+            "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
             "page": page,
             "size": size,
             "total_pages": total_pages,
-            "items": result
+            "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
 
     def create_project(self, project_in: ProjectCreate, user_id: int) -> dict:
