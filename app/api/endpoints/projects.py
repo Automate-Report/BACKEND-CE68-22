@@ -59,11 +59,12 @@ async def create_project(project_in: ProjectCreate):
 
 # PUT /projects/{project_id} : อัพเดตโปรเจกต์
 @router.put("/{project_id}", response_model=ProjectResponse)
-async def update_project(project_id: int, project_in: ProjectCreate, user_id: int):
+async def update_project(project_id: int, project_in: ProjectCreate):
+    fake_current_user_id = 1
     updated_project = project_service.update_project(
         project_id=project_id,
         project_in=project_in,
-        user_id=user_id
+        user_id=fake_current_user_id
     )
     if not updated_project:
         raise HTTPException(status_code=404, detail="Project not found")
@@ -71,10 +72,11 @@ async def update_project(project_id: int, project_in: ProjectCreate, user_id: in
 
 # DELETE /projects/{project_id} : ลบโปรเจกต์
 @router.delete("/{project_id}")
-async def delete_project(project_id: int, user_id: int):
+async def delete_project(project_id: int):
+    fake_current_user_id = 1
     success = project_service.delete_project(
         project_id=project_id,
-        user_id=user_id
+        user_id=fake_current_user_id
     )
     if not success:
         raise HTTPException(status_code=404, detail="Project not found")
