@@ -1,23 +1,29 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from typing import List
 from app.schemas.project import ProjectCreate, ProjectResponse
+from app.schemas.pagination import PaginatedResponse
 from app.services.project import project_service # เรียก Service ที่เราสร้างตะกี้
 
 
 router = APIRouter()
  
 # GET /projects/ : ดึงโปรเจกต์ทั้งหมดของ user นั้น
-@router.get("/all", response_model=List[ProjectResponse])
-async def get_all_projects():
+@router.get("/all", response_model=PaginatedResponse[ProjectResponse])
+async def get_all_projects(
+    page: int = Query(1, ge=1, description="Page number"), 
+    size: int = Query(10, ge=1, le=100, description="Items per page")
+):
     # ในอนาคตต้องดึง user_id จาก Token (Auth) 
     # แต่ตอนนี้ Mock เป็น user_id = 1 ไปก่อน
     fake_current_user_id = 1
 
-    projects = project_service.get_all_projects(
-        user_id=fake_current_user_id
+    result = project_service.get_all_projects(
+        user_id=fake_current_user_id,
+        page=page,
+        size=size
     )
 
-    return projects 
+    return result
 
 # POST /projects/ : สร้างโปรเจกต์ใหม่
 @router.post("/", response_model=ProjectResponse)
