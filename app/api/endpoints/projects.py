@@ -13,7 +13,9 @@ async def get_all_projects(
     page: int = Query(1, ge=1, description="Page number"), 
     size: int = Query(10, ge=1, le=100, description="Items per page"),
     sort_by: Optional[str] = Query(None, description="Column to sort by"),
-    order: Optional[str] = Query("asc", description="asc or desc")
+    order: Optional[str] = Query("asc", description="asc or desc"),
+    search: Optional[str] = Query(None, description="Search box"),
+    filter: Optional[str] = Query("ALL", description="filter - ALL -    -    ")
 ):
     # ในอนาคตต้องดึง user_id จาก Token (Auth) 
     # แต่ตอนนี้ Mock เป็น user_id = 1 ไปก่อน
@@ -24,7 +26,9 @@ async def get_all_projects(
         page=page,
         size=size,
         sort_by=sort_by, 
-        order=order
+        order=order,
+        search=search,
+        filter=filter
     )
 
     return result

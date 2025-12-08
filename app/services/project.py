@@ -34,15 +34,23 @@ class ProjectService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def get_all_projects(self, user_id: int, page: int, size: int, sort_by: str = None, order: str = "asc"):
+    def get_all_projects(self, user_id: int, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
         projects = self._read_json()
         
         # 1. กรอง User
         all_matches = []
         for proj in projects:
-            if proj["user_id"] == user_id:
-                all_matches.append(proj)
+            if filter == "ALL":
+                if search:
+                    if proj["user_id"] == user_id and search in proj["name"]:
+                        all_matches.append(proj)
+                else:
+                    if proj["user_id"] == user_id:
+                        all_matches.append(proj)
+            else:
+                # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
+                pass
 
         if sort_by:
             reverse = (order == "desc")
