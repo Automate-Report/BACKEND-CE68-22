@@ -5,3 +5,4 @@
 pip install -r requirements.txt
 การ run ใช้ fastapi dev main.py -> test
 ช่วงแรก ๆ ทำ dummy data ที่ฝั่ง backend ก่อน
+(delete_late) run using ==> uvicorn app.main:app --reload
