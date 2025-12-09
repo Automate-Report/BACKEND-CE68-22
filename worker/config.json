@@ -1,6 +1,7 @@
 {
-  "agent_id": "550e8400-e29b-41d4-a716-446655440000",
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30...",
-  "refresh_token": "d94f...", 
-  "registered_at": "2025-12-09T23:00:00Z"
+  "api_url": "http://127.0.0.1:8000/",
+  "task_interval_seconds": 60,
+  "log_level": "INFO",
+  "agent_version": "1.0.0",
+  "computer_name": "My-MacBook-Pro"
 }
