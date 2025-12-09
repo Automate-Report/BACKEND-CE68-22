@@ -6,10 +6,14 @@ import uuid
 from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, Response
 from fastapi.responses import StreamingResponse
+from cryptography.fernet import Fernet
 
 # Import ของที่เราทำไว้
 from app.core import security
 from app.api import deps
+
+ENCRYPTION_KEY = b'gPN8qnR_vSIySogiV5QJBJcsWKoEBYBmebJPdy5rgSs=' 
+cipher = Fernet(ENCRYPTION_KEY)
 
 router = APIRouter()
 
@@ -68,6 +72,9 @@ def download_worker_zip(
         "log_level": "INFO"
     }
 
+    encrypted_secret = cipher.encrypt(json.dumps(secret_data).encode())
+    encrypted_config = cipher.encrypt(json.dumps(config_data).encode())
+
     # --- D. แพ็คใส่ ZIP (In-Memory) ---
     zip_buffer = io.BytesIO()
     
@@ -76,10 +83,10 @@ def download_worker_zip(
         zip_file.write(EXE_PATH, arcname="worker_agent.exe")
         
         # 2. ใส่ไฟล์ .worker_secret (แปลง dict -> json string)
-        zip_file.writestr(".worker_secret", json.dumps(secret_data, indent=4))
+        zip_file.writestr("secret.dat", encrypted_secret)
         
         # 3. ใส่ไฟล์ worker_config.json
-        zip_file.writestr("worker_config.json", json.dumps(config_data, indent=4))
+        zip_file.writestr("config.dat", encrypted_config)
 
     # เลื่อน Pointer กลับไปหัวแถว เตรียมส่งออก
     zip_buffer.seek(0)
