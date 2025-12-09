@@ -25,3 +25,5 @@ weasyprint                 # แปลง HTML เป็น PDF (ง่ายก
 
 # --- Utils ---
 requests                   # เผื่อใช้ยิง Notification ภายนอก (Line/Email)
+
+jose>=3.3.0
