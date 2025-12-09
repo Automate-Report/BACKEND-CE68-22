@@ -12,6 +12,10 @@ from cryptography.fernet import Fernet
 from app.core import security
 from app.api import deps
 
+# from cryptography.fernet import Fernet
+# print(Fernet.generate_key().decode())
+# คุณจะได้ String ยาวๆ เช่น "Xj-9...=" ให้ Copy เก็บไว้
+
 ENCRYPTION_KEY = b'gPN8qnR_vSIySogiV5QJBJcsWKoEBYBmebJPdy5rgSs=' 
 cipher = Fernet(ENCRYPTION_KEY)
 
