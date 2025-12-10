@@ -30,8 +30,8 @@ def download_worker_zip(
     API สำหรับ User กดดาวน์โหลด Agent
     ระบบจะสร้างไฟล์ Zip ที่ข้างในมี:
     1. worker_agent.exe (โปรแกรมหลัก)
-    2. .worker_secret (ไฟล์ความลับที่มี Token เฉพาะตัว ฝังมาให้เลย)
-    3. worker_config.json (ค่าตั้งค่าเริ่มต้น)
+    2. secret.dat (ไฟล์ความลับที่มี Token เฉพาะตัว ฝังมาให้เลย)
+    3. config.dat (ค่าตั้งค่าเริ่มต้น)
     """
 
     # 1. Mock User ขึ้นมาเอง (หลอกระบบว่าเป็น admin)
