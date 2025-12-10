@@ -11,6 +11,8 @@ from cryptography.fernet import Fernet
 # Import ของที่เราทำไว้
 from app.core import security
 from app.api import deps
+from app.schemas.worker import WorkerCreate, WorkerResponse
+from app.services.worker import worker_service
 
 # from cryptography.fernet import Fernet
 # print(Fernet.generate_key().decode())
@@ -20,6 +22,14 @@ ENCRYPTION_KEY = b'gPN8qnR_vSIySogiV5QJBJcsWKoEBYBmebJPdy5rgSs='
 cipher = Fernet(ENCRYPTION_KEY)
 
 router = APIRouter()
+
+@router.post("/", response_model=WorkerResponse)
+def create_worker(worker_in: WorkerCreate):
+    fake_user_id = 1
+
+    new_worker = worker_service.create_worker(worker_in, fake_user_id)
+
+    return new_worker
 
 @router.get("/download-worker")
 def download_worker_zip(
@@ -105,3 +115,4 @@ def download_worker_zip(
         media_type="application/zip", 
         headers=headers
     )
+
