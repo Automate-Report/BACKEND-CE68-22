@@ -1,8 +1,16 @@
 import json
 import os
-from datetime import datetime
+import io
+import zipfile
+
+from datetime import datetime, timedelta
 from typing import List, Optional
+from fastapi import Response
+from fastapi.responses import StreamingResponse
+from cryptography.fernet import Fernet
+
 from app.schemas.worker import WorkerCreate
+from app.core import security
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -10,6 +18,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "workers.json")
 
 class WorkerService:
+    __ENCRYPTION_KEY = b'gPN8qnR_vSIySogiV5QJBJcsWKoEBYBmebJPdy5rgSs=' 
+    __cipher = Fernet(__ENCRYPTION_KEY)
     
     def _ensure_dummy_folder_exists(self):
         """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
@@ -34,58 +44,39 @@ class WorkerService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    # def get_all_projects(self, user_id: int, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
-    #     """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
-    #     projects = self._read_json()
-        
-    #     # 1. กรอง User
-    #     all_matches = []
-    #     for proj in projects:
-    #         if filter == "ALL":
-    #             if search:
-    #                 if proj["user_id"] == user_id and search in proj["name"]:
-    #                     all_matches.append(proj)
-    #             else:
-    #                 if proj["user_id"] == user_id:
-    #                     all_matches.append(proj)
-    #         else:
-    #             # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
-    #             pass
-
-    #     if sort_by:
-    #         reverse = (order == "desc")
-    #         # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
-    #         all_matches.sort(key=lambda x: x.get(sort_by, ""), reverse=reverse)
-        
-    #     # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
-    #     total_count = len(all_matches)
-            
-    #     # 3. คำนวณ Pagination Logic
-    #     import math
-    #     total_pages = math.ceil(total_count / size)
-        
-    #     offset = (page - 1) * size
-        
-    #     # --- จุดที่ต้องแก้: ตัดข้อมูล (Slicing) ---
-    #     # ใช้ Python Slice [start : end]
-    #     paginated_items = all_matches[offset : offset + size]
-
-    #     return {
-    #         "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
-    #         "page": page,
-    #         "size": size,
-    #         "total_pages": total_pages,
-    #         "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
-    #     }
+    def _get_cipher(self):
+        return self.__cipher
     
-    # def get_project_by_id(self, user_id:int, project_id:int):
-    #     projects = self._read_json()
+    def _find_exe(self):
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        EXE_PATH = os.path.join(BASE_DIR, "static", "bin", "worker_agent.exe")
+    
+        if not os.path.exists(EXE_PATH):
+            return {
+                "code": 500,
+                "content": "Server Error: Worker executable not found."
+            }
+        return {
+            "code": 200,
+            "content": EXE_PATH
+        }
+    
+    def _create_token(self, worker_id:int, user: dict):
+        token = security.create_token(
+            data={
+                "sub": worker_id, # ID ของ Worker ที่ user กด download
+                "role": "agent", # ระบุ Role เพื่อให้ผ่าน deps.get_current_agent
+                "owner": user["sub"] # ผูกกับ User คนที่กดโหลด
+            },
+            expires_delta=timedelta(days=1)
+        )
+        return token
+    
+    def _encryption(self, data: dict):
+        cipher = self._get_cipher()
 
-    #     for proj in projects:
-    #         if proj["user_id"] == user_id and proj["id"] == project_id:
-    #             return proj
-            
-    #     return None
+        return cipher.encrypt(json.dumps(data).encode())
+
 
     def create_worker(self, worker_in: WorkerCreate, user_id: int) -> dict:
         """Service: สร้างโปรเจกต์ใหม่"""
@@ -111,28 +102,71 @@ class WorkerService:
         self._save_json(workers)
 
         return new_worker
+
+    def get_worker_by_id(self, worker_id: int):
+        workers = self._read_json()
+
+        for worker in workers:
+            if worker_id == worker["id"]:
+                return worker
+            
+        return None
     
-    # def update_project(self, project_id: int, project_in: ProjectCreate, user_id: int) -> Optional[dict]:
-    #     """Service: อัปเดตโปรเจกต์"""
-    #     projects = self._read_json()
-    #     for proj in projects:
-    #         if proj["id"] == project_id and proj["user_id"] == user_id:
-    #             proj["name"] = project_in.name
-    #             proj["description"] = project_in.description
-    #             proj["updated_at"] = datetime.now().isoformat()
-    #             self._save_json(projects)
-    #             return proj
-    #     return None
+    def download_worker(self, worker_id: int, current_user: dict):
+        isEXEpath = self._find_exe()
+
+        if isEXEpath["code"] == 500:
+            return Response(content=isEXEpath["content"], status_code=isEXEpath["code"])
+        
+        exe_path = isEXEpath["content"]
+
+        jwt_token = self._create_token(worker_id=worker_id, user=current_user)
+
+        secret_data = {
+            "agent_id": worker_id,
+            "access_token": jwt_token,
+            "owner": current_user["sub"],
+            "created_at": str(datetime.now())
+        }    
     
-    # def delete_project(self, project_id: int, user_id: int) -> bool:
-    #     """Service: ลบโปรเจกต์"""
-    #     projects = self._read_json()
-    #     for i, proj in enumerate(projects):
-    #         if proj["id"] == project_id and proj["user_id"] == user_id:
-    #             del projects[i]
-    #             self._save_json(projects)
-    #             return True
-    #     return False
+        # ไฟล์ Config ทั่วไป
+        config_data = {
+            "api_url": "http://127.0.0.1:8000", # หรือ URL ของ Production
+            "task_interval_seconds": 60,
+            "log_level": "INFO"
+        }
+
+        encrypted_secret = self._encryption(data=secret_data)
+        encrypted_config = self._encryption(data=config_data)
+
+        zip_buffer = io.BytesIO()
+
+        with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
+            # 1. ใส่ไฟล์ .exe
+            zip_file.write(exe_path, arcname="worker_agent.exe")
+            
+            # 2. ใส่ไฟล์ .worker_secret (แปลง dict -> json string)
+            zip_file.writestr("secret.dat", encrypted_secret)
+            
+            # 3. ใส่ไฟล์ worker_config.json
+            zip_file.writestr("config.dat", encrypted_config)
+
+        # เลื่อน Pointer กลับไปหัวแถว เตรียมส่งออก
+        zip_buffer.seek(0)
+
+        # --- E. ส่งกลับให้ Browser ดาวน์โหลด ---
+        headers = {
+            "Content-Disposition": f'attachment; filename="worker_agent_{worker_id}.zip"'
+        }
+        
+        return StreamingResponse(
+            zip_buffer, 
+            media_type="application/zip", 
+            headers=headers
+        )
+        
+    
+  
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 worker_service = WorkerService()
