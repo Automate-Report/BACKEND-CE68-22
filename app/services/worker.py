@@ -18,8 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "workers.json")
 
 class WorkerService:
-    __ENCRYPTION_KEY = b'gPN8qnR_vSIySogiV5QJBJcsWKoEBYBmebJPdy5rgSs=' 
-    __cipher = Fernet(__ENCRYPTION_KEY)
+    __crptography_key = ""
     
     def _ensure_dummy_folder_exists(self):
         """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
@@ -45,7 +44,13 @@ class WorkerService:
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
     def _get_cipher(self):
-        return self.__cipher
+        dynamic_key = Fernet.generate_key() 
+        self.__crptography_key = dynamic_key
+        cipher = Fernet(dynamic_key)
+        return cipher
+    
+    def _get_crptography_key(self):
+        return self.__crptography_key
     
     def _find_exe(self):
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -72,9 +77,7 @@ class WorkerService:
         )
         return token
     
-    def _encryption(self, data: dict):
-        cipher = self._get_cipher()
-
+    def _encryption(self, data: dict, cipher):
         return cipher.encrypt(json.dumps(data).encode())
 
 
@@ -136,8 +139,10 @@ class WorkerService:
             "log_level": "INFO"
         }
 
-        encrypted_secret = self._encryption(data=secret_data)
-        encrypted_config = self._encryption(data=config_data)
+        cipher = self._get_cipher()
+        encrypted_secret = self._encryption(data=secret_data, cipher=cipher)
+        encrypted_config = self._encryption(data=config_data, cipher=cipher)
+ 
 
         zip_buffer = io.BytesIO()
 
@@ -150,6 +155,9 @@ class WorkerService:
             
             # 3. ใส่ไฟล์ worker_config.json
             zip_file.writestr("config.dat", encrypted_config)
+
+            # 4. ใส่ไฟล์ .system_lock
+            zip_file.writestr(".system_lock", self._get_crptography_key())
 
         # เลื่อน Pointer กลับไปหัวแถว เตรียมส่งออก
         zip_buffer.seek(0)
