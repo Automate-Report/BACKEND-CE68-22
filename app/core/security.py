@@ -1,3 +1,5 @@
+import secrets
+
 from datetime import datetime, timedelta
 from typing import Optional, Union, Any
 from jose import jwt, JWTError
@@ -34,3 +36,4 @@ def decode_access_token(token: str) -> Optional[dict]:
         return payload
     except JWTError:
         return None
+    

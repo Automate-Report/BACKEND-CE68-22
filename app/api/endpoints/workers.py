@@ -3,15 +3,16 @@ import zipfile
 import json
 
 from datetime import datetime, timedelta
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
 
 # Import ของที่เราทำไว้
 from app.core import security
 from app.api import deps
-from app.schemas.worker import WorkerCreate, WorkerResponse
+from app.schemas.worker import WorkerCreate, WorkerResponse, HandshakeRequest
 from app.services.worker import worker_service
+from app.services import handshake
 
 # from cryptography.fernet import Fernet
 # print(Fernet.generate_key().decode())

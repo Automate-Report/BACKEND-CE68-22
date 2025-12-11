@@ -4,7 +4,7 @@ import io
 import zipfile
 
 from datetime import datetime, timedelta
-from typing import List, Optional
+from typing import List
 from fastapi import Response
 from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
@@ -82,7 +82,7 @@ class WorkerService:
 
 
     def create_worker(self, worker_in: WorkerCreate, user_id: int) -> dict:
-        """Service: สร้างโปรเจกต์ใหม่"""
+        """Service: สร้าง Worker"""
         workers = self._read_json()
         
         # 1. จำลอง Logic Auto Increment ID
@@ -107,6 +107,7 @@ class WorkerService:
         return new_worker
 
     def get_worker_by_id(self, worker_id: int):
+        """Service: ดึงข้อมูล 1 Worker"""
         workers = self._read_json()
 
         for worker in workers:
@@ -116,6 +117,7 @@ class WorkerService:
         return None
     
     def download_worker(self, worker_id: int, current_user: dict):
+        """Service: download Worker"""
         isEXEpath = self._find_exe()
 
         if isEXEpath["code"] == 500:
