@@ -2,8 +2,22 @@
   {
     "id": 1,
     "name": "worker1",
-    "access_key_id": "1",
+    "api_key": "b2f011800463283bf7864eb3b62581fbe541312d9c33264e71f37e81de5c0deb",
+    "status": "active",
     "created_at": "2025-12-10T16:55:50.632979",
-    "updated_at": "2025-12-10T16:55:50.633437"
+    "updated_at": "2025-12-10T16:55:50.633437",
+    "hostname": "Nattharika-Jeksungnern",
+    "activated_at": "2025-12-12 04:15:24.585652"
+  },
+  {
+    "id": 2,
+    "name": "2",
+    "access_key_id": "1",
+    "created_at": "2025-12-12T04:20:15.532227",
+    "updated_at": "2025-12-12T04:20:15.532242",
+    "status": "active",
+    "api_key": "fc47474e1d5da8fd8d0d11b9b5885c2f74c01707bf781a31541523e11993450d",
+    "hostname": "Nattharika-Jeksungnern",
+    "activated_at": "2025-12-12 04:26:07.903002"
   }
 ]

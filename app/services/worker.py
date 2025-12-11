@@ -5,11 +5,11 @@ import zipfile
 
 from datetime import datetime, timedelta
 from typing import List
-from fastapi import Response
+from fastapi import Response, HTTPException
 from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
 
-from app.schemas.worker import WorkerCreate
+from app.schemas.worker import WorkerCreate, HandshakeRequest, TaskSubmitRequest
 from app.core import security
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
@@ -69,8 +69,8 @@ class WorkerService:
     def _create_token(self, worker_id:int, user: dict):
         token = security.create_token(
             data={
-                "sub": worker_id, # ID ของ Worker ที่ user กด download
-                "role": "agent", # ระบุ Role เพื่อให้ผ่าน deps.get_current_agent
+                "sub": str(worker_id), # ID ของ Worker ที่ user กด download
+                "type": "registration", 
                 "owner": user["sub"] # ผูกกับ User คนที่กดโหลด
             },
             expires_delta=timedelta(days=1)
@@ -98,6 +98,7 @@ class WorkerService:
             "access_key_id": worker_in.access_key_id,
             "created_at": datetime.now().isoformat(),
             "updated_at": datetime.now().isoformat(),
+            "status": "inactive"
         }
         
         # 3. บันทึก
@@ -125,13 +126,14 @@ class WorkerService:
         
         exe_path = isEXEpath["content"]
 
-        jwt_token = self._create_token(worker_id=worker_id, user=current_user)
+        reg_token = self._create_token(worker_id=worker_id, user=current_user)
 
         secret_data = {
-            "agent_id": worker_id,
-            "access_token": jwt_token,
+            "worker_id": worker_id,
+            "registration_token": reg_token,
             "owner": current_user["sub"],
-            "created_at": str(datetime.now())
+            "created_at": str(datetime.now()),
+            "api_key": None
         }    
     
         # ไฟล์ Config ทั่วไป
@@ -174,9 +176,90 @@ class WorkerService:
             media_type="application/zip", 
             headers=headers
         )
-        
     
-  
+    def worker_handshake(self, req: HandshakeRequest):
+        # A. ตรวจสอบ Registration Token
+        payload = security.decode_access_token(req.registration_token)
 
-# สร้าง Instance ไว้ให้ Router เรียกใช้
+        if not payload or payload.get("type") != "registration":
+            raise HTTPException(status_code=400, detail="Invalid registration token")
+        
+        token_worker_id = payload.get("sub") # "sub" เป็น worker_id
+
+        workers = self._read_json()
+        hasWorker = None
+        for worker in workers:
+            if token_worker_id == str(worker["id"]):
+                if worker["status"] == "active":
+                    # อาจจะยอมให้ Re-key หรือจะ Error ก็ได้แล้วแต่ Policy
+                    pass
+
+                new_api_key = security.generate_api_key()
+                worker["status"] = "active"
+                worker["api_key"] = new_api_key
+                worker["hostname"] = req.hostname
+                worker["activated_at"] = str(datetime.now())
+                self._save_json(workers)
+                return {
+                    "status": "success",
+                    "agent_id": str(hasWorker),
+                    "api_key": new_api_key
+                }
+
+        raise HTTPException(status_code=404, detail="Worker ID not found")
+    
+    def auth(self, req: HandshakeRequest):
+        workers = self._read_json()
+
+        for worker in workers:
+            if worker["api_key"] == req.api_key:
+                if worker["status"] != "active":
+                    return HTTPException(status_code=403, detail="Worker is inactive or revoked")
+            
+            # สร้าง Session Token (JWT) อายุ 15 นาที
+            session_token = security.create_token(
+                data={
+                    "sub": str(worker["id"]), 
+                    "role": "agent",
+                    "owner": str(worker["id"])
+                },
+                expires_delta=timedelta(minutes=15)
+            )
+        
+        return {
+            "access_token": session_token,
+            "token_type": "bearer",
+            "expires_in": 900
+        }
+    
+    def process_task(self, worker_id: int, task_data: TaskSubmitRequest):
+        """
+        บันทึกการทำงาน: อัปเดตเวลา updated_at ของ Worker
+        """
+        workers = self._read_json()
+        target_worker = None
+        
+        # 1. หา Worker และอัปเดตเวลา
+        for worker in workers:
+            if worker["id"] == worker_id:
+                worker["updated_at"] = datetime.now().isoformat()
+                # worker["last_iteration"] = task_data.iteration # (Optional) เก็บ Log รอบล่าสุด
+                target_worker = worker
+                break
+        
+        if target_worker:
+            self._save_json(workers)
+            
+            # --- (Optional) ถ้าอยากเก็บ Log งานแยกอีกไฟล์ ---
+            # self._append_to_task_log(worker_id, task_data)
+            
+            print(f"✅ [Worker {worker_id}] Reported task: Iteration {task_data.iteration}")
+            return {
+                "status": "success",
+                "message": f"Task iteration {task_data.iteration} received"
+            }
+            
+        return {"status": "error", "message": "Worker not found"}
+
+
 worker_service = WorkerService()

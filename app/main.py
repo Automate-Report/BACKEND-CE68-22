@@ -28,7 +28,7 @@ app.add_middleware(
 # prefix="/projects" แปลว่า URL จะเป็น http://localhost:8000/projects/...
 # tags=["Projects"] เอาไว้จัดหมวดหมู่ใน Swagger UI
 app.include_router(projects.router, prefix="/projects", tags=["Projects"])
-app.include_router(workers.router, prefix="/workerts", tags=["Workers"])
+app.include_router(workers.router, prefix="/workers", tags=["Workers"])
 
 
 # 4. Health Check Endpoint (เอาไว้ยิงเช็คว่า Server ตายหรือยัง)

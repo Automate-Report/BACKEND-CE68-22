@@ -3,16 +3,16 @@ import zipfile
 import json
 
 from datetime import datetime, timedelta
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Body
 from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
 
 # Import ของที่เราทำไว้
 from app.core import security
 from app.api import deps
-from app.schemas.worker import WorkerCreate, WorkerResponse, HandshakeRequest
+from app.schemas.worker import WorkerCreate, WorkerResponse, HandshakeRequest, AuthRequest, TaskSubmitRequest
 from app.services.worker import worker_service
-from app.services import handshake
+
 
 # from cryptography.fernet import Fernet
 # print(Fernet.generate_key().decode())
@@ -56,3 +56,35 @@ def download_worker_zip(
 
     return result
 
+@router.post("/handshake")
+def worker_handshake(req: HandshakeRequest):
+    result = worker_service.worker_handshake(
+        req=req
+    )
+
+    return result
+
+@router.post("/auth")
+def agent_auth_exchange(req: AuthRequest):
+    """
+    Agent ใช้ API Key เพื่อขอ Session Token (อายุสั้น) สำหรับทำงาน
+    """
+    result = worker_service.auth(
+        req=req
+    )
+
+    return result
+
+@router.post("/submit-task")
+def submit_task(
+    data: dict = Body(...),
+    # 👇 เอา comment ออก และใช้ deps.get_current_agent ตัวใหม่
+    current_worker: dict = Depends(deps.get_current_agent)
+):
+    worker_id = current_worker["id"]
+    print(f"📩 Task Received from Worker {worker_id}: {data}")
+    
+    # ส่งต่อให้ service บันทึกเวลา
+    # result = worker_service.process_task(worker_id, data) # (ถ้าคุณเขียน method นี้แล้ว)
+    
+    return {"status": "success", "received_data": data}
