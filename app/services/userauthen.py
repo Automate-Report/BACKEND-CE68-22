@@ -1,9 +1,9 @@
 import json
 import os
 from datetime import datetime, timedelta
-from typing import List, Optional
+from typing import List
 import jwt
-from app.schemas.userauthen import UserAuthen
+from app.schemas.userauthen import LoginRequest
 from app.core.config import authen_settings
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
@@ -31,14 +31,7 @@ class UserAuthenService:
         except json.JSONDecodeError:
             return [] # ถ้าไฟล์เสียหรือว่างเปล่า ให้คืนค่า list ว่าง
 
-    def _save_json(self, data: List[dict]):
-        """บันทึกข้อมูลลงไฟล์ JSON"""
-        self._ensure_dummy_folder_exists()
-        with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
-            # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
-            json.dump(data, f, indent=2, ensure_ascii=False, default=str)
-
-    def authenticate_user(self, email: str, password: str) -> UserAuthen:
+    def authenticate_user(self, email: str, password: str):
         """Service: ตรวจสอบการเข้าสู่ระบบของผู้ใช้"""
         users = self._read_json()
         for user in users:
@@ -48,28 +41,26 @@ class UserAuthenService:
                 # create JWT
                 payload = {
                     "sub": email,
+                    "iat": datetime.utcnow(),
                     "exp": datetime.utcnow() + timedelta(hours=1)
                 }
-                token = jwt.encode(payload, authen_settings.SECRET_KEY, algorithm=authen_settings.ALGORITHM)
 
-                # response body
-                body = {"user": {"email": email}}
-
-                # attach cookie
-                res = JSONResponse(body)
-                res.set_cookie(
-                    key="access_token",
-                    value=token,
-                    httponly=True,
-                    secure=False, # True = only allow https
-                    samesite="lax",
-                    max_age=3600,
+                token = jwt.encode(
+                    payload,
+                    authen_settings.SECRET_KEY,
+                    algorithm=authen_settings.ALGORITHM
                 )
 
-                return res
+                return {
+                "token": token,
+                "user": {
+                    "email": email,
+                    "username": user["username"]
+                }
+            }
             
-            else:
-                raise HTTPException(status_code=401, detail="Invalid email or password")
+        # Check all but user not found
+        raise HTTPException(status_code=401, detail="Invalid email or password")
 
         
 # สร้าง instance ของ Service เพื่อใช้งาน
