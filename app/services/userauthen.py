@@ -1,12 +1,13 @@
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List
-import jwt
+from jose import jwt, JWTError
 from app.schemas.userauthen import LoginRequest, UserCreate
 from app.core.config import authen_settings
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
+from app.core.redis import redis_client
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -38,6 +39,24 @@ class UserAuthenService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
+    def blacklist_token(self, token: str):
+        try:
+            payload = jwt.decode(token, authen_settings.SECRET_KEY, algorithms=[authen_settings.ALGORITHM])
+        except JWTError as errormsg:
+            print(errormsg)
+            return  # Invalid token, cannot blacklist
+
+        exp = payload["exp"]
+        now = int(datetime.now(timezone.utc).timestamp())
+        ttl = exp - now
+
+        if ttl <= 0:
+            return  # token already expired
+        
+        print("token blacklisted :", token)
+
+        redis_client.setex(token, ttl, "blacklisted")
+
     def authenticate_user(self, loginRequest: LoginRequest):
         """Service: ตรวจสอบการเข้าสู่ระบบของผู้ใช้"""
         users = self._read_json()
@@ -46,12 +65,15 @@ class UserAuthenService:
             if user["email"] == loginRequest.email and user["password"] == loginRequest.password:
                 
                 # create JWT
+                now = datetime.now(timezone.utc)
+                expire = now + timedelta(hours=1)
                 payload = {
                     "sub": loginRequest.email,
-                    "iat": datetime.utcnow(),
-                    "exp": datetime.utcnow() + timedelta(hours=1)
+                    "iat": int(now.timestamp()),
+                    "exp": int(expire.timestamp())
                 }
-
+                print(now, expire)
+                
                 token = jwt.encode(
                     payload,
                     authen_settings.SECRET_KEY,

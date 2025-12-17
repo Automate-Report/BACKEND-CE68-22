@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException, Query
+from app.deps.auth import get_current_user
+from fastapi import APIRouter, HTTPException, Request, Depends
 from fastapi.responses import JSONResponse
 from app.schemas.userauthen import LoginRequest, UserCreate
 from app.services.userauthen import userauthen_service # เรียก Service ที่เราสร้างตะกี้
@@ -21,6 +22,7 @@ async def login(data: LoginRequest):
         secure=False,  # True = https only
         samesite="lax",
         max_age=3600,
+        path="/"
     )
     return res
 
@@ -32,3 +34,31 @@ async def register(data: UserCreate):
     return JSONResponse({
         "user": new_user
     })
+
+@router.post("/logout")
+async def logout(request: Request):
+    token = request.cookies.get("access_token")
+
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    userauthen_service.blacklist_token(token)
+
+    response = JSONResponse({"message": "Logged out"})
+    response.delete_cookie(
+        key="access_token",
+        path="/"
+    )
+
+    return response
+
+# FOR TESTING COOKIES AND TOKEN BLACKLIST, DELETE LATER
+@router.get("/me")
+async def protected(user = Depends(get_current_user)):
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    return {
+        "message": "You are authenticated",
+        "user": user["sub"]
+    }
