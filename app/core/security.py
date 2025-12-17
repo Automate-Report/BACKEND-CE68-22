@@ -39,6 +39,6 @@ def decode_access_token(token: str) -> Optional[dict]:
         return None
     
 def generate_api_key() -> str:
-    """สร้าง API Key แบบสุ่มยาว 64 ตัวอักษร"""
-    return secrets.token_hex(32)
+    """สร้าง API Key แบบสุ่ม"""
+    return secrets.token_urlsafe(32)
     

@@ -1,11 +1,8 @@
-import io
-import zipfile
-import json
 
-from datetime import datetime, timedelta
-from fastapi import APIRouter, Depends, HTTPException, Body
-from fastapi.responses import StreamingResponse
-from cryptography.fernet import Fernet
+
+from fastapi import APIRouter, Depends, Body
+
+
 
 # Import ของที่เราทำไว้
 from app.core import security
@@ -13,13 +10,6 @@ from app.api import deps
 from app.schemas.worker import WorkerCreate, WorkerResponse, HandshakeRequest, AuthRequest, TaskSubmitRequest
 from app.services.worker import worker_service
 
-
-# from cryptography.fernet import Fernet
-# print(Fernet.generate_key().decode())
-# คุณจะได้ String ยาวๆ เช่น "Xj-9...=" ให้ Copy เก็บไว้
-
-ENCRYPTION_KEY = b'gPN8qnR_vSIySogiV5QJBJcsWKoEBYBmebJPdy5rgSs=' 
-cipher = Fernet(ENCRYPTION_KEY)
 
 router = APIRouter()
 
@@ -75,7 +65,9 @@ def agent_auth_exchange(req: AuthRequest):
 
     return result
 
-@router.post("/submit-task")
+
+
+@router.post("/submit-task") # dummy
 def submit_task(
     data: dict = Body(...),
     # 👇 เอา comment ออก และใช้ deps.get_current_agent ตัวใหม่
@@ -85,6 +77,6 @@ def submit_task(
     print(f"📩 Task Received from Worker {worker_id}: {data}")
     
     # ส่งต่อให้ service บันทึกเวลา
-    # result = worker_service.process_task(worker_id, data) # (ถ้าคุณเขียน method นี้แล้ว)
+    result = worker_service.process_task(worker_id, data) # (ถ้าคุณเขียน method นี้แล้ว)
     
-    return {"status": "success", "received_data": data}
+    return result

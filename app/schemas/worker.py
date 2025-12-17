@@ -4,7 +4,6 @@ from datetime import datetime
 
 class WorkerCreate(BaseModel):
     name: str
-    access_key_id: str
 
 
 class WorkerResponse(BaseModel):
