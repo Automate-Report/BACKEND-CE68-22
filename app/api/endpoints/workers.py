@@ -1,13 +1,12 @@
 
-
-from fastapi import APIRouter, Depends, Body
-
-
+from fastapi import APIRouter, Depends, Body, Query
+from typing import Optional
 
 # Import ของที่เราทำไว้
 from app.core import security
 from app.api import deps
 from app.schemas.worker import WorkerCreate, WorkerResponse, HandshakeRequest, AuthRequest, TaskSubmitRequest
+from app.schemas.pagination import PaginatedResponse
 from app.services.worker import worker_service
 
 
@@ -20,6 +19,31 @@ def create_worker(worker_in: WorkerCreate):
     new_worker = worker_service.create_worker(worker_in, fake_user_id)
 
     return new_worker
+
+@router.get("/all", response_model=PaginatedResponse[WorkerResponse])
+async def get_all_workers(
+    page: int = Query(1, ge=1, description="Page number"), 
+    size: int = Query(10, ge=1, le=100, description="Items per page"),
+    sort_by: Optional[str] = Query(None, description="Column to sort by"),
+    order: Optional[str] = Query("asc", description="asc or desc"),
+    search: Optional[str] = Query(None, description="Search box"),
+    filter: Optional[str] = Query("ALL", description="filter - ALL -    -    ")
+):
+    # ในอนาคตต้องดึง user_id จาก Token (Auth) 
+    # แต่ตอนนี้ Mock เป็น user_id = 1 ไปก่อน
+    fake_current_user_id = 1
+
+    result = worker_service.get_all_workers(
+        user_id=fake_current_user_id,
+        page=page,
+        size=size,
+        sort_by=sort_by, 
+        order=order,
+        search=search,
+        filter=filter
+    )
+
+    return result
 
 @router.post("/download/{worker_id}")
 def download_worker_zip(

@@ -111,6 +111,50 @@ class WorkerService:
 
         return new_worker
     
+    def get_all_workers(self, user_id: int, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
+        """Service: ดึงข้อมูล Worker ทั้งหมดของ user นั้น"""
+        workers = self._read_json()
+        
+        # 1. กรอง User
+        all_matches = []
+        for worker in workers:
+            if filter == "ALL":
+                if search:
+                    if worker["user_id"] == user_id and search in worker["name"]:
+                        all_matches.append(worker)
+                else:
+                    if worker["user_id"] == user_id:
+                        all_matches.append(worker)
+            else:
+                # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
+                pass
+
+        if sort_by:
+            reverse = (order == "desc")
+            # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
+            all_matches.sort(key=lambda x: x.get(sort_by, ""), reverse=reverse)
+        
+        # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
+        total_count = len(all_matches)
+            
+        # 3. คำนวณ Pagination Logic
+        import math
+        total_pages = math.ceil(total_count / size)
+        
+        offset = (page - 1) * size
+        
+        # --- จุดที่ต้องแก้: ตัดข้อมูล (Slicing) ---
+        # ใช้ Python Slice [start : end]
+        paginated_items = all_matches[offset : offset + size]
+
+        return {
+            "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
+            "page": page,
+            "size": size,
+            "total_pages": total_pages,
+            "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
+        }
+    
 
     def get_worker_by_id(self, worker_id: int):
         """Service: ดึงข้อมูล 1 Worker"""
