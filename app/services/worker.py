@@ -111,23 +111,16 @@ class WorkerService:
 
         return new_worker
     
-    def get_all_workers(self, user_id: int, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
+    def get_all_workers(self, user_id: int, page: int, size: int, sort_by: str = None, order: str = "asc"):
         """Service: ดึงข้อมูล Worker ทั้งหมดของ user นั้น"""
         workers = self._read_json()
         
         # 1. กรอง User
         all_matches = []
         for worker in workers:
-            if filter == "ALL":
-                if search:
-                    if worker["user_id"] == user_id and search in worker["name"]:
-                        all_matches.append(worker)
-                else:
-                    if worker["user_id"] == user_id:
-                        all_matches.append(worker)
-            else:
-                # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
-                pass
+            if worker["user_id"] == user_id:
+                all_matches.append(worker)
+
 
         if sort_by:
             reverse = (order == "desc")
