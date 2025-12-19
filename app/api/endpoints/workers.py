@@ -36,8 +36,7 @@ async def get_all_workers(
         page=page,
         size=size,
         sort_by=sort_by, 
-        order=order,
-        filter=filter
+        order=order
     )
 
     return result
@@ -45,13 +44,13 @@ async def get_all_workers(
 @router.delete("/{worker_id}")
 async def delete_worker(worker_id: int):
     fake_current_user_id = 1
-    success = worker_service.delete_project(
-        project_id=worker_id,
+    success = worker_service.delete_worker(
+        worker_id=worker_id,
         user_id=fake_current_user_id
     )
     if not success:
-        raise HTTPException(status_code=404, detail="Project not found")
-    return {"detail": "Project deleted successfully"}
+        raise HTTPException(status_code=404, detail="Worker not found")
+    return {"detail": "Worker deleted successfully"}
 
 @router.post("/download/{worker_id}")
 def download_worker_zip(
