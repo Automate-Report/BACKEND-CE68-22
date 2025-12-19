@@ -1,5 +1,5 @@
 
-from fastapi import APIRouter, Depends, Body, Query
+from fastapi import APIRouter, Depends, Body, Query, HTTPException
 from typing import Optional
 
 # Import ของที่เราทำไว้
@@ -41,6 +41,17 @@ async def get_all_workers(
     )
 
     return result
+
+@router.delete("/{worker_id}")
+async def delete_worker(worker_id: int):
+    fake_current_user_id = 1
+    success = worker_service.delete_project(
+        project_id=worker_id,
+        user_id=fake_current_user_id
+    )
+    if not success:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return {"detail": "Project deleted successfully"}
 
 @router.post("/download/{worker_id}")
 def download_worker_zip(
