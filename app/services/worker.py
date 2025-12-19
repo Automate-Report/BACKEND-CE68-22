@@ -301,7 +301,6 @@ class WorkerService:
         # (Optional) เก็บ Log Task
         # if hasattr(task_data, 'iteration'):
         #     target_worker["last_iteration"] = task_data.iteration 
-
         # 5. บันทึกข้อมูลลงไฟล์
         self._save_json(workers)
         
