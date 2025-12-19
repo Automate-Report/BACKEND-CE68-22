@@ -93,7 +93,7 @@
     "name": "create worker 10",
     "hostname": null,
     "api_key_id": null,
-    "status": "offline",
+    "status": "online",
     "isActive": false,
     "created_at": "2025-12-19T21:17:10.072453",
     "updated_at": "2025-12-19T21:17:10.072461"
