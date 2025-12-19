@@ -1,17 +1,5 @@
 [
   {
-    "id": 1,
-    "user_id": 1,
-    "name": "test5",
-    "hostname": "Nattharika-Jeksungnern",
-    "api_key_id": 6,
-    "status": "online",
-    "isActive": true,
-    "created_at": "2025-12-17T16:03:54.894885",
-    "updated_at": "2025-12-17T16:03:54.894901",
-    "activated_at": "2025-12-17 16:25:25.978767"
-  },
-  {
     "id": 2,
     "user_id": 1,
     "name": "create worker 1",

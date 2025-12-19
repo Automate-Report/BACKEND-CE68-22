@@ -9,6 +9,7 @@ class WorkerCreate(BaseModel):
 class WorkerResponse(BaseModel):
     id: int
     name: str
+    status: str
     created_at: datetime
     updated_at: datetime
 
