@@ -10,6 +10,8 @@ class WorkerResponse(BaseModel):
     id: int
     name: str
     status: str
+    isActive: str
+    access_key_id: int
     created_at: datetime
     updated_at: datetime
 
