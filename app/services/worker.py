@@ -159,7 +159,7 @@ class WorkerService:
         return False
     
 
-    def get_worker_by_id(self, worker_id: int):
+    def get_worker_by_id(self, user_id:int, worker_id: int):
         """Service: ดึงข้อมูล 1 Worker"""
         workers = self._read_json()
 

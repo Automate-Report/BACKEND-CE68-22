@@ -41,6 +41,18 @@ async def get_all_workers(
 
     return result
 
+@router.get("/{worker_id}", response_model=WorkerResponse)
+async def get_worker_by_id(worker_id: int):
+    # เรียก Service เพื่อดึงข้อมูลตาม ID
+    fake_current_user_id = 1
+    worker = worker_service.get_worker_by_id(fake_current_user_id, worker_id)
+
+    if not worker:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Worker not found")
+        
+    return worker
+
 @router.delete("/{worker_id}")
 async def delete_worker(worker_id: int):
     fake_current_user_id = 1
