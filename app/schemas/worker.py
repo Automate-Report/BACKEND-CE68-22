@@ -11,7 +11,7 @@ class WorkerResponse(BaseModel):
     name: str
     status: str
     isActive: bool
-    access_key_id: int
+    access_key_id: Optional[int] = None
     created_at: datetime
     updated_at: datetime
 
