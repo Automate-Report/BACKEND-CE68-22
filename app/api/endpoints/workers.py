@@ -53,12 +53,21 @@ async def get_worker_by_id(worker_id: int):
         
     return worker
 
-@router.post("/key")
-def update_access_key(payload: WorkerAccessKey):
+@router.post("/add-key")
+def add_access_key(payload: WorkerAccessKey):
 
-    worker = worker_service.update_access_key(
+    worker = worker_service.add_access_key(
         worker_id=payload.worker_id,
         access_key_id=payload.access_key_id
+    )
+
+    return worker
+
+@router.post("/remove-key/{worker_id}")
+def remove_access_key(worker_id: int):
+
+    worker = worker_service.remove_access_key(
+        worker_id=worker_id
     )
 
     return worker

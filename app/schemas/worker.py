@@ -21,7 +21,7 @@ class WorkerResponse(BaseModel):
 class WorkerAccessKey(BaseModel):
     worker_id: int
     access_key_id: int
-
+    
 class HandshakeRequest(BaseModel):
     registration_token: str
     hostname: str
