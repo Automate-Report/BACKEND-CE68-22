@@ -30,3 +30,11 @@ async def get_access_key_by_id(access_key_id: int):
         
     return worker
 
+@router.delete("/{access_key_id}")
+async def delete_access_key(access_key_id: int):
+    success = access_key_service.delete_access_key_by_id(access_key_id)
+
+    if not success:
+        raise HTTPException(status_code=404, detail="Access Key not found")
+    return {"detail": "Access Key deleted successfully"}
+
