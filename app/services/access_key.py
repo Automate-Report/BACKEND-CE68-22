@@ -67,6 +67,16 @@ class AccessKeyService:
                 return key
             
         return None
+    
+    def delete_access_key_by_id(self, id: int):
+        access_keys =self._read_json()
+        for i, key in enumerate(access_keys):
+            if key["id"] == id:
+                del access_keys[i]
+                self._save_json(access_keys)
+                return True
+            
+        return False
    
 
 access_key_service = AccessKeyService()
