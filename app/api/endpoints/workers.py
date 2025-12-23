@@ -5,7 +5,7 @@ from typing import Optional
 # Import ของที่เราทำไว้
 from app.core import security
 from app.api import deps
-from app.schemas.worker import WorkerCreate, WorkerResponse, HandshakeRequest, AuthRequest, TaskSubmitRequest
+from app.schemas.worker import WorkerCreate, WorkerResponse, HandshakeRequest, AuthRequest, WorkerAccessKey
 from app.schemas.pagination import PaginatedResponse
 from app.services.worker import worker_service
 
@@ -51,6 +51,16 @@ async def get_worker_by_id(worker_id: int):
         from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Worker not found")
         
+    return worker
+
+@router.post("/key")
+def update_access_key(payload: WorkerAccessKey):
+
+    worker = worker_service.update_access_key(
+        worker_id=payload.worker_id,
+        access_key_id=payload.access_key_id
+    )
+
     return worker
 
 @router.delete("/{worker_id}")

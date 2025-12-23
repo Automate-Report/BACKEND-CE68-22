@@ -9,7 +9,7 @@ from fastapi import Response, HTTPException
 from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
 
-from app.schemas.worker import WorkerCreate, HandshakeRequest, TaskSubmitRequest
+from app.schemas.worker import WorkerCreate, HandshakeRequest, WorkerResponse
 from app.core import security
 from app.services.api_key import api_key_service
 
@@ -168,6 +168,18 @@ class WorkerService:
                 return worker
             
         return None
+    
+    def update_access_key(self, worker_id:int, access_key_id: int):
+        """Service: update access key id ให้ worker id"""
+        workers = self._read_json()
+
+        for worker in workers:
+            if worker_id == worker["id"]:
+                worker["access_key_id"] = access_key_id
+
+        self._save_json(workers)
+        return None
+
     
     def download_worker(self, worker_id: int, current_user: dict):
         """Service: download Worker"""

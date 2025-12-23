@@ -18,6 +18,10 @@ class WorkerResponse(BaseModel):
     class Config:
         orm_mode = True # เพื่อให้ Pydantic อ่านข้อมูลจาก ORM objects ได้ ไว้ใช้กับ SQLAlchemy ตอนทำ database
 
+class WorkerAccessKey(BaseModel):
+    worker_id: int
+    access_key_id: int
+
 class HandshakeRequest(BaseModel):
     registration_token: str
     hostname: str
