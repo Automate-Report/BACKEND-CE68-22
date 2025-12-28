@@ -1,13 +1,46 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+import asyncio
+from contextlib import asynccontextmanager
+
+from app.core.db import engine, Base
+
 # 1. Import Router ที่เราสร้างไว้
 from app.api.endpoints import projects
+
+# --- ส่วนของ Async Background Service ---
+async def my_background_service():
+    try:
+        while True:
+            print("Background service is processing...")
+            await asyncio.sleep(60) # ทำงานทุกๆ 60 วินาที
+    except asyncio.CancelledError:
+        print("Background service is stopping...")
+
+# --- Lifespan Management ---
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # [Startup]: ทำงานตอนเปิด Server
+    async with engine.begin() as conn:
+        # สร้าง Table ทั้งหมดถ้ายังไม่มี (เหมือน setup_db ของคุณ)
+        await conn.run_sync(Base.metadata.create_all)
+    
+    # เริ่มรัน Background Task
+    bg_task = asyncio.create_task(my_background_service())
+    
+    yield  # --- ช่วงที่ App รันปกติ ---
+
+    # [Shutdown]: ทำงานตอนปิด Server
+    bg_task.cancel() # ปิด Background Task
+    await engine.dispose() # ปิดการเชื่อมต่อ DB
 
 app = FastAPI(
     title="CE68-22 Backend API",
     description="API for Project (Master-Agent Architecture)",
     version="1.0.0",
+    lifespan=lifespan
+
 )
 
 # 2. ตั้งค่า CORS (สำคัญมาก! เพื่อให้ Next.js คุยกับ FastAPI ได้)
