@@ -5,6 +5,7 @@ import asyncio
 from contextlib import asynccontextmanager
 
 from app.core.db import engine, Base
+from app.models import users, access_keys, asset_credentials, assets, jobs, logs, project_tags, projects, reports, schedules, tags, vulnerabilities, workers
 
 # 1. Import Router ที่เราสร้างไว้
 from app.api.endpoints import projects
@@ -60,7 +61,7 @@ app.add_middleware(
 # 3. ลงทะเบียน Router (เอา API Projects มาแปะเข้ากับ App หลัก)
 # prefix="/projects" แปลว่า URL จะเป็น http://localhost:8000/projects/...
 # tags=["Projects"] เอาไว้จัดหมวดหมู่ใน Swagger UI
-app.include_router(projects.router, prefix="/projects", tags=["Projects"])
+# app.include_router(projects.router, prefix="/projects", tags=["Projects"])
 
 
 # 4. Health Check Endpoint (เอาไว้ยิงเช็คว่า Server ตายหรือยัง)

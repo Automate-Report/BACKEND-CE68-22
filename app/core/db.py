@@ -3,7 +3,12 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from dotenv import load_dotenv
 from sqlalchemy.orm import DeclarativeBase
 
-load_dotenv() # โหลด .env จาก root folder โดยอัตโนมัติ
+from pathlib import Path
+# หา path ของไฟล์ .env ที่อยู่ที่ root ของโปรเจกต์
+env_path = Path(__file__).parent.parent.parent / ".env"
+load_dotenv(dotenv_path=env_path)
+
+# load_dotenv('../.env') # โหลด .env จาก root folder โดยอัตโนมัติ
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
