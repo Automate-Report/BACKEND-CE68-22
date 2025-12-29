@@ -21,6 +21,12 @@ class WorkerResponse(BaseModel):
 class WorkerAccessKey(BaseModel):
     worker_id: int
     access_key_id: int
+
+#-----------------Worker Agent----------------------#
+class VerifyRequest(BaseModel):
+    key: str
+    worker_id: int
+    hostname: str
     
 class HandshakeRequest(BaseModel):
     registration_token: str

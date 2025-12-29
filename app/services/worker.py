@@ -2,16 +2,17 @@ import json
 import os
 import io
 import zipfile
+import jwt
 
 from datetime import datetime, timedelta
 from typing import List
-from fastapi import Response, HTTPException
+from fastapi import Response, HTTPException, Header
 from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
 
-from app.schemas.worker import WorkerCreate, HandshakeRequest, WorkerResponse
+from app.schemas.worker import WorkerCreate, HandshakeRequest, VerifyRequest
 from app.core import security
-from app.services.api_key import api_key_service
+from app.services.access_key import access_key_service
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -20,6 +21,7 @@ JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "workers.json")
 
 class WorkerService:
     __crptography_key = ""
+    SECRET_KEY: str = "super-secret-key-fixed-value-1234567890"
     
     def _ensure_dummy_folder_exists(self):
         """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
@@ -191,6 +193,91 @@ class WorkerService:
         self._save_json(workers)
         return None
 
+    def verify_worker(self, req: VerifyRequest):
+        workers = self._read_json()
+        target_worker = None
+        for worker in workers:
+            if worker["id"] == req.worker_id:
+                target_worker = worker
+
+        if not target_worker:
+            # Use 404 for "Not Found"
+            raise HTTPException(status_code=404, detail="Worker ID not found")
+        
+        access_key_id = target_worker.get("access_key_id")
+
+        
+
+        if not access_key_id:
+            raise HTTPException(status_code=400, detail="Worker missing access key")
+        
+        access_key = access_key_service.get_access_key_by_id(access_key_id)
+
+        if (not access_key.get("key")) or req.key != access_key.get("key"):
+            raise HTTPException(status_code=403, detail=f"Invalid access key {access_key.get("key")}")
+        
+        target_worker["hostname"] = req.hostname
+        self._save_json(workers)
+
+        token = jwt.encode(
+            {
+                "sub": str(req.worker_id),
+                "exp": datetime.utcnow() + timedelta(minutes=1)
+            },
+            access_key.get("key"),
+            algorithm="HS256"
+        )
+
+        return {
+                "status": "success",
+                "token": token
+            }
+    
+    def verify_token(self, authorization: str = Header(None)):
+        # ... extraction logic ...
+        token = authorization.split(" ")[1]
+
+        try:
+            # ---------------------------------------------------
+            # ขั้นตอนที่ 1 (The Strange Part): แอบดูไส้ในก่อน 
+            # โดยยัง "ไม่ตรวจลายเซ็น" (verify_signature=False)
+            # เพื่อเอาแค่ Worker ID ออกมาหา key
+            # ---------------------------------------------------
+            unverified_payload = jwt.decode(token, options={"verify_signature": False})
+            worker_id = int(unverified_payload.get("sub"))
+
+            # ---------------------------------------------------
+            # ขั้นตอนที่ 2: ไปดึง Access Key ของ Worker คนนั้นมาจาก DB
+            # ---------------------------------------------------
+            # สมมติว่ามี function ดึง key จาก worker_id
+            # (คุณอาจต้องเรียก service หรือ query db ตรงนี้)
+            fake_user_id = 1
+            worker = self.get_worker_by_id(user_id=fake_user_id, worker_id=worker_id) 
+            if not worker:
+                raise HTTPException(status_code=401, detail="Worker not found (ID invalid)")
+            
+            access_key_id = worker["access_key_id"]
+            worker_access_key = access_key_service.get_access_key_by_id(access_key_id)
+
+            
+            if not worker_access_key.get("key"):
+                raise HTTPException(status_code=401, detail="Worker not found")
+
+            # ---------------------------------------------------
+            # ขั้นตอนที่ 3: ตรวจสอบจริง (Verify)
+            # รอบนี้ใช้ Key ของเจ้าตัวจริงๆ ถ้า Token ถูกปลอมแปลงมา จะ Error ตรงนี้
+            # ---------------------------------------------------
+            payload = jwt.decode(token, worker_access_key.get("key"), algorithms=["HS256"])
+            
+            return payload.get("sub")
+
+        except jwt.ExpiredSignatureError:
+            raise HTTPException(status_code=401, detail="Token has expired")
+        except jwt.InvalidTokenError:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        except ValueError:
+            # กันกรณี sub ไม่ใช่ตัวเลข
+            raise HTTPException(status_code=401, detail="Invalid Worker ID format")
     
     def download_worker(self, worker_id: int, current_user: dict):
         """Service: download Worker"""
@@ -252,135 +339,135 @@ class WorkerService:
             headers=headers
         )
     
-    def worker_handshake(self, req: HandshakeRequest):
-        # A. ตรวจสอบ Registration Token
-        payload = security.decode_access_token(req.registration_token)
+    # def worker_handshake(self, req: HandshakeRequest):
+    #     # A. ตรวจสอบ Registration Token
+    #     payload = security.decode_access_token(req.registration_token)
 
-        if not payload or payload.get("type") != "registration":
-            raise HTTPException(status_code=400, detail="Invalid registration token")
+    #     if not payload or payload.get("type") != "registration":
+    #         raise HTTPException(status_code=400, detail="Invalid registration token")
         
-        token_worker_id = payload.get("sub") # "sub" เป็น worker_id
+    #     token_worker_id = payload.get("sub") # "sub" เป็น worker_id
 
-        workers = self._read_json()
-        target_worker = None
-        for worker in workers:
-            if token_worker_id == str(worker["id"]):
-                target_worker = worker
-                break
-        if not target_worker:
-            raise HTTPException(status_code=404, detail="Worker ID not found")
+    #     workers = self._read_json()
+    #     target_worker = None
+    #     for worker in workers:
+    #         if token_worker_id == str(worker["id"]):
+    #             target_worker = worker
+    #             break
+    #     if not target_worker:
+    #         raise HTTPException(status_code=404, detail="Worker ID not found")
 
-        if target_worker["isActive"] == True:
-            # อาจจะยอมให้ Re-key หรือจะ Error ก็ได้แล้วแต่ Policy
-            pass
+    #     if target_worker["isActive"] == True:
+    #         # อาจจะยอมให้ Re-key หรือจะ Error ก็ได้แล้วแต่ Policy
+    #         pass
 
-        new_api_key = api_key_service.create_api_key()
-        target_worker["isActive"] = True
-        target_worker["api_key_id"] = new_api_key["id"]
-        target_worker["hostname"] = req.hostname
-        target_worker["activated_at"] = str(datetime.now())
-        target_worker["status"] = "online"
-        self._save_json(workers)
+    #     new_api_key = api_key_service.create_api_key()
+    #     target_worker["isActive"] = True
+    #     target_worker["api_key_id"] = new_api_key["id"]
+    #     target_worker["hostname"] = req.hostname
+    #     target_worker["activated_at"] = str(datetime.now())
+    #     target_worker["status"] = "online"
+    #     self._save_json(workers)
 
-        return {
-            "status": "success",
-            "agent_id": str(target_worker["id"]),
-            "api_key": new_api_key["key"]
-        }
+    #     return {
+    #         "status": "success",
+    #         "agent_id": str(target_worker["id"]),
+    #         "api_key": new_api_key["key"]
+    #     }
 
     
-    def auth(self, req: HandshakeRequest):
-        workers = self._read_json()
-        api_key = None
-        target_worker = None
-        for worker in workers:
-            api_key = api_key_service.get_api_key_by_id(worker["api_key_id"])
-            if not api_key:
-                continue
+    # def auth(self, req: HandshakeRequest):
+    #     workers = self._read_json()
+    #     api_key = None
+    #     target_worker = None
+    #     for worker in workers:
+    #         api_key = api_key_service.get_api_key_by_id(worker["api_key_id"])
+    #         if not api_key:
+    #             continue
 
-            if api_key["key"] == req.api_key:
-                target_worker = worker
-                break
+    #         if api_key["key"] == req.api_key:
+    #             target_worker = worker
+    #             break
 
-        if not target_worker:
-            raise HTTPException(status_code=401, detail="Invalid API Key")
+    #     if not target_worker:
+    #         raise HTTPException(status_code=401, detail="Invalid API Key")
         
-        if target_worker["isActive"] == False:
-            print(f"DEBUG: Worker {target_worker['id']} is found but Inactive!")
-            raise HTTPException(status_code=403, detail="Worker is not activated or disabled")
+    #     if target_worker["isActive"] == False:
+    #         print(f"DEBUG: Worker {target_worker['id']} is found but Inactive!")
+    #         raise HTTPException(status_code=403, detail="Worker is not activated or disabled")
         
-        target_worker["status"] = "online"
-        self._save_json(workers)
+    #     target_worker["status"] = "online"
+    #     self._save_json(workers)
 
-            # สร้าง Session Token (JWT) อายุ 15 นาที
-        session_token = security.create_token(
-            data={
-                "sub": str(target_worker["id"]), 
-                "role": "agent",
-                "owner": str(target_worker["id"])
-            },
-            expires_delta=timedelta(minutes=15)
-        )
+    #         # สร้าง Session Token (JWT) อายุ 15 นาที
+    #     session_token = security.create_token(
+    #         data={
+    #             "sub": str(target_worker["id"]), 
+    #             "role": "agent",
+    #             "owner": str(target_worker["id"])
+    #         },
+    #         expires_delta=timedelta(minutes=15)
+    #     )
 
-        return {
-            "access_token": session_token,
-            "token_type": "bearer",
-            "expires_in": 900
-        }
+    #     return {
+    #         "access_token": session_token,
+    #         "token_type": "bearer",
+    #         "expires_in": 900
+    #     }
     
-    def process_task(self, worker_id: int, task_data: dict): # แก้ type hint ให้รับ dict หรือ model ตามที่คุณใช้
-        """
-        Service: รับรายงานผล (Heartbeat)
-        แก้ไข: เพิ่มระบบ Auto-fix เพื่อแก้ปัญหา 403 ถาวร
-        """
-        workers = self._read_json()
-        target_worker = None
+    # def process_task(self, worker_id: int, task_data: dict): # แก้ type hint ให้รับ dict หรือ model ตามที่คุณใช้
+    #     """
+    #     Service: รับรายงานผล (Heartbeat)
+    #     แก้ไข: เพิ่มระบบ Auto-fix เพื่อแก้ปัญหา 403 ถาวร
+    #     """
+    #     workers = self._read_json()
+    #     target_worker = None
         
-        # 1. หา Worker (แปลงเป็น String เพื่อความชัวร์)
-        print(f"🔍 Debug: Processing task for Worker ID: {worker_id}")
+    #     # 1. หา Worker (แปลงเป็น String เพื่อความชัวร์)
+    #     print(f"🔍 Debug: Processing task for Worker ID: {worker_id}")
         
-        for worker in workers:
-            if str(worker["id"]) == str(worker_id):
-                target_worker = worker
-                break
+    #     for worker in workers:
+    #         if str(worker["id"]) == str(worker_id):
+    #             target_worker = worker
+    #             break
         
-        # 2. ถ้าหาไม่เจอจริงๆ ให้ 404
-        if not target_worker:
-            print(f"❌ Error: Worker ID {worker_id} not found in DB")
-            raise HTTPException(status_code=404, detail="Worker ID not found")
+    #     # 2. ถ้าหาไม่เจอจริงๆ ให้ 404
+    #     if not target_worker:
+    #         print(f"❌ Error: Worker ID {worker_id} not found in DB")
+    #         raise HTTPException(status_code=404, detail="Worker ID not found")
 
-        # 3. ✅ จุดแก้ไขปัญหา 403 (Auto-Fix Logic)
-        # แทนที่จะดีด Error เราจะเช็คและ "ซ่อม" ค่าให้ถูกต้อง
-        if target_worker.get("isActive") is False:
-            print(f"⚠️ Warning: Worker {worker_id} status is Inactive.")
-            print(f"🛠️ Auto-Fixing: Forcing isActive = True to bypass 403...")
+    #     # 3. ✅ จุดแก้ไขปัญหา 403 (Auto-Fix Logic)
+    #     # แทนที่จะดีด Error เราจะเช็คและ "ซ่อม" ค่าให้ถูกต้อง
+    #     if target_worker.get("isActive") is False:
+    #         print(f"⚠️ Warning: Worker {worker_id} status is Inactive.")
+    #         print(f"🛠️ Auto-Fixing: Forcing isActive = True to bypass 403...")
             
-            # --- บังคับเปิดใช้งานทันที ---
-            target_worker["isActive"] = True 
-            # --------------------------
+    #         # --- บังคับเปิดใช้งานทันที ---
+    #         target_worker["isActive"] = True 
+    #         # --------------------------
             
-            # หมายเหตุ: ใน Production จริง ควรใช้ raise HTTPException(403) 
-            # แต่ในช่วง Dev ที่ข้อมูลเพี้ยน ให้ใช้แบบนี้เพื่อให้ผ่านไปได้ก่อน
+    #         # หมายเหตุ: ใน Production จริง ควรใช้ raise HTTPException(403) 
+    #         # แต่ในช่วง Dev ที่ข้อมูลเพี้ยน ให้ใช้แบบนี้เพื่อให้ผ่านไปได้ก่อน
 
-        # 4. อัปเดตข้อมูล Heartbeat
-        current_time = str(datetime.now())
-        target_worker["updated_at"] = current_time
-        target_worker["last_seen"] = current_time
-        target_worker["status"] = "online" # ยืนยันสถานะ
+    #     # 4. อัปเดตข้อมูล Heartbeat
+    #     current_time = str(datetime.now())
+    #     target_worker["updated_at"] = current_time
+    #     target_worker["last_seen"] = current_time
+    #     target_worker["status"] = "online" # ยืนยันสถานะ
         
-        # (Optional) เก็บ Log Task
-        # if hasattr(task_data, 'iteration'):
-        #     target_worker["last_iteration"] = task_data.iteration 
-        # 5. บันทึกข้อมูลลงไฟล์
-        self._save_json(workers)
+    #     # (Optional) เก็บ Log Task
+    #     # if hasattr(task_data, 'iteration'):
+    #     #     target_worker["last_iteration"] = task_data.iteration 
+    #     # 5. บันทึกข้อมูลลงไฟล์
+    #     self._save_json(workers)
         
-        print(f"✅ Success: Worker {worker_id} updated. Status: Online")
+    #     print(f"✅ Success: Worker {worker_id} updated. Status: Online")
 
-        return {
-            "status": "success",
-            "message": "Task processed successfully",
-            "server_time": current_time
-        }
+    #     return {
+    #         "status": "success",
+    #         "message": "Task processed successfully",
+    #         "server_time": current_time
+    #     }
 
 
 worker_service = WorkerService()
