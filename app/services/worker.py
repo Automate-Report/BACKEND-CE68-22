@@ -307,60 +307,6 @@ class WorkerService:
         )
 
 
-    
-    # def process_task(self, worker_id: int, task_data: dict): # แก้ type hint ให้รับ dict หรือ model ตามที่คุณใช้
-    #     """
-    #     Service: รับรายงานผล (Heartbeat)
-    #     แก้ไข: เพิ่มระบบ Auto-fix เพื่อแก้ปัญหา 403 ถาวร
-    #     """
-    #     workers = self._read_json()
-    #     target_worker = None
-        
-    #     # 1. หา Worker (แปลงเป็น String เพื่อความชัวร์)
-    #     print(f"🔍 Debug: Processing task for Worker ID: {worker_id}")
-        
-    #     for worker in workers:
-    #         if str(worker["id"]) == str(worker_id):
-    #             target_worker = worker
-    #             break
-        
-    #     # 2. ถ้าหาไม่เจอจริงๆ ให้ 404
-    #     if not target_worker:
-    #         print(f"❌ Error: Worker ID {worker_id} not found in DB")
-    #         raise HTTPException(status_code=404, detail="Worker ID not found")
-
-    #     # 3. ✅ จุดแก้ไขปัญหา 403 (Auto-Fix Logic)
-    #     # แทนที่จะดีด Error เราจะเช็คและ "ซ่อม" ค่าให้ถูกต้อง
-    #     if target_worker.get("isActive") is False:
-    #         print(f"⚠️ Warning: Worker {worker_id} status is Inactive.")
-    #         print(f"🛠️ Auto-Fixing: Forcing isActive = True to bypass 403...")
-            
-    #         # --- บังคับเปิดใช้งานทันที ---
-    #         target_worker["isActive"] = True 
-    #         # --------------------------
-            
-    #         # หมายเหตุ: ใน Production จริง ควรใช้ raise HTTPException(403) 
-    #         # แต่ในช่วง Dev ที่ข้อมูลเพี้ยน ให้ใช้แบบนี้เพื่อให้ผ่านไปได้ก่อน
-
-    #     # 4. อัปเดตข้อมูล Heartbeat
-    #     current_time = str(datetime.now())
-    #     target_worker["updated_at"] = current_time
-    #     target_worker["last_seen"] = current_time
-    #     target_worker["status"] = "online" # ยืนยันสถานะ
-        
-    #     # (Optional) เก็บ Log Task
-    #     # if hasattr(task_data, 'iteration'):
-    #     #     target_worker["last_iteration"] = task_data.iteration 
-    #     # 5. บันทึกข้อมูลลงไฟล์
-    #     self._save_json(workers)
-        
-    #     print(f"✅ Success: Worker {worker_id} updated. Status: Online")
-
-    #     return {
-    #         "status": "success",
-    #         "message": "Task processed successfully",
-    #         "server_time": current_time
-    #     }
 
 
 worker_service = WorkerService()

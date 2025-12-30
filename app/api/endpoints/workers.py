@@ -84,7 +84,7 @@ async def delete_worker(worker_id: int):
         raise HTTPException(status_code=404, detail="Worker not found")
     return {"detail": "Worker deleted successfully"}
 
-@router.post("/download/{worker_id}")
+@router.get("/download/{worker_id}")
 def download_worker_zip(
     # ใช้ Deps: ตรวจสอบว่าคนเรียกคือ User เว็บที่ล็อกอินแล้วเท่านั้น
     # current_user: dict = Depends(deps.get_current_web_user)
