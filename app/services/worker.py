@@ -5,7 +5,7 @@ import zipfile
 import jwt
 
 from datetime import datetime, timedelta
-from typing import List
+from typing import List, Optional
 from fastapi import Response, HTTPException, Header
 from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
@@ -169,6 +169,17 @@ class WorkerService:
             if worker_id == worker["id"]:
                 return worker
             
+        return None
+    
+    def update_worker(self, worker_id: int, worker_in: WorkerCreate, user_id: int) -> Optional[dict]:
+        """Service: อัปเดต Worker"""
+        workers = self._read_json()
+        for worker in workers:
+            if worker["id"] == worker_id and worker["user_id"] == user_id:
+                worker["name"] = worker_in.name
+                worker["updated_at"] = datetime.now().isoformat()
+                self._save_json(workers)
+                return worker
         return None
     
     def add_access_key(self, worker_id:int, access_key_id: int):
