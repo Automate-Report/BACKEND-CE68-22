@@ -9,6 +9,7 @@ class WorkerCreate(BaseModel):
 class WorkerResponse(BaseModel):
     id: int
     name: str
+    hostname: str
     status: str
     isActive: bool
     access_key_id: Optional[int] = None
