@@ -20,8 +20,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "workers.json")
 
 class WorkerService:
-    __crptography_key = ""
-    SECRET_KEY: str = "super-secret-key-fixed-value-1234567890"
     
     def _ensure_dummy_folder_exists(self):
         """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
@@ -46,43 +44,36 @@ class WorkerService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def _get_cipher(self):
-        dynamic_key = Fernet.generate_key() 
-        self.__crptography_key = dynamic_key
-        cipher = Fernet(dynamic_key)
-        return cipher
-    
-    def _get_crptography_key(self):
-        return self.__crptography_key
-    
-    def _find_exe(self):
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        EXE_PATH = os.path.join(BASE_DIR, "static", "bin", "worker_agent.exe")
-    
-        if not os.path.exists(EXE_PATH):
-            return {
-                "code": 500,
-                "content": "Server Error: Worker executable not found."
-            }
-        return {
-            "code": 200,
-            "content": EXE_PATH
-        }
-    
-    def _create_token(self, worker_id:int, user: dict):
-        token = security.create_token(
-            data={
-                "sub": str(worker_id), # ID ของ Worker ที่ user กด download
-                "type": "registration", 
-                "owner": user["sub"] # ผูกกับ User คนที่กดโหลด
-            },
-            expires_delta=timedelta(days=1)
-        )
-        return token
-    
-    def _encryption(self, data: dict, cipher):
-        return cipher.encrypt(json.dumps(data).encode())
+    def _enrich_worker_status(self, worker):
+        """ฟังก์ชันช่วยคำนวณสถานะของ Worker"""
+        OFFLINE_THRESHOLD_SECONDS = 600
+        
+        # 1. เช็คเรื่อง Key ก่อน (สำคัญสุด)
+        if not worker.get("access_key_id"):
+            worker["status"] = "Revoked" # โดนถอดสิทธิ์
+            return worker
 
+        # 2. เช็คเรื่องเวลา (Online/Offline)
+        last_seen_str = worker.get("last_heartbeat")
+        
+        if not last_seen_str:
+            worker["status"] = "offline" # ไม่เคยต่อเน็ตเลย
+            return worker
+
+        # แปลง String กลับเป็น datetime
+        try:
+            last_seen = datetime.fromisoformat(last_seen_str)
+            time_diff = datetime.utcnow() - last_seen
+
+            if time_diff.total_seconds() < OFFLINE_THRESHOLD_SECONDS:
+                worker["status"] = "online"
+            else:
+                worker["status"] = "offline"
+                
+        except ValueError:
+            worker["status"] = "Unknown"
+
+        return worker
 
     def create_worker(self, worker_in: WorkerCreate, user_id: int) -> dict:
         """Service: สร้าง Worker"""
@@ -120,6 +111,7 @@ class WorkerService:
         # 1. กรอง User
         all_matches = []
         for worker in workers:
+            worker = self._enrich_worker_status(worker)
             if worker["user_id"] == user_id:
                 all_matches.append(worker)
 
@@ -142,6 +134,7 @@ class WorkerService:
         # ใช้ Python Slice [start : end]
         paginated_items = all_matches[offset : offset + size]
 
+        self._save_json(workers)
         return {
             "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
             "page": page,
@@ -200,6 +193,9 @@ class WorkerService:
         for worker in workers:
             if worker_id == worker["id"]:
                 worker["access_key_id"] = None
+                worker["isActive"] = False
+                worker["status"] = "Revoked"
+                worker["last_heartbeat"] = None
 
         self._save_json(workers)
         return None
@@ -222,17 +218,28 @@ class WorkerService:
             raise HTTPException(status_code=400, detail="Worker missing access key")
         
         access_key = access_key_service.get_access_key_by_id(access_key_id)
+        access_key_data = access_key.get("key")
 
-        if (not access_key.get("key")) or req.key != access_key.get("key"):
-            raise HTTPException(status_code=403, detail=f"Invalid access key {access_key.get("key")}")
+        if (not access_key_data) or (not access_key):
+            raise HTTPException(status_code=500, detail="Internal Error: Key data missing")
+        
+        current_access_key = access_key_data
+
+        if req.key != current_access_key:
+            # 🔥 CASE B: User กด "Generate New Key" ไปแล้ว
+            # Agent (ที่ถือ Key เก่า) ส่งมาจะไม่ตรงกับ current_secret
+            raise HTTPException(status_code=403, detail="Invalid Access Key (Key mismatch)")
         
         target_worker["hostname"] = req.hostname
+        target_worker["isActive"] = True
+        target_worker["status"] = "online"
+
         self._save_json(workers)
 
         token = jwt.encode(
             {
                 "sub": str(req.worker_id),
-                "exp": datetime.utcnow() + timedelta(minutes=1)
+                "exp": datetime.utcnow() + timedelta(minutes=30)
             },
             access_key.get("key"),
             algorithm="HS256"
@@ -267,27 +274,48 @@ class WorkerService:
                 raise HTTPException(status_code=401, detail="Worker not found (ID invalid)")
             
             access_key_id = worker["access_key_id"]
-            worker_access_key = access_key_service.get_access_key_by_id(access_key_id)
 
+            if not access_key_id:
+                # ถ้าไม่มี ID แสดงว่าโดนถอดสิทธิ์แล้ว
+                raise HTTPException(status_code=401, detail="Access Key Revoked")
             
-            if not worker_access_key.get("key"):
-                raise HTTPException(status_code=401, detail="Worker not found")
+            worker_access_key = access_key_service.get_access_key_by_id(access_key_id)
+            real_secret = worker_access_key.get("key")
+    
+            if not real_secret:
+                raise HTTPException(status_code=401, detail="Secret missing")
 
             # ---------------------------------------------------
             # ขั้นตอนที่ 3: ตรวจสอบจริง (Verify)
             # รอบนี้ใช้ Key ของเจ้าตัวจริงๆ ถ้า Token ถูกปลอมแปลงมา จะ Error ตรงนี้
             # ---------------------------------------------------
-            payload = jwt.decode(token, worker_access_key.get("key"), algorithms=["HS256"])
+            payload = jwt.decode(token, real_secret, algorithms=["HS256"])
             
             return payload.get("sub")
 
         except jwt.ExpiredSignatureError:
             raise HTTPException(status_code=401, detail="Token has expired")
         except jwt.InvalidTokenError:
-            raise HTTPException(status_code=401, detail="Invalid token")
+            raise HTTPException(status_code=401, detail="Invalid Token (Key mismatched or tampered)")
         except ValueError:
             # กันกรณี sub ไม่ใช่ตัวเลข
             raise HTTPException(status_code=401, detail="Invalid Worker ID format")
+    
+    def update_heartbeat(self, worker_id: int):
+        workers = self._read_json()
+        found = False
+
+        for worker in workers:
+            if worker["id"] == int(worker_id):
+                worker["last_heartbeat"] = datetime.utcnow().isoformat()
+                worker["status"] = "online"
+                worker["isActive"] = True
+                found = True
+
+        if found:
+            self._save_json(workers)
+            return True
+        return False
     
     def download_worker(self, worker_id: int):
         """Service: download Worker"""

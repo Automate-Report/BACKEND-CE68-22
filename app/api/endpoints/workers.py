@@ -1,6 +1,7 @@
 
 from fastapi import APIRouter, Depends, Body, Query, HTTPException
 from typing import Optional
+from datetime import datetime
 
 # Import ของที่เราทำไว้
 from app.core import security
@@ -112,6 +113,18 @@ def verify_access_key(req: VerifyRequest):
     result = worker_service.verify_worker(req)
 
     return result
+
+#HeartBeat
+@router.post("/heartbeat")
+def heartbeat(worker_id: int = Depends(worker_service.verify_token)): 
+    # worker_id นี้ได้มาจากการแกะ Token ที่ถูกต้องแล้ว
+    
+    result = worker_service.update_heartbeat(worker_id)
+    if not result:
+        # กรณีนี้ยากที่จะเกิด ถ้า Token ผ่านแล้ว แต่เผื่อไว้
+        raise HTTPException(status_code=404, detail="Worker not found")
+        
+    return {"status": "ok", "timestamp": datetime.utcnow()}
     
 #Dummy task
 @router.post("/submit-task")
@@ -120,37 +133,3 @@ def submit_task(data: dict = Body(...), current_worker_id: int = Depends(worker_
     return data
 
 
-# @router.post("/handshake")
-# def worker_handshake(req: HandshakeRequest):
-#     result = worker_service.worker_handshake(
-#         req=req
-#     )
-
-#     return result
-
-# @router.post("/auth")
-# def agent_auth_exchange(req: AuthRequest):
-#     """
-#     Agent ใช้ API Key เพื่อขอ Session Token (อายุสั้น) สำหรับทำงาน
-#     """
-#     result = worker_service.auth(
-#         req=req
-#     )
-
-#     return result
-
-
-
-# @router.post("/submit-task") # dummy
-# def submit_task(
-#     data: dict = Body(...),
-#     # 👇 เอา comment ออก และใช้ deps.get_current_agent ตัวใหม่
-#     current_worker: dict = Depends(deps.get_current_agent)
-# ):
-#     worker_id = current_worker["id"]
-#     print(f"📩 Task Received from Worker {worker_id}: {data}")
-    
-#     # ส่งต่อให้ service บันทึกเวลา
-#     result = worker_service.process_task(worker_id, data) # (ถ้าคุณเขียน method นี้แล้ว)
-    
-#     return result

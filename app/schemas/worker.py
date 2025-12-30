@@ -15,6 +15,7 @@ class WorkerResponse(BaseModel):
     access_key_id: Optional[int] = None
     created_at: datetime
     updated_at: datetime
+    last_heatbeat: Optional[datetime] = None
 
     class Config:
         orm_mode = True # เพื่อให้ Pydantic อ่านข้อมูลจาก ORM objects ได้ ไว้ใช้กับ SQLAlchemy ตอนทำ database
