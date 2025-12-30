@@ -90,21 +90,7 @@ def download_worker_zip(
     # current_user: dict = Depends(deps.get_current_web_user)
     worker_id: int,
 ):
-    """
-    API สำหรับ User กดดาวน์โหลด Agent
-    ระบบจะสร้างไฟล์ Zip ที่ข้างในมี:
-    1. worker_agent.exe (โปรแกรมหลัก)
-    2. secret.dat (ไฟล์ความลับที่มี Token เฉพาะตัว ฝังมาให้เลย)
-    3. config.dat (ค่าตั้งค่าเริ่มต้น)
-    """
-
-    # 1. Mock User ขึ้นมาเอง (หลอกระบบว่าเป็น admin)
-    fake_current_user = {"sub": "test_dev_user", "role": "user"}
-
-    result = worker_service.download_worker(
-        worker_id=worker_id,
-        current_user=fake_current_user
-    )
+    result = worker_service.download_worker(worker_id)
 
     return result
 
