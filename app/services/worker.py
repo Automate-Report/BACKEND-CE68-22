@@ -207,7 +207,6 @@ class WorkerService:
         access_key_id = target_worker.get("access_key_id")
 
         
-
         if not access_key_id:
             raise HTTPException(status_code=400, detail="Worker missing access key")
         
@@ -279,141 +278,35 @@ class WorkerService:
             # กันกรณี sub ไม่ใช่ตัวเลข
             raise HTTPException(status_code=401, detail="Invalid Worker ID format")
     
-    def download_worker(self, worker_id: int, current_user: dict):
+    def download_worker(self, worker_id: int):
         """Service: download Worker"""
-        isEXEpath = self._find_exe()
-
-        if isEXEpath["code"] == 500:
-            return Response(content=isEXEpath["content"], status_code=isEXEpath["code"])
-        
-        exe_path = isEXEpath["content"]
-
-        reg_token = self._create_token(worker_id=worker_id, user=current_user)
-
-        secret_data = {
-            "worker_id": worker_id,
-            "registration_token": reg_token,
-            "owner": current_user["sub"],
-            "created_at": str(datetime.now()),
-            "api_key": None
-        }    
-    
-        # ไฟล์ Config ทั่วไป
-        config_data = {
-            "api_url": "http://127.0.0.1:8000", # หรือ URL ของ Production
-            "task_interval_seconds": 60,
-            "log_level": "INFO"
+        hidden_payload = {
+            "WORKER_ID": worker_id,
+            "BACKEND_URL": "http://127.0.0.1:8000"
         }
 
-        cipher = self._get_cipher()
-        encrypted_secret = self._encryption(data=secret_data, cipher=cipher)
-        encrypted_config = self._encryption(data=config_data, cipher=cipher)
- 
+        fake_user_id = 1
+        worker = self.get_worker_by_id(user_id=fake_user_id, worker_id=worker_id)
 
-        zip_buffer = io.BytesIO()
+        EMBEDED_KEY = b'i-0yYzq1qgi--twBbVJBH6neq1xw38E8ZcJ7KdBVBjM='
+        DELIMITER = b"|||HIDDEN_DATA|||"
 
-        with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
-            # 1. ใส่ไฟล์ .exe
-            zip_file.write(exe_path, arcname="worker_agent.exe")
-            
-            # 2. ใส่ไฟล์ .worker_secret (แปลง dict -> json string)
-            zip_file.writestr("secret.dat", encrypted_secret)
-            
-            # 3. ใส่ไฟล์ worker_config.json
-            zip_file.writestr("config.dat", encrypted_config)
+        json_bytes = json.dumps(hidden_payload).encode()
+        f = Fernet(EMBEDED_KEY)
+        encrypted_payload = f.encrypt(json_bytes)
 
-            # 4. ใส่ไฟล์ .system_lock
-            zip_file.writestr(".system_lock", self._get_crptography_key())
+        with open("app/static/bin/worker_template.exe", "rb") as f:
+            exe_data = f.read()
 
-        # เลื่อน Pointer กลับไปหัวแถว เตรียมส่งออก
-        zip_buffer.seek(0)
+        final_exe = exe_data + DELIMITER + encrypted_payload
 
-        # --- E. ส่งกลับให้ Browser ดาวน์โหลด ---
-        headers = {
-            "Content-Disposition": f'attachment; filename="worker_agent_{worker_id}.zip"'
-        }
-        
         return StreamingResponse(
-            zip_buffer, 
-            media_type="application/zip", 
-            headers=headers
+            io.BytesIO(final_exe),
+            media_type="application/vnd.microsoft.portable-executable",
+            headers={"Content-Disposition": f"attachment; filename=worker_{worker.get("name")}.exe"}
         )
-    
-    # def worker_handshake(self, req: HandshakeRequest):
-    #     # A. ตรวจสอบ Registration Token
-    #     payload = security.decode_access_token(req.registration_token)
 
-    #     if not payload or payload.get("type") != "registration":
-    #         raise HTTPException(status_code=400, detail="Invalid registration token")
-        
-    #     token_worker_id = payload.get("sub") # "sub" เป็น worker_id
 
-    #     workers = self._read_json()
-    #     target_worker = None
-    #     for worker in workers:
-    #         if token_worker_id == str(worker["id"]):
-    #             target_worker = worker
-    #             break
-    #     if not target_worker:
-    #         raise HTTPException(status_code=404, detail="Worker ID not found")
-
-    #     if target_worker["isActive"] == True:
-    #         # อาจจะยอมให้ Re-key หรือจะ Error ก็ได้แล้วแต่ Policy
-    #         pass
-
-    #     new_api_key = api_key_service.create_api_key()
-    #     target_worker["isActive"] = True
-    #     target_worker["api_key_id"] = new_api_key["id"]
-    #     target_worker["hostname"] = req.hostname
-    #     target_worker["activated_at"] = str(datetime.now())
-    #     target_worker["status"] = "online"
-    #     self._save_json(workers)
-
-    #     return {
-    #         "status": "success",
-    #         "agent_id": str(target_worker["id"]),
-    #         "api_key": new_api_key["key"]
-    #     }
-
-    
-    # def auth(self, req: HandshakeRequest):
-    #     workers = self._read_json()
-    #     api_key = None
-    #     target_worker = None
-    #     for worker in workers:
-    #         api_key = api_key_service.get_api_key_by_id(worker["api_key_id"])
-    #         if not api_key:
-    #             continue
-
-    #         if api_key["key"] == req.api_key:
-    #             target_worker = worker
-    #             break
-
-    #     if not target_worker:
-    #         raise HTTPException(status_code=401, detail="Invalid API Key")
-        
-    #     if target_worker["isActive"] == False:
-    #         print(f"DEBUG: Worker {target_worker['id']} is found but Inactive!")
-    #         raise HTTPException(status_code=403, detail="Worker is not activated or disabled")
-        
-    #     target_worker["status"] = "online"
-    #     self._save_json(workers)
-
-    #         # สร้าง Session Token (JWT) อายุ 15 นาที
-    #     session_token = security.create_token(
-    #         data={
-    #             "sub": str(target_worker["id"]), 
-    #             "role": "agent",
-    #             "owner": str(target_worker["id"])
-    #         },
-    #         expires_delta=timedelta(minutes=15)
-    #     )
-
-    #     return {
-    #         "access_token": session_token,
-    #         "token_type": "bearer",
-    #         "expires_in": 900
-    #     }
     
     # def process_task(self, worker_id: int, task_data: dict): # แก้ type hint ให้รับ dict หรือ model ตามที่คุณใช้
     #     """
