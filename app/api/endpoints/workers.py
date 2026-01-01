@@ -61,15 +61,6 @@ def gen_access_key(worker_id: int):
 
     return worker
 
-@router.post("/add-key")
-def add_access_key(payload: WorkerAccessKey):
-
-    worker = worker_service.add_access_key(
-        worker_id=payload.worker_id,
-        access_key_id=payload.access_key_id
-    )
-
-    return worker
 
 @router.post("/remove-key/{worker_id}")
 def remove_access_key(worker_id: int):
