@@ -55,6 +55,12 @@ async def get_worker_by_id(worker_id: int):
         
     return worker
 
+@router.post("/gen-key/{worker_id}")
+def gen_access_key(worker_id: int):
+    worker = worker_service.generate_access_key(worker_id)
+
+    return worker
+
 @router.post("/add-key")
 def add_access_key(payload: WorkerAccessKey):
 

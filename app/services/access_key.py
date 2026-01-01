@@ -40,6 +40,8 @@ class AccessKeyService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
+
+
     def create_access_key(self):
         """Service: สร้าง API Key"""
         access_keys = self._read_json()
@@ -50,7 +52,7 @@ class AccessKeyService:
         
         new_access_key = {
             "id": new_id,
-            "key": security.generate_api_key(),
+            "key": security.generate_access_key(),
             "created_at": datetime.now().isoformat(),
             "updated_at": datetime.now().isoformat(),
         }
