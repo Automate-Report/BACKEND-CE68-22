@@ -38,7 +38,7 @@ def decode_access_token(token: str) -> Optional[dict]:
         print(f"❌ JWT Decode Error: {e}")
         return None
     
-def generate_api_key() -> str:
-    """สร้าง API Key แบบสุ่ม"""
+def generate_access_key() -> str:
+    """สร้าง Access Key แบบสุ่ม"""
     return secrets.token_urlsafe(32)
     
