@@ -31,6 +31,15 @@ async def get_all_assets(
 
     return result
 
+@router.get("/{asset_id}", response_model=AssetResponse)
+async def get_asset_by_id(asset_id: int):
+    asset = asset_service.get_asset_by_id(asset_id)
+
+    if not asset:
+        HTTPException(status_code=404, detail="Asset not found")
+    
+    return asset
+
 @router.post("/", response_model=AssetResponse)
 async def create_asset(asset_in: AssetCreate):
     new_asset = asset_service.create_asset(asset_in)
