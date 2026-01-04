@@ -36,3 +36,25 @@ async def create_asset(asset_in: AssetCreate):
     new_asset = asset_service.create_asset(asset_in)
 
     return new_asset
+
+# PUT (Update)
+@router.put("/{asset_id}", response_model=AssetResponse)
+async def update_asset(asset_id: int, asset_in: AssetCreate):
+    asset = asset_service.update_asset(
+        asset_id=asset_id,
+        asset_in=asset_in
+    )
+
+    if not asset:
+        HTTPException(status_code=404, detail="Asset not found")
+    
+    return asset
+
+# DELETE 
+@router.delete("/{asset_id}")
+async def delete_asset(asset_id: int):
+    success = asset_service.delete_asset(asset_id)
+
+    if not success:
+        raise HTTPException(status_code=404, detail="Asset not found")
+    return {"detail": "Project deleted successfully"}
