@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime
 from typing import List, Optional
-from app.schemas.project import ProjectCreate
+from app.schemas.asset import AssetCreate
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -78,6 +78,65 @@ class AssetService:
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
     
+    def get_asset_by_id(self, project_id:int, asset_id:int):
+        assets = self._read_json()
+
+        for asset in assets:
+            if asset["project_id"] == project_id and asset["id"] == asset_id:
+                return asset
+            
+        return None
+
+    def create_asset(self, asset_in: AssetCreate) -> dict:
+        """Service: สร้าง Asset ใหม่"""
+        assets = self._read_json()
+        
+        # 1. จำลอง Logic Auto Increment ID
+        new_id = 1
+        if assets:
+            # เอา ID ตัวสุดท้ายมา + 1
+            new_id = assets[-1]["id"] + 1
+            
+        # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
+        new_asset = {
+            "id": new_id,
+            "name": asset_in.name,
+            "project_id": asset_in.project_id,
+            "credential_id": asset_in.credential_id,
+            "description": asset_in.description,
+            "target": asset_in.target,
+            "type": asset_in.type,
+            "created_at": datetime.now().isoformat(),
+            "updated_at": datetime.now().isoformat(),
+        }
+        
+        # 3. บันทึก
+        assets.append(new_asset)
+        self._save_json(assets)
+        
+        return new_asset
+    
+    # def update_project(self, project_id: int, project_in: ProjectCreate, user_id: int) -> Optional[dict]:
+    #     """Service: อัปเดตโปรเจกต์"""
+    #     projects = self._read_json()
+    #     for proj in projects:
+    #         if proj["id"] == project_id and proj["user_id"] == user_id:
+    #             proj["name"] = project_in.name
+    #             proj["description"] = project_in.description
+    #             proj["updated_at"] = datetime.now().isoformat()
+    #             self._save_json(projects)
+    #             return proj
+    #     return None
+    
+    def delete_project(self, project_id: int, user_id: int) -> bool:
+        """Service: ลบโปรเจกต์"""
+        projects = self._read_json()
+        for i, proj in enumerate(projects):
+            if proj["id"] == project_id and proj["user_id"] == user_id:
+                del projects[i]
+                self._save_json(projects)
+                return True
+        return False
 
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
