@@ -42,6 +42,13 @@ class CredentialService:
                 return cred
             
         return None
+    
+    def get_credential_by_asset_id(self, asset_id: int):
+        credentials = self._read_json()
+
+        for cred in credentials:
+            if cred["asset_id"] == asset_id:
+                return cred
 
     def create_credential(self, credential_in: CredentialCreate) -> dict:
         """Service: สร้าง Credential ใหม่"""
