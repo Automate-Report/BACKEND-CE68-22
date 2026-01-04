@@ -78,11 +78,11 @@ class AssetService:
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
     
-    def get_asset_by_id(self, project_id:int, asset_id:int):
+    def get_asset_by_id(self, asset_id:int):
         assets = self._read_json()
 
         for asset in assets:
-            if asset["project_id"] == project_id and asset["id"] == asset_id:
+            if asset["id"] == asset_id:
                 return asset
             
         return None

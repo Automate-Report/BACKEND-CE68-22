@@ -49,6 +49,8 @@ class CredentialService:
         for cred in credentials:
             if cred["asset_id"] == asset_id:
                 return cred
+        
+        return None
 
     def create_credential(self, credential_in: CredentialCreate) -> dict:
         """Service: สร้าง Credential ใหม่"""

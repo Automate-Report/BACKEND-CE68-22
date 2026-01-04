@@ -16,7 +16,7 @@ async def get_credential_by_id(credential_id: int):
     return credential
 
 # GET 
-@router.get("/byAsset/{asset_id}", response_model=CredentialResponse)
+@router.get("/byAsset/{asset_id}", response_model=CredentialResponse | None)
 async def get_credential_by_asset(asset_id: int):
     credential = credential_service.get_credential_by_id(asset_id)
 
