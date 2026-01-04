@@ -9,6 +9,7 @@ class AssetCreate(BaseModel):
     type: str
 
 class AssetResponse(BaseModel):
+    id: int
     name: str
     project_id: int
     description: str
