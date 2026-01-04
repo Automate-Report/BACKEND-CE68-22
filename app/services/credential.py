@@ -86,7 +86,7 @@ class CredentialService:
         credentials = self._read_json()
         for i, cred in enumerate(credentials):
             if cred["id"] == credential_id:
-                del cred[i]
+                del credentials[i]
                 self._save_json(credentials)
                 return True
         return False
