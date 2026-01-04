@@ -199,16 +199,6 @@
     "updated_at": "2026-01-05T00:13:25.003862"
   },
   {
-    "id": 20,
-    "name": "CE68-22 Test Create Credential",
-    "project_id": 3,
-    "description": "",
-    "target": "www.test-credential.xyx",
-    "type": "URL",
-    "created_at": "2026-01-05T03:26:00.957973",
-    "updated_at": "2026-01-05T03:26:00.958006"
-  },
-  {
     "id": 21,
     "name": "string",
     "project_id": 3,
