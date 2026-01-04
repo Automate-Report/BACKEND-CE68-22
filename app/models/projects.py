@@ -10,7 +10,6 @@ class Project(Base):
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
     name:Mapped[str] = mapped_column(sa.String(255))
     user_email: Mapped[str] = mapped_column(sa.ForeignKey("users.email"))
-    tag_project_id:Mapped[str] = mapped_column(sa.String(255))  #MOCK UPPPPPPPPPPPP
     created_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
     updated_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now(), onupdate=sa.sql.func.now())
     description:Mapped[Optional[str]] =  mapped_column(sa.Text, default=None)
