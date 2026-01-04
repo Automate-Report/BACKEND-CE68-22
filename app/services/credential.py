@@ -43,7 +43,7 @@ class CredentialService:
             
         return None
 
-    def create_asset(self, credential_in: CredentialCreate) -> dict:
+    def create_credential(self, credential_in: CredentialCreate) -> dict:
         """Service: สร้าง Credential ใหม่"""
         credentials = self._read_json()
         
