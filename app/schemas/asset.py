@@ -17,6 +17,7 @@ class AssetResponse(BaseModel):
     description: str
     target: str
     type: str
+    updated_at: str
 
     class Config:
         orm_mode = True
