@@ -129,13 +129,13 @@ class AssetService:
                 return asset
         return None
     
-    def delete_project(self, project_id: int, user_id: int) -> bool:
-        """Service: ลบโปรเจกต์"""
-        projects = self._read_json()
-        for i, proj in enumerate(projects):
-            if proj["id"] == project_id and proj["user_id"] == user_id:
-                del projects[i]
-                self._save_json(projects)
+    def delete_asset(self, asset_id: int) -> bool:
+        """Service: ลบ Asset"""
+        assets = self._read_json()
+        for i, asset in enumerate(assets):
+            if asset["id"] == asset_id:
+                del assets[i]
+                self._save_json(assets)
                 return True
         return False
 
