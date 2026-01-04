@@ -6,7 +6,6 @@ from app.services.asset import asset_service
 
 router = APIRouter()
 
-# GET /projects/ : ดึงโปรเจกต์ทั้งหมดของ user นั้น
 @router.get("/all/{project_id}", response_model=PaginatedResponse[AssetResponse])
 async def get_all_assets(
     project_id: int,
@@ -31,3 +30,9 @@ async def get_all_assets(
     )
 
     return result
+
+@router.post("/", response_model=AssetResponse)
+async def create_asset(asset_in: AssetCreate):
+    new_asset = asset_service.create_asset(asset_in)
+
+    return new_asset
