@@ -102,7 +102,6 @@ class AssetService:
             "id": new_id,
             "name": asset_in.name,
             "project_id": asset_in.project_id,
-            "credential_id": asset_in.credential_id,
             "description": asset_in.description,
             "target": asset_in.target,
             "type": asset_in.type,
