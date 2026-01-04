@@ -15,6 +15,16 @@ async def get_credential_by_id(credential_id: int):
     
     return credential
 
+# GET 
+@router.get("/byAsset/{asset_id}", response_model=CredentialResponse)
+async def get_credential_by_asset(asset_id: int):
+    credential = credential_service.get_credential_by_id(asset_id)
+
+    if not credential:
+        HTTPException(status_code=404, detail="Credential not found")
+    
+    return credential
+
 # POST (Create) credentials/
 @router.post("/", response_model=CredentialResponse)
 async def create_credential(credential_in: CredentialCreate):
