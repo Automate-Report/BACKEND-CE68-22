@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # 1. Import Router ที่เราสร้างไว้
 from app.api.endpoints import projects
 from app.api.endpoints import assets
+from app.api.endpoints import credentials
 
 app = FastAPI(
     title="CE68-22 Backend API",
@@ -30,6 +31,7 @@ app.add_middleware(
 # tags=["Projects"] เอาไว้จัดหมวดหมู่ใน Swagger UI
 app.include_router(projects.router, prefix="/projects", tags=["Projects"])
 app.include_router(assets.router, prefix="/assets", tags=["Assets"])
+app.include_router(credentials.router, prefix="/credentials", tag=["Credentials"])
 
 
 # 4. Health Check Endpoint (เอาไว้ยิงเช็คว่า Server ตายหรือยัง)
