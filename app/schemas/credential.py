@@ -1,12 +1,11 @@
 from pydantic import BaseModel
 
 class CredentialCreate(BaseModel):
-    asset_id: int
     username: str
     password: str
 
 class CredentialResponse(BaseModel):
-    asset_id: int
+    id: int
     username: str
     password: str
 

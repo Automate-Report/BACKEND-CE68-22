@@ -65,7 +65,6 @@ class CredentialService:
         # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_credential = {
             "id": new_id,
-            "asset_id": credential_in.asset_id,
             "username": credential_in.username,
             "password": credential_in.password,
             "created_at": datetime.now().isoformat(),
