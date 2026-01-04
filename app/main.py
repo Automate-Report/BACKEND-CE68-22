@@ -31,7 +31,7 @@ app.add_middleware(
 # tags=["Projects"] เอาไว้จัดหมวดหมู่ใน Swagger UI
 app.include_router(projects.router, prefix="/projects", tags=["Projects"])
 app.include_router(assets.router, prefix="/assets", tags=["Assets"])
-app.include_router(credentials.router, prefix="/credentials", tag=["Credentials"])
+app.include_router(credentials.router, prefix="/credentials", tags=["Credentials"])
 
 
 # 4. Health Check Endpoint (เอาไว้ยิงเช็คว่า Server ตายหรือยัง)
