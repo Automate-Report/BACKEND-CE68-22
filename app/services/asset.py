@@ -115,17 +115,19 @@ class AssetService:
         
         return new_asset
     
-    # def update_project(self, project_id: int, project_in: ProjectCreate, user_id: int) -> Optional[dict]:
-    #     """Service: อัปเดตโปรเจกต์"""
-    #     projects = self._read_json()
-    #     for proj in projects:
-    #         if proj["id"] == project_id and proj["user_id"] == user_id:
-    #             proj["name"] = project_in.name
-    #             proj["description"] = project_in.description
-    #             proj["updated_at"] = datetime.now().isoformat()
-    #             self._save_json(projects)
-    #             return proj
-    #     return None
+    def update_asset(self, asset_id: int, asset_in: AssetCreate):
+        """Service: อัปเดต Asset"""
+        assets = self._read_json()
+        for asset in assets:
+            if asset["id"] == asset_id:
+                asset["name"] = asset_in.name
+                asset["description"] = asset_in.description
+                asset["target"] = asset_in.target
+                asset["type"] = asset_in.type
+                asset["updated_at"] = datetime.now().isoformat()
+                self._save_json(assets)
+                return asset
+        return None
     
     def delete_project(self, project_id: int, user_id: int) -> bool:
         """Service: ลบโปรเจกต์"""
