@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
 from app.schemas.project import ProjectCreate, ProjectResponse
 from app.schemas.pagination import PaginatedResponse
-from app.services.project import project_service # เรียก Service ที่เราสร้างตะกี้
+from app.services.project import project_service 
 
 
 router = APIRouter()
