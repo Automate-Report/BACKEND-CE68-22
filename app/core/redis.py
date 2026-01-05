@@ -1,7 +1,7 @@
 import redis
 
 redis_client = redis.Redis(
-    host="localhost",
+    host="10.20.20.108",
     port=5678,
     db=0,
     decode_responses=True
