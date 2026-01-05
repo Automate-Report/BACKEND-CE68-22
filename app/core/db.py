@@ -1,16 +1,9 @@
 import os
+from app.core.config import authen_settings
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from dotenv import load_dotenv
 from sqlalchemy.orm import DeclarativeBase
 
-from pathlib import Path
-# หา path ของไฟล์ .env ที่อยู่ที่ root ของโปรเจกต์
-env_path = Path(__file__).parent.parent.parent / ".env"
-load_dotenv(dotenv_path=env_path)
-
-# load_dotenv('../.env') # โหลด .env จาก root folder โดยอัตโนมัติ
-
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = authen_settings.DATABASE_URL
 
 # 1. สร้าง Async Engine
 engine = create_async_engine(DATABASE_URL, echo=True)
