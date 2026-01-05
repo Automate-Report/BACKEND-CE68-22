@@ -12,6 +12,7 @@ from app.api.endpoints import projects
 from app.api.endpoints import auth
 from app.api.endpoints import assets
 from app.api.endpoints import credentials
+from app.api.endpoints import projects, workers, access_keys
 
 # --- ส่วนของ Async Background Service ---
 async def my_background_service():
@@ -38,6 +39,7 @@ async def lifespan(app: FastAPI):
     # [Shutdown]: ทำงานตอนปิด Server
     bg_task.cancel() # ปิด Background Task
     await engine.dispose() # ปิดการเชื่อมต่อ DB
+
 
 
 app = FastAPI(
@@ -70,6 +72,8 @@ app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 app.include_router(assets.router, prefix="/assets", tags=["Assets"])
 app.include_router(credentials.router, prefix="/credentials", tags=["Credentials"])
 
+app.include_router(workers.router, prefix="/workers", tags=["Workers"])
+app.include_router(access_keys.router, prefix="/access-keys", tags=["Access Keys"])
 
 # 4. Health Check Endpoint (เอาไว้ยิงเช็คว่า Server ตายหรือยัง)
 @app.get("/")
