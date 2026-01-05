@@ -1,0 +1,46 @@
+[
+  {
+    "firstname": "user1",
+    "lastname": "lastname1",
+    "email": "user@example.com",
+    "password": "securepassword",
+    "created_at": "2025-12-05T18:48:00",
+    "updated_at": "2025-12-05T18:48:00",
+    "session_token": null,
+    "google_id": null,
+    "picture": "path/to/pic.png"
+  },
+  {
+    "firstname": "user2",
+    "lastname": "lastname2",
+    "email": "user2@example.com",
+    "password": "securepassword",
+    "created_at": "2025-12-05T18:48:00",
+    "updated_at": "2025-12-05T18:48:00",
+    "session_token": null,
+    "google_id": null,
+    "picture": "path/to/pic.png"
+  },
+  {
+    "firstname": "string",
+    "lastname": "string",
+    "email": "string",
+    "password": "string",
+    "created_at": "2025-12-13T14:01:18.919868",
+    "updated_at": "2025-12-13T14:01:18.919868",
+    "session_token": null,
+    "google_id": null,
+    "picture": null
+  },
+  {
+    "firstname": "Hinoshii",
+    "lastname": "Sudlor",
+    "email": "aa@gmail.com",
+    "password": "asdfjkl;",
+    "created_at": "2025-12-13T14:11:41.806507",
+    "updated_at": "2025-12-13T14:11:41.806507",
+    "session_token": null,
+    "google_id": null,
+    "picture": null
+  }
+]
