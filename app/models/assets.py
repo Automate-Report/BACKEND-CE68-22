@@ -1,4 +1,5 @@
 import enum
+import datetime
 import sqlalchemy as sa
 from sqlalchemy.orm import Mapped, mapped_column
 from app.core.db import Base
@@ -15,3 +16,5 @@ class Asset(Base):
     description:Mapped[str] = mapped_column(sa.Text)
     target:Mapped[str] = mapped_column(sa.String(255))
     type:Mapped[AssetType] = mapped_column(sa.Enum(AssetType))
+    created_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
+    updated_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now(), onupdate=sa.sql.func.now())
