@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 from typing import List
 from jose import jwt, JWTError
 from app.schemas.userauthen import LoginRequest, UserCreate
-from app.core.config import authen_settings
+from app.core.config import settings
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from app.core.redis import redis_client
@@ -41,7 +41,7 @@ class UserAuthenService:
 
     def blacklist_token(self, token: str):
         try:
-            payload = jwt.decode(token, authen_settings.SECRET_KEY, algorithms=[authen_settings.ALGORITHM])
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         except JWTError as errormsg:
             print(errormsg)
             return  # Invalid token, cannot blacklist
@@ -76,8 +76,8 @@ class UserAuthenService:
                 
                 token = jwt.encode(
                     payload,
-                    authen_settings.SECRET_KEY,
-                    algorithm=authen_settings.ALGORITHM
+                    settings.SECRET_KEY,
+                    algorithm=settings.ALGORITHM
                 )
 
                 return {
