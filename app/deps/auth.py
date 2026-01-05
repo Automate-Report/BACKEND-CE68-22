@@ -2,7 +2,7 @@
 from fastapi import Request, HTTPException, status
 from jose import jwt, JWTError
 from app.core.redis import redis_client
-from app.core.config import authen_settings
+from app.core.config import settings
 
 def get_current_user(request: Request):
     token = request.cookies.get("access_token")
@@ -23,8 +23,8 @@ def get_current_user(request: Request):
     try:
         payload = jwt.decode(
             token,
-            authen_settings.SECRET_KEY,
-            algorithms=[authen_settings.ALGORITHM]
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM]
         )
     except JWTError:
         raise HTTPException(
