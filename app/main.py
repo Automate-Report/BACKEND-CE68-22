@@ -9,6 +9,7 @@ from app.models import users, access_keys, asset_credentials, assets, jobs, logs
 
 # 1. Import Router ที่เราสร้างไว้
 from app.api.endpoints import projects
+from app.api.endpoints import auth
 
 # --- ส่วนของ Async Background Service ---
 async def my_background_service():
@@ -61,7 +62,8 @@ app.add_middleware(
 # 3. ลงทะเบียน Router (เอา API Projects มาแปะเข้ากับ App หลัก)
 # prefix="/projects" แปลว่า URL จะเป็น http://localhost:8000/projects/...
 # tags=["Projects"] เอาไว้จัดหมวดหมู่ใน Swagger UI
-# app.include_router(projects.router, prefix="/projects", tags=["Projects"])
+app.include_router(projects.router, prefix="/projects", tags=["Projects"])
+app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 
 
 # 4. Health Check Endpoint (เอาไว้ยิงเช็คว่า Server ตายหรือยัง)
