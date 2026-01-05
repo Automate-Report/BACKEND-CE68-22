@@ -2,7 +2,8 @@ from pydantic_settings import BaseSettings
 
 class AuthenSettings(BaseSettings):
     SECRET_KEY: str
-    ALGORITHM: str = "HS256"
+    ALGORITHM: str
+    DATABASE_URL: str
 
     class Config:
         env_file = ".env"
