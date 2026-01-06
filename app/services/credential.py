@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime
 from typing import List, Optional
-from app.schemas.credential import CredentialCreate
+from app.schemas.asset_credential import CredentialCreate
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
