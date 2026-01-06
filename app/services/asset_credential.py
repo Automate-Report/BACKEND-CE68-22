@@ -1,15 +1,15 @@
 import json
 import os
 from datetime import datetime
-from typing import List, Optional
-from app.schemas.asset_credential import CredentialCreate
+from typing import List
+from app.schemas.asset_credential import AssetCredentialCreate
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "credentials.json")
 
-class CredentialService:
+class AssetCredentialService:
     
     def _ensure_dummy_folder_exists(self):
         """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
@@ -52,7 +52,7 @@ class CredentialService:
         
         return None
 
-    def create_credential(self, credential_in: CredentialCreate) -> dict:
+    def create_credential(self, credential_in: AssetCredentialCreate) -> dict:
         """Service: สร้าง Credential ใหม่"""
         credentials = self._read_json()
         
@@ -65,6 +65,7 @@ class CredentialService:
         # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_credential = {
             "id": new_id,
+            "asset_id": credential_in.asset_id,
             "username": credential_in.username,
             "password": credential_in.password,
             "created_at": datetime.now().isoformat(),
@@ -77,7 +78,7 @@ class CredentialService:
         
         return new_credential
     
-    def update_credential(self, credential_id: int, credential_in: CredentialCreate):
+    def update_credential(self, credential_id: int, credential_in: AssetCredentialCreate):
         """Service: อัปเดต Credential"""
         credentials = self._read_json()
         for cred in credentials:
@@ -101,4 +102,4 @@ class CredentialService:
 
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
-credential_service = CredentialService()
+asset_credential_service = AssetCredentialService()

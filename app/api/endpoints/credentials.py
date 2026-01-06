@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
 from app.schemas.asset_credential import CredentialCreate, CredentialResponse
-from app.services.credential import credential_service
+from app.services.asset_credential import credential_service
 
 router = APIRouter()
 
