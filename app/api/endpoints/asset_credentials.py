@@ -21,7 +21,7 @@ async def get_credential_by_asset(asset_id: int):
     credential = asset_credential_service.get_credential_by_asset_id(asset_id)
 
     if not credential:
-        raise HTTPException(status_code=404, detail="Credential not found")
+        raise HTTPException(status_code=210, detail="Asset not have credential.")
     
     return credential
 
@@ -41,7 +41,7 @@ async def update_credential(credential_id: int, credential_in: AssetCredentialCr
     )
 
     if not credential:
-        HTTPException(status_code="210", detail="Asset not have credential.")
+        HTTPException(status_code=404, detail="Credential not found")
     
     return credential
 
