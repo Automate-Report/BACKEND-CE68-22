@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Test Create Asset witchout Credential",
+    "project_id": 4,
+    "description": "",
+    "target": "10.0.0.1",
+    "type": "IP",
+    "created_at": "2026-01-06T20:56:42.750062",
+    "updated_at": "2026-01-06T20:56:42.750071"
+  },
+  {
+    "id": 2,
+    "name": "Test Create Asset with Credential",
+    "project_id": 4,
+    "description": "",
+    "target": "www.test.test.xyz",
+    "type": "URL",
+    "created_at": "2026-01-06T20:57:23.908676",
+    "updated_at": "2026-01-06T20:57:23.908683"
+  },
+  {
+    "id": 3,
+    "name": "Test Edit Asset to have Credential",
+    "project_id": 4,
+    "description": null,
+    "target": "1.2.3.4",
+    "type": "IP",
+    "created_at": "2026-01-06T21:06:24.253809",
+    "updated_at": "2026-01-06T21:07:18.471373"
+  },
+  {
+    "id": 4,
+    "name": "Test Edit Asset to Delete Credential",
+    "project_id": 4,
+    "description": "",
+    "target": "www.test.xyz",
+    "type": "URL",
+    "created_at": "2026-01-06T21:07:53.141767",
+    "updated_at": "2026-01-06T21:07:53.141777"
+  }
+]
