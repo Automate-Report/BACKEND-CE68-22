@@ -1,17 +1,5 @@
 [
   {
-    "id": 6,
-    "user_id": 1,
-    "name": "create worker 5",
-    "hostname": null,
-    "access_key_id": 16,
-    "status": "Revoked",
-    "isActive": false,
-    "created_at": "2025-12-19T21:16:55.973368",
-    "updated_at": "2025-12-19T21:16:55.973374",
-    "last_heartbeat": null
-  },
-  {
     "id": 7,
     "user_id": 1,
     "name": "Worker of Nattharika",
