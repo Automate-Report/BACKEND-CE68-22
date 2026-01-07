@@ -119,7 +119,7 @@ class WorkerService:
         if sort_by:
             reverse = (order == "desc")
             # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
-            all_matches.sort(key=lambda x: x.get(sort_by, ""), reverse=reverse)
+            all_matches.sort(key=lambda x: (x.get(sort_by) or ""), reverse=reverse)
         
         # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
         total_count = len(all_matches)
