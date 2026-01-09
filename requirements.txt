@@ -11,6 +11,8 @@ alembic>=1.10.0            # ตัวจัดการ Migration (แก้ Ta
 python-jose[cryptography]  # สร้าง/แกะ JWT Token
 passlib[bcrypt]            # Hash Password
 python-multipart           # รับ Form Data (Login) และ Upload File
+authlib>=1.0.0             # OAuth2 Client (Google Login)
+itsdangerous>=2.1.0        # for starlette-session
 
 # --- Configuration ---
 pydantic-settings>=2.0.0   # โหลดค่าจาก .env

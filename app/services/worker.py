@@ -352,7 +352,7 @@ class WorkerService:
         return StreamingResponse(
             io.BytesIO(final_exe),
             media_type="application/vnd.microsoft.portable-executable",
-            headers={"Content-Disposition": f"attachment; filename=worker_{worker.get("name")}.exe"}
+            headers={"Content-Disposition": f"attachment; filename=worker_{worker.get('name')}.exe"}
         )
 
 
