@@ -337,7 +337,7 @@ class WorkerService:
         fake_user_id = 1
         worker = self.get_worker_by_id(user_id=fake_user_id, worker_id=worker_id)
 
-        EMBEDED_KEY = b'i-0yYzq1qgi--twBbVJBH6neq1xw38E8ZcJ7KdBVBjM='
+        EMBEDED_KEY = b'JimGiFbXqlAwUAXu2PM1_eATccCMR7uAoB0wfI2DMgQ='
         DELIMITER = b"|||HIDDEN_DATA|||"
 
         json_bytes = json.dumps(hidden_payload).encode()
@@ -349,10 +349,27 @@ class WorkerService:
 
         final_exe = exe_data + DELIMITER + encrypted_payload
 
+        # --- ส่วนที่แก้ไข: สร้าง ZIP File ในหน่วยความจำ ---
+        zip_buffer = io.BytesIO()
+
+        exe_filename_inside = f"worker_{worker.get('name')}.exe"
+
+        # สร้าง Zip file
+        # ZIP_DEFLATED คือการบีบอัดข้อมูล (ถ้าไม่ใส่จะเป็นแค่การรวมไฟล์เฉยๆ ไม่ลดขนาด)
+        with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+            # writestr ใช้เขียนข้อมูล bytes (final_exe) ลงไปใน zip โดยตรง
+            zf.writestr(exe_filename_inside, final_exe)
+
+        # เลื่อน Pointer กลับไปที่จุดเริ่มต้นของไฟล์ เพื่อเตรียมอ่านส่งกลับ
+        zip_buffer.seek(0)
+
+        # ส่งกลับเป็น application/zip
         return StreamingResponse(
-            io.BytesIO(final_exe),
-            media_type="application/vnd.microsoft.portable-executable",
-            headers={"Content-Disposition": f"attachment; filename=worker_{worker.get("name")}.exe"}
+            zip_buffer,
+            media_type="application/zip",
+            headers={
+                "Content-Disposition": f"attachment; filename=worker_{worker.get('name')}.zip"
+            }
         )
 
 
