@@ -344,31 +344,54 @@ class WorkerService:
         f = Fernet(EMBEDED_KEY)
         encrypted_payload = f.encrypt(json_bytes)
 
-        with open("app/static/bin/worker_template.exe", "rb") as f:
-            exe_data = f.read()
-
-        final_exe = exe_data + DELIMITER + encrypted_payload
+        # 2. ตั้งค่า Path
+        # โฟลเดอร์ต้นฉบับที่ได้จาก PyInstaller (Template)
+        TEMPLATE_DIR = "app/static/bin/SecurityWorker" 
+        
+        # ชื่อไฟล์ exe หลักที่เราต้องการฝังยา (ต้องตรงกับชื่อที่ตั้งตอน build --name)
+        TARGET_EXE_NAME = "SecurityWorker.exe"
 
         # --- ส่วนที่แก้ไข: สร้าง ZIP File ในหน่วยความจำ ---
         zip_buffer = io.BytesIO()
 
-        exe_filename_inside = f"worker_{worker.get('name')}.exe"
+        dest_root_folder = f"SecurityWorker_{worker.get('name')}"
 
-        # สร้าง Zip file
-        # ZIP_DEFLATED คือการบีบอัดข้อมูล (ถ้าไม่ใส่จะเป็นแค่การรวมไฟล์เฉยๆ ไม่ลดขนาด)
         with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
-            # writestr ใช้เขียนข้อมูล bytes (final_exe) ลงไปใน zip โดยตรง
-            zf.writestr(exe_filename_inside, final_exe)
+        
+            # วนลูปอ่านทุกไฟล์ใน Folder Template
+            for root, dirs, files in os.walk(TEMPLATE_DIR):
+                for filename in files:
+                    # Path เต็มของไฟล์ในเครื่อง Server
+                    abs_path = os.path.join(root, filename)
+                    
+                    # Path สัมพัทธ์ (Relative) เพื่อใช้จัดโครงสร้างใน Zip
+                    # เช่น ถ้าไฟล์อยู่ template/internal/lib.dll -> rel_path จะเป็น internal/lib.dll
+                    rel_path = os.path.relpath(abs_path, TEMPLATE_DIR)
+                    
+                    # Path ปลายทางใน Zip (เอาชื่อโฟลเดอร์ worker มานำหน้า)
+                    zip_arcname = os.path.join(dest_root_folder, rel_path)
 
-        # เลื่อน Pointer กลับไปที่จุดเริ่มต้นของไฟล์ เพื่อเตรียมอ่านส่งกลับ
+                    # --- จุดสำคัญ: เช็คว่าเป็นไฟล์ exe หลักหรือไม่ ---
+                    if filename == TARGET_EXE_NAME:
+                        # ถ้าใช่: อ่านมา + ฝัง payload + เขียนลง zip (writestr)
+                        with open(abs_path, "rb") as f_exe:
+                            exe_data = f_exe.read()
+                        
+                        final_exe_data = exe_data + DELIMITER + encrypted_payload
+                        zf.writestr(zip_arcname, final_exe_data)
+                    
+                    else:
+                        # ถ้าไม่ใช่ (เป็นพวก dll, _internal): จับยัดลง zip เลย (write)
+                        zf.write(abs_path, arcname=zip_arcname)
+
+        # 4. ส่งไฟล์กลับ
         zip_buffer.seek(0)
-
-        # ส่งกลับเป็น application/zip
+            
         return StreamingResponse(
             zip_buffer,
             media_type="application/zip",
             headers={
-                "Content-Disposition": f"attachment; filename=worker_{worker.get('name')}.zip"
+                "Content-Disposition": f"attachment; filename={dest_root_folder}.zip"
             }
         )
 
