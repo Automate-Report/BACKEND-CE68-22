@@ -6,7 +6,7 @@ from datetime import datetime
 # Import ของที่เราทำไว้
 from app.core import security
 from app.api import deps
-from app.schemas.worker import WorkerCreate, WorkerResponse, HandshakeRequest, AuthRequest, WorkerAccessKey, VerifyRequest
+from app.schemas.worker import WorkerCreate, WorkerResponse, VerifyRequest, FindingCreate
 from app.schemas.pagination import PaginatedResponse
 from app.services.worker import worker_service
 from app.services.access_key import access_key_service
@@ -129,4 +129,13 @@ def submit_task(data: dict = Body(...), current_worker_id: int = Depends(worker_
     print(f"Logged in worker is: {current_worker_id}")
     return data
 
+@router.post("/get-report", status_code=201)
+def receive_report(report: FindingCreate):
+    
+    # 1. คำนวณ CVSS (Enrichment)
+    score, vector = worker_service.calculate_cvss(report.vulnerability.type)
+    
+    # 2. แปลงจาก Pydantic Schema -> Database Model
+    
+    return {"status": "success", "cvss_score": score, "vector": vector, "report": report}
 

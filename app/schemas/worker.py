@@ -29,16 +29,56 @@ class VerifyRequest(BaseModel):
     key: str
     worker_id: int
     hostname: str
-    
+
 class HandshakeRequest(BaseModel):
     registration_token: str
     hostname: str
 
 class AuthRequest(BaseModel):
     api_key: str
-
+    
 # Dummy
 class TaskSubmitRequest(BaseModel):
     iteration: int
     status: str
     result: Optional[Any] = None #
+
+#------------Pen Test Result-----------------------------#
+class TargetInfo(BaseModel):
+    url: str
+    parameter: str
+    method: str
+
+# 2. ย่อย: Vuln Info
+class VulnInfo(BaseModel):
+    type: str
+    severity: str
+    db_type: Optional[str] = None
+    xss_context: Optional[str] = None
+
+# 3. ย่อย: Evidence
+class EvidenceInfo(BaseModel):
+    payload: str
+    details: Optional[str] = ""
+    screenshot: Optional[str] = None # Base64 String
+    curl_command: Optional[str] = None
+
+# 4. ย่อย: Technical
+class TechnicalInfo(BaseModel):
+    status_code: int
+    request_headers: Optional[str] = ""
+    response_headers: Optional[str] = ""
+    timestamp: float
+
+# 5. ย่อย: Remediation
+class RemediationInfo(BaseModel):
+    description: str
+    recommendation: str
+
+# --- MAIN SCHEMA (รับ JSON ก้อนใหญ่) ---
+class FindingCreate(BaseModel):
+    target: TargetInfo
+    vulnerability: VulnInfo
+    evidence: EvidenceInfo
+    technical: TechnicalInfo
+    remediation: RemediationInfo
