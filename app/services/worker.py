@@ -92,7 +92,6 @@ class WorkerService:
             "user_id": user_id,
             "name": worker_in.name,
             "hostname": None,
-            "access_key_id": None,
             "status": "offline",
             "isActive": False,
             "created_at": datetime.now().isoformat(),
