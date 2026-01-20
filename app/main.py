@@ -53,7 +53,7 @@ app = FastAPI(
     title="CE68-22 Backend API",
     description="API for Project (Master-Agent Architecture)",
     version="1.0.0",
-    lifespan=lifespan
+    # lifespan=lifespan
 
 )
 
