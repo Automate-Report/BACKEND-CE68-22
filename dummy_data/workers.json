@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "user_id": 1,
+    "name": "Test Create Worker",
+    "hostname": null,
+    "status": "Revoked",
+    "isActive": false,
+    "created_at": "2026-01-21T14:49:50.147197",
+    "updated_at": "2026-01-21T14:49:50.147204"
+  }
+]
