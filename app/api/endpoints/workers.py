@@ -62,7 +62,7 @@ def gen_access_key(worker_id: int):
         access_key_service.create_access_key(worker_id)
         return key
     
-    raise HTTPException(status_code=404, detail="This worker has already access key.")
+    return None
 
 
 @router.post("/remove-key/{worker_id}")
