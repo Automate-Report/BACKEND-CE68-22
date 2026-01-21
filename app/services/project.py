@@ -2,6 +2,7 @@ import json
 import os
 from datetime import datetime
 from typing import List, Optional
+
 from app.schemas.project import ProjectCreate
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
@@ -91,15 +92,7 @@ class ProjectService:
         """Service: สร้างโปรเจกต์ใหม่"""
         projects = self._read_json()
         
-        # 1. จำลอง Logic Auto Increment ID
-        new_id = 1
-        if projects:
-            # เอา ID ตัวสุดท้ายมา + 1
-            new_id = projects[-1]["id"] + 1
-            
-        # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_project = {
-            "id": new_id,
             "name": project_in.name,
             "description": project_in.description,
             "user_id": user_id,

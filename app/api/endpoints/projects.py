@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query
-from typing import List, Optional
+from typing import Optional
 from app.schemas.project import ProjectCreate, ProjectResponse
 from app.schemas.pagination import PaginatedResponse
 from app.services.project import project_service 
