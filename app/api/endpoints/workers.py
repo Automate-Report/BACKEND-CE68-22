@@ -7,6 +7,7 @@ from datetime import datetime
 from app.schemas.worker import WorkerCreate, WorkerResponse, VerifyRequest
 from app.schemas.pagination import PaginatedResponse
 from app.services.worker import worker_service
+from app.services.access_key import access_key_service
 
 
 
@@ -55,9 +56,13 @@ async def get_worker_by_id(worker_id: int):
 
 @router.post("/gen-key/{worker_id}")
 def gen_access_key(worker_id: int):
-    worker = worker_service.generate_access_key(worker_id)
+    key = access_key_service.get_access_key_by_worker_id(worker_id)
 
-    return worker
+    if not key:
+        access_key_service.create_access_key(worker_id)
+        return key
+    
+    raise HTTPException(status_code=404, detail="This worker has already access key.")
 
 
 @router.post("/remove-key/{worker_id}")
