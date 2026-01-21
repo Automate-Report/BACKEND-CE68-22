@@ -68,6 +68,11 @@ def gen_access_key(worker_id: int):
 @router.post("/remove-key/{worker_id}")
 def remove_access_key(worker_id: int):
 
+    key = access_key_service.get_access_key_by_worker_id(worker_id)
+
+    if not key:
+        raise HTTPException(status_code=404, detail="This worker has not access key.")
+
     worker = worker_service.remove_access_key(
         worker_id=worker_id
     )
