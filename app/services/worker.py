@@ -7,11 +7,11 @@ import jwt
 from cvss import CVSS3
 from datetime import datetime, timedelta
 from typing import List, Optional
-from fastapi import Response, HTTPException, Header
+from fastapi import HTTPException, Header
 from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
 
-from app.schemas.worker import WorkerCreate, HandshakeRequest, VerifyRequest
+from app.schemas.worker import WorkerCreate, VerifyRequest
 from app.core import security
 from app.services.access_key import access_key_service
 
