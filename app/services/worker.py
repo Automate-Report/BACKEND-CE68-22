@@ -174,35 +174,13 @@ class WorkerService:
                 self._save_json(workers)
                 return worker
         return None
-    
-    def generate_access_key(self, worker_id:int):
-        """Service: Create & Delete Access Key"""
-        workers = self._read_json()
-
-        target = None
-
-        for worker in workers:
-            if worker["id"] == worker_id:
-                target = worker
-
-        access_key_id = target.get("access_key_id")
-        if access_key_id == None:
-            access_key = access_key_service.create_access_key()
-            target["access_key_id"] = access_key["id"]
-        else:
-            raise HTTPException(status_code=404, detail="Access Key is exist.")
-
-        self._save_json(workers)
-        return target
-
-    
+       
     def remove_access_key(self, worker_id:int):
         """Service: remove access key id ให้ worker id"""
         workers = self._read_json()
 
         for worker in workers:
             if worker_id == worker["id"]:
-                worker["access_key_id"] = None
                 worker["isActive"] = False
                 worker["status"] = "Revoked"
                 worker["last_heartbeat"] = None
