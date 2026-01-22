@@ -372,25 +372,7 @@ class WorkerService:
                 "Content-Disposition": f"attachment; filename={dest_root_folder}.zip"
             }
         )
-    
-    def calculate_cvss(self, vuln_type: str):
-        # Template คะแนนมาตรฐาน
-        vectors = {
-            "Error-Based SQLi": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", # 9.8
-            "Time-Based SQLi":  "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-            "Boolean-Based SQLi": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-            "Reflected XSS":    "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N", # 6.1
-            "DOM XSS":          "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
-            "Stored XSS":       "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:L/I:L/A:N",
-        }
-        
-        vector_str = vectors.get(vuln_type)
-        if not vector_str:
-            # กรณีไม่รู้จัก ให้เป็น Medium ไว้ก่อน
-            vector_str = "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N" 
-            
-        c = CVSS3(vector_str)
-        return c.base_score, vector_str
+
 
 
 
