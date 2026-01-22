@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
+
+from app.core.config import settings
 
 import asyncio
 from contextlib import asynccontextmanager
@@ -26,21 +29,21 @@ async def my_background_service():
         print("Background service is stopping...")
 
 # --- Lifespan Management ---
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # [Startup]: ทำงานตอนเปิด Server
-    async with engine.begin() as conn:
-        # สร้าง Table ทั้งหมดถ้ายังไม่มี (เหมือน setup_db ของคุณ)
-        await conn.run_sync(Base.metadata.create_all)
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     # [Startup]: ทำงานตอนเปิด Server
+#     async with engine.begin() as conn:
+#         # สร้าง Table ทั้งหมดถ้ายังไม่มี (เหมือน setup_db ของคุณ)
+#         await conn.run_sync(Base.metadata.create_all)
     
-    # เริ่มรัน Background Task
-    bg_task = asyncio.create_task(my_background_service())
+#     # เริ่มรัน Background Task
+#     bg_task = asyncio.create_task(my_background_service())
     
-    yield  # --- ช่วงที่ App รันปกติ ---
+#     yield  # --- ช่วงที่ App รันปกติ ---
 
-    # [Shutdown]: ทำงานตอนปิด Server
-    bg_task.cancel() # ปิด Background Task
-    await engine.dispose() # ปิดการเชื่อมต่อ DB
+#     # [Shutdown]: ทำงานตอนปิด Server
+#     bg_task.cancel() # ปิด Background Task
+#     await engine.dispose() # ปิดการเชื่อมต่อ DB
 
 
 
@@ -48,7 +51,7 @@ app = FastAPI(
     title="CE68-22 Backend API",
     description="API for Project (Master-Agent Architecture)",
     version="1.0.0",
-    lifespan=lifespan
+    # lifespan=lifespan
 
 )
 
@@ -64,6 +67,12 @@ app.add_middleware(
     allow_credentials=True,       # อนุญาตให้ส่ง Cookie/Token
     allow_methods=["*"],          # อนุญาตทุกท่า (GET, POST, PUT, DELETE)
     allow_headers=["*"],          # อนุญาตทุก Header
+)
+
+# Session (required by Authlib)
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.SESSION_SECRET_KEY,
 )
 
 # 3. ลงทะเบียน Router (เอา API Projects มาแปะเข้ากับ App หลัก)

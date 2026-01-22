@@ -8,6 +8,8 @@ from app.core.config import settings
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from app.core.redis import redis_client
+from app.core.jwt import create_access_token
+
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -61,36 +63,51 @@ class UserAuthenService:
         """Service: ตรวจสอบการเข้าสู่ระบบของผู้ใช้"""
         users = self._read_json()
         for user in users:
-            # email และ password ตรงกัน
             if user["email"] == loginRequest.email and user["password"] == loginRequest.password:
-                
-                # create JWT
-                now = datetime.now(timezone.utc)
-                expire = now + timedelta(hours=1)
-                payload = {
-                    "sub": loginRequest.email,
-                    "iat": int(now.timestamp()),
-                    "exp": int(expire.timestamp())
-                }
-                print(now, expire)
-                
-                token = jwt.encode(
-                    payload,
-                    settings.SECRET_KEY,
-                    algorithm=settings.ALGORITHM
-                )
-
-                return {
-                "token": token,
-                "user": {
-                    "email": loginRequest.email,
-                    "firstname": user["firstname"],
-                    "lastname": user["lastname"]
-                }
-            }
+                return create_access_token(loginRequest.email, user["firstname"], user["lastname"])
             
         # Check all but user not found
         raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    def authenticate_user_google(self, userdata: dict):
+        
+        allusers = self._read_json()
+        google_id = userdata["sub"]
+        email = userdata["email"]
+        firstname = userdata["given_name"]
+        lastname = userdata["family_name"]
+        picture = userdata["picture"]
+
+        # check if alr had an account with this google_id
+        for user in allusers:
+
+            # has account
+            if user.get("google_id") == google_id:
+                return create_access_token(email, firstname, lastname)
+
+            # has account but without google oauth
+            if user.get("email") == email:
+                user["google_id"] = google_id
+                user["picture"] = picture
+                user["updated_at"] = datetime.now().isoformat()
+                self._save_json(allusers)
+                return create_access_token(email, firstname, lastname)                
+        
+        # create new user + login, if google_id not found in DB
+        new_user = {
+            "firstname": firstname,
+            "lastname": lastname,
+            "email": email,
+            "password": None,
+            "created_at": datetime.now().isoformat(),
+            "updated_at": datetime.now().isoformat(),
+            "session_token": None,
+            "google_id": google_id,
+            "picture": picture
+        }
+        allusers.append(new_user)
+        self._save_json(allusers)
+        return create_access_token(email, firstname, lastname)
     
     def create_user(self, createUser: UserCreate):
         """Service: สร้างผู้ใช้ใหม่"""
