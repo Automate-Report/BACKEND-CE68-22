@@ -4,6 +4,7 @@ import io
 import zipfile
 import jwt
 
+from cvss import CVSS3
 from datetime import datetime, timedelta
 from typing import List, Optional
 from fastapi import Response, HTTPException, Header
@@ -119,7 +120,7 @@ class WorkerService:
         if sort_by:
             reverse = (order == "desc")
             # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
-            all_matches.sort(key=lambda x: x.get(sort_by, ""), reverse=reverse)
+            all_matches.sort(key=lambda x: (x.get(sort_by) or ""), reverse=reverse)
         
         # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
         total_count = len(all_matches)
@@ -337,24 +338,82 @@ class WorkerService:
         fake_user_id = 1
         worker = self.get_worker_by_id(user_id=fake_user_id, worker_id=worker_id)
 
-        EMBEDED_KEY = b'i-0yYzq1qgi--twBbVJBH6neq1xw38E8ZcJ7KdBVBjM='
+        EMBEDED_KEY = b'JimGiFbXqlAwUAXu2PM1_eATccCMR7uAoB0wfI2DMgQ='
         DELIMITER = b"|||HIDDEN_DATA|||"
 
         json_bytes = json.dumps(hidden_payload).encode()
         f = Fernet(EMBEDED_KEY)
         encrypted_payload = f.encrypt(json_bytes)
 
-        with open("app/static/bin/worker_template.exe", "rb") as f:
-            exe_data = f.read()
+        # 2. ตั้งค่า Path
+        # โฟลเดอร์ต้นฉบับที่ได้จาก PyInstaller (Template)
+        TEMPLATE_DIR = "app/static/bin/SecurityWorker" 
+        
+        # ชื่อไฟล์ exe หลักที่เราต้องการฝังยา (ต้องตรงกับชื่อที่ตั้งตอน build --name)
+        TARGET_EXE_NAME = "SecurityWorker.exe"
 
-        final_exe = exe_data + DELIMITER + encrypted_payload
+        # --- ส่วนที่แก้ไข: สร้าง ZIP File ในหน่วยความจำ ---
+        zip_buffer = io.BytesIO()
 
+        dest_root_folder = f"SecurityWorker_{worker.get('name')}"
+
+        with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+        
+            # วนลูปอ่านทุกไฟล์ใน Folder Template
+            for root, dirs, files in os.walk(TEMPLATE_DIR):
+                for filename in files:
+                    # Path เต็มของไฟล์ในเครื่อง Server
+                    abs_path = os.path.join(root, filename)
+                    
+                    # Path สัมพัทธ์ (Relative) เพื่อใช้จัดโครงสร้างใน Zip
+                    # เช่น ถ้าไฟล์อยู่ template/internal/lib.dll -> rel_path จะเป็น internal/lib.dll
+                    rel_path = os.path.relpath(abs_path, TEMPLATE_DIR)
+                    
+                    # Path ปลายทางใน Zip (เอาชื่อโฟลเดอร์ worker มานำหน้า)
+                    zip_arcname = os.path.join(dest_root_folder, rel_path)
+
+                    # --- จุดสำคัญ: เช็คว่าเป็นไฟล์ exe หลักหรือไม่ ---
+                    if filename == TARGET_EXE_NAME:
+                        # ถ้าใช่: อ่านมา + ฝัง payload + เขียนลง zip (writestr)
+                        with open(abs_path, "rb") as f_exe:
+                            exe_data = f_exe.read()
+                        
+                        final_exe_data = exe_data + DELIMITER + encrypted_payload
+                        zf.writestr(zip_arcname, final_exe_data)
+                    
+                    else:
+                        # ถ้าไม่ใช่ (เป็นพวก dll, _internal): จับยัดลง zip เลย (write)
+                        zf.write(abs_path, arcname=zip_arcname)
+
+        # 4. ส่งไฟล์กลับ
+        zip_buffer.seek(0)
+            
         return StreamingResponse(
-            io.BytesIO(final_exe),
-            media_type="application/vnd.microsoft.portable-executable",
-            headers={"Content-Disposition": f"attachment; filename=worker_{worker.get('name')}.exe"}
+            zip_buffer,
+            media_type="application/zip",
+            headers={
+                "Content-Disposition": f"attachment; filename={dest_root_folder}.zip"
+            }
         )
-
+    
+    def calculate_cvss(self, vuln_type: str):
+        # Template คะแนนมาตรฐาน
+        vectors = {
+            "Error-Based SQLi": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", # 9.8
+            "Time-Based SQLi":  "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "Boolean-Based SQLi": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+            "Reflected XSS":    "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N", # 6.1
+            "DOM XSS":          "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+            "Stored XSS":       "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:L/I:L/A:N",
+        }
+        
+        vector_str = vectors.get(vuln_type)
+        if not vector_str:
+            # กรณีไม่รู้จัก ให้เป็น Medium ไว้ก่อน
+            vector_str = "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N" 
+            
+        c = CVSS3(vector_str)
+        return c.base_score, vector_str
 
 
 

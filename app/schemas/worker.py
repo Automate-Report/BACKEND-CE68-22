@@ -29,14 +29,14 @@ class VerifyRequest(BaseModel):
     key: str
     worker_id: int
     hostname: str
-    
+
 class HandshakeRequest(BaseModel):
     registration_token: str
     hostname: str
 
 class AuthRequest(BaseModel):
     api_key: str
-
+    
 # Dummy
 class TaskSubmitRequest(BaseModel):
     iteration: int

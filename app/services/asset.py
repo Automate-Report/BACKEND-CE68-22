@@ -1,7 +1,7 @@
 import json
 import os
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 from app.schemas.asset import AssetCreate
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
@@ -55,7 +55,7 @@ class AssetService:
         if sort_by:
             reverse = (order == "desc")
             # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
-            all_matches.sort(key=lambda x: x.get(sort_by, ""), reverse=reverse)
+            all_matches.sort(key=lambda x: (x.get(sort_by) or ""), reverse=reverse)
         
         # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
         total_count = len(all_matches)
@@ -102,7 +102,6 @@ class AssetService:
             "id": new_id,
             "name": asset_in.name,
             "project_id": asset_in.project_id,
-            "credential_id": asset_in.credential_id,
             "description": asset_in.description,
             "target": asset_in.target,
             "type": asset_in.type,

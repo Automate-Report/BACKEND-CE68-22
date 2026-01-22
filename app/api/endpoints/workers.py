@@ -4,12 +4,10 @@ from typing import Optional
 from datetime import datetime
 
 # Import ของที่เราทำไว้
-from app.core import security
-from app.api import deps
-from app.schemas.worker import WorkerCreate, WorkerResponse, HandshakeRequest, AuthRequest, WorkerAccessKey, VerifyRequest
+from app.schemas.worker import WorkerCreate, WorkerResponse, VerifyRequest
 from app.schemas.pagination import PaginatedResponse
 from app.services.worker import worker_service
-from app.services.access_key import access_key_service
+
 
 
 router = APIRouter()
