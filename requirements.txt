@@ -33,3 +33,4 @@ cryptography>=39.0.0
 jwt
 
 cvss
+httpx
