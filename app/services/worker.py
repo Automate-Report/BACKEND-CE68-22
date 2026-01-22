@@ -318,21 +318,20 @@ class WorkerService:
         EMBEDED_KEY = b'JimGiFbXqlAwUAXu2PM1_eATccCMR7uAoB0wfI2DMgQ='
         DELIMITER = b"|||HIDDEN_DATA|||"
 
-        json_bytes = json.dumps(hidden_payload).encode()
-        f = Fernet(EMBEDED_KEY)
-        encrypted_payload = f.encrypt(json_bytes)
 
-        # 2. ตั้งค่า Path
-        # โฟลเดอร์ต้นฉบับที่ได้จาก PyInstaller (Template)
+        json_bytes = json.dumps(hidden_payload).encode() # worker_id + backend_url
+        f = Fernet(EMBEDED_KEY) # สร้างตัวเข้ารหัส
+        encrypted_payload = f.encrypt(json_bytes) # เข้ารหัส
+
+        # Path ของ Worker
         TEMPLATE_DIR = "app/static/bin/SecurityWorker" 
-        
-        # ชื่อไฟล์ exe หลักที่เราต้องการฝังยา (ต้องตรงกับชื่อที่ตั้งตอน build --name)
+        # ชื่อไฟล์ exe 
         TARGET_EXE_NAME = "SecurityWorker.exe"
 
         # --- ส่วนที่แก้ไข: สร้าง ZIP File ในหน่วยความจำ ---
         zip_buffer = io.BytesIO()
 
-        dest_root_folder = f"SecurityWorker_{worker.get('name')}"
+        dest_folder_name = f"SecurityWorker_{worker.get('name')}"
 
         with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
         
@@ -347,7 +346,7 @@ class WorkerService:
                     rel_path = os.path.relpath(abs_path, TEMPLATE_DIR)
                     
                     # Path ปลายทางใน Zip (เอาชื่อโฟลเดอร์ worker มานำหน้า)
-                    zip_arcname = os.path.join(dest_root_folder, rel_path)
+                    zip_arcname = os.path.join(dest_folder_name, rel_path)
 
                     # --- จุดสำคัญ: เช็คว่าเป็นไฟล์ exe หลักหรือไม่ ---
                     if filename == TARGET_EXE_NAME:
@@ -355,7 +354,7 @@ class WorkerService:
                         with open(abs_path, "rb") as f_exe:
                             exe_data = f_exe.read()
                         
-                        final_exe_data = exe_data + DELIMITER + encrypted_payload
+                        final_exe_data = exe_data + DELIMITER + encrypted_payload #ฉีดข้อมูล worker_id + backend_url
                         zf.writestr(zip_arcname, final_exe_data)
                     
                     else:
@@ -369,7 +368,7 @@ class WorkerService:
             zip_buffer,
             media_type="application/zip",
             headers={
-                "Content-Disposition": f"attachment; filename={dest_root_folder}.zip"
+                "Content-Disposition": f"attachment; filename={dest_folder_name}.zip"
             }
         )
 
