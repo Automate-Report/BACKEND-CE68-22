@@ -56,27 +56,26 @@ class ProjectTagService:
         
         return new_project_tag
     
-    def update_project(self, project_id: int, project_in: ProjectCreate) -> Optional[dict]:
-        """Service: อัปเดตโปรเจกต์"""
-        projects = self._read_json()
-        for proj in projects:
-            if proj["id"] == project_id and proj["email"] == project_in.user_id:
-                proj["name"] = project_in.name
-                proj["description"] = project_in.description
-                proj["updated_at"] = datetime.now().isoformat()
-                self._save_json(projects)
-                return proj
-        return None
+    def get_all_tag_ids(self, project_id: int):
+        project_tags = self._read_json()
+
+        tags = []
+
+        for pt in project_tags:
+            if pt["project_id"] == project_id:
+                tags.append(pt["tag_id"])
+
+        return tags
     
-    def delete_project(self, project_id: int) -> bool:
-        """Service: ลบโปรเจกต์"""
-        projects = self._read_json()
-        for i, proj in enumerate(projects):
-            if proj["id"] == project_id:
-                del projects[i]
-                self._save_json(projects)
-                return True
-        return False
+    # def delete_project(self, project_id: int) -> bool:
+    #     """Service: ลบโปรเจกต์"""
+    #     projects = self._read_json()
+    #     for i, proj in enumerate(projects):
+    #         if proj["id"] == project_id:
+    #             del projects[i]
+    #             self._save_json(projects)
+    #             return True
+    #     return False
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 project_tag_service = ProjectTagService()
