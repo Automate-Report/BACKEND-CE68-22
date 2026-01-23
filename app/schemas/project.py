@@ -5,13 +5,14 @@ from datetime import datetime
 class ProjectCreate(BaseModel):
     name: str
     description: Optional[str] = None
+    user_id: str
 
 
 class ProjectResponse(BaseModel):
     id: int
     name: str
     description: Optional[str] = None
-    user_id: int
+    user_id: str
     created_at: datetime
     updated_at: datetime
 

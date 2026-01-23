@@ -88,14 +88,20 @@ class ProjectService:
             
         return None
 
-    def create_project(self, project_in: ProjectCreate, user_id: int) -> dict:
+    def create_project(self, project_in: ProjectCreate) -> dict:
         """Service: สร้างโปรเจกต์ใหม่"""
         projects = self._read_json()
-        
+
+        new_id = 1
+        if projects:
+            # เอา ID ตัวสุดท้ายมา + 1
+            new_id = projects[-1]["id"] + 1
+
         new_project = {
+            "id": new_id,
             "name": project_in.name,
             "description": project_in.description,
-            "user_id": user_id,
+            "user_id": project_in.user_id,
             "created_at": datetime.now().isoformat(),
             "updated_at": datetime.now().isoformat(),
         }
