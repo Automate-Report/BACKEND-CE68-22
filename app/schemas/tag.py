@@ -2,6 +2,10 @@ from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
 
+class TagCreate(BaseModel):
+    user_id: str
+    name: str
+
 class TagsResponse(BaseModel):
     id: int
     name: str

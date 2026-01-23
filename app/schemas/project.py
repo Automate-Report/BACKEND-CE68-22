@@ -6,7 +6,7 @@ class ProjectCreate(BaseModel):
     name: str
     description: Optional[str] = None
     user_id: str
-    tags: Optional[List[str]] = None
+    tag_ids: Optional[List[int]] = []
 
 class ProjectResponse(BaseModel):
     id: int

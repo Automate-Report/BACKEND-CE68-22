@@ -33,7 +33,7 @@ class TagService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def create_tags(self, tag: str, user_id: str) -> dict:
+    def create_tag(self, tag: str, user_id: str) -> dict:
         """Service: สร้าง Tag ใหม่"""
         tags = self._read_json()
 
@@ -55,6 +55,17 @@ class TagService:
         tags.append(new_tag)
         self._save_json(tags)
         return new_tag
+    
+    def get_all_tags(self, user_id: int):
+        tags = self._read_json()
+
+        result = []
+
+        for tag in tags:
+            if tag["user_id"] == user_id:
+                result.append(tag)
+            
+        return result
     
     def get_tag_by_id(self, id: int):
         tags = self._read_json()

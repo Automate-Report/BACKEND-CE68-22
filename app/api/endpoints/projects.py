@@ -46,16 +46,14 @@ async def get_project_by_id(project_id: int):
 # POST /projects/ : สร้างโปรเจกต์ใหม่
 @router.post("/", response_model=ProjectResponse)
 async def create_project(project_in: ProjectCreate):
-    tags_to_create = project_in.tags
+    tag_ids = project_in.tag_ids
     new_project = project_service.create_project(
         name=project_in.name,
         description=project_in.description,
         user_id=project_in.user_id
     )
-    for tag in tags_to_create:
-        new_tag = tag_service.create_tags(tag, new_project["email"])
-        #เพิ่ม realtion project กับ tag
-        result = project_tag_service.create_project_tag(new_tag["id"], new_project["id"])
+    for id in tag_ids:
+        result = project_tag_service.create_project_tag(id, new_project["id"])
     return new_project
 
 # PUT /projects/{project_id} : อัพเดตโปรเจกต์
