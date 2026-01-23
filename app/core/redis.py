@@ -8,7 +8,7 @@ redis_client = redis.Redis(
 )
 redis_worker = redis.Redis(
     host="10.20.20.108",
-    post=5678,
+    port=5678,
     db=1,
     decode_responses=True
 )
