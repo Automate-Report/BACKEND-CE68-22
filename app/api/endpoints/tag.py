@@ -10,7 +10,7 @@ router = APIRouter()
 
 # GET /projects/ : ดึงโปรเจกต์ทั้งหมดของ user นั้น
 @router.get("/all/{project_id}", response_model=List[TagsResponse])
-async def get_all_projects(project_id: int):
+async def get_all_tags(project_id: int):
     tag_ids = project_tag_service.get_all_tag_ids(project_id)
 
     tags = []
@@ -21,3 +21,12 @@ async def get_all_projects(project_id: int):
             tags.append(tag)
 
     return tags
+
+# DELETE 
+@router.delete("/{tag_id}")
+async def delete_tag(tag_id: int):
+    success = tag_service.delete_tag(id=tag_id)
+    
+    if not success:
+        raise HTTPException(status_code=404, detail="Tag not found")
+    return {"detail": "Tag deleted successfully"}
