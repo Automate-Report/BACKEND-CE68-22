@@ -10,6 +10,7 @@ router = APIRouter()
 # GET /projects/ : ดึงโปรเจกต์ทั้งหมดของ user นั้น
 @router.get("/all", response_model=PaginatedResponse[ProjectResponse])
 async def get_all_projects(
+    user_id: str,
     page: int = Query(1, ge=1, description="Page number"), 
     size: int = Query(10, ge=1, le=100, description="Items per page"),
     sort_by: Optional[str] = Query(None, description="Column to sort by"),
@@ -17,12 +18,9 @@ async def get_all_projects(
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    ")
 ):
-    # ในอนาคตต้องดึง user_id จาก Token (Auth) 
-    # แต่ตอนนี้ Mock เป็น user_id = 1 ไปก่อน
-    fake_current_user_id = 1
 
     result = project_service.get_all_projects(
-        user_id=fake_current_user_id,
+        user_id=user_id,
         page=page,
         size=size,
         sort_by=sort_by, 
@@ -67,10 +65,8 @@ async def update_project(project_id: int, project_in: ProjectCreate):
 # DELETE /projects/{project_id} : ลบโปรเจกต์
 @router.delete("/{project_id}")
 async def delete_project(project_id: int):
-    fake_current_user_id = 1
     success = project_service.delete_project(
-        project_id=project_id,
-        user_id=fake_current_user_id
+        project_id=project_id
     )
     if not success:
         raise HTTPException(status_code=404, detail="Project not found")
