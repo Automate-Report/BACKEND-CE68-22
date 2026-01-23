@@ -65,15 +65,15 @@ class TagService:
             
         return None
     
-    # def delete_tag(self, project_id: int) -> bool:
-    #     """Service: ลบ Tag"""
-    #     projects = self._read_json()
-    #     for i, proj in enumerate(projects):
-    #         if proj["id"] == project_id:
-    #             del projects[i]
-    #             self._save_json(projects)
-    #             return True
-    #     return False
+    def delete_tag(self, id: int) -> bool:
+        """Service: ลบ Tag"""
+        tags = self._read_json()
+        for i, tag in enumerate(tags):
+            if tag["id"] == id:
+                del tags[i]
+                self._save_json(tags)
+                return True
+        return False
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 tag_service = TagService()
