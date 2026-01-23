@@ -1,8 +1,10 @@
 from app.deps.auth import get_current_user
 from fastapi import APIRouter, HTTPException, Request, Depends
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from app.schemas.userauthen import LoginRequest, UserCreate
 from app.services.userauthen import userauthen_service # เรียก Service ที่เราสร้างตะกี้
+from app.core.google_oauth import oauth
+from app.core.config import settings
 
 router = APIRouter()
 
@@ -51,6 +53,37 @@ async def logout(request: Request):
     )
 
     return response
+
+@router.get("/google/login")
+async def google_login(request: Request):
+    return await oauth.google.authorize_redirect(request, settings.GOOGLE_REDIRECT_URI)
+
+@router.get("/google/callback")
+async def google_callback(request: Request):
+    try:
+        token = await oauth.google.authorize_access_token(request)
+        user = token.get("userinfo")
+        if not user:
+            raise HTTPException(status_code=400, detail="Failed to get user info")
+
+        auth = userauthen_service.authenticate_user_google(user)
+
+        res = RedirectResponse(url=settings.FRONTEND_URL)
+        res.set_cookie(
+            key="access_token",
+            value=auth["token"],
+            httponly=True,
+            secure=False,  # True = https only
+            samesite="lax",
+            max_age=3600,
+            path="/"
+        )
+        print("Google OAuth login successful for user:", auth["token"])   
+        return res
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 
 # FOR TESTING COOKIES AND TOKEN BLACKLIST, DELETE LATER
 @router.get("/me")
