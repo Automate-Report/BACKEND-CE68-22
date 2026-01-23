@@ -35,12 +35,9 @@ async def get_all_projects(
 
 @router.get("/{project_id}", response_model=ProjectResponse)
 async def get_project_by_id(project_id: int):
-    # เรียก Service เพื่อดึงข้อมูลตาม ID
-    fake_current_user_id = 1
-    project = project_service.get_project_by_id(fake_current_user_id, project_id)
 
-    
-    
+    project = project_service.get_project_by_id(project_id)
+
     if not project:
         from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Project not found")
