@@ -1,0 +1,11 @@
+[
+    {
+        "id": 1,
+        "schedule_id": 1,
+        "worker_id": 1,
+        "status": "pending",
+        "started_at": "",
+        "finished_at": "",
+        "created_at": ""
+    }
+]
