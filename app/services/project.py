@@ -101,7 +101,7 @@ class ProjectService:
             "id": new_id,
             "name": project_in.name,
             "description": project_in.description,
-            "user_id": project_in.user_id,
+            "email": project_in.user_id,
             "created_at": datetime.now().isoformat(),
             "updated_at": datetime.now().isoformat(),
         }
@@ -112,11 +112,11 @@ class ProjectService:
         
         return new_project
     
-    def update_project(self, project_id: int, project_in: ProjectCreate, user_id: int) -> Optional[dict]:
+    def update_project(self, project_id: int, project_in: ProjectCreate) -> Optional[dict]:
         """Service: อัปเดตโปรเจกต์"""
         projects = self._read_json()
         for proj in projects:
-            if proj["id"] == project_id and proj["user_id"] == user_id:
+            if proj["id"] == project_id and proj["email"] == project_in.user_id:
                 proj["name"] = project_in.name
                 proj["description"] = project_in.description
                 proj["updated_at"] = datetime.now().isoformat()
