@@ -44,10 +44,10 @@ class ProjectService:
         for proj in projects:
             if filter == "ALL":
                 if search:
-                    if proj["user_id"] == user_id and search in proj["name"]:
+                    if proj["email"] == user_id and search in proj["name"]:
                         all_matches.append(proj)
                 else:
-                    if proj["user_id"] == user_id:
+                    if proj["email"] == user_id:
                         all_matches.append(proj)
             else:
                 # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
@@ -124,11 +124,11 @@ class ProjectService:
                 return proj
         return None
     
-    def delete_project(self, project_id: int, user_id: int) -> bool:
+    def delete_project(self, project_id: int) -> bool:
         """Service: ลบโปรเจกต์"""
         projects = self._read_json()
         for i, proj in enumerate(projects):
-            if proj["id"] == project_id and proj["user_id"] == user_id:
+            if proj["id"] == project_id:
                 del projects[i]
                 self._save_json(projects)
                 return True
