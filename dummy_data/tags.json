@@ -5,5 +5,26 @@
     "email": "user@example.com",
     "created_at": "2026-01-24T04:11:39.142627",
     "updated_at": "2026-01-24T04:11:39.142631"
+  },
+  {
+    "id": 2,
+    "name": "Marketing",
+    "email": "user@example.com",
+    "created_at": "2026-01-24T04:28:00.496936",
+    "updated_at": "2026-01-24T04:28:00.496947"
+  },
+  {
+    "id": 3,
+    "name": "Development",
+    "email": "user@example.com",
+    "created_at": "2026-01-24T04:28:00.508657",
+    "updated_at": "2026-01-24T04:28:00.508665"
+  },
+  {
+    "id": 4,
+    "name": "Urgent",
+    "email": "user@example.com",
+    "created_at": "2026-01-24T04:28:00.523873",
+    "updated_at": "2026-01-24T04:28:00.523879"
   }
 ]

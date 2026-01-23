@@ -3,14 +3,13 @@ import os
 from datetime import datetime
 from typing import List, Optional
 
-from app.schemas.project import ProjectCreate
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "projects.json")
+JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "project_tags.json")
 
-class ProjectService:
+class ProjectTagService:
     
     def _ensure_dummy_folder_exists(self):
         """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
@@ -35,82 +34,27 @@ class ProjectService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def get_all_projects(self, user_id: int, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
-        """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
-        projects = self._read_json()
-        
-        # 1. กรอง User
-        all_matches = []
-        for proj in projects:
-            if filter == "ALL":
-                if search:
-                    if proj["email"] == user_id and search in proj["name"]:
-                        all_matches.append(proj)
-                else:
-                    if proj["email"] == user_id:
-                        all_matches.append(proj)
-            else:
-                # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
-                pass
-
-        if sort_by:
-            reverse = (order == "desc")
-            # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
-            all_matches.sort(key=lambda x: (x.get(sort_by) or ""), reverse=reverse)
-        
-        # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
-        total_count = len(all_matches)
-            
-        # 3. คำนวณ Pagination Logic
-        import math
-        total_pages = math.ceil(total_count / size)
-        
-        offset = (page - 1) * size
-        
-        # --- จุดที่ต้องแก้: ตัดข้อมูล (Slicing) ---
-        # ใช้ Python Slice [start : end]
-        paginated_items = all_matches[offset : offset + size]
-
-        return {
-            "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
-            "page": page,
-            "size": size,
-            "total_pages": total_pages,
-            "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
-        }
-    
-    def get_project_by_id(self, project_id:int):
-        projects = self._read_json()
-
-        for proj in projects:
-            if proj["id"] == project_id:
-                return proj
-            
-        return None
-
-    def create_project(self, project_in: ProjectCreate) -> dict:
+    def create_project_tag(self, tag_id: str, project_id: str) -> dict:
         """Service: สร้างโปรเจกต์ใหม่"""
-        projects = self._read_json()
+        project_tags = self._read_json()
 
         new_id = 1
-        if projects:
+        if project_tags:
             # เอา ID ตัวสุดท้ายมา + 1
-            new_id = projects[-1]["id"] + 1
+            new_id = project_tags[-1]["id"] + 1
 
-        new_project = {
+        new_project_tag = {
             "id": new_id,
-            "name": project_in.name,
-            "description": project_in.description,
-            "email": project_in.user_id,
+            "project_id": project_id,
+            "tag_id": tag_id,
             "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat(),
         }
         
         # 3. บันทึก
-        projects.append(new_project)
-        self._save_json(projects)
+        project_tags.append(new_project_tag)
+        self._save_json(project_tags)
         
-        return new_project
+        return new_project_tag
     
     def update_project(self, project_id: int, project_in: ProjectCreate) -> Optional[dict]:
         """Service: อัปเดตโปรเจกต์"""
@@ -135,4 +79,4 @@ class ProjectService:
         return False
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
-project_service = ProjectService()
+project_tag_service = ProjectTagService()

@@ -33,7 +33,7 @@ class TagService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def create_tags(self, new_tags: list, user_id: str) -> dict:
+    def create_tags(self, tag: str, user_id: str) -> dict:
         """Service: สร้าง Tag ใหม่"""
         tags = self._read_json()
 
@@ -42,21 +42,19 @@ class TagService:
             # เอา ID ตัวสุดท้ายมา + 1
             new_id = tags[-1]["id"] + 1
 
-        for t in new_tags:
-
-            new_tag = {
-                "id": new_id,
-                "name": t,
-                "email": user_id,
-                "created_at": datetime.now().isoformat(),
-                "updated_at": datetime.now().isoformat(),
-            }
-            new_id += 1
+        new_tag = {
+            "id": new_id,
+            "name": tag,
+            "email": user_id,
+            "created_at": datetime.now().isoformat(),
+            "updated_at": datetime.now().isoformat(),
+        }
+        new_id += 1
         
-            # 3. บันทึก
-            tags.append(new_tag)
+        # 3. บันทึก
+        tags.append(new_tag)
         self._save_json(tags)
-        return True
+        return new_tag
     
     def delete_tag(self, project_id: int) -> bool:
         """Service: ลบ Tag"""

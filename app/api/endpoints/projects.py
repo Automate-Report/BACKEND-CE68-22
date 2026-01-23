@@ -4,6 +4,7 @@ from app.schemas.project import ProjectCreate, ProjectResponse
 from app.schemas.pagination import PaginatedResponse
 from app.services.project import project_service 
 from app.services.tag import tag_service
+from app.services.project_tag import project_tag_service
 
 router = APIRouter()
  
@@ -51,8 +52,10 @@ async def create_project(project_in: ProjectCreate):
         description=project_in.description,
         user_id=project_in.user_id
     )
-    
-    result = tag_service.create_tags(tags_to_create, new_project["email"])
+    for tag in tags_to_create:
+        new_tag = tag_service.create_tags(tag, new_project["email"])
+        #เพิ่ม realtion project กับ tag
+        result = project_tag_service.create_project_tag(new_tag["id"], new_project["id"])
     return new_project
 
 # PUT /projects/{project_id} : อัพเดตโปรเจกต์
