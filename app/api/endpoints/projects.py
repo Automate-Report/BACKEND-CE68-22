@@ -3,7 +3,7 @@ from typing import Optional
 from app.schemas.project import ProjectCreate, ProjectResponse
 from app.schemas.pagination import PaginatedResponse
 from app.services.project import project_service 
-
+from app.services.tag import tag_service
 
 router = APIRouter()
 
@@ -45,10 +45,14 @@ async def get_project_by_id(project_id: int):
 # POST /projects/ : สร้างโปรเจกต์ใหม่
 @router.post("/", response_model=ProjectResponse)
 async def create_project(project_in: ProjectCreate):
+    tags_to_create = project_in.tags
     new_project = project_service.create_project(
-        project_in=project_in
+        name=project_in.name,
+        description=project_in.description,
+        user_id=project_in.user_id
     )
-
+    
+    result = tag_service.create_tags(tags_to_create, new_project["email"])
     return new_project
 
 # PUT /projects/{project_id} : อัพเดตโปรเจกต์
