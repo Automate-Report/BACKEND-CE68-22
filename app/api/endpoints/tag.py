@@ -9,7 +9,7 @@ router = APIRouter()
 
 # GET /projects/ : ดึงโปรเจกต์ทั้งหมดของ user นั้น
 @router.get("/all/{user_id}", response_model=List[TagsResponse])
-async def get_all_tags(user_id: int):
+async def get_all_tags(user_id: str):
     tags = tag_service.get_all_tags(user_id)
     return tags
 
