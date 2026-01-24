@@ -56,13 +56,13 @@ class TagService:
         self._save_json(tags)
         return new_tag
     
-    def get_all_tags(self, user_id: int):
+    def get_all_tags(self, user_id: str):
         tags = self._read_json()
 
         result = []
 
         for tag in tags:
-            if tag["user_id"] == user_id:
+            if tag["email"] == user_id:
                 result.append(tag)
             
         return result
