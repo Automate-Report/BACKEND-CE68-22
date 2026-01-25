@@ -2,6 +2,19 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
+class JobStatus(BaseModel):
+    failed: int
+    finished: int
+    ongoing: int
+    scheduled: int
+class ScheduleResponse(BaseModel):
+    schedule_id: int
+    project_id: int
+    name: str
+    job_status: JobStatus
+    atk_type: str
+    start_date: datetime
+    end_date: datetime
 class ScheduleCreate(BaseModel):
     project_id: int
     name: str
@@ -10,7 +23,7 @@ class ScheduleCreate(BaseModel):
     worker: int #จะให้ Front ส่งเป็น ID มาเลย
     cron_expression: str #เช่น "0 0 * * *" (ทำที่ Front)
     start_date: datetime
-    end_date: Optional[datetime] = None #ถ้าไม่ตั้ง Repeat จะไม่มีค่า end_date
+    end_date: datetime #ถ้าไม่ตั้ง Repeat end_date = start_date
 
     class Config:
         orm_mode = True # เพื่อให้ Pydantic อ่านข้อมูลจาก ORM objects ได้ ไว้ใช้กับ SQLAlchemy ตอนทำ database

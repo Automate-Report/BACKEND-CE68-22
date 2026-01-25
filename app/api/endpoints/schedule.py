@@ -1,10 +1,13 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
-from app.schemas.schedule import ScheduleCreate
+from app.schemas.schedule import ScheduleCreate, ScheduleResponse
 from app.services.schedule import schedule_service 
 
 
 router = APIRouter()
+
+# GET all schedules
+@router.get("/all", response_model=List[ScheduleResponse])
 
 # GET attack type
 @router.get("/{schedule_id}/type", response_model=str)
