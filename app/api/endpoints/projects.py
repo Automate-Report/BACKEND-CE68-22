@@ -6,7 +6,7 @@ from app.services.project import project_service
 
 
 router = APIRouter()
- 
+
 # GET /projects/ : ดึงโปรเจกต์ทั้งหมดของ user นั้น
 @router.get("/all", response_model=PaginatedResponse[ProjectResponse])
 async def get_all_projects(

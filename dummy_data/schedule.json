@@ -1,0 +1,47 @@
+[
+    {
+        "schedule_id": 1,
+        "schedule_name": "Daily SQL Injection Scan",
+        "project_id": 101,
+        "asset_id": 5501,
+        "worker_id": 3001,
+        "cron_expression": "0 0 * * *",
+        "attack_type": "sql_injection",
+        "is_active": true,
+        "next_run_at": "2026-01-25T00:00:00Z",
+        "start_date": "2026-01-01",
+        "end_date": "2026-12-31",
+        "created_at": "2026-01-01T10:15:30Z",
+        "updated_at": "2026-01-10T08:45:00Z"
+    },
+    {
+        "schedule_id": 2,
+        "schedule_name": "Bi-hourly XSS Scan",
+        "project_id": 101,
+        "asset_id": 5502,
+        "worker_id": 3002,
+        "cron_expression": "*/30 * * * *",
+        "attack_type": "xss",
+        "is_active": true,
+        "next_run_at": "2026-01-24T12:30:00Z",
+        "start_date": "2026-01-10",
+        "end_date": null,
+        "created_at": "2026-01-10T09:00:00Z",
+        "updated_at": "2026-01-20T14:20:00Z"
+    },
+    {
+        "schedule_id": 3,
+        "schedule_name": "Weekly DDoS Simulation",
+        "project_id": 102,
+        "asset_id": 5601,
+        "worker_id": 3003,
+        "cron_expression": "0 3 * * 1",
+        "attack_type": "ddos",
+        "is_active": false,
+        "next_run_at": null,
+        "start_date": "2025-12-01",
+        "end_date": "2026-01-15",
+        "created_at": "2025-12-01T08:00:00Z",
+        "updated_at": "2026-01-15T23:59:59Z"
+    }
+]
