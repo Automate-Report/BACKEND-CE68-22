@@ -5,7 +5,6 @@ from datetime import datetime
 class WorkerCreate(BaseModel):
     name: str
     thread_number: int
-    user_id: str
 
 
 class WorkerResponse(BaseModel):
