@@ -1,13 +1,5 @@
 [
   {
-    "id": 1,
-    "name": "test ใช้ email เป็น user_id",
-    "description": "fdgdgdgdfgdgdgd",
-    "email": "user@example.com",
-    "created_at": "2026-01-24T02:50:00.528491",
-    "updated_at": "2026-01-24T02:50:05.556045"
-  },
-  {
     "id": 2,
     "name": "test create project with tags",
     "description": "test",
