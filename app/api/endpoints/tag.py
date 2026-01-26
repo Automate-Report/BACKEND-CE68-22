@@ -23,9 +23,8 @@ async def create_tag(tag_in: TagCreate):
 @router.delete("/{tag_id}")
 async def delete_tag(tag_id: int):
     delete_relation = project_tag_service.delete_by_tag_id(tag_id)
-    success = True
-    if delete_relation is True:
-        success = tag_service.delete_tag(id=tag_id)
+
+    success = tag_service.delete_tag(id=tag_id)
 
     if not success:
         raise HTTPException(status_code=404, detail="Tag not found")
