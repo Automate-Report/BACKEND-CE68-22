@@ -1,92 +1,20 @@
 [
   {
-    "id": 1,
-    "project_id": 12,
-    "tag_id": 2,
-    "created_at": "2026-01-24T04:28:00.497489"
-  },
-  {
     "id": 2,
-    "project_id": 12,
-    "tag_id": 3,
-    "created_at": "2026-01-24T04:28:00.516343"
+    "project_id": 16,
+    "tag_id": 13,
+    "created_at": "2026-01-26T22:05:25.286743"
   },
   {
     "id": 3,
-    "project_id": 12,
-    "tag_id": 4,
-    "created_at": "2026-01-24T04:28:00.531035"
+    "project_id": 16,
+    "tag_id": 14,
+    "created_at": "2026-01-26T22:05:25.293952"
   },
   {
     "id": 4,
-    "project_id": 13,
-    "tag_id": 8,
-    "created_at": "2026-01-24T06:45:09.466422"
-  },
-  {
-    "id": 5,
-    "project_id": 14,
-    "tag_id": 9,
-    "created_at": "2026-01-24T06:46:05.716656"
-  },
-  {
-    "id": 6,
-    "project_id": 14,
-    "tag_id": 10,
-    "created_at": "2026-01-24T06:46:05.726978"
-  },
-  {
-    "id": 7,
-    "project_id": 15,
-    "tag_id": 9,
-    "created_at": "2026-01-24T07:01:04.154577"
-  },
-  {
-    "id": 8,
     "project_id": 16,
-    "tag_id": 9,
-    "created_at": "2026-01-24T07:01:43.237827"
-  },
-  {
-    "id": 9,
-    "project_id": 17,
-    "tag_id": 9,
-    "created_at": "2026-01-24T07:04:18.709244"
-  },
-  {
-    "id": 10,
-    "project_id": 17,
-    "tag_id": 10,
-    "created_at": "2026-01-24T07:04:18.719937"
-  },
-  {
-    "id": 11,
-    "project_id": 18,
-    "tag_id": 10,
-    "created_at": "2026-01-24T10:19:09.800793"
-  },
-  {
-    "id": 12,
-    "project_id": 18,
-    "tag_id": 8,
-    "created_at": "2026-01-24T10:19:09.813401"
-  },
-  {
-    "id": 13,
-    "project_id": 18,
-    "tag_id": 5,
-    "created_at": "2026-01-24T10:19:09.825748"
-  },
-  {
-    "id": 14,
-    "project_id": 19,
-    "tag_id": 9,
-    "created_at": "2026-01-26T00:35:13.135905"
-  },
-  {
-    "id": 15,
-    "project_id": 19,
-    "tag_id": 10,
-    "created_at": "2026-01-26T00:35:13.149746"
+    "tag_id": 15,
+    "created_at": "2026-01-26T22:05:25.301127"
   }
 ]
