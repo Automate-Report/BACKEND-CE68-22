@@ -56,7 +56,7 @@ class TagService:
         self._save_json(tags)
         return new_tag
     
-    def get_all_tags(self, user_id: str):
+    def get_all_tags_by_user_id(self, user_id: str):
         tags = self._read_json()
 
         result = []
