@@ -2,11 +2,23 @@
   {
     "id": 1,
     "user_id": 1,
-    "name": "Test Create Worker",
+    "thread_number": 10,
+    "name": "test with number of threads",
     "hostname": null,
     "status": "Revoked",
     "isActive": false,
-    "created_at": "2026-01-21T14:49:50.147197",
-    "updated_at": "2026-01-21T14:49:50.147204"
+    "created_at": "2026-01-27T00:00:01.746802",
+    "updated_at": "2026-01-27T00:00:01.746812"
+  },
+  {
+    "id": 2,
+    "user_id": 1,
+    "thread_number": 2,
+    "name": "Dummy Data",
+    "hostname": "Dummy Hostname",
+    "status": "Revoked",
+    "isActive": false,
+    "created_at": "2026-01-27T00:04:04.415361",
+    "updated_at": "2026-01-27T00:04:04.415373"
   }
 ]
