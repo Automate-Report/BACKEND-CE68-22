@@ -76,7 +76,7 @@ class WorkerService:
 
         return worker
 
-    def create_worker(self, worker_in: WorkerCreate, user_id: int) -> dict:
+    def create_worker(self, worker_in: WorkerCreate) -> dict:
         """Service: สร้าง Worker"""
         workers = self._read_json()
         
@@ -89,7 +89,7 @@ class WorkerService:
         # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_worker = {
             "id": new_id,
-            "user_id": user_id,
+            "email": worker_in.user_id,
             "thread_number": worker_in.thread_number,
             "name": worker_in.name,
             "hostname": None,

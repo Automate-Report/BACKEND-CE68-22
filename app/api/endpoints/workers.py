@@ -15,9 +15,8 @@ router = APIRouter()
 
 @router.post("/", response_model=WorkerResponse)
 def create_worker(worker_in: WorkerCreate):
-    fake_user_id = 1
 
-    new_worker = worker_service.create_worker(worker_in, fake_user_id)
+    new_worker = worker_service.create_worker(worker_in)
 
     return new_worker
 
@@ -28,12 +27,7 @@ async def get_all_workers(
     sort_by: Optional[str] = Query(None, description="Column to sort by"),
     order: Optional[str] = Query("asc", description="asc or desc"),
 ):
-    # ในอนาคตต้องดึง user_id จาก Token (Auth) 
-    # แต่ตอนนี้ Mock เป็น user_id = 1 ไปก่อน
-    fake_current_user_id = 1
-
     result = worker_service.get_all_workers(
-        user_id=fake_current_user_id,
         page=page,
         size=size,
         sort_by=sort_by, 
