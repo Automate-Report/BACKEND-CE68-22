@@ -90,6 +90,7 @@ class WorkerService:
         new_worker = {
             "id": new_id,
             "user_id": user_id,
+            "thread_number": worker_in.thread_number,
             "name": worker_in.name,
             "hostname": None,
             "status": "offline",
