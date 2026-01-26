@@ -9,14 +9,15 @@ from app.schemas.pagination import PaginatedResponse
 from app.services.worker import worker_service
 from app.services.access_key import access_key_service
 
+from app.deps.auth import get_current_user
 
 
 router = APIRouter()
 
 @router.post("/", response_model=WorkerResponse)
-def create_worker(worker_in: WorkerCreate):
+def create_worker(worker_in: WorkerCreate, user = Depends(get_current_user)):
 
-    new_worker = worker_service.create_worker(worker_in)
+    new_worker = worker_service.create_worker(worker_in, user["sub"])
 
     return new_worker
 
@@ -26,8 +27,10 @@ async def get_all_workers(
     size: int = Query(10, ge=1, le=100, description="Items per page"),
     sort_by: Optional[str] = Query(None, description="Column to sort by"),
     order: Optional[str] = Query("asc", description="asc or desc"),
+    user = Depends(get_current_user)
 ):
     result = worker_service.get_all_workers(
+        user_id=user["sub"],
         page=page,
         size=size,
         sort_by=sort_by, 
@@ -37,10 +40,9 @@ async def get_all_workers(
     return result
 
 @router.get("/{worker_id}", response_model=WorkerResponse)
-async def get_worker_by_id(worker_id: int):
+async def get_worker_by_id(worker_id: int, user = Depends(get_current_user)):
     # เรียก Service เพื่อดึงข้อมูลตาม ID
-    fake_current_user_id = 1
-    worker = worker_service.get_worker_by_id(fake_current_user_id, worker_id)
+    worker = worker_service.get_worker_by_id(user["sub"], worker_id)
 
     if not worker:
         from fastapi import HTTPException
@@ -74,23 +76,21 @@ def remove_access_key(worker_id: int):
     return worker
 
 @router.delete("/{worker_id}")
-async def delete_worker(worker_id: int):
-    fake_current_user_id = 1
+async def delete_worker(worker_id: int, user = Depends(get_current_user)):
     success = worker_service.delete_worker(
         worker_id=worker_id,
-        user_id=fake_current_user_id
+        user_id=user["sub"]
     )
     if not success:
         raise HTTPException(status_code=404, detail="Worker not found")
     return {"detail": "Worker deleted successfully"}
 
 @router.put("/{worker_id}", response_model=WorkerResponse)
-async def update_worker(worker_id: int, worker_in: WorkerCreate):
-    fake_current_user_id = 1
+async def update_worker(worker_id: int, worker_in: WorkerCreate, user = Depends(get_current_user)):
     updated_worker = worker_service.update_worker(
         worker_id=worker_id,
         worker_in=worker_in,
-        user_id=fake_current_user_id
+        user_id=user["sub"]
     )
     if not updated_worker:
         raise HTTPException(status_code=404, detail="Worker not found")
