@@ -10,3 +10,14 @@ router = APIRouter()
 async def get_all_tags(project_id: str):
     tags = project_tag_service.get_all_tag_ids(project_id)
     return tags
+
+@router.delete("/projects/{project_id}/tags/{tag_id}")
+async def delete_relation_project_tag(project_id:int, tag_id:int):
+    success = project_tag_service.delete_relation(
+        project_id=project_id,
+        tag_id=tag_id
+    )
+
+    if not success:
+        raise HTTPException(status_code=404, detail="Project or Tag not found")
+    return {"detail": "Project deleted successfully"}

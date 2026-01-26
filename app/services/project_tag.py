@@ -76,11 +76,20 @@ class ProjectTagService:
                 return True
         return False
     
-    def delete_project(self, project_id: int) -> bool:
+    def delete_by_project_id(self, project_id: int) -> bool:
         """Service: ลบโปรเจกต์"""
         project_tags = self._read_json()
         for i, proj in enumerate(project_tags):
             if proj["project_id"] == project_id:
+                del project_tags[i]
+                self._save_json(project_tags)
+                return True
+        return False
+    
+    def delete_relation(self, project_id: int, tag_id: int) -> bool:
+        project_tags = self._read_json()
+        for i, proj in enumerate(project_tags):
+            if proj["project_id"] == project_id and proj["tag_id"] == tag_id:
                 del project_tags[i]
                 self._save_json(project_tags)
                 return True
