@@ -69,7 +69,7 @@ async def update_project(project_id: int, project_in: ProjectCreate):
 # DELETE /projects/{project_id} : ลบโปรเจกต์
 @router.delete("/{project_id}")
 async def delete_project(project_id: int):
-    delete_relation = project_tag_service.delete_project_tags(
+    delete_relation = project_tag_service.delete_project(
         project_id=project_id
     )
 
