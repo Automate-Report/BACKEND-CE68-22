@@ -68,12 +68,10 @@ async def update_project(project_id: int, project_in: ProjectCreate):
     old_tag_ids = set(project_tag_service.get_all_tag_ids(project_id))
 
     add_tags = new_tag_ids - old_tag_ids
-
     for id in add_tags:
         result = project_tag_service.create_project_tag(id, updated_project["id"])
 
     delete_tags = old_tag_ids - new_tag_ids
-
     for id in delete_tags:
         result = project_tag_service.delete_by_tag_id(id)
             
