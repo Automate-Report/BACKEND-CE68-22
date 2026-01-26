@@ -4,6 +4,7 @@ from typing import Optional, List
 from app.schemas.tag import TagsResponse, TagCreate
 
 from app.services.tag import tag_service
+from app.services.project_tag import project_tag_service
 
 router = APIRouter()
 
@@ -21,7 +22,9 @@ async def create_tag(tag_in: TagCreate):
 # DELETE 
 @router.delete("/{tag_id}")
 async def delete_tag(tag_id: int):
-    success = tag_service.delete_tag(id=tag_id)
+    delete_relation = project_tag_service(tag_id)
+    if delete_relation is True:
+        success = tag_service.delete_tag(id=tag_id)
 
     if not success:
         raise HTTPException(status_code=404, detail="Tag not found")
