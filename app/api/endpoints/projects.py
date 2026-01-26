@@ -3,7 +3,6 @@ from typing import Optional
 from app.schemas.project import ProjectCreate, ProjectResponse
 from app.schemas.pagination import PaginatedResponse
 from app.services.project import project_service 
-from app.services.tag import tag_service
 from app.services.project_tag import project_tag_service
 
 router = APIRouter()
@@ -70,9 +69,13 @@ async def update_project(project_id: int, project_in: ProjectCreate):
 # DELETE /projects/{project_id} : ลบโปรเจกต์
 @router.delete("/{project_id}")
 async def delete_project(project_id: int):
-    success = project_service.delete_project(
+    delete_relation = project_tag_service.delete_project_tags(
         project_id=project_id
     )
+    if delete_relation is True:
+        success = project_service.delete_project(
+            project_id=project_id
+        )
     if not success:
         raise HTTPException(status_code=404, detail="Project not found")
     return {"detail": "Project deleted successfully"}
