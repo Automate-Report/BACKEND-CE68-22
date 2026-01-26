@@ -58,18 +58,24 @@ async def create_project(project_in: ProjectCreate):
 # PUT /projects/{project_id} : อัพเดตโปรเจกต์
 @router.put("/{project_id}", response_model=ProjectResponse)
 async def update_project(project_id: int, project_in: ProjectCreate):
+    tag_ids = project_in.tag_ids
     updated_project = project_service.update_project(
         project_id=project_id,
         project_in=project_in
     )
     if not updated_project:
         raise HTTPException(status_code=404, detail="Project not found")
+    
+    if tag_ids:
+        for id in tag_ids:
+            result = project_tag_service.create_project_tag(id, updated_project["id"])
+    
     return updated_project
 
 # DELETE /projects/{project_id} : ลบโปรเจกต์
 @router.delete("/{project_id}")
 async def delete_project(project_id: int):
-    delete_relation = project_tag_service.delete_project(
+    delete_relation = project_tag_service.delete_by_project_id(
         project_id=project_id
     )
 
