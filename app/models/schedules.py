@@ -13,6 +13,7 @@ class Schedule(Base):
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
     project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id")) #======================================FK ULID
     asset_id:Mapped[int] = mapped_column(sa.ForeignKey("assets.id")) #======================================FK ULID
+    worker_id:Mapped[int] = mapped_column(sa.ForeignKey("workers.id")) #======================================FK ULID
     cron_expression:Mapped[str] = mapped_column(sa.String(255))
     attack_type:Mapped[ScheduleAttackType] = mapped_column(sa.Enum(ScheduleAttackType))
     is_active:Mapped[bool] = mapped_column(sa.Boolean, default=False)

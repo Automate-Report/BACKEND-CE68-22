@@ -13,6 +13,7 @@ class Worker(Base):
     __tablename__ = "workers"
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
     user_email: Mapped[str] = mapped_column(sa.ForeignKey("users.email"))
+    thread_number:Mapped[int] = mapped_column(sa.Integer, default=1)
     last_heartbeat:Mapped[Optional[datetime.datetime]] = mapped_column(sa.DateTime(timezone=True), default=None)
     status:Mapped[WorkerStatus]= mapped_column(sa.Enum(WorkerStatus), default=WorkerStatus.OFFLINE)
     created_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
