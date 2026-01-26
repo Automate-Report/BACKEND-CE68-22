@@ -91,10 +91,11 @@ async def delete_project(project_id: int):
     success = project_service.delete_project(
         project_id=project_id
     )
-    if delete_relation is True:
-        success = project_service.delete_project(
-            project_id=project_id
-        )
+
+
+    success = project_service.delete_project(
+        project_id=project_id
+    )
     if not success:
         raise HTTPException(status_code=404, detail="Project not found")
     return {"detail": "Project deleted successfully"}
