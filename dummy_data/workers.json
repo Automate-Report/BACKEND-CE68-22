@@ -14,11 +14,11 @@
     "id": 2,
     "email": "user@example.com",
     "thread_number": 1,
-    "name": "asdfg",
+    "name": "Test Edit Worker",
     "hostname": null,
     "status": "Revoked",
     "isActive": false,
     "created_at": "2026-01-27T20:38:58.268840",
-    "updated_at": "2026-01-27T20:38:58.268850"
+    "updated_at": "2026-01-27T21:14:37.228317"
   }
 ]
