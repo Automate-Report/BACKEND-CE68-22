@@ -4,9 +4,9 @@
     "email": "user@example.com",
     "thread_number": 3,
     "name": "XSS Worker",
-    "hostname": null,
+    "hostname": "test",
     "status": "Revoked",
-    "isActive": false,
+    "isActive": true,
     "created_at": "2026-01-27T18:49:28.965751",
     "updated_at": "2026-01-27T18:49:28.965758"
   }
