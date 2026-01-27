@@ -2,6 +2,7 @@ import json
 import os
 from datetime import datetime
 from typing import List, Optional
+
 from app.schemas.project import ProjectCreate
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
@@ -34,7 +35,7 @@ class ProjectService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def get_all_projects(self, user_id: int, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
+    def get_all_projects(self, user_id: str, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
         projects = self._read_json()
         
@@ -43,10 +44,10 @@ class ProjectService:
         for proj in projects:
             if filter == "ALL":
                 if search:
-                    if proj["user_id"] == user_id and search in proj["name"]:
+                    if proj["email"] == user_id and search in proj["name"]:
                         all_matches.append(proj)
                 else:
-                    if proj["user_id"] == user_id:
+                    if proj["email"] == user_id:
                         all_matches.append(proj)
             else:
                 # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
@@ -78,31 +79,29 @@ class ProjectService:
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
     
-    def get_project_by_id(self, user_id:int, project_id:int):
+    def get_project_by_id(self, project_id:int, user_id: str):
         projects = self._read_json()
 
         for proj in projects:
-            if proj["user_id"] == user_id and proj["id"] == project_id:
+            if proj["id"] == project_id and proj["email"] == user_id:
                 return proj
             
         return None
 
-    def create_project(self, project_in: ProjectCreate, user_id: int) -> dict:
+    def create_project(self, name: str, description: str, user_id: str) -> dict:
         """Service: สร้างโปรเจกต์ใหม่"""
         projects = self._read_json()
-        
-        # 1. จำลอง Logic Auto Increment ID
+
         new_id = 1
         if projects:
             # เอา ID ตัวสุดท้ายมา + 1
             new_id = projects[-1]["id"] + 1
-            
-        # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
+
         new_project = {
             "id": new_id,
-            "name": project_in.name,
-            "description": project_in.description,
-            "user_id": user_id,
+            "name": name,
+            "description": description,
+            "email": user_id,
             "created_at": datetime.now().isoformat(),
             "updated_at": datetime.now().isoformat(),
         }
@@ -113,11 +112,11 @@ class ProjectService:
         
         return new_project
     
-    def update_project(self, project_id: int, project_in: ProjectCreate, user_id: int) -> Optional[dict]:
+    def update_project(self, project_id: int, project_in: ProjectCreate, user_id: str) -> Optional[dict]:
         """Service: อัปเดตโปรเจกต์"""
         projects = self._read_json()
         for proj in projects:
-            if proj["id"] == project_id and proj["user_id"] == user_id:
+            if proj["id"] == project_id and proj["email"] == user_id:
                 proj["name"] = project_in.name
                 proj["description"] = project_in.description
                 proj["updated_at"] = datetime.now().isoformat()
@@ -125,11 +124,11 @@ class ProjectService:
                 return proj
         return None
     
-    def delete_project(self, project_id: int, user_id: int) -> bool:
+    def delete_project(self, project_id: int) -> bool:
         """Service: ลบโปรเจกต์"""
         projects = self._read_json()
         for i, proj in enumerate(projects):
-            if proj["id"] == project_id and proj["user_id"] == user_id:
+            if proj["id"] == project_id:
                 del projects[i]
                 self._save_json(projects)
                 return True

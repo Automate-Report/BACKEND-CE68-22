@@ -18,6 +18,8 @@ from app.api.endpoints import asset_credentials
 from app.api.endpoints import workers
 from app.api.endpoints import access_keys
 from app.api.endpoints import pentest_log
+from app.api.endpoints import tag
+from app.api.endpoints import project_tags
 
 # --- ส่วนของ Async Background Service ---
 async def my_background_service():
@@ -29,21 +31,21 @@ async def my_background_service():
         print("Background service is stopping...")
 
 # --- Lifespan Management ---
-# @asynccontextmanager
-# async def lifespan(app: FastAPI):
-#     # [Startup]: ทำงานตอนเปิด Server
-#     async with engine.begin() as conn:
-#         # สร้าง Table ทั้งหมดถ้ายังไม่มี (เหมือน setup_db ของคุณ)
-#         await conn.run_sync(Base.metadata.create_all)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # [Startup]: ทำงานตอนเปิด Server
+    async with engine.begin() as conn:
+        # สร้าง Table ทั้งหมดถ้ายังไม่มี (เหมือน setup_db ของคุณ)
+        await conn.run_sync(Base.metadata.create_all)
     
-#     # เริ่มรัน Background Task
-#     bg_task = asyncio.create_task(my_background_service())
+    # เริ่มรัน Background Task
+    bg_task = asyncio.create_task(my_background_service())
     
-#     yield  # --- ช่วงที่ App รันปกติ ---
+    yield  # --- ช่วงที่ App รันปกติ ---
 
-#     # [Shutdown]: ทำงานตอนปิด Server
-#     bg_task.cancel() # ปิด Background Task
-#     await engine.dispose() # ปิดการเชื่อมต่อ DB
+    # [Shutdown]: ทำงานตอนปิด Server
+    bg_task.cancel() # ปิด Background Task
+    await engine.dispose() # ปิดการเชื่อมต่อ DB
 
 
 
@@ -51,7 +53,7 @@ app = FastAPI(
     title="CE68-22 Backend API",
     description="API for Project (Master-Agent Architecture)",
     version="1.0.0",
-    # lifespan=lifespan
+    lifespan=lifespan
 
 )
 
@@ -86,6 +88,9 @@ app.include_router(asset_credentials.router, prefix="/credentials", tags=["Crede
 app.include_router(workers.router, prefix="/workers", tags=["Workers"])
 app.include_router(access_keys.router, prefix="/access-keys", tags=["Access Keys"])
 app.include_router(pentest_log.router, prefix="/pentest-logs", tags=["Pentest Logs"])
+
+app.include_router(tag.router, prefix="/tags", tags=["Tags"])
+app.include_router(project_tags.router, prefix="/project-tags", tags=["Project Tags"])
 
 # 4. Health Check Endpoint (เอาไว้ยิงเช็คว่า Server ตายหรือยัง)
 @app.get("/")

@@ -7,11 +7,11 @@ import jwt
 from cvss import CVSS3
 from datetime import datetime, timedelta
 from typing import List, Optional
-from fastapi import Response, HTTPException, Header
+from fastapi import HTTPException, Header
 from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
 
-from app.schemas.worker import WorkerCreate, HandshakeRequest, VerifyRequest
+from app.schemas.worker import WorkerCreate, VerifyRequest
 from app.core import security
 from app.services.access_key import access_key_service
 
@@ -76,7 +76,7 @@ class WorkerService:
 
         return worker
 
-    def create_worker(self, worker_in: WorkerCreate, user_id: int) -> dict:
+    def create_worker(self, worker_in: WorkerCreate, user_id: str) -> dict:
         """Service: สร้าง Worker"""
         workers = self._read_json()
         
@@ -89,10 +89,10 @@ class WorkerService:
         # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_worker = {
             "id": new_id,
-            "user_id": user_id,
+            "email": user_id,
+            "thread_number": worker_in.thread_number,
             "name": worker_in.name,
             "hostname": None,
-            "access_key_id": None,
             "status": "offline",
             "isActive": False,
             "created_at": datetime.now().isoformat(),
@@ -105,7 +105,7 @@ class WorkerService:
 
         return new_worker
     
-    def get_all_workers(self, user_id: int, page: int, size: int, sort_by: str = None, order: str = "asc"):
+    def get_all_workers(self, user_id: str, page: int, size: int, sort_by: str = None, order: str = "asc"):
         """Service: ดึงข้อมูล Worker ทั้งหมดของ user นั้น"""
         workers = self._read_json()
         
@@ -113,7 +113,7 @@ class WorkerService:
         all_matches = []
         for worker in workers:
             worker = self._enrich_worker_status(worker)
-            if worker["user_id"] == user_id:
+            if worker["email"] == user_id:
                 all_matches.append(worker)
 
 
@@ -144,18 +144,18 @@ class WorkerService:
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
     
-    def delete_worker(self, worker_id: int, user_id: int) -> bool:
+    def delete_worker(self, worker_id: int, user_id: str) -> bool:
         """Service: ลบ Worker"""
         workers = self._read_json()
         for i, worker in enumerate(workers):
-            if worker["id"] == worker_id and worker["user_id"] == user_id:
+            if worker["id"] == worker_id and worker["email"] == user_id:
                 del workers[i]
                 self._save_json(workers)
                 return True
         return False
     
 
-    def get_worker_by_id(self, user_id:int, worker_id: int):
+    def get_worker_by_id(self, user_id:str, worker_id: int):
         """Service: ดึงข้อมูล 1 Worker"""
         workers = self._read_json()
 
@@ -165,45 +165,23 @@ class WorkerService:
             
         return None
     
-    def update_worker(self, worker_id: int, worker_in: WorkerCreate, user_id: int) -> Optional[dict]:
+    def update_worker(self, worker_id: int, worker_in: WorkerCreate, user_id: str) -> Optional[dict]:
         """Service: อัปเดต Worker"""
         workers = self._read_json()
         for worker in workers:
-            if worker["id"] == worker_id and worker["user_id"] == user_id:
+            if worker["id"] == worker_id and worker["email"] == user_id:
                 worker["name"] = worker_in.name
                 worker["updated_at"] = datetime.now().isoformat()
                 self._save_json(workers)
                 return worker
         return None
-    
-    def generate_access_key(self, worker_id:int):
-        """Service: Create & Delete Access Key"""
-        workers = self._read_json()
-
-        target = None
-
-        for worker in workers:
-            if worker["id"] == worker_id:
-                target = worker
-
-        access_key_id = target.get("access_key_id")
-        if access_key_id == None:
-            access_key = access_key_service.create_access_key()
-            target["access_key_id"] = access_key["id"]
-        else:
-            raise HTTPException(status_code=404, detail="Access Key is exist.")
-
-        self._save_json(workers)
-        return target
-
-    
+       
     def remove_access_key(self, worker_id:int):
         """Service: remove access key id ให้ worker id"""
         workers = self._read_json()
 
         for worker in workers:
             if worker_id == worker["id"]:
-                worker["access_key_id"] = None
                 worker["isActive"] = False
                 worker["status"] = "Revoked"
                 worker["last_heartbeat"] = None
@@ -341,21 +319,20 @@ class WorkerService:
         EMBEDED_KEY = b'JimGiFbXqlAwUAXu2PM1_eATccCMR7uAoB0wfI2DMgQ='
         DELIMITER = b"|||HIDDEN_DATA|||"
 
-        json_bytes = json.dumps(hidden_payload).encode()
-        f = Fernet(EMBEDED_KEY)
-        encrypted_payload = f.encrypt(json_bytes)
 
-        # 2. ตั้งค่า Path
-        # โฟลเดอร์ต้นฉบับที่ได้จาก PyInstaller (Template)
+        json_bytes = json.dumps(hidden_payload).encode() # worker_id + backend_url
+        f = Fernet(EMBEDED_KEY) # สร้างตัวเข้ารหัส
+        encrypted_payload = f.encrypt(json_bytes) # เข้ารหัส
+
+        # Path ของ Worker
         TEMPLATE_DIR = "app/static/bin/SecurityWorker" 
-        
-        # ชื่อไฟล์ exe หลักที่เราต้องการฝังยา (ต้องตรงกับชื่อที่ตั้งตอน build --name)
+        # ชื่อไฟล์ exe 
         TARGET_EXE_NAME = "SecurityWorker.exe"
 
         # --- ส่วนที่แก้ไข: สร้าง ZIP File ในหน่วยความจำ ---
         zip_buffer = io.BytesIO()
 
-        dest_root_folder = f"SecurityWorker_{worker.get('name')}"
+        dest_folder_name = f"SecurityWorker_{worker.get('name')}"
 
         with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
         
@@ -370,7 +347,7 @@ class WorkerService:
                     rel_path = os.path.relpath(abs_path, TEMPLATE_DIR)
                     
                     # Path ปลายทางใน Zip (เอาชื่อโฟลเดอร์ worker มานำหน้า)
-                    zip_arcname = os.path.join(dest_root_folder, rel_path)
+                    zip_arcname = os.path.join(dest_folder_name, rel_path)
 
                     # --- จุดสำคัญ: เช็คว่าเป็นไฟล์ exe หลักหรือไม่ ---
                     if filename == TARGET_EXE_NAME:
@@ -378,7 +355,7 @@ class WorkerService:
                         with open(abs_path, "rb") as f_exe:
                             exe_data = f_exe.read()
                         
-                        final_exe_data = exe_data + DELIMITER + encrypted_payload
+                        final_exe_data = exe_data + DELIMITER + encrypted_payload #ฉีดข้อมูล worker_id + backend_url
                         zf.writestr(zip_arcname, final_exe_data)
                     
                     else:
@@ -392,28 +369,10 @@ class WorkerService:
             zip_buffer,
             media_type="application/zip",
             headers={
-                "Content-Disposition": f"attachment; filename={dest_root_folder}.zip"
+                "Content-Disposition": f"attachment; filename={dest_folder_name}.zip"
             }
         )
-    
-    def calculate_cvss(self, vuln_type: str):
-        # Template คะแนนมาตรฐาน
-        vectors = {
-            "Error-Based SQLi": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", # 9.8
-            "Time-Based SQLi":  "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-            "Boolean-Based SQLi": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-            "Reflected XSS":    "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N", # 6.1
-            "DOM XSS":          "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
-            "Stored XSS":       "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:L/I:L/A:N",
-        }
-        
-        vector_str = vectors.get(vuln_type)
-        if not vector_str:
-            # กรณีไม่รู้จัก ให้เป็น Medium ไว้ก่อน
-            vector_str = "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N" 
-            
-        c = CVSS3(vector_str)
-        return c.base_score, vector_str
+
 
 
 

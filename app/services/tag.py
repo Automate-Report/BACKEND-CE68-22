@@ -1,22 +1,15 @@
 import json
 import os
-import io
-import zipfile
-
-from datetime import datetime, timedelta
-from typing import List
-
-
-
-from app.core import security
+from datetime import datetime
+from typing import List, Optional
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "access_keys.json")
+JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "tags.json")
 
-class AccessKeyService:
-
+class TagService:
+    
     def _ensure_dummy_folder_exists(self):
         """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
         folder = os.path.dirname(JSON_FILE_PATH)
@@ -40,54 +33,58 @@ class AccessKeyService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-
-
-    def create_access_key(self, worker_id):
-        """Service: สร้าง API Key"""
-        access_keys = self._read_json()
+    def create_tag(self, tag: str, user_id: str) -> dict:
+        """Service: สร้าง Tag ใหม่"""
+        tags = self._read_json()
 
         new_id = 1
-        if access_keys:
-            new_id = access_keys[-1]["id"] + 1
-        
-        new_access_key = {
+        if tags:
+            # เอา ID ตัวสุดท้ายมา + 1
+            new_id = tags[-1]["id"] + 1
+
+        new_tag = {
             "id": new_id,
-            "worker_id": worker_id,
-            "key": security.generate_access_key(),
+            "name": tag,
+            "email": user_id,
             "created_at": datetime.now().isoformat(),
             "updated_at": datetime.now().isoformat(),
         }
-
-        access_keys.append(new_access_key)
-        self._save_json(access_keys)
-
-        return new_access_key
+        new_id += 1
+        
+        # 3. บันทึก
+        tags.append(new_tag)
+        self._save_json(tags)
+        return new_tag
     
-    def get_access_key_by_id(self, id: int):
-        access_keys = self._read_json()
-        for key in access_keys:
-            if key["id"] == id:
-                return key
+    def get_all_tags_by_user_id(self, user_id: str):
+        tags = self._read_json()
+
+        result = []
+
+        for tag in tags:
+            if tag["email"] == user_id:
+                result.append(tag)
+            
+        return result
+    
+    def get_tag_by_id(self, id: int):
+        tags = self._read_json()
+
+        for tag in tags:
+            if tag["id"] == id:
+                return tag
             
         return None
     
-    def get_access_key_by_worker_id(self, worker_id: int):
-        access_keys = self._read_json()
-        for key in access_keys:
-            if key["worker_id"] == worker_id:
-                return key
-            
-        return None
-    
-    def delete_access_key_by_id(self, id: int):
-        access_keys =self._read_json()
-        for i, key in enumerate(access_keys):
-            if key["id"] == id:
-                del access_keys[i]
-                self._save_json(access_keys)
+    def delete_tag(self, id: int) -> bool:
+        """Service: ลบ Tag"""
+        tags = self._read_json()
+        for i, tag in enumerate(tags):
+            if tag["id"] == id:
+                del tags[i]
+                self._save_json(tags)
                 return True
-            
         return False
-   
 
-access_key_service = AccessKeyService()
+# สร้าง Instance ไว้ให้ Router เรียกใช้
+tag_service = TagService()

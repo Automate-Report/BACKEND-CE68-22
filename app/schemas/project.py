@@ -1,17 +1,16 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 class ProjectCreate(BaseModel):
     name: str
     description: Optional[str] = None
-
+    tag_ids: Optional[List[int]] = []
 
 class ProjectResponse(BaseModel):
     id: int
     name: str
     description: Optional[str] = None
-    user_id: int
     created_at: datetime
     updated_at: datetime
 
