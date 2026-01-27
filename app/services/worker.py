@@ -175,6 +175,16 @@ class WorkerService:
                 self._save_json(workers)
                 return worker
         return None
+    
+    def activate_access_key(self, worker_id):
+        workers = self._read_json()
+
+        for worker in workers:
+            if worker_id == worker["id"]:
+                worker["status"] = "offline"
+
+        self._save_json(workers)
+        return None
        
     def remove_access_key(self, worker_id:int):
         """Service: remove access key id ให้ worker id"""

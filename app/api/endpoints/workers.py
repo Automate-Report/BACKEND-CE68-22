@@ -56,6 +56,7 @@ def gen_access_key(worker_id: int):
 
     if not key:
         access_key_service.create_access_key(worker_id)
+        worker_service.activate_access_key(worker_id)
         return key
     
     return None
