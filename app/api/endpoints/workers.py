@@ -4,7 +4,7 @@ from typing import Optional
 from datetime import datetime
 
 # Import ของที่เราทำไว้
-from app.schemas.worker import WorkerCreate, WorkerResponse, VerifyRequest
+from app.schemas.worker import WorkerCreate, WorkerResponse, VerifyRequest, HeartBeatPayload
 from app.schemas.pagination import PaginatedResponse
 from app.services.worker import worker_service
 from app.services.access_key import access_key_service
@@ -116,10 +116,10 @@ def verify_access_key(req: VerifyRequest):
 
 #HeartBeat
 @router.post("/heartbeat")
-def heartbeat(worker_id: int = Depends(worker_service.verify_token)): 
+def heartbeat(payload: HeartBeatPayload, worker_id: int = Depends(worker_service.verify_token)): 
     # worker_id นี้ได้มาจากการแกะ Token ที่ถูกต้องแล้ว
     
-    result = worker_service.update_heartbeat(worker_id)
+    result = worker_service.update_heartbeat(worker_id, payload)
     if not result:
         # กรณีนี้ยากที่จะเกิด ถ้า Token ผ่านแล้ว แต่เผื่อไว้
         raise HTTPException(status_code=404, detail="Worker not found")
