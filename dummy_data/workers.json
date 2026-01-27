@@ -1,24 +1,13 @@
 [
   {
     "id": 1,
-    "user_id": 1,
-    "thread_number": 10,
-    "name": "test with number of threads",
+    "email": "user@example.com",
+    "thread_number": 3,
+    "name": "XSS Worker",
     "hostname": null,
     "status": "Revoked",
     "isActive": false,
-    "created_at": "2026-01-27T00:00:01.746802",
-    "updated_at": "2026-01-27T00:00:01.746812"
-  },
-  {
-    "id": 2,
-    "user_id": 1,
-    "thread_number": 2,
-    "name": "Dummy Data",
-    "hostname": "Dummy Hostname",
-    "status": "Revoked",
-    "isActive": false,
-    "created_at": "2026-01-27T00:04:04.415361",
-    "updated_at": "2026-01-27T00:04:04.415373"
+    "created_at": "2026-01-27T18:49:28.965751",
+    "updated_at": "2026-01-27T18:49:28.965758"
   }
 ]
