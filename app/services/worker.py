@@ -12,7 +12,7 @@ from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
 
 from app.core import security
-from app.schemas.worker import WorkerCreate, VerifyRequest
+from app.schemas.worker import WorkerCreate, VerifyRequest, HeartBeatPayload
 from app.services.access_key import access_key_service
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
@@ -267,14 +267,13 @@ class WorkerService:
             if not worker:
                 raise HTTPException(status_code=401, detail="Worker not found (ID invalid)")
             
-            access_key_id = worker["access_key_id"]
+            access_key = access_key_service.get_access_key_by_worker_id(worker.get("id"))
 
-            if not access_key_id:
+            if not access_key:
                 # ถ้าไม่มี ID แสดงว่าโดนถอดสิทธิ์แล้ว
                 raise HTTPException(status_code=401, detail="Access Key Revoked")
             
-            worker_access_key = access_key_service.get_access_key_by_id(access_key_id)
-            real_secret = worker_access_key.get("key")
+            real_secret = access_key.get("key")
     
             if not real_secret:
                 raise HTTPException(status_code=401, detail="Secret missing")
@@ -295,16 +294,18 @@ class WorkerService:
             # กันกรณี sub ไม่ใช่ตัวเลข
             raise HTTPException(status_code=401, detail="Invalid Worker ID format")
     
-    def update_heartbeat(self, worker_id: int):
+    def update_heartbeat(self, worker_id: int, payload: HeartBeatPayload):
         workers = self._read_json()
         found = False
 
         for worker in workers:
             if worker["id"] == int(worker_id):
+                worker["current_load"] = payload.current_load
                 worker["last_heartbeat"] = datetime.utcnow().isoformat()
-                worker["status"] = "online"
+                worker["status"] = payload.status
                 worker["isActive"] = True
                 found = True
+                break
 
         if found:
             self._save_json(workers)

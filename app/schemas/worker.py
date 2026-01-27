@@ -36,6 +36,10 @@ class HandshakeRequest(BaseModel):
     registration_token: str
     hostname: str
 
+class HeartBeatPayload(BaseModel):
+    current_load: int
+    status: str
+
 class AuthRequest(BaseModel):
     api_key: str
     
