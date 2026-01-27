@@ -1,5 +1,7 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import Optional
+
+from app.deps.auth import get_current_user
 from app.schemas.project import ProjectCreate, ProjectResponse
 from app.schemas.pagination import PaginatedResponse
 from app.services.project import project_service 
@@ -10,17 +12,17 @@ router = APIRouter()
 # GET /projects/ : ดึงโปรเจกต์ทั้งหมดของ user นั้น
 @router.get("/all", response_model=PaginatedResponse[ProjectResponse])
 async def get_all_projects(
-    user_id: str,
     page: int = Query(1, ge=1, description="Page number"), 
     size: int = Query(10, ge=1, le=100, description="Items per page"),
     sort_by: Optional[str] = Query(None, description="Column to sort by"),
     order: Optional[str] = Query("asc", description="asc or desc"),
     search: Optional[str] = Query(None, description="Search box"),
-    filter: Optional[str] = Query("ALL", description="filter - ALL -    -    ")
+    filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
+    user = Depends(get_current_user)
 ):
 
     result = project_service.get_all_projects(
-        user_id=user_id,
+        user_id=user["sub"],
         page=page,
         size=size,
         sort_by=sort_by, 
@@ -32,9 +34,9 @@ async def get_all_projects(
     return result
 
 @router.get("/{project_id}", response_model=ProjectResponse)
-async def get_project_by_id(project_id: int):
+async def get_project_by_id(project_id: int, user = Depends(get_current_user)):
 
-    project = project_service.get_project_by_id(project_id)
+    project = project_service.get_project_by_id(project_id, user["sub"])
 
     if not project:
         from fastapi import HTTPException
@@ -44,12 +46,12 @@ async def get_project_by_id(project_id: int):
 
 # POST /projects/ : สร้างโปรเจกต์ใหม่
 @router.post("/", response_model=ProjectResponse)
-async def create_project(project_in: ProjectCreate):
+async def create_project(project_in: ProjectCreate, user = Depends(get_current_user)):
     tag_ids = project_in.tag_ids
     new_project = project_service.create_project(
         name=project_in.name,
         description=project_in.description,
-        user_id=project_in.user_id
+        user_id=user["sub"]
     )
     for id in tag_ids:
         result = project_tag_service.create_project_tag(id, new_project["id"])
@@ -57,11 +59,12 @@ async def create_project(project_in: ProjectCreate):
 
 # PUT /projects/{project_id} : อัพเดตโปรเจกต์
 @router.put("/{project_id}", response_model=ProjectResponse)
-async def update_project(project_id: int, project_in: ProjectCreate):
+async def update_project(project_id: int, project_in: ProjectCreate, user = Depends(get_current_user)):
     new_tag_ids = set(project_in.tag_ids)
     updated_project = project_service.update_project(
         project_id=project_id,
-        project_in=project_in
+        project_in=project_in,
+        user_id=user["sub"]
     )
     if not updated_project:
         raise HTTPException(status_code=404, detail="Project not found")

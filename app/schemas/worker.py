@@ -4,11 +4,13 @@ from datetime import datetime
 
 class WorkerCreate(BaseModel):
     name: str
+    thread_number: int
 
 
 class WorkerResponse(BaseModel):
     id: int
     name: str
+    thread_number: int
     hostname: Optional[str] = None
     status: str
     isActive: bool

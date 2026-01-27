@@ -5,7 +5,6 @@ from datetime import datetime
 class ProjectCreate(BaseModel):
     name: str
     description: Optional[str] = None
-    user_id: str
     tag_ids: Optional[List[int]] = []
 
 class ProjectResponse(BaseModel):

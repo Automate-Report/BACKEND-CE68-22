@@ -35,7 +35,7 @@ class ProjectService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def get_all_projects(self, user_id: int, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
+    def get_all_projects(self, user_id: str, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
         projects = self._read_json()
         
@@ -79,11 +79,11 @@ class ProjectService:
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
     
-    def get_project_by_id(self, project_id:int):
+    def get_project_by_id(self, project_id:int, user_id: str):
         projects = self._read_json()
 
         for proj in projects:
-            if proj["id"] == project_id:
+            if proj["id"] == project_id and proj["email"] == user_id:
                 return proj
             
         return None
@@ -112,11 +112,11 @@ class ProjectService:
         
         return new_project
     
-    def update_project(self, project_id: int, project_in: ProjectCreate) -> Optional[dict]:
+    def update_project(self, project_id: int, project_in: ProjectCreate, user_id: str) -> Optional[dict]:
         """Service: อัปเดตโปรเจกต์"""
         projects = self._read_json()
         for proj in projects:
-            if proj["id"] == project_id and proj["email"] == project_in.user_id:
+            if proj["id"] == project_id and proj["email"] == user_id:
                 proj["name"] = project_in.name
                 proj["description"] = project_in.description
                 proj["updated_at"] = datetime.now().isoformat()

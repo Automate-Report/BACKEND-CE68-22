@@ -31,21 +31,21 @@ async def my_background_service():
         print("Background service is stopping...")
 
 # --- Lifespan Management ---
-# @asynccontextmanager
-# async def lifespan(app: FastAPI):
-#     # [Startup]: ทำงานตอนเปิด Server
-#     async with engine.begin() as conn:
-#         # สร้าง Table ทั้งหมดถ้ายังไม่มี (เหมือน setup_db ของคุณ)
-#         await conn.run_sync(Base.metadata.create_all)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # [Startup]: ทำงานตอนเปิด Server
+    async with engine.begin() as conn:
+        # สร้าง Table ทั้งหมดถ้ายังไม่มี (เหมือน setup_db ของคุณ)
+        await conn.run_sync(Base.metadata.create_all)
     
-#     # เริ่มรัน Background Task
-#     bg_task = asyncio.create_task(my_background_service())
+    # เริ่มรัน Background Task
+    bg_task = asyncio.create_task(my_background_service())
     
-#     yield  # --- ช่วงที่ App รันปกติ ---
+    yield  # --- ช่วงที่ App รันปกติ ---
 
-#     # [Shutdown]: ทำงานตอนปิด Server
-#     bg_task.cancel() # ปิด Background Task
-#     await engine.dispose() # ปิดการเชื่อมต่อ DB
+    # [Shutdown]: ทำงานตอนปิด Server
+    bg_task.cancel() # ปิด Background Task
+    await engine.dispose() # ปิดการเชื่อมต่อ DB
 
 
 
@@ -53,7 +53,7 @@ app = FastAPI(
     title="CE68-22 Backend API",
     description="API for Project (Master-Agent Architecture)",
     version="1.0.0",
-    # lifespan=lifespan
+    lifespan=lifespan
 
 )
 
