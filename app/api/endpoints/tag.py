@@ -1,5 +1,7 @@
-from fastapi import APIRouter, HTTPException, Query
-from typing import Optional, List
+from fastapi import APIRouter, HTTPException, Depends
+from typing import  List
+
+from app.deps.auth import get_current_user
 
 from app.schemas.tag import TagsResponse, TagCreate
 
@@ -9,9 +11,9 @@ from app.services.project_tag import project_tag_service
 router = APIRouter()
 
 # GET /projects/ : ดึงโปรเจกต์ทั้งหมดของ user นั้น
-@router.get("/all/{user_id}", response_model=List[TagsResponse])
-async def get_all_tags_by_user_id(user_id: str):
-    tags = tag_service.get_all_tags_by_user_id(user_id)
+@router.get("/all/", response_model=List[TagsResponse])
+async def get_all_tags_by_user_id(user = Depends(get_current_user)):
+    tags = tag_service.get_all_tags_by_user_id(user["sub"])
     return tags
 
 @router.get("/project/{project_id}", response_model=List[TagsResponse])
@@ -31,8 +33,8 @@ async def get_tag_by_id(tag_id: int):
     return tag
 
 @router.post("/", response_model=TagsResponse)
-async def create_tag(tag_in: TagCreate):
-    new_tag = tag_service.create_tag(tag_in.name, tag_in.user_id)
+async def create_tag(tag_in: TagCreate, user = Depends(get_current_user)):
+    new_tag = tag_service.create_tag(tag_in.name, user["sub"])
     return new_tag
 
 # DELETE 
