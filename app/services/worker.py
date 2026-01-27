@@ -11,8 +11,8 @@ from fastapi import HTTPException, Header
 from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
 
-from app.schemas.worker import WorkerCreate, VerifyRequest
 from app.core import security
+from app.schemas.worker import WorkerCreate, VerifyRequest
 from app.services.access_key import access_key_service
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
@@ -200,19 +200,14 @@ class WorkerService:
             # Use 404 for "Not Found"
             raise HTTPException(status_code=404, detail="Worker ID not found")
         
-        access_key_id = target_worker.get("access_key_id")
+        
+        access_key = access_key_service.get_access_key_by_worker_id(target_worker.get("id"))
 
         
-        if not access_key_id:
+        if not access_key:
             raise HTTPException(status_code=400, detail="Worker missing access key")
         
-        access_key = access_key_service.get_access_key_by_id(access_key_id)
-        access_key_data = access_key.get("key")
-
-        if (not access_key_data) or (not access_key):
-            raise HTTPException(status_code=500, detail="Internal Error: Key data missing")
-        
-        current_access_key = access_key_data
+        current_access_key = access_key.get("key")
 
         if req.key != current_access_key:
             # 🔥 CASE B: User กด "Generate New Key" ไปแล้ว
