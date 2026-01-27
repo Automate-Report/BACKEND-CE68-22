@@ -113,7 +113,7 @@ class WorkerService:
         all_matches = []
         for worker in workers:
             worker = self._enrich_worker_status(worker)
-            if worker["user_id"] == user_id:
+            if worker["email"] == user_id:
                 all_matches.append(worker)
 
 
@@ -144,18 +144,18 @@ class WorkerService:
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
     
-    def delete_worker(self, worker_id: int, user_id: int) -> bool:
+    def delete_worker(self, worker_id: int, user_id: str) -> bool:
         """Service: ลบ Worker"""
         workers = self._read_json()
         for i, worker in enumerate(workers):
-            if worker["id"] == worker_id and worker["user_id"] == user_id:
+            if worker["id"] == worker_id and worker["email"] == user_id:
                 del workers[i]
                 self._save_json(workers)
                 return True
         return False
     
 
-    def get_worker_by_id(self, user_id:int, worker_id: int):
+    def get_worker_by_id(self, user_id:str, worker_id: int):
         """Service: ดึงข้อมูล 1 Worker"""
         workers = self._read_json()
 
@@ -165,11 +165,11 @@ class WorkerService:
             
         return None
     
-    def update_worker(self, worker_id: int, worker_in: WorkerCreate, user_id: int) -> Optional[dict]:
+    def update_worker(self, worker_id: int, worker_in: WorkerCreate, user_id: str) -> Optional[dict]:
         """Service: อัปเดต Worker"""
         workers = self._read_json()
         for worker in workers:
-            if worker["id"] == worker_id and worker["user_id"] == user_id:
+            if worker["id"] == worker_id and worker["email"] == user_id:
                 worker["name"] = worker_in.name
                 worker["updated_at"] = datetime.now().isoformat()
                 self._save_json(workers)
