@@ -63,6 +63,22 @@ class JobService:
         self._save_json(jobs)
         
         return new_job
+    
+    def update_job_status(self, job_id: int, status: str):
+        jobs = self._read_json()
+
+        target_job = None
+
+        for job in jobs:
+            if job["id"] == job_id:
+                target_job = job
+                break
+
+        target_job["status"] = status
+
+        if not target_job:
+            return False
+        return True
 
     async def dispatch_job(self, schedule):
         asset = asset_service.get_asset_by_id(schedule.asset_id)
