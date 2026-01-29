@@ -11,7 +11,7 @@ from croniter import croniter
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "schedule.json")
+JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "test_schedule.json")
 
 class ScheduleService:
     
