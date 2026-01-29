@@ -18,6 +18,7 @@ from app.api.endpoints import asset_credentials
 from app.api.endpoints import workers
 from app.api.endpoints import access_keys
 from app.api.endpoints import pentest_log
+from app.api.endpoints import schedule
 
 # --- ส่วนของ Async Background Service ---
 async def my_background_service():
@@ -82,7 +83,7 @@ app.include_router(projects.router, prefix="/projects", tags=["Projects"])
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 app.include_router(assets.router, prefix="/assets", tags=["Assets"])
 app.include_router(asset_credentials.router, prefix="/credentials", tags=["Credentials"])
-
+app.include_router(schedule.router, prefix="/schedule", tags=["Schedule"])
 app.include_router(workers.router, prefix="/workers", tags=["Workers"])
 app.include_router(access_keys.router, prefix="/access-keys", tags=["Access Keys"])
 app.include_router(pentest_log.router, prefix="/pentest-logs", tags=["Pentest Logs"])

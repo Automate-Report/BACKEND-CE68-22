@@ -2,19 +2,38 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
+class Jobs(BaseModel):
+    job_name: str
+    worker_name: str
+    time_assigned: str #"2 min ago", "2 hrs ago", backend will calc i think
+    status: str
+class ScheduleItem(BaseModel):
+    schedule_id: int
+    schedule_name: str
+    project_id: int
+    asset_id: int
+    worker_id: int
+    cron_expression: str
+    attack_type: str
+    is_active: bool
+    next_run_at: Optional[datetime]
+    start_date: datetime
+    end_date: datetime
+    created_at: datetime
+    updated_at: datetime
 class JobStatus(BaseModel):
     failed: int
     finished: int
     ongoing: int
     scheduled: int
 class ScheduleResponse(BaseModel):
-    schedule_id: int
+    id: int
     project_id: int
     name: str
-    job_status: JobStatus
     atk_type: str
     start_date: datetime
     end_date: datetime
+    job_status: JobStatus
 class ScheduleCreate(BaseModel):
     project_id: int
     name: str
