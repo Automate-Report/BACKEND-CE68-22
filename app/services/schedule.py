@@ -37,14 +37,88 @@ class ScheduleService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def get_atk_type(self, schedule_id: int):
+
+    def get_all_schedules(self, project_id: int, page: int, size: int, sort_by: str = None, 
+                          order: str = "asc", search: str = None, filter: str = "ALL"):
+        """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
+        schedules = self._read_json()
+        print(123456)
+        # 1. กรอง Project
+        all_matches = []
+        for sch in schedules:
+            if filter == "ALL":
+                if search:
+                    if sch["project_id"] == project_id and search in sch["name"]:
+                        displaytable_sch = {
+                            "id": sch["schedule_id"],
+                            "project_id": sch["project_id"],
+                            "name": sch["schedule_name"],
+                            "atk_type": sch["attack_type"],
+                            "start_date": sch["start_date"],
+                            "end_date": sch["end_date"],
+                            "job_status": {# ตัวอย่างข้อมูล 
+                                "failed": 2,
+                                "finished": 42,
+                                "ongoing": 1,    
+                                "scheduled": 3,
+                            }
+                        }
+                        all_matches.append(displaytable_sch)
+                else:
+                    if sch["project_id"] == project_id:
+                        displaytable_sch = {
+                            "id": sch["schedule_id"],
+                            "project_id": sch["project_id"],
+                            "name": sch["schedule_name"],
+                            "atk_type": sch["attack_type"],
+                            "start_date": sch["start_date"],
+                            "end_date": sch["end_date"],
+                            "job_status": {# ตัวอย่างข้อมูล 
+                                "failed": 2,
+                                "finished": 42,
+                                "ongoing": 1,    
+                                "scheduled": 3,
+                            }
+                        }
+                        all_matches.append(displaytable_sch)
+            else:
+                # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
+                pass
+
+        if sort_by:
+            reverse = (order == "desc")
+            # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
+            all_matches.sort(key=lambda x: (x.get(sort_by) or ""), reverse=reverse)
+        
+        # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
+        total_count = len(all_matches)
+            
+        # 3. คำนวณ Pagination Logic
+        import math
+        total_pages = math.ceil(total_count / size)
+        
+        offset = (page - 1) * size
+        
+        # --- จุดที่ต้องแก้: ตัดข้อมูล (Slicing) ---
+        # ใช้ Python Slice [start : end]
+        paginated_items = all_matches[offset : offset + size]
+
+        return {
+            "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
+            "page": page,
+            "size": size,
+            "total_pages": total_pages,
+            "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
+        }
+    
+    def get_by_id(self, schedule_id: int):
         schedules = self._read_json()
         
         for schedule in schedules:
-            if schedule["id"] == schedule_id:
-                return schedule["attack_type"]
+            if schedule["schedule_id"] == schedule_id:
+                return schedule
         
-        return "Type Not Found"
+        return "Schedule Not Found"
     
     def update_schedule(self, schedule_input: ScheduleCreate):
         schedules = self._read_json()
