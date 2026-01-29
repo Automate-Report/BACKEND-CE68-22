@@ -72,9 +72,8 @@ class JobService:
         for job in jobs:
             if job["id"] == job_id:
                 job["status"] = status
+                self._save_json(jobs)
                 return True
-
-        self._save_json(jobs)
         return False
 
     
@@ -134,8 +133,6 @@ class JobService:
         jobs = self._read_json()
         workers = worker_service._read_json()
 
-        stuck_jobs = []
-
         for job in jobs:
             try:
                 # ใช้คีย์ให้ตรงกับใน JSON ของคุณ (ระวัง created_at vs create_at)
@@ -144,17 +141,13 @@ class JobService:
                 continue
 
             if job["status"] == "pending" and job_created_time < timeout_limit:
-                stuck_jobs.append(job)
-
-
-        for job in stuck_jobs:
-            print(f"🕵️ [Watchdog] Job {job["id"]} is stuck. Marking as failed.")
-            job["status"] = "failed"
-            # คืนโหลดให้ Worker ตัวเดิม (ถ้ามี)
-            for w in workers:
-                if w["id"] == job["worker_id"]:
-                    if w and w["current_load"] > 0:
-                        w["current_load"] -= 1
+                print(f"🕵️ [Watchdog] Job {job["id"]} is stuck. Marking as failed.")
+                job["status"] = "failed"
+                # คืนโหลดให้ Worker ตัวเดิม (ถ้ามี)
+                for w in workers:
+                    if w["id"] == job["worker_id"]:
+                        if w and w["current_load"] > 0:
+                            w["current_load"] -= 1
 
         
         self._save_json(jobs)
