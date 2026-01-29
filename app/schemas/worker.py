@@ -11,6 +11,7 @@ class WorkerResponse(BaseModel):
     id: int
     name: str
     thread_number: int
+    current_load: int
     hostname: Optional[str] = None
     status: str
     isActive: bool
