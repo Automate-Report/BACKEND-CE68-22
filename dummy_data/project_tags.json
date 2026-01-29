@@ -1,17 +1,5 @@
 [
   {
-    "id": 1,
-    "project_id": 2,
-    "tag_id": 16,
-    "created_at": "2026-01-27T20:20:12.680230"
-  },
-  {
-    "id": 2,
-    "project_id": 2,
-    "tag_id": 10,
-    "created_at": "2026-01-27T20:20:12.693101"
-  },
-  {
     "id": 3,
     "project_id": 2,
     "tag_id": 13,
@@ -46,5 +34,35 @@
     "project_id": 5,
     "tag_id": 15,
     "created_at": "2026-01-27T20:39:25.711047"
+  },
+  {
+    "id": 9,
+    "project_id": 3,
+    "tag_id": 16,
+    "created_at": "2026-01-28T17:23:26.460625"
+  },
+  {
+    "id": 10,
+    "project_id": 3,
+    "tag_id": 5,
+    "created_at": "2026-01-28T17:23:26.475016"
+  },
+  {
+    "id": 11,
+    "project_id": 3,
+    "tag_id": 13,
+    "created_at": "2026-01-28T17:23:26.488362"
+  },
+  {
+    "id": 12,
+    "project_id": 3,
+    "tag_id": 14,
+    "created_at": "2026-01-28T17:23:26.499880"
+  },
+  {
+    "id": 13,
+    "project_id": 3,
+    "tag_id": 15,
+    "created_at": "2026-01-28T17:23:26.513111"
   }
 ]
