@@ -36,7 +36,7 @@ async def get_all_projects(
 @router.get("/{project_id}", response_model=ProjectResponse)
 async def get_project_by_id(project_id: int, user = Depends(get_current_user)):
 
-    project = project_service.get_project_by_id(project_id, user["sub"])
+    project = project_service.get_project_by_id(project_id)
 
     if not project:
         from fastapi import HTTPException
