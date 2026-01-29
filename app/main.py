@@ -23,6 +23,7 @@ from app.api.endpoints import pentest_log
 from app.api.endpoints import tag
 from app.api.endpoints import project_tags
 from app.api.endpoints import schedule
+from app.api.endpoints import jobs
 
 # --- Lifespan Management ---
 @asynccontextmanager
@@ -91,6 +92,8 @@ app.include_router(pentest_log.router, prefix="/pentest-logs", tags=["Pentest Lo
 
 app.include_router(tag.router, prefix="/tags", tags=["Tags"])
 app.include_router(project_tags.router, prefix="/project-tags", tags=["Project Tags"])
+
+app.include_router(jobs.router, prefix="/jobs", tags=["Jobs"])
 
 # 4. Health Check Endpoint (เอาไว้ยิงเช็คว่า Server ตายหรือยัง)
 
