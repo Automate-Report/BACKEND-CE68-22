@@ -80,19 +80,19 @@ class JobService:
             return False
         return True
 
-    async def dispatch_job(self, schedule):
-        asset = asset_service.get_asset_by_id(schedule.asset_id)
+    # async def dispatch_job(self, schedule):
+    #     asset = asset_service.get_asset_by_id(schedule.asset_id)
 
-        new_job = self.create_job()
+    #     new_job = self.create_job()
 
-        payload = JobWorkerPayload(
-            job_id=new_job["id"],
-            target_url=asset["target"],
-            attack_type="XSS"
-        )
+    #     payload = JobWorkerPayload(
+    #         job_id=new_job["id"],
+    #         target_url=asset["target"],
+    #         attack_type="XSS"
+    #     )
 
-        await redis_jobs.rpush(QUEUE_KEY, payload.model_dump_json())
-        print(f"🚀 Job {new_job.id} dispatched to Redis!")
+    #     await redis_jobs.rpush(QUEUE_KEY, payload.model_dump_json())
+    #     print(f"🚀 Job {new_job.id} dispatched to Redis!")
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 job_service = JobService()
