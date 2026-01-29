@@ -69,18 +69,14 @@ class JobService:
     def update_job_status(self, job_id: int, status: str):
         jobs = self._read_json()
 
-        target_job = None
-
         for job in jobs:
             if job["id"] == job_id:
-                target_job = job
-                break
+                job["status"] = status
+                return True
 
-        target_job["status"] = status
+        self._save_json(jobs)
+        return False
 
-        if not target_job:
-            return False
-        return True
     
     def best_worker(self, user_id: str):
         workers = worker_service.read_all_worker(user_id)
