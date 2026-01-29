@@ -3,7 +3,7 @@
     "id": 1,
     "email": "user@example.com",
     "thread_number": 3,
-    "current_load": 2,
+    "current_load": 1,
     "name": "XSS Worker1",
     "hostname": "test",
     "status": "online",
@@ -23,7 +23,7 @@
     "isActive": true,
     "created_at": "2026-01-27T18:49:28.965751",
     "updated_at": "2026-01-27T18:49:28.965758",
-    "last_heartbeat": "2026-01-29T14:00:50.691658"
+    "last_heartbeat": "2026-01-29T14:26:36.939908"
   },
   {
     "id": 3,

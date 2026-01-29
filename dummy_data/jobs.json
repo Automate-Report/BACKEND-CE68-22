@@ -3,7 +3,52 @@
     "id": 1,
     "schedule_id": 1,
     "worker_id": 1,
+    "status": "failed",
+    "created_at": "2026-01-25T10:00:00"
+  },
+  {
+    "id": 2,
+    "schedule_id": 1,
+    "worker_id": 2,
     "status": "pending",
-    "create_at": "2026-01-25T10:00:00"
+    "created_at": "2026-01-29T21:01:54.742903",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 3,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T21:02:04.782657",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 4,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T21:02:04.797745",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 5,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "completed",
+    "created_at": "2026-01-29T21:16:27.737062",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 6,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "completed",
+    "created_at": "2026-01-29T21:16:27.756954",
+    "started_at": null,
+    "finished_at": null
   }
 ]
