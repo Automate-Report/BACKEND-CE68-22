@@ -29,6 +29,6 @@ pool_jobs = redis.ConnectionPool.from_url(
 redis_client = redis.Redis(connection_pool=pool_blacklist)
 redis_jobs = redis.Redis(connection_pool=pool_jobs)
 
-QUEUE_KEY = "system:queue" #เก็บงานที่พร้อมทำ
+QUEUE_KEY = "system:queue:work" #เก็บงานที่พร้อมทำ
 
 #docker run -d --name redis -p 5678  redis:6379 redis
