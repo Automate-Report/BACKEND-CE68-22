@@ -399,5 +399,491 @@
     "created_at": "2026-01-29T16:50:56.877472",
     "started_at": null,
     "finished_at": null
+  },
+  {
+    "id": 145,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T19:32:11.979372",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 146,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T19:32:11.993874",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 147,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T19:34:19.153706",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 148,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T19:34:19.174042",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 149,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T19:35:01.271562",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 150,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T19:35:01.286562",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 151,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T19:36:01.397825",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 152,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T19:36:01.411514",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 153,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T19:43:53.120912",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 154,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T19:44:03.161381",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 155,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T19:44:03.178537",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 156,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:15:04.730560",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 157,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:15:04.752043",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 158,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:19:48.733000",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 159,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:20:08.793825",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 160,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:20:08.812497",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 161,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:21:08.947344",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 162,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:22:09.057877",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 163,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:22:09.072596",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 164,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:23:09.202689",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 165,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:24:09.323466",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 166,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:24:09.341294",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 167,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:25:09.474472",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 168,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:25:09.493043",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 169,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:26:09.645245",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 170,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:26:09.661649",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 171,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:27:07.315622",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 172,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:28:08.497910",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 173,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:28:08.514340",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 174,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:29:08.670328",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 175,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:30:08.777350",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 176,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:30:08.792389",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 177,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:31:08.906024",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 178,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:32:09.020014",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 179,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:32:09.038946",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 180,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:33:09.162527",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 181,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:34:09.282307",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 182,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:34:09.301680",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 183,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:35:09.453965",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 184,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:35:09.471067",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 185,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:36:09.608857",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 186,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:36:09.624656",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 187,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:37:09.759049",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 188,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:38:09.879471",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 189,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:38:09.899048",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 190,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:39:10.022889",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 191,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:40:00.130608",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 192,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:40:00.146787",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 193,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:41:06.423657",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 194,
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:42:06.530005",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 195,
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-29T20:42:06.546819",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 196,
+    "schedule_id": 1,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-29T20:43:06.672674",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 197,
+    "schedule_id": 1,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-29T20:44:06.771863",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 198,
+    "schedule_id": 2,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-29T20:44:06.785795",
+    "started_at": null,
+    "finished_at": null
   }
 ]
