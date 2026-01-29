@@ -379,7 +379,14 @@ class WorkerService:
             }
         )
 
+    def read_all_worker(self, user_id: str):
+        workers = self._read_json()
+        result = []
+        for w in workers:
+            if w["email"] == user_id:
+                result.append(w)
 
+        return result
 
 
 worker_service = WorkerService()
