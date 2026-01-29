@@ -1,15 +1,32 @@
 [
-    {
-        "id": 1,
-        "project_id": 1,
-        "asset_id": 1,
-        "cron_expression": "0 * * * *",
-        "attack_type": "XSS",
-        "is_active": true, 
-        "next_run_at": "2025-12-19T22:17:01.149461",
-        "start_date": "2025-12-19T21:17:01.149461",
-        "end_date": "2026-12-19T21:17:01.149461",
-        "created_at": "2025-12-19T21:17:01.149461",
-        "updated_at": "2025-12-19T21:17:01.149461"
-    }
+  {
+    "id": 1,
+    "project_id": 2,
+    "asset_id": 1,
+    "cron_expression": "*/1 * * * *", 
+    "attack_type": "XSS",
+    "is_active": true,
+    "start_date": "2026-01-01T00:00:00",
+    "end_date": "2026-12-31T23:59:59"
+  },
+  {
+    "id": 2,
+    "project_id": 3,
+    "asset_id": 2,
+    "cron_expression": "*/2 * * * * Z */5 * * * *", 
+    "attack_type": "SQLi",
+    "is_active": true,
+    "start_date": "2026-01-01T00:00:00",
+    "end_date": "2026-12-31T23:59:59"
+  },
+  {
+    "id": 3,
+    "project_id": 4,
+    "asset_id": 3,
+    "cron_expression": "0 0 * * *",
+    "attack_type": "XSS",
+    "is_active": false, 
+    "start_date": "2026-01-01T00:00:00",
+    "end_date": "2026-12-31T23:59:59"
+  }
 ]
