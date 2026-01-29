@@ -79,11 +79,11 @@ class ProjectService:
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
     
-    def get_project_by_id(self, project_id:int, user_id: str):
+    def get_project_by_id(self, project_id:int):
         projects = self._read_json()
 
         for proj in projects:
-            if proj["id"] == project_id and proj["email"] == user_id:
+            if proj["id"] == project_id:
                 return proj
             
         return None
