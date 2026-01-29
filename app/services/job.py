@@ -121,14 +121,14 @@ class JobService:
         # payload = JobWorkerPayload(
         #     job_id=new_job["id"],
         #     target_url=asset["target"],
-        #     attack_type="XSS",
+        #     attack_type="xss",
         # )
 
-        # ถ้ายังไม่มี ให้สร้าง Lock ไว้ (Expire ใน 60 วินาที)
+        # # ถ้ายังไม่มี ให้สร้าง Lock ไว้ (Expire ใน 60 วินาที)
         # await redis_jobs.setex(lock_key, 60, "locked")
         # queue_name = f"{QUEUE_KEY}:{best_worker["id"]}"
         # await redis_jobs.rpush(queue_name, payload.model_dump_json()) #"system:queue:{worker_id}"
-        # print(f"🚀 Job {new_job["id"]} not dispatched to Redis!")
+        # print(f"🚀 Job {new_job["id"]} dispatched to Redis!")
         print(f"🚀 Job temp not dispatched to Redis!")
 
     async def run_watchdog(self):
