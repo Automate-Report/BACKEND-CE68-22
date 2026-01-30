@@ -202,11 +202,12 @@ class JobService:
             try:
                 # ใช้คีย์ให้ตรงกับใน JSON ของคุณ (ระวัง created_at vs create_at)
                 job_created_time = datetime.fromisoformat(job["created_at"])
-                job_startup_time = datetime.fromisoformat(job["started_at"])
+                if job["started_at"]:
+                    job_startup_time = datetime.fromisoformat(job["started_at"])
             except (ValueError, KeyError):
                 continue
-
-            if (job["status"] == "pending" and job_created_time < timeout_limit) or (job["status"] == "running" and job_startup_time < running_timeout_limit):
+            
+            if (job["status"] == "pending" and job_created_time < timeout_limit) or (job["started_at"] and job["status"] == "running" and job_startup_time < running_timeout_limit):
                 print(f"🕵️ [Watchdog] Job {job["id"]} is stuck. Marking as failed.")
                 job["status"] = "failed"
                 # คืนโหลดให้ Worker ตัวเดิม (ถ้ามี)
