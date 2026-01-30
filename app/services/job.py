@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from typing import List
 
 from app.core.redis import QUEUE_KEY, redis_jobs
@@ -129,13 +129,13 @@ class JobService:
             if job["id"] == job_id:
                 if status == "completed":
                     job["status"] = status
-                    job["finished_at"] = datetime.now(timezone.utc)
+                    job["finished_at"] = datetime.utcnow()
                 elif status == "running":
                     job["status"] = status
-                    job["started_at"] = datetime.now(timezone.utc)
+                    job["started_at"] = datetime.utcnow()
                 elif status == "failed":
                     job["status"] = status
-                    job["started_at"] = job["finished_at"] = datetime.now(timezone.utc)
+                    job["started_at"] = job["finished_at"] = datetime.utcnow()
                 self._save_json(jobs)
                 return True
         return False
@@ -194,7 +194,7 @@ class JobService:
         """🛡️ ตรวจสอบงานที่ค้างใน pending นานเกินไป (Watchdog)"""
         print("🛡️ [Watchdog] Started checking...")
         timeout_limit = datetime.utcnow() - timedelta(minutes=5)
-        running_timeout_limit = datetime.now(timezone.utc) - timedelta(minutes=30)
+        running_timeout_limit = datetime.utcnow() - timedelta(minutes=30)
         jobs = self._read_json()
         workers = worker_service._read_json()
 
