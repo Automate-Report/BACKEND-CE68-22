@@ -77,20 +77,22 @@ class JobService:
         jobs = self._read_json()
 
         result = []
-
+        n = 0
         for job in jobs:
             if job["schedule_id"] == schedule_id:
-                temp = dict()
-                temp["id"] = job["id"]
-                temp["name"] = job["name"]
-                temp["status"] = job["status"]
-                temp["worker_id"] = job["worker_id"]
+                n += 1
                 worker = worker_service.get_worker_by_id(user_id, job["worker_id"])
-                temp["worker_name"] = worker["name"]
-                temp["created_at"] = job["created_at"]
+                temp = {
+                    "id": job["id"],
+                    "name": f"{job["name"]} Job#{n}",
+                    "status": job["status"],
+                    "worker_id": job["worker_id"],
+                    "worker_name": worker["name"],
+                    "created_at": job["created_at"]
+                }
                 result.append(temp)
 
-        return result
+        return result[::-1]
     
 
     

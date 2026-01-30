@@ -16,6 +16,10 @@ def update_status_job(payload:  JobStatusPayload, current_worker: int = Depends(
 
 @router.get("/schedule/{schedule_id}", response_model=List[JobStatusResponse])
 def get_jobs_by_schedule(schedule_id: int):
+    """
+    ใหม่ขึ้นก่อน
+
+    """
     jobs = job_service.get_job_by_schedule_id(schedule_id, "user@example.com")
 
     return jobs
