@@ -146,5 +146,25 @@
     "created_at": "2026-01-30T13:59:05.531413",
     "started_at": null,
     "finished_at": null
+  },
+  {
+    "id": 16,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "completed",
+    "created_at": "2026-01-30T15:22:18.029698",
+    "started_at": "2026-01-30 08:22:24.178799+00:00",
+    "finished_at": "2026-01-30 08:30:56.105995+00:00"
+  },
+  {
+    "id": 17,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "completed",
+    "created_at": "2026-01-30T15:22:18.048711",
+    "started_at": "2026-01-30 08:22:26.257851+00:00",
+    "finished_at": "2026-01-30 08:22:27.181475+00:00"
   }
 ]
