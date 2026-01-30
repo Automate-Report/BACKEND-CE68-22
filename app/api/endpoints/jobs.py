@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Body
 from typing import List
-from app.schemas.job import JobStatusPayload, JobStatusResponse
+from app.schemas.job import JobStatusPayload, JobStatusResponse, CountStatusResponse
 
 
 from app.services.worker import worker_service
@@ -23,4 +23,11 @@ def get_jobs_by_schedule(schedule_id: int):
     jobs = job_service.get_job_by_schedule_id(schedule_id, "user@example.com")
 
     return jobs
+
+@router.get("/number/{schedule_id}", response_model=CountStatusResponse)
+def get_number_job_status_by_schedule_id(schedule_id: int):
+
+    result = job_service.get_number_job_status_by_schedule_id(schedule_id)
+
+    return result
 

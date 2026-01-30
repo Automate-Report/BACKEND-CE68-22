@@ -94,6 +94,32 @@ class JobService:
 
         return result[::-1]
     
+    def get_number_job_status_by_schedule_id(self, schedule_id: int):
+        jobs = self._read_json()
+
+        pending = 0
+        running = 0
+        completed = 0
+        failed = 0
+
+        for job in jobs:
+            if job["schedule_id"] == schedule_id:
+                if job["status"] == "pending":
+                    pending += 1
+                elif job["status"] == "running":
+                    running += 1
+                elif job["status"] == "completed":
+                    completed += 1
+                elif job["status"] == "failed":
+                    failed += 1
+
+        return {
+            "pending": pending,
+            "running": running,
+            "completed": completed,
+            "failed": failed
+        }
+    
 
     
     def update_job_status(self, job_id: int, status: str):
