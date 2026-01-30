@@ -11,3 +11,11 @@ class JobStatusPayload(BaseModel):
     job_id: int
     status: str
 
+class JobStatusResponse(BaseModel):
+    id: int
+    name: str
+    worker_id: int
+    worker_name: str
+    status: str
+    created_at: Optional[datetime] = None
+

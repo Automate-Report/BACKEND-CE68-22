@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List
 
 from app.core.redis import QUEUE_KEY, redis_jobs
@@ -39,7 +39,7 @@ class JobService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
     
-    def create_job(self, schedule_id: int, worker_id: int) -> dict:
+    def create_job(self, schedule_id: int, worker_id: int, attack_type: str, target: str) -> dict:
         """Service: สร้าง Job ใหม่"""
         jobs = self._read_json()
         
@@ -48,10 +48,16 @@ class JobService:
         if jobs:
             # เอา ID ตัวสุดท้ายมา + 1
             new_id = jobs[-1]["id"] + 1
+        
+        if attack_type == "sql_intection":
+            job_name = f"SQLi - {target}"
+        else:
+            job_name = f"{attack_type.upper()} - {target}"
             
         # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_job= {
             "id": new_id,
+            "name": job_name,
             "schedule_id": schedule_id,
             "worker_id": worker_id,
             "status": "pending",
@@ -66,12 +72,42 @@ class JobService:
         
         return new_job
     
+    def get_job_by_schedule_id(self, schedule_id: int, user_id: str):
+        """Service: ดึง Job ตาม Schedule"""
+        jobs = self._read_json()
+
+        result = []
+
+        for job in jobs:
+            if job["schedule_id"] == schedule_id:
+                temp = dict()
+                temp["id"] = job["id"]
+                temp["name"] = job["name"]
+                temp["status"] = job["status"]
+                temp["worker_id"] = job["worker_id"]
+                worker = worker_service.get_worker_by_id(user_id, job["worker_id"])
+                temp["worker_name"] = worker["name"]
+                temp["created_at"] = job["created_at"]
+                result.append(temp)
+
+        return result
+    
+
+    
     def update_job_status(self, job_id: int, status: str):
         jobs = self._read_json()
 
         for job in jobs:
             if job["id"] == job_id:
-                job["status"] = status
+                if status == "completed":
+                    job["status"] = status
+                    job["finished_at"] = datetime.now(timezone.utc)
+                elif status == "running":
+                    job["status"] = status
+                    job["started_at"] = datetime.now(timezone.utc)
+                elif status == "failed":
+                    job["status"] = status
+                    job["started_at"] = job["finished_at"] = datetime.now(timezone.utc)
                 self._save_json(jobs)
                 return True
         return False
@@ -111,12 +147,12 @@ class JobService:
 
         # best_worker = self.best_worker(user_id)
 
-        # new_job = self.create_job(schedule_data["id"], best_worker["id"])
+        # new_job = self.create_job(schedule_data["id"], best_worker["id"], schedule_data["attack_type"], asset["target"])
 
         # payload = JobWorkerPayload(
         #     job_id=new_job["id"],
         #     target_url=asset["target"],
-        #     attack_type="xss",
+        #     attack_type=schedule_data["attack_type"],
         # )
 
         # # ถ้ายังไม่มี ให้สร้าง Lock ไว้ (Expire ใน 60 วินาที)
@@ -152,6 +188,7 @@ class JobService:
         
         self._save_json(jobs)
         worker_service._save_json(workers)
+
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 job_service = JobService()
