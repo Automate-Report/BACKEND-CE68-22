@@ -19,3 +19,9 @@ class JobStatusResponse(BaseModel):
     status: str
     created_at: Optional[datetime] = None
 
+class CountStatusResponse(BaseModel):
+    pending: int
+    running: int
+    completed: int
+    failed: int
+
