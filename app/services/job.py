@@ -129,13 +129,13 @@ class JobService:
             if job["id"] == job_id:
                 if status == "completed":
                     job["status"] = status
-                    job["finished_at"] = datetime.utcnow()
+                    job["finished_at"] = datetime.utcnow().isoformat()
                 elif status == "running":
                     job["status"] = status
-                    job["started_at"] = datetime.utcnow()
+                    job["started_at"] = datetime.utcnow().isoformat()
                 elif status == "failed":
                     job["status"] = status
-                    job["started_at"] = job["finished_at"] = datetime.utcnow()
+                    job["started_at"] = job["finished_at"] = datetime.utcnow().isoformat()
                 self._save_json(jobs)
                 return True
         return False
