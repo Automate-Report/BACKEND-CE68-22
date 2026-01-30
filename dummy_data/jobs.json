@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "name": "dff",
     "schedule_id": 1,
     "worker_id": 1,
     "status": "failed",
@@ -8,6 +9,7 @@
   },
   {
     "id": 2,
+    "name": "dff",
     "schedule_id": 1,
     "worker_id": 2,
     "status": "failed",
@@ -17,6 +19,7 @@
   },
   {
     "id": 3,
+    "name": "dff",
     "schedule_id": 1,
     "worker_id": 2,
     "status": "completed",
@@ -26,6 +29,7 @@
   },
   {
     "id": 4,
+    "name": "dff",
     "schedule_id": 2,
     "worker_id": 2,
     "status": "completed",
@@ -35,6 +39,7 @@
   },
   {
     "id": 5,
+    "name": "dff",
     "schedule_id": 1,
     "worker_id": 2,
     "status": "completed",
@@ -44,6 +49,7 @@
   },
   {
     "id": 6,
+    "name": "dff",
     "schedule_id": 1,
     "worker_id": 2,
     "status": "completed",
@@ -53,6 +59,7 @@
   },
   {
     "id": 7,
+    "name": "dff",
     "schedule_id": 2,
     "worker_id": 2,
     "status": "completed",
@@ -62,6 +69,7 @@
   },
   {
     "id": 8,
+    "name": "dff",
     "schedule_id": 1,
     "worker_id": 2,
     "status": "completed",
@@ -71,6 +79,7 @@
   },
   {
     "id": 9,
+    "name": "dff",
     "schedule_id": 2,
     "worker_id": 2,
     "status": "completed",
@@ -80,6 +89,7 @@
   },
   {
     "id": 10,
+    "name": "dff",
     "schedule_id": 1,
     "worker_id": 2,
     "status": "completed",
@@ -89,6 +99,7 @@
   },
   {
     "id": 11,
+    "name": "dff",
     "schedule_id": 2,
     "worker_id": 2,
     "status": "completed",
@@ -98,6 +109,7 @@
   },
   {
     "id": 12,
+    "name": "dff",
     "schedule_id": 1,
     "worker_id": 1,
     "status": "pending",
@@ -107,6 +119,7 @@
   },
   {
     "id": 13,
+    "name": "dff",
     "schedule_id": 1,
     "worker_id": 2,
     "status": "completed",
@@ -116,6 +129,7 @@
   },
   {
     "id": 14,
+    "name": "dff",
     "schedule_id": 2,
     "worker_id": 2,
     "status": "completed",
@@ -125,6 +139,7 @@
   },
   {
     "id": 15,
+    "name": "dff",
     "schedule_id": 1,
     "worker_id": 1,
     "status": "pending",
