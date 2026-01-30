@@ -194,6 +194,7 @@ class JobService:
         """🛡️ ตรวจสอบงานที่ค้างใน pending นานเกินไป (Watchdog)"""
         print("🛡️ [Watchdog] Started checking...")
         timeout_limit = datetime.utcnow() - timedelta(minutes=5)
+        running_timeout_limit = datetime.now(timezone.utc) - timedelta(minutes=30)
         jobs = self._read_json()
         workers = worker_service._read_json()
 
@@ -201,10 +202,11 @@ class JobService:
             try:
                 # ใช้คีย์ให้ตรงกับใน JSON ของคุณ (ระวัง created_at vs create_at)
                 job_created_time = datetime.fromisoformat(job["created_at"])
+                job_startup_time = datetime.fromisoformat(job["started_at"])
             except (ValueError, KeyError):
                 continue
 
-            if job["status"] == "pending" and job_created_time < timeout_limit:
+            if (job["status"] == "pending" and job_created_time < timeout_limit) or (job["status"] == "running" and job_startup_time < running_timeout_limit):
                 print(f"🕵️ [Watchdog] Job {job["id"]} is stuck. Marking as failed.")
                 job["status"] = "failed"
                 # คืนโหลดให้ Worker ตัวเดิม (ถ้ามี)
