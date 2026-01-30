@@ -3,9 +3,9 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Mapped, mapped_column
 from app.core.db import Base
 
-class EmailType(sa.types.TypeDecorator):
+class EmailType(sa.TypeDecorator):
     """Converted to lowercase on way in, stays string on way out."""
-    impl = sa.types.String(255)
+    impl = sa.String(255)
     cache_ok = True
 
     def process_bind_param(self, value, dialect):
