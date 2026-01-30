@@ -20,7 +20,6 @@ from app.api.endpoints import asset_credentials
 from app.api.endpoints import workers
 from app.api.endpoints import access_keys
 from app.api.endpoints import pentest_log
-from app.api.endpoints import schedule
 from app.api.endpoints import tag
 from app.api.endpoints import project_tags
 from app.api.endpoints import schedule
