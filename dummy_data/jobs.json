@@ -312,9 +312,349 @@
     "name": "XSS - http://testphp.vulnweb.com/search.php",
     "schedule_id": 1,
     "worker_id": 2,
-    "status": "running",
+    "status": "failed",
     "created_at": "2026-01-30T20:57:51.074656",
     "started_at": "2026-01-30T13:57:53.112842",
+    "finished_at": null
+  },
+  {
+    "id": 33,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:25:58.116228",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 34,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:25:58.136410",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 35,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:26:08.183249",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 36,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:26:08.202838",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 37,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:27:14.427821",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 38,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:28:04.529405",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 39,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:28:04.545673",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 40,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:29:08.686110",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 41,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:30:08.802980",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 42,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:30:08.820125",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 43,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:31:08.935245",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 44,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:32:09.040891",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 45,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:32:09.061610",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 46,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 1,
+    "status": "pending",
+    "created_at": "2026-01-30T21:33:09.207977",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 47,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:34:09.340958",
+    "started_at": "2026-01-30 14:34:11.396694",
+    "finished_at": null
+  },
+  {
+    "id": 48,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:34:09.366724",
+    "started_at": "2026-01-30 14:34:13.450654",
+    "finished_at": null
+  },
+  {
+    "id": 49,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:35:09.491607",
+    "started_at": "2026-01-30 14:35:11.574176",
+    "finished_at": null
+  },
+  {
+    "id": 50,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:35:09.514118",
+    "started_at": "2026-01-30 14:35:13.638771",
+    "finished_at": null
+  },
+  {
+    "id": 51,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:36:09.794740",
+    "started_at": "2026-01-30 14:36:11.844275",
+    "finished_at": null
+  },
+  {
+    "id": 52,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:36:09.817078",
+    "started_at": "2026-01-30 14:36:13.919336",
+    "finished_at": null
+  },
+  {
+    "id": 53,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "failed",
+    "created_at": "2026-01-30T21:37:09.960080",
+    "started_at": "2026-01-30 14:44:59.214983",
+    "finished_at": "2026-01-30 14:44:59.214983"
+  },
+  {
+    "id": 54,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "failed",
+    "created_at": "2026-01-30T21:38:00.053427",
+    "started_at": "2026-01-30 14:45:02.498706",
+    "finished_at": "2026-01-30 14:45:02.498706"
+  },
+  {
+    "id": 55,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:38:00.069544",
+    "started_at": "2026-01-30 14:38:04.150986",
+    "finished_at": null
+  },
+  {
+    "id": 56,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:39:00.190032",
+    "started_at": "2026-01-30 14:39:02.243952",
+    "finished_at": null
+  },
+  {
+    "id": 57,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:40:00.318302",
+    "started_at": "2026-01-30 14:40:02.366960",
+    "finished_at": null
+  },
+  {
+    "id": 58,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:40:00.336249",
+    "started_at": "2026-01-30 14:40:04.424592",
+    "finished_at": null
+  },
+  {
+    "id": 59,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:41:00.467338",
+    "started_at": "2026-01-30 14:41:02.532547",
+    "finished_at": null
+  },
+  {
+    "id": 60,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:42:00.593654",
+    "started_at": "2026-01-30 14:42:02.640397",
+    "finished_at": null
+  },
+  {
+    "id": 61,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:42:00.617670",
+    "started_at": "2026-01-30 14:42:04.685519",
+    "finished_at": null
+  },
+  {
+    "id": 62,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:43:00.751269",
+    "started_at": "2026-01-30 14:43:02.822589",
+    "finished_at": null
+  },
+  {
+    "id": 63,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:44:00.865524",
+    "started_at": "2026-01-30 14:44:02.901981",
+    "finished_at": null
+  },
+  {
+    "id": 64,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "running",
+    "created_at": "2026-01-30T21:44:00.883305",
+    "started_at": "2026-01-30 14:44:04.951804",
+    "finished_at": null
+  },
+  {
+    "id": 65,
+    "name": "XSS - http://testphp.vulnweb.com/search.php",
+    "schedule_id": 1,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-30T21:45:00.991947",
+    "started_at": null,
+    "finished_at": null
+  },
+  {
+    "id": 66,
+    "name": "SQL_INJECTION - www.test.test.xyz",
+    "schedule_id": 2,
+    "worker_id": 2,
+    "status": "pending",
+    "created_at": "2026-01-30T21:45:01.012867",
+    "started_at": null,
     "finished_at": null
   }
 ]
