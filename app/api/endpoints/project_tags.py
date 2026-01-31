@@ -1,5 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional, List
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.db import get_db  #Session ของ DB
 from app.schemas.tag import TagsResponse
 from app.services.project_tag import project_tag_service
 

@@ -2,6 +2,10 @@ import json
 import os
 from datetime import datetime
 from typing import List, Optional
+from fastapi import HTTPException
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.tags import Tag #SQL Alchemy Models
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -33,58 +37,61 @@ class TagService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def create_tag(self, tag: str, user_id: str) -> dict:
+    async def create_tag(self, tag_name: str, user_id: str, db: AsyncSession) -> dict:
         """Service: สร้าง Tag ใหม่"""
-        tags = self._read_json()
+        new_tag_db = Tag(
+            user_email = user_id,
+            name = tag_name,
+            text_color = "#000000",  #MOCK UP===============
+            bg_color = "#FFFFFF",  #MOCK UP===============
+        )
 
-        new_id = 1
-        if tags:
-            # เอา ID ตัวสุดท้ายมา + 1
-            new_id = tags[-1]["id"] + 1
-
-        new_tag = {
-            "id": new_id,
-            "name": tag,
-            "email": user_id,
-            "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat(),
-        }
-        new_id += 1
+        try:
+            db.add(new_tag_db)
+            await db.commit()
+            # refresh to get the DB generated content such as created_at
+            await db.refresh(new_tag_db)
+        except Exception as e:
+            await db.rollback()
+            print(f"DEBUG ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Could not create tag")
         
-        # 3. บันทึก
-        tags.append(new_tag)
-        self._save_json(tags)
+        new_tag = {
+            "id": new_tag_db.id,
+            "name": new_tag_db.name,
+        }
+
         return new_tag
     
-    def get_all_tags_by_user_id(self, user_id: str):
-        tags = self._read_json()
-
-        result = []
-
-        for tag in tags:
-            if tag["email"] == user_id:
-                result.append(tag)
-            
-        return result
+    async def get_all_tags_by_user_id(self, user_id: str, db: AsyncSession):
+        query = sa.select(Tag).where(Tag.user_email == user_id)
+        result = await db.execute(query)
+        tags = result.scalars().all()
+   
+        return tags
     
-    def get_tag_by_id(self, id: int):
-        tags = self._read_json()
+    async def get_tag_by_id(self, id: int, db:AsyncSession):
+        query = sa.select(Tag).where(Tag.id == id)
+        result = await db.execute(query)
+        tag = result.scalar_one_or_none()
 
-        for tag in tags:
-            if tag["id"] == id:
-                return tag
+        if tag:
+            return tag
             
         return None
     
-    def delete_tag(self, id: int) -> bool:
+    async def delete_tag(self, id: int, db: AsyncSession) -> bool:
         """Service: ลบ Tag"""
-        tags = self._read_json()
-        for i, tag in enumerate(tags):
-            if tag["id"] == id:
-                del tags[i]
-                self._save_json(tags)
-                return True
-        return False
+        query = sa.select(Tag).where(Tag.id == id)
+        result = await db.execute(query)
+        tag = result.scalar_one_or_none()
 
+        if not tag:
+            return False
+
+        db.delete(tag)
+        await db.commit()
+        return True
+        
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 tag_service = TagService()

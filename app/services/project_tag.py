@@ -3,6 +3,11 @@ import os
 from datetime import datetime
 from typing import List, Optional
 
+from fastapi import HTTPException
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.project_tags import ProjectTag #SQL Alchemy Models
+
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -34,38 +39,42 @@ class ProjectTagService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def create_project_tag(self, tag_id: str, project_id: str) -> dict:
+    async def create_project_tag(self, tag_id: str, project_id: str, db: AsyncSession) -> dict:
         """Service: สร้างโปรเจกต์ใหม่"""
-        project_tags = self._read_json()
+        new_project_tag_db = ProjectTag(
+            project_id = project_id,
+            tag_id = tag_id,
+        )
 
-        new_id = 1
-        if project_tags:
-            # เอา ID ตัวสุดท้ายมา + 1
-            new_id = project_tags[-1]["id"] + 1
-
-        new_project_tag = {
-            "id": new_id,
-            "project_id": project_id,
-            "tag_id": tag_id,
-            "created_at": datetime.now().isoformat(),
-        }
+        try:
+            db.add(new_project_tag_db)
+            await db.commit()
+            # refresh to get the DB generated content such as created_at
+            await db.refresh(new_project_tag_db)
+        except Exception as e:
+            await db.rollback()
+            print(f"DEBUG ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Could not create project tag")
         
-        # 3. บันทึก
-        project_tags.append(new_project_tag)
-        self._save_json(project_tags)
+        new_project_tag = {
+            "project_id": new_project_tag_db.project_id,
+            "tag_id": new_project_tag_db.tag_id,
+            "created_at": new_project_tag_db.created_at,
+        }
         
         return new_project_tag
     
-    def get_all_tag_ids(self, project_id: int):
-        project_tags = self._read_json()
+    async def get_all_tag_ids(self, project_id: int, db: AsyncSession):
+        query = sa.select(ProjectTag).where(ProjectTag.project_id == project_id)
+        result = await db.execute(query)
+        project_tags = result.scalars().all()
 
-        tags = []
+        tags_id = []
+        
+        for project_tag in project_tags:
+            tags_id.append(project_tag.tag_id)
 
-        for pt in project_tags:
-            if pt["project_id"] == project_id:
-                tags.append(pt["tag_id"])
-
-        return tags
+        return tags_id
     
     def delete_by_tag_id(self, tag_id: int) -> bool:
         project_tags = self._read_json()
