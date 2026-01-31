@@ -124,11 +124,11 @@ class JobService:
     
     def update_job_status(self, job_id: int, status: str):
         jobs = self._read_json()
-
+        print(status)
         for job in jobs:
             if job["id"] == job_id:
-                if status == "completed":
-                    job["status"] = status
+                if status == "found" or status == "not found":
+                    job["status"] = "completed"
                     job["finished_at"] = datetime.utcnow().isoformat()
                 elif status == "running":
                     job["status"] = status
