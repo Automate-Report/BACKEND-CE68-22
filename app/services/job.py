@@ -162,6 +162,9 @@ class JobService:
         # lock_key = f"lock:schedule:{schedule_data["id"]}:{datetime.utcnow().strftime('%Y%m%d%H%M')}"
     
         # # ถ้ามี Lock นี้อยู่ใน Redis แล้ว แสดงว่านาทีนี้ส่งงานไปแล้ว
+
+
+
         # if await redis_jobs.exists(lock_key):
         #     return
 

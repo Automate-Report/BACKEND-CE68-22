@@ -1,6 +1,0 @@
-20:00:01 [INFO] [ScanEngine][Job 22] Starting Discovery Phase...
-20:00:05 [INFO] [ScanEngine][Job 22] Crawler found 3 unique URLs.
-20:00:06 [INFO] [ScanEngine][Job 22] Starting XSS Scan on search.php
-20:00:10 [INFO] [ScanEngine][Job 22] Vulnerability detected: Reflected XSS
-20:00:12 [INFO] [ScanEngine][Job 22] Capturing screenshot...
-20:00:15 [INFO] [ScanEngine][Job 22] Workflow completed.

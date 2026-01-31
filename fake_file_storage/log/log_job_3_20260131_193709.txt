@@ -1,0 +1,12 @@
+19:37:06 [INFO] [ScanEngine][Job 3] Starting Discovery Phase...
+19:37:06 [INFO] [Crawler] Starting Crawl on: www.test.test.xyz (Depth: 2)
+19:37:07 [INFO]     [>] Crawling: www.test.test.xyz
+19:37:07 [WARNING]     [!] Page load warning: Page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL
+Call log:
+  - navigating to "www.test.test.xyz", waiting until "domcontentloaded"
+
+19:37:07 [INFO]     [+] Found Params: {}
+19:37:07 [INFO] [ScanEngine][Job 3] Discovery finished. Unique targets: 1
+19:37:07 [INFO] [ScanEngine] --- Analyzing: www.test.test.xyz ---
+19:37:07 [INFO] [ScanEngine][Job 3] Running SQLi Scan...
+19:37:07 [INFO] [SQLi] Starting SQLi Scan on: www.test.test.xyz
