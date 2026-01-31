@@ -25,8 +25,12 @@ class Job(Base):
 @sa.event.listens_for(Job.status, 'set')
 def receive_set(target, value, oldvalue, initiator):
     # update started_at when value is "running"
-    if value == JobStatus.RUNNING and oldvalue == JobStatus.PENDING:
-        target.started_at = sa.sql.func.now()
-    if value == JobStatus.COMPLETED or value == JobStatus.FAILED:
-        if oldvalue == JobStatus.RUNNING:
+    if oldvalue == JobStatus.PENDING:
+        if value == JobStatus.RUNNING:
+            target.started_at = sa.sql.func.now()
+        elif value == JobStatus.FAILED:
+            target.started_at = sa.sql.func.now()
+            target.finished_at = sa.sql.func.now()
+    elif oldvalue == JobStatus.RUNNING:
+        if value == JobStatus.COMPLETED or value == JobStatus.FAILED:
             target.finished_at = sa.sql.func.now()

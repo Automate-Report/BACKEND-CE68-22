@@ -1,6 +1,8 @@
 from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import Optional
 
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.db import get_db  #Session ของ DB
 from app.deps.auth import get_current_user
 from app.schemas.project import ProjectCreate, ProjectResponse
 from app.schemas.pagination import PaginatedResponse
@@ -18,25 +20,27 @@ async def get_all_projects(
     order: Optional[str] = Query("asc", description="asc or desc"),
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
-    user = Depends(get_current_user)
+    user = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
 ):
 
-    result = project_service.get_all_projects(
+    result = await project_service.get_all_projects(
         user_id=user["sub"],
         page=page,
         size=size,
         sort_by=sort_by, 
         order=order,
         search=search,
-        filter=filter
+        filter=filter,
+        db=db
     )
 
     return result
 
 @router.get("/{project_id}", response_model=ProjectResponse)
-async def get_project_by_id(project_id: int, user = Depends(get_current_user)):
+async def get_project_by_id(project_id: int, user = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
 
-    project = project_service.get_project_by_id(project_id, user["sub"])
+    project = await project_service.get_project_by_id(project_id, user["sub"],db)
 
     if not project:
         from fastapi import HTTPException
@@ -46,12 +50,13 @@ async def get_project_by_id(project_id: int, user = Depends(get_current_user)):
 
 # POST /projects/ : สร้างโปรเจกต์ใหม่
 @router.post("/", response_model=ProjectResponse)
-async def create_project(project_in: ProjectCreate, user = Depends(get_current_user)):
+async def create_project(project_in: ProjectCreate, user = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
     tag_ids = project_in.tag_ids
-    new_project = project_service.create_project(
+    new_project = await project_service.create_project(
         name=project_in.name,
         description=project_in.description,
-        user_id=user["sub"]
+        user_id=user["sub"],
+        db=db
     )
     for id in tag_ids:
         result = project_tag_service.create_project_tag(id, new_project["id"])

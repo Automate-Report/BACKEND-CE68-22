@@ -2,8 +2,11 @@ import json
 import os
 from datetime import datetime
 from typing import List, Optional
-
-from app.schemas.project import ProjectCreate
+from fastapi import HTTPException
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.projects import Project #SQL Alchemy Models
+from app.schemas.project import ProjectCreate, ProjectResponse
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -35,24 +38,21 @@ class ProjectService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def get_all_projects(self, user_id: str, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
+    async def get_all_projects(self, user_id: str, page: int, size: int, db: AsyncSession, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
-        projects = self._read_json()
-        
-        # 1. กรอง User
-        all_matches = []
-        for proj in projects:
-            if filter == "ALL":
-                if search:
-                    if proj["email"] == user_id and search in proj["name"]:
-                        all_matches.append(proj)
-                else:
-                    if proj["email"] == user_id:
-                        all_matches.append(proj)
-            else:
-                # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
-                pass
+        query = sa.select(Project).where(Project.user_email == user_id)
+        result = await db.execute(query)
+        projects = result.scalars().all()
 
+        all_matches = [
+            {
+                "id": proj.id,
+                "name": proj.name,
+                "description": proj.description,
+                "created_at": proj.created_at,
+                "updated_at": proj.updated_at,
+            } for proj in projects]
+        
         if sort_by:
             reverse = (order == "desc")
             # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
@@ -79,36 +79,49 @@ class ProjectService:
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
     
-    def get_project_by_id(self, project_id:int, user_id: str):
-        projects = self._read_json()
+    async def get_project_by_id(self, project_id:int, user_id: str, db: AsyncSession):
+        query = sa.select(Project).where(Project.id == project_id and Project.user_email == user_id)
+        result = await db.execute(query)
+        project = result.scalar_one_or_none()
+        
 
-        for proj in projects:
-            if proj["id"] == project_id and proj["email"] == user_id:
-                return proj
+        if project:
+            return {
+                "id": project.id,
+                "name": project.name,
+                "description": project.description,
+                "created_at": project.created_at,
+                "updated_at": project.updated_at,
+            }
             
         return None
 
-    def create_project(self, name: str, description: str, user_id: str) -> dict:
+    async def create_project(self, name: str, description: str, user_id: str, db: AsyncSession) -> dict:
         """Service: สร้างโปรเจกต์ใหม่"""
-        projects = self._read_json()
+        new_project_db = Project(
+            name = name,
+            user_email = user_id,
+            description = description
+        )
 
-        new_id = 1
-        if projects:
-            # เอา ID ตัวสุดท้ายมา + 1
-            new_id = projects[-1]["id"] + 1
-
-        new_project = {
-            "id": new_id,
-            "name": name,
-            "description": description,
-            "email": user_id,
-            "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat(),
-        }
+        try:
+            db.add(new_project_db)
+            await db.commit()
+            # refresh to get the DB generated content such as created_at
+            await db.refresh(new_project_db)
+        except Exception as e:
+            await db.rollback()
+            print(f"DEBUG ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Could not create project")
         
-        # 3. บันทึก
-        projects.append(new_project)
-        self._save_json(projects)
+        new_project = {
+            "id": new_project_db.id,
+            "name": new_project_db.name,
+            "description": new_project_db.description,
+            "email": new_project_db.user_email,
+            "created_at": new_project_db.created_at,
+            "updated_at": new_project_db.updated_at
+        }
         
         return new_project
     

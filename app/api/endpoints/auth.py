@@ -1,5 +1,8 @@
 from app.deps.auth import get_current_user
 from fastapi import APIRouter, HTTPException, Request, Depends
+
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.db import get_db  #Session ของ DB
 from fastapi.responses import JSONResponse, RedirectResponse
 from app.schemas.userauthen import LoginRequest, UserCreate
 from app.services.userauthen import userauthen_service # เรียก Service ที่เราสร้างตะกี้
@@ -9,9 +12,9 @@ from app.core.config import settings
 router = APIRouter()
 
 @router.post("/login")
-async def login(data: LoginRequest):
+async def login(data: LoginRequest, db: AsyncSession = Depends(get_db)):
 
-    auth = userauthen_service.authenticate_user(data)
+    auth =  await userauthen_service.authenticate_user(data,db)
     
     res = JSONResponse({
         "user": auth["user"]
@@ -29,13 +32,11 @@ async def login(data: LoginRequest):
     return res
 
 @router.post("/register")
-async def register(data: UserCreate):
+async def register(data: UserCreate, db: AsyncSession = Depends(get_db)):
 
-    new_user = userauthen_service.create_user(data)
+    new_user = await userauthen_service.create_user(data,db)
+    return new_user
 
-    return JSONResponse({
-        "user": new_user
-    })
 
 @router.post("/logout")
 async def logout(request: Request):

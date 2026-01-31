@@ -3,6 +3,9 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import List
 from jose import jwt, JWTError
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.users import User #SQL Alchemy Models
 from app.schemas.userauthen import LoginRequest, UserCreate
 from app.core.config import settings
 from fastapi import HTTPException
@@ -59,13 +62,14 @@ class UserAuthenService:
 
         redis_client.setex(token, ttl, "blacklisted")
 
-    def authenticate_user(self, loginRequest: LoginRequest):
+    async def authenticate_user(self, loginRequest: LoginRequest, db: AsyncSession):
         """Service: ตรวจสอบการเข้าสู่ระบบของผู้ใช้"""
-        users = self._read_json()
-        for user in users:
-            if user["email"] == loginRequest.email and user["password"] == loginRequest.password:
-                return create_access_token(loginRequest.email, user["firstname"], user["lastname"])
-            
+        query = sa.select(User).where(User.email == loginRequest.email)
+        result = await db.execute(query)
+        user = result.scalar_one_or_none()
+        print(user)
+        if user and user.password == loginRequest.password:
+            return create_access_token(loginRequest.email, user.first_name, user.last_name)
         # Check all but user not found
         raise HTTPException(status_code=401, detail="Invalid email or password")
     
@@ -109,35 +113,40 @@ class UserAuthenService:
         self._save_json(allusers)
         return create_access_token(email, firstname, lastname)
     
-    def create_user(self, createUser: UserCreate):
+    async def create_user(self, createUser: UserCreate, db: AsyncSession):
         """Service: สร้างผู้ใช้ใหม่"""
-        users = self._read_json()
+        query = sa.select(User).where(User.email == createUser.email)
+        result = await db.execute(query)
+        existing_user = result.scalar_one_or_none()
         
-        if any(u["email"] == createUser.email for u in users):
+        if existing_user:
             raise HTTPException(status_code=400, detail="Email already registered")
-
         else:
-            new_user = {
-                "firstname": createUser.firstName,
-                "lastname": createUser.lastName,
-                "email": createUser.email,
-                "password": createUser.password,
-                "created_at": datetime.now().isoformat(),
-                "updated_at": datetime.now().isoformat(),
-                "session_token": None,
-                "google_id": None,
-                "picture": None
-            }
-            
-            users.append(new_user)
-            self._save_json(users)
-            
-            # Only return non-sensitive info
-            return {
-                "email": createUser.email,
-                "firstname": createUser.firstName,
-                "lastname": createUser.lastName
-            }
+            new_user = User(
+                first_name = createUser.firstName,
+                last_name = createUser.lastName,
+                email = createUser.email,
+                password = createUser.password,
+                google_id = None,
+                picture_path = None,
+                session = None
+            )
+        
+        try:
+            db.add(new_user)
+            await db.commit()
+            # refresh to get the DB generated content such as created_at
+            await db.refresh(new_user)
+        except Exception as e:
+            await db.rollback()
+            print(f"DEBUG ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Could not create user")
+        # Only return non-sensitive info
+        return {
+            "email": createUser.email,
+            "firstname": createUser.firstName,
+            "lastname": createUser.lastName
+        }
 
         
 # สร้าง instance ของ Service เพื่อใช้งาน
