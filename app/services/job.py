@@ -72,6 +72,16 @@ class JobService:
         
         return new_job
     
+    def get_job_ids_by_schedule_id(self, schedule_id: int):
+        jobs = self._read_json()
+
+        job_ids = []
+
+        for job in jobs:
+            if job["schedule_id"] == schedule_id:
+                job_ids.append(job["id"])
+        return job_ids
+    
     def get_job_by_schedule_id(self, schedule_id: int, user_id: str):
         """Service: ดึง Job ตาม Schedule"""
         jobs = self._read_json()

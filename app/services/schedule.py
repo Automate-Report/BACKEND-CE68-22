@@ -186,6 +186,15 @@ class ScheduleService:
                 return True
         return False
     
+    def get_schedule_ids_by_project_id(self, project_id: int):
+        schedules = self._read_json()
+        schedule_ids = []
+        for schedule in schedules:
+            if schedule["project_id"] == project_id:
+                schedule_ids.append(schedule["id"])
+
+        return schedule_ids
+    
     async def _is_due_now(self, cron_string: str):
         now = datetime.utcnow().replace(second=0, microsecond=0)
 
