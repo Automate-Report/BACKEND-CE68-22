@@ -12,11 +12,9 @@ class ScheduleItem(BaseModel):
     schedule_name: str
     project_id: int
     asset_id: int
-    worker_id: int
     cron_expression: str
     attack_type: str
     is_active: bool
-    next_run_at: Optional[datetime]
     start_date: datetime
     end_date: datetime
     created_at: datetime
@@ -39,7 +37,6 @@ class ScheduleCreate(BaseModel):
     name: str
     atk_type: str
     asset: int #จะให้ Front ส่งเป็น ID มาเลย
-    worker: int #จะให้ Front ส่งเป็น ID มาเลย
     cron_expression: str #เช่น "0 0 * * *" (ทำที่ Front)
     start_date: datetime
     end_date: datetime #ถ้าไม่ตั้ง Repeat end_date = start_date

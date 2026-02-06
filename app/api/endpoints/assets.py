@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
-from app.schemas.asset import AssetCreate, AssetResponse
+from app.schemas.asset import AssetCreate, AssetListForDropdown, AssetResponse
 from app.schemas.pagination import PaginatedResponse
 from app.services.asset import asset_service
 
@@ -30,6 +30,11 @@ async def get_all_assets(
     )
 
     return result
+
+@router.get("/names/{project_id}", response_model=List[AssetListForDropdown])
+async def get_all_asset_names_for_dropdown(project_id: int):
+    assets = asset_service.get_all_asset_names_for_dropdown(project_id)
+    return assets
 
 @router.get("/{asset_id}", response_model=AssetResponse)
 async def get_asset_by_id(asset_id: int):

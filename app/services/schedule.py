@@ -48,7 +48,7 @@ class ScheduleService:
         for sch in schedules:
             if filter == "ALL":
                 if search:
-                    if sch["project_id"] == project_id and search in sch["name"]:
+                    if sch["project_id"] == project_id and search in sch["schedule_name"]:
                         displaytable_sch = {
                             "id": sch["schedule_id"],
                             "project_id": sch["project_id"],
@@ -120,45 +120,37 @@ class ScheduleService:
         
         return "Schedule Not Found"
     
-    def update_schedule(self, schedule_input: ScheduleCreate):
+    def create_schedule(self, schedule_input: ScheduleCreate):
         schedules = self._read_json()
-        latest_id = max([s["id"] for s in schedules], default=0)
+        latest_id = max([s["schedule_id"] for s in schedules], default=0)
         
         new_schedule = {
             "schedule_id": latest_id + 1,
             "schedule_name": schedule_input.name,
             "project_id": schedule_input.project_id,
             "asset_id": schedule_input.asset,
-            "worker_id": schedule_input.worker,
             "cron_expression": schedule_input.cron_expression,
             "attack_type": schedule_input.atk_type,
             "is_active": True,
-            "next_run_at": "Temporary Value", # i have to cacl this? is this necessary?
             "start_date": schedule_input.start_date,
             "end_date": schedule_input.end_date,
             "created_at": datetime.now().isoformat(),
             "updated_at": datetime.now().isoformat()
-        },
+        }
         
         schedules.append(new_schedule)
         self._save_json(schedules)
         
-        # Only return non-sensitive info
-        return {
-            "shcedule_id": new_schedule["schedule_id"],
-            "schedule_name": new_schedule["schedule_name"],
-            "schedule_atk_type": new_schedule["attack_type"],
-        }
+        return "Schedule Created Successfully"
 
     def edit_schedule(self, schedule_id: int, schedule_input: ScheduleCreate):
         schedules = self._read_json()
         
         for schedule in schedules:
-            if schedule["id"] == schedule_id:
+            if schedule["schedule_id"] == schedule_id:
                 schedule["schedule_name"] = schedule_input.name
                 schedule["project_id"] = schedule_input.project_id
                 schedule["asset_id"] = schedule_input.asset
-                schedule["worker_id"] = schedule_input.worker
                 schedule["cron_expression"] = schedule_input.cron_expression
                 schedule["attack_type"] = schedule_input.atk_type
                 schedule["start_date"] = schedule_input.start_date
@@ -167,19 +159,14 @@ class ScheduleService:
                 
                 self._save_json(schedules)
                 
-                # Only return non-sensitive info
-                return {
-                    "shcedule_id": schedule["schedule_id"],
-                    "schedule_name": schedule["schedule_name"],
-                    "schedule_atk_type": schedule["attack_type"],
-                }
+                return "Schedule Updated Successfully"
         
         raise HTTPException(status_code=404, detail="Schedule not found")
     
     def delete_schedule(self, schedule_id: int) -> bool:
         schedules = self._read_json()
         for i, schedule in enumerate(schedules):
-            if schedule["id"] == schedule_id:
+            if schedule["schedule_id"] == schedule_id:
                 del schedules[i]
                 self._save_json(schedules)
                 return True

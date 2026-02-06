@@ -86,6 +86,18 @@ class AssetService:
                 return asset
             
         return None
+    
+    def get_all_asset_names_for_dropdown(self, project_id: int) -> List[dict]:
+        """Service: ดึงชื่อ Asset ทั้งหมดในโปรเจกต์ สำหรับ Dropdown"""
+        assets = self._read_json()
+        filtered_assets = []
+        for asset in assets:
+            if asset["project_id"] == project_id:
+                filtered_assets.append({
+                    "name": asset["name"],
+                    "id": asset["id"]
+                })
+        return filtered_assets
 
     def create_asset(self, asset_in: AssetCreate) -> dict:
         """Service: สร้าง Asset ใหม่"""

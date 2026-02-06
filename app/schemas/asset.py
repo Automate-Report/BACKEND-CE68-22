@@ -18,5 +18,9 @@ class AssetResponse(BaseModel):
     type: str
     updated_at: datetime
 
+class AssetListForDropdown(BaseModel):
+    name: str
+    id: int
+
     class Config:
         orm_mode = True
