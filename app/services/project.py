@@ -118,34 +118,48 @@ class ProjectService:
             "id": new_project_db.id,
             "name": new_project_db.name,
             "description": new_project_db.description,
-            "email": new_project_db.user_email,
             "created_at": new_project_db.created_at,
             "updated_at": new_project_db.updated_at
         }
         
         return new_project
     
-    def update_project(self, project_id: int, project_in: ProjectCreate, user_id: str) -> Optional[dict]:
+    async def update_project(self, project_id: int, project_in: ProjectCreate, user_id: str, db: AsyncSession) -> Optional[dict]:
         """Service: อัปเดตโปรเจกต์"""
-        projects = self._read_json()
-        for proj in projects:
-            if proj["id"] == project_id and proj["email"] == user_id:
-                proj["name"] = project_in.name
-                proj["description"] = project_in.description
-                proj["updated_at"] = datetime.now().isoformat()
-                self._save_json(projects)
-                return proj
-        return None
+        query = sa.select(Project).where(Project.id == project_id and Project.user_email == user_id)
+        result = await db.execute(query)
+        project_db = result.scalar_one_or_none
+
+        if not project_db:
+            return None
+        project_db.name = project_in.name
+        project_db.description = project_in.description
+
+        await db.commit()
+        await db.refresh(project_db)
+
+        returned_project = {
+            "id": returned_project.id,
+            "name": returned_project.name,
+            "description": returned_project.description,
+            "created_at": returned_project.created_at,
+            "updated_at": returned_project.updated_at
+        }
+
+        return returned_project
     
-    def delete_project(self, project_id: int) -> bool:
+    async def delete_project(self, project_id: int, db: AsyncSession) -> bool:
         """Service: ลบโปรเจกต์"""
-        projects = self._read_json()
-        for i, proj in enumerate(projects):
-            if proj["id"] == project_id:
-                del projects[i]
-                self._save_json(projects)
-                return True
-        return False
+        query = sa.select(Project).where(Project.id == project_id)
+        result = await db.execute(query)
+        project = result.scalar_one_or_none
+
+        if not project:
+            return False
+        
+        db.delete(project)
+        await db.commit()
+        return True
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 project_service = ProjectService()

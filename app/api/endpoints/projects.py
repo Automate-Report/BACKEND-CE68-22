@@ -58,44 +58,47 @@ async def create_project(project_in: ProjectCreate, user = Depends(get_current_u
         user_id=user["sub"],
         db=db
     )
-    for id in tag_ids:
-        result = project_tag_service.create_project_tag(id, new_project["id"])
+    for tag_id in tag_ids:
+        result = await project_tag_service.create_project_tag(tag_id, new_project["id"],db)
     return new_project
 
 # PUT /projects/{project_id} : อัพเดตโปรเจกต์
 @router.put("/{project_id}", response_model=ProjectResponse)
-async def update_project(project_id: int, project_in: ProjectCreate, user = Depends(get_current_user)):
+async def update_project(project_id: int, project_in: ProjectCreate, user = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
     new_tag_ids = set(project_in.tag_ids)
-    updated_project = project_service.update_project(
+    updated_project = await project_service.update_project(
         project_id=project_id,
         project_in=project_in,
-        user_id=user["sub"]
+        user_id=user["sub"],
+        db=db
     )
     if not updated_project:
         raise HTTPException(status_code=404, detail="Project not found")
-    old_tag_ids = set(project_tag_service.get_all_tag_ids(project_id))
+    old_tag_ids = set(await project_tag_service.get_all_tag_ids(project_id,db))
 
     add_tags = new_tag_ids - old_tag_ids
     for id in add_tags:
-        result = project_tag_service.create_project_tag(id, updated_project["id"])
+        result = await project_tag_service.create_project_tag(id, updated_project["id"],db)
 
     delete_tags = old_tag_ids - new_tag_ids
     for id in delete_tags:
-        result = project_tag_service.delete_by_tag_id(id)
+        result = await project_tag_service.delete_by_tag_id(id,db)
             
     
     return updated_project
 
 # DELETE /projects/{project_id} : ลบโปรเจกต์
 @router.delete("/{project_id}")
-async def delete_project(project_id: int):
-    delete_relation = project_tag_service.delete_by_project_id(
-        project_id=project_id
+async def delete_project(project_id: int, db: AsyncSession = Depends(get_db)):
+    delete_relation = await project_tag_service.delete_by_project_id(
+        project_id=project_id,
+        db=db
     )
 
 
-    success = project_service.delete_project(
-        project_id=project_id
+    success = await project_service.delete_project(
+        project_id=project_id,
+        db=db
     )
     if not success:
         raise HTTPException(status_code=404, detail="Project not found")

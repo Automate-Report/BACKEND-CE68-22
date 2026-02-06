@@ -19,7 +19,7 @@ async def get_all_tags_by_user_id(user = Depends(get_current_user), db: AsyncSes
 
 @router.get("/project/{project_id}", response_model=List[TagsResponse])
 async def get_all_tags_by_project_id(project_id: int, db: AsyncSession = Depends(get_db)):
-    tag_ids = project_tag_service.get_all_tag_ids(project_id=project_id)
+    tag_ids = await project_tag_service.get_all_tag_ids(project_id=project_id,db=db)
     tags = []
     for id in tag_ids:
         t = await tag_service.get_tag_by_id(id, db)
@@ -34,14 +34,14 @@ async def get_tag_by_id(tag_id: int, db: AsyncSession = Depends(get_db)):
     return tag
 
 @router.post("/", response_model=TagsResponse)
-async def create_tag(tag_in: TagCreate, user = Depends(get_current_user), db:AsyncSession = Depends(get_db)):
+async def create_tag(tag_in: TagCreate, user = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
     new_tag = await tag_service.create_tag(tag_in.name, user["sub"], db)
     return new_tag
 
 # DELETE 
 @router.delete("/{tag_id}")
-async def delete_tag(tag_id: int, db:AsyncSession = Depends(get_db)):
-    delete_relation = project_tag_service.delete_by_tag_id(tag_id)
+async def delete_tag(tag_id: int, db: AsyncSession = Depends(get_db)):
+    delete_relation = await project_tag_service.delete_by_tag_id(tag_id,db)
 
     success = await tag_service.delete_tag(id=tag_id, db=db)
 

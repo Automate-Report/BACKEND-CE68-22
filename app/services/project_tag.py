@@ -76,33 +76,38 @@ class ProjectTagService:
 
         return tags_id
     
-    def delete_by_tag_id(self, tag_id: int) -> bool:
-        project_tags = self._read_json()
-        for i, proj in enumerate(project_tags):
-            if proj["tag_id"] == tag_id:
-                del project_tags[i]
-                self._save_json(project_tags)
-                return True
-        return False
+    async def delete_by_tag_id(self, tag_id: int, db: AsyncSession) -> bool:
+        try:
+            query = sa.delete(ProjectTag).where(ProjectTag.tag_id == tag_id)
+            result = await db.execute(query)
+            await db.commit()
+            return True
+        except:
+            await db.rollback()
+            return False
     
-    def delete_by_project_id(self, project_id: int) -> bool:
+    async def delete_by_project_id(self, project_id: int, db: AsyncSession) -> bool:
         """Service: ลบโปรเจกต์"""
-        project_tags = self._read_json()
-        for i, proj in enumerate(project_tags):
-            if proj["project_id"] == project_id:
-                del project_tags[i]
-                self._save_json(project_tags)
-                return True
-        return False
+        try:
+            query = sa.delete(ProjectTag).where(ProjectTag.project_id == project_id)
+            result = await db.execute(query)
+            await db.commit()
+            return True
+        except:
+            await db.rollback()
+            return False
     
-    def delete_relation(self, project_id: int, tag_id: int) -> bool:
-        project_tags = self._read_json()
-        for i, proj in enumerate(project_tags):
-            if proj["project_id"] == project_id and proj["tag_id"] == tag_id:
-                del project_tags[i]
-                self._save_json(project_tags)
-                return True
-        return False
+    async def delete_relation(self, project_id: int, tag_id: int, db: AsyncSession) -> bool:
+        query = sa.select(ProjectTag).where(ProjectTag.project_id == project_id and ProjectTag.tag_id == tag_id)
+        result = await db.execute(query)
+        project_tag = result.scalar_one_or_none()
+
+        if not project_tag:
+            return False
+
+        db.delete(project_tag)
+        await db.commit()
+        return True
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 project_tag_service = ProjectTagService()
