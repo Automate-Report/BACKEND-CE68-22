@@ -13,7 +13,7 @@ class ReportStatus(enum.Enum):
 class Report(Base):
     __tablename__ = "reports"
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
-    log_id:Mapped[int] = mapped_column(sa.ForeignKey("logs.id")) #======================================FK ULID
+    job_id:Mapped[int] = mapped_column(sa.ForeignKey("jobs.id")) #======================================FK ULID
     file_name:Mapped[str] = mapped_column(sa.String(255))
     file_path:Mapped[str] = mapped_column(sa.String(255))
     file_type:Mapped[str] = mapped_column(sa.String(255))
