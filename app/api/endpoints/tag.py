@@ -22,7 +22,8 @@ async def get_all_tags_by_project_id(project_id: int):
     tags = []
     for id in tag_ids:
         t = tag_service.get_tag_by_id(id)
-        tags.append(t)
+        if t:
+            tags.append(t)
     return tags
 
 @router.get("/{tag_id}", response_model=TagsResponse)
