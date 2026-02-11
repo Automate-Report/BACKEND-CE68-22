@@ -1,9 +1,9 @@
 [
     {
-        "schedule_id": 11,
+        "schedule_id": 1,
         "schedule_name": "Bunnygirl is the best girl",
-        "project_id": 101,
-        "asset_id": 5501,
+        "project_id": 2,
+        "asset_id": 1,
         "worker_id": 3001,
         "cron_expression": "0 0 * * *Z6 30 * * *",
         "attack_type": "sql_injection",
