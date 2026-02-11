@@ -72,6 +72,15 @@ class JobService:
         
         return new_job
     
+    def get_job_by_id(self, job_id: int):
+        jobs = self._read_json()
+
+        for job in jobs:
+            if job["id"] == job_id:
+                return job
+            
+        return None
+    
     def get_job_ids_by_schedule_id(self, schedule_id: int):
         jobs = self._read_json()
 

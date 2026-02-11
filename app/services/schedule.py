@@ -11,7 +11,7 @@ from croniter import croniter
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "test_schedule.json")
+JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "schedule.json")
 
 class ScheduleService:
     
@@ -146,7 +146,7 @@ class ScheduleService:
         
         # Only return non-sensitive info
         return {
-            "shcedule_id": new_schedule["schedule_id"],
+            "schedule_id": new_schedule["schedule_id"],
             "schedule_name": new_schedule["schedule_name"],
             "schedule_atk_type": new_schedule["attack_type"],
         }
@@ -155,7 +155,7 @@ class ScheduleService:
         schedules = self._read_json()
         
         for schedule in schedules:
-            if schedule["id"] == schedule_id:
+            if schedule["schedule_id"] == schedule_id:
                 schedule["schedule_name"] = schedule_input.name
                 schedule["project_id"] = schedule_input.project_id
                 schedule["asset_id"] = schedule_input.asset
@@ -170,7 +170,7 @@ class ScheduleService:
                 
                 # Only return non-sensitive info
                 return {
-                    "shcedule_id": schedule["schedule_id"],
+                    "schedule_id": schedule["schedule_id"],
                     "schedule_name": schedule["schedule_name"],
                     "schedule_atk_type": schedule["attack_type"],
                 }
@@ -191,7 +191,7 @@ class ScheduleService:
         schedule_ids = []
         for schedule in schedules:
             if schedule["project_id"] == project_id:
-                schedule_ids.append(schedule["id"])
+                schedule_ids.append(schedule["schedule_id"])
 
         return schedule_ids
     
