@@ -16,7 +16,6 @@ class Schedule(Base):
     cron_expression:Mapped[str] = mapped_column(sa.String(255))
     attack_type:Mapped[ScheduleAttackType] = mapped_column(sa.Enum(ScheduleAttackType))
     is_active:Mapped[bool] = mapped_column(sa.Boolean, default=False)
-    next_run_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True))
     start_date:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True))
     end_date:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True))
     created_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())

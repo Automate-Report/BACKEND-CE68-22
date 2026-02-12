@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "project_id": 2,
+    "asset_id": 1,
+    "cron_expression": "*/1 * * * *", 
+    "attack_type": "xss",
+    "is_active": true,
+    "start_date": "2026-01-01T00:00:00",
+    "end_date": "2026-12-31T23:59:59"
+  },
+  {
+    "id": 2,
+    "project_id": 3,
+    "asset_id": 2,
+    "cron_expression": "*/2 * * * * Z */5 * * * *", 
+    "attack_type": "sql_injection",
+    "is_active": true,
+    "start_date": "2026-01-01T00:00:00",
+    "end_date": "2026-12-31T23:59:59"
+  },
+  {
+    "id": 3,
+    "project_id": 4,
+    "asset_id": 3,
+    "cron_expression": "0 0 * * *",
+    "attack_type": "xss",
+    "is_active": false, 
+    "start_date": "2026-01-01T00:00:00",
+    "end_date": "2026-12-31T23:59:59"
+  }
+]

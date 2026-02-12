@@ -4,7 +4,7 @@ from jose import jwt, JWTError
 from app.core.redis import redis_client
 from app.core.config import settings
 
-def get_current_user(request: Request):
+async def get_current_user(request: Request):
     token = request.cookies.get("access_token")
 
     if not token:
@@ -14,7 +14,7 @@ def get_current_user(request: Request):
         )
 
     # check if token is blacklisted
-    if redis_client.exists(token):
+    if await redis_client.exists(token):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token revoked"

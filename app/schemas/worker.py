@@ -4,11 +4,14 @@ from datetime import datetime
 
 class WorkerCreate(BaseModel):
     name: str
+    thread_number: int
 
 
 class WorkerResponse(BaseModel):
     id: int
     name: str
+    thread_number: int
+    current_load: int
     hostname: Optional[str] = None
     status: str
     isActive: bool
@@ -33,6 +36,10 @@ class VerifyRequest(BaseModel):
 class HandshakeRequest(BaseModel):
     registration_token: str
     hostname: str
+
+class HeartBeatPayload(BaseModel):
+    current_load: int
+    status: str
 
 class AuthRequest(BaseModel):
     api_key: str

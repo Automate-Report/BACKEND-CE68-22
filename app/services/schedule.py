@@ -5,12 +5,13 @@ from typing import List
 from app.schemas.schedule import ScheduleCreate
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
+from croniter import croniter
 
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "schedule.json")
+JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "test_schedule.json")
 
 class ScheduleService:
     
@@ -171,6 +172,34 @@ class ScheduleService:
                 self._save_json(schedules)
                 return True
         return False
+    
+    async def _is_due_now(self, cron_string: str):
+        now = datetime.utcnow().replace(second=0, microsecond=0)
+
+        expressions = [e.strip() for e in cron_string.split("Z")]
+
+        for expr in expressions:
+            try:
+                # คำนวณจุดรันล่าสุดของ Cron ตัวนั้นๆ
+                prev_run = croniter(expr, now + timedelta(seconds=1)).get_prev(datetime)
+                if prev_run == now:
+                    return True
+            except Exception as e:
+                print(f"❌ Invalid Cron: {expr} - {e}")
+                
+        return False
+    
+    async def get_due_schedules(self):
+        
+        schedules = self._read_json()
+
+        due_schedules = []
+
+        for schedule in schedules:
+            if await self._is_due_now(schedule["cron_expression"]):
+                due_schedules.append(schedule)
+        return due_schedules
+
         
 # สร้าง instance ของ Service เพื่อใช้งาน
 schedule_service = ScheduleService()
