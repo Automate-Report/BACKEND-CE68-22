@@ -6,12 +6,13 @@ from app.schemas.schedule import ScheduleCreate
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from croniter import croniter
-
+from app.services.job import job_service
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "test_schedule.json")
+# JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "test_schedule.json")
+JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "schedule.json")
 
 class ScheduleService:
     
@@ -43,13 +44,13 @@ class ScheduleService:
                           order: str = "asc", search: str = None, filter: str = "ALL"):
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
         schedules = self._read_json()
-        print(123456)
         # 1. กรอง Project
         all_matches = []
         for sch in schedules:
             if filter == "ALL":
                 if search:
                     if sch["project_id"] == project_id and search in sch["schedule_name"]:
+                        jobstatus = job_service.get_number_job_status_by_schedule_id(sch["schedule_id"])
                         displaytable_sch = {
                             "id": sch["schedule_id"],
                             "project_id": sch["project_id"],
@@ -57,16 +58,17 @@ class ScheduleService:
                             "atk_type": sch["attack_type"],
                             "start_date": sch["start_date"],
                             "end_date": sch["end_date"],
-                            "job_status": {# ตัวอย่างข้อมูล 
-                                "failed": 2,
-                                "finished": 42,
-                                "ongoing": 1,    
-                                "scheduled": 3,
+                            "job_status": {
+                                "failed": jobstatus["failed"],
+                                "finished": jobstatus["completed"],
+                                "ongoing": jobstatus["running"],    
+                                "scheduled": jobstatus["pending"],
                             }
                         }
                         all_matches.append(displaytable_sch)
                 else:
                     if sch["project_id"] == project_id:
+                        jobstatus = job_service.get_number_job_status_by_schedule_id(sch["schedule_id"])
                         displaytable_sch = {
                             "id": sch["schedule_id"],
                             "project_id": sch["project_id"],
@@ -74,11 +76,11 @@ class ScheduleService:
                             "atk_type": sch["attack_type"],
                             "start_date": sch["start_date"],
                             "end_date": sch["end_date"],
-                            "job_status": {# ตัวอย่างข้อมูล 
-                                "failed": 2,
-                                "finished": 42,
-                                "ongoing": 1,    
-                                "scheduled": 3,
+                            "job_status": {
+                                "failed": jobstatus["failed"],
+                                "finished": jobstatus["completed"],
+                                "ongoing": jobstatus["running"],    
+                                "scheduled": jobstatus["pending"],
                             }
                         }
                         all_matches.append(displaytable_sch)

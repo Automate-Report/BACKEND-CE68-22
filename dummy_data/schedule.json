@@ -2,9 +2,9 @@
   {
     "schedule_id": 11,
     "schedule_name": "Bunnygirl is the best girl",
-    "project_id": 101,
+    "project_id": 3,
     "asset_id": 1,
-    "cron_expression": "0 0 * * *Z6 30 * * *",
+    "cron_expression": "0 0 * * *Z30 3 * * *",
     "attack_type": "sql_injection",
     "is_active": true,
     "start_date": "2026-01-01",
@@ -15,7 +15,7 @@
   {
     "schedule_id": 12,
     "schedule_name": "Bi-hourly XSS Scan",
-    "project_id": 101,
+    "project_id": 3,
     "asset_id": 2,
     "cron_expression": "*/30 * * * *",
     "attack_type": "xss",
@@ -28,7 +28,7 @@
   {
     "schedule_id": 13,
     "schedule_name": "Weekly DDoS Simulation",
-    "project_id": 102,
+    "project_id": 3,
     "asset_id": 3,
     "cron_expression": "0 3 * * 1",
     "attack_type": "ddos",
