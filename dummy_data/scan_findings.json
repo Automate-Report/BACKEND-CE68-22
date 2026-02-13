@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "job_id": 10,
+    "vuln_id": 3,
+    "payload": "1' OR '1'='1",
+    "screenshot_path": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+    "curl_command": "curl -X GET 'http://example.com/search?id=1%27%20OR%20%271%27%3D%271'",
+    "timestamp": "2026-02-13T17:07:14.645158"
+  }
+]
