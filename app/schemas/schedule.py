@@ -2,11 +2,6 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
-class Jobs(BaseModel):
-    job_name: str
-    worker_name: str
-    time_assigned: str #"2 min ago", "2 hrs ago", backend will calc i think
-    status: str
 class ScheduleItem(BaseModel):
     schedule_id: int
     schedule_name: str
