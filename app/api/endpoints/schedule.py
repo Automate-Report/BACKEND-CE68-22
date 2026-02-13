@@ -44,14 +44,14 @@ async def get_schedule(schedule_id: int):
 # POST new schedule
 @router.post("/create")
 async def create_schedule(schedule_input: ScheduleCreate):
-    new_schedule = schedule_service.create_schedule(schedule_input)
-    return new_schedule
+    status_message = schedule_service.create_schedule(schedule_input)
+    return {"message": status_message}
 
 # PUT update via edit schedule
 @router.put("/{schedule_id}/update")
 async def update_schedule(schedule_id: int, schedule_input: ScheduleCreate):
-    updated_project = schedule_service.edit_schedule(schedule_id, schedule_input)
-    return updated_project
+    status_message = schedule_service.edit_schedule(schedule_id, schedule_input)
+    return {"message": status_message}
 
 # DELETE
 @router.delete("/{schedule_id}/delete")
