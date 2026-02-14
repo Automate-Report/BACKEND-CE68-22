@@ -4,10 +4,10 @@
     "name": "XSS - http://testphp.vulnweb.com/search.php",
     "schedule_id": 1,
     "worker_id": 2,
-    "status": "failed",
+    "status": "completed",
     "created_at": "2026-01-31T19:27:07.659642",
-    "started_at": "2026-01-31T12:27:09.712055",
-    "finished_at": null
+    "started_at": "2026-02-14T10:11:26.017371",
+    "finished_at": "2026-02-14T10:13:00.043617"
   },
   {
     "id": 2,
