@@ -1,0 +1,80 @@
+21:27:36 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+21:27:36 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:4040/#/
+21:27:37 [INFO]      [+] Discovered: GET http://localhost:4040/assets/i18n/en.json (0 params)
+21:27:37 [INFO]      [+] Discovered: GET http://localhost:4040/rest/admin/application-version (0 params)
+21:27:37 [INFO]      [+] Discovered: GET http://localhost:4040/rest/admin/application-configuration (0 params)
+21:27:37 [INFO]      [+] Discovered: GET http://localhost:4040/api/Challenges/ (0 params)
+21:27:37 [INFO]      [+] Discovered: GET http://localhost:4040/rest/languages (0 params)
+21:27:37 [INFO]      [+] Discovered: GET http://localhost:4040/api/Quantitys/ (0 params)
+21:27:37 [INFO]      [+] Discovered: GET http://localhost:4040/rest/products/search (0 params)
+21:27:39 [INFO]      [+] Discovered: GET http://localhost:4040/ (1 params)
+21:27:41 [INFO]      [+] Discovered: GET http://localhost:4040/search (1 params)
+21:27:43 [INFO]      [+] Discovered: GET http://localhost:4040/photo-wall (1 params)
+21:27:45 [INFO]      [+] Discovered: GET http://localhost:4040/about (1 params)
+21:27:47 [INFO]      [+] Discovered: GET http://localhost:4040/contact (1 params)
+21:27:50 [INFO]      [+] Discovered: GET http://localhost:4040/login (1 params)
+21:27:50 [INFO] [ScanEngine] Discovery finished. Unique targets found: 13
+21:27:50 [INFO] --- XSS Scan on: http://localhost:4040/assets/i18n/en.json (GET) ---
+21:27:50 [INFO] [XSS] Scanning GET on http://localhost:4040/assets/i18n/en.json (Type: json)
+21:27:50 [INFO] [*] Starting DOM Scan on: http://localhost:4040/assets/i18n/en.json
+21:27:57 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+21:28:01 [INFO] --- XSS Scan on: http://localhost:4040/rest/admin/application-version (GET) ---
+21:28:01 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/admin/application-version (Type: json)
+21:28:01 [INFO] [*] Starting DOM Scan on: http://localhost:4040/rest/admin/application-version
+21:28:07 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+21:28:11 [INFO] --- XSS Scan on: http://localhost:4040/rest/admin/application-configuration (GET) ---
+21:28:11 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/admin/application-configuration (Type: json)
+21:28:11 [INFO] [*] Starting DOM Scan on: http://localhost:4040/rest/admin/application-configuration
+21:28:17 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+21:28:21 [INFO] --- XSS Scan on: http://localhost:4040/api/Challenges/ (GET) ---
+21:28:21 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Challenges/ (Type: json)
+21:28:21 [INFO] [*] Starting DOM Scan on: http://localhost:4040/api/Challenges/
+21:28:28 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+21:28:32 [INFO] --- XSS Scan on: http://localhost:4040/rest/languages (GET) ---
+21:28:32 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/languages (Type: json)
+21:28:32 [INFO] [*] Starting DOM Scan on: http://localhost:4040/rest/languages
+21:28:38 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+21:28:42 [INFO] --- XSS Scan on: http://localhost:4040/api/Quantitys/ (GET) ---
+21:28:42 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Quantitys/ (Type: json)
+21:28:42 [INFO] [*] Starting DOM Scan on: http://localhost:4040/api/Quantitys/
+21:28:48 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+21:28:52 [INFO] --- XSS Scan on: http://localhost:4040/rest/products/search (GET) ---
+21:28:52 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/products/search (Type: json)
+21:28:52 [INFO] [*] Starting DOM Scan on: http://localhost:4040/rest/products/search
+21:28:59 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+21:29:03 [INFO] --- XSS Scan on: http://localhost:4040/ (GET) ---
+21:29:03 [INFO] [XSS] Scanning GET on http://localhost:4040/ (Type: form)
+21:29:03 [INFO]     -> Analyzing: q
+21:29:03 [INFO] [*] Starting DOM Scan on: http://localhost:4040/
+21:29:05 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+21:29:10 [INFO]     -> Testing Parameter: q
+21:29:10 [INFO] --- XSS Scan on: http://localhost:4040/search (GET) ---
+21:29:10 [INFO] [XSS] Scanning GET on http://localhost:4040/search (Type: form)
+21:29:10 [INFO]     -> Analyzing: q
+21:29:10 [INFO] [*] Starting DOM Scan on: http://localhost:4040/search
+21:29:13 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+21:29:17 [INFO]     -> Testing Parameter: q
+21:29:17 [INFO] --- XSS Scan on: http://localhost:4040/photo-wall (GET) ---
+21:29:17 [INFO] [XSS] Scanning GET on http://localhost:4040/photo-wall (Type: form)
+21:29:17 [INFO]     -> Analyzing: q
+21:29:17 [INFO] [*] Starting DOM Scan on: http://localhost:4040/photo-wall
+21:29:20 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+21:29:25 [INFO]     -> Testing Parameter: q
+21:29:25 [INFO] --- XSS Scan on: http://localhost:4040/about (GET) ---
+21:29:25 [INFO] [XSS] Scanning GET on http://localhost:4040/about (Type: form)
+21:29:25 [INFO]     -> Analyzing: q
+21:29:25 [INFO] [*] Starting DOM Scan on: http://localhost:4040/about
+21:29:28 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+21:29:32 [INFO]     -> Testing Parameter: q
+21:29:32 [INFO] --- XSS Scan on: http://localhost:4040/contact (GET) ---
+21:29:32 [INFO] [XSS] Scanning GET on http://localhost:4040/contact (Type: form)
+21:29:32 [INFO]     -> Analyzing: q
+21:29:32 [INFO] [*] Starting DOM Scan on: http://localhost:4040/contact
+21:29:35 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+21:29:39 [INFO]     -> Testing Parameter: q
+21:29:40 [INFO] --- XSS Scan on: http://localhost:4040/login (GET) ---
+21:29:40 [INFO] [XSS] Scanning GET on http://localhost:4040/login (Type: form)
+21:29:40 [INFO]     -> Analyzing: q
+21:29:40 [INFO] [*] Starting DOM Scan on: http://localhost:4040/login
+21:29:42 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+21:29:47 [INFO]     -> Testing Parameter: q

@@ -1,0 +1,17 @@
+20:09:26 [INFO] [ScanEngine][Job 1] Starting Discovery Phase...
+20:09:26 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:4040/#/
+20:09:27 [INFO]      [+] Discovered: GET http://localhost:4040/assets/i18n/en.json (0 params)
+20:09:27 [INFO]      [+] Discovered: GET http://localhost:4040/rest/admin/application-version (0 params)
+20:09:27 [INFO]      [+] Discovered: GET http://localhost:4040/rest/admin/application-configuration (0 params)
+20:09:27 [INFO]      [+] Discovered: GET http://localhost:4040/api/Challenges/ (0 params)
+20:09:27 [INFO]      [+] Discovered: GET http://localhost:4040/rest/languages (0 params)
+20:09:27 [INFO]      [+] Discovered: GET http://localhost:4040/api/Quantitys/ (0 params)
+20:09:27 [INFO]      [+] Discovered: GET http://localhost:4040/rest/products/search (0 params)
+20:09:28 [INFO]      [+] Discovered: GET http://localhost:4040/ (1 params)
+20:09:31 [INFO]      [+] Discovered: GET http://localhost:4040/login (1 params)
+20:09:33 [INFO]      [+] Discovered: GET http://localhost:4040/search (1 params)
+20:09:34 [INFO]      [+] Discovered: GET http://localhost:4040/contact (1 params)
+20:09:36 [INFO]      [+] Discovered: GET http://localhost:4040/photo-wall (1 params)
+20:09:38 [INFO]      [+] Discovered: GET http://localhost:4040/about (1 params)
+20:09:38 [INFO] [ScanEngine][Job 1] Discovery finished. Unique targets: 13
+20:09:38 [ERROR] ❌ Critical Error: 'AuthHandler' object has no attribute 'cookies'
