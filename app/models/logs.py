@@ -13,6 +13,7 @@ class Log(Base):
     __tablename__ = "logs"
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
     job_id:Mapped[int] = mapped_column(sa.ForeignKey("jobs.id")) #======================================FK ULID
+    pentest_result:Mapped[str] = mapped_column(sa.Text)
     file_name:Mapped[str] = mapped_column(sa.String(255))
     file_path:Mapped[str] = mapped_column(sa.String(255))
     file_type:Mapped[str] = mapped_column(sa.String(255))
