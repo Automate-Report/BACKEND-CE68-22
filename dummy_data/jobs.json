@@ -4,20 +4,20 @@
     "name": "XSS - http://testphp.vulnweb.com/search.php",
     "schedule_id": 1,
     "worker_id": 2,
-    "status": "failed",
+    "status": "completed",
     "created_at": "2026-01-31T19:27:07.659642",
-    "started_at": "2026-02-17T13:28:08.985525",
-    "finished_at": "2026-02-17T13:28:08.985525"
+    "started_at": "2026-02-17T15:21:38.695179",
+    "finished_at": "2026-02-17T15:21:57.672193"
   },
   {
     "id": 2,
     "name": "XSS - http://testphp.vulnweb.com/search.php",
     "schedule_id": 1,
     "worker_id": 2,
-    "status": "running",
+    "status": "failed",
     "created_at": "2026-01-31T19:28:06.089895",
-    "started_at": "2026-02-15T09:20:05.163587",
-    "finished_at": "2026-02-15T09:14:22.422375"
+    "started_at": "2026-02-17T15:24:35.812643",
+    "finished_at": "2026-02-17T15:24:35.812643"
   },
   {
     "id": 3,
@@ -26,8 +26,8 @@
     "worker_id": 2,
     "status": "failed",
     "created_at": "2026-01-31T19:28:06.104228",
-    "started_at": "2026-01-31T12:28:11.432234",
-    "finished_at": null
+    "started_at": "2026-02-17T15:24:28.308970",
+    "finished_at": "2026-02-17T15:24:28.308970"
   },
   {
     "id": 4,

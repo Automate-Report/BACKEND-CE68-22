@@ -1,0 +1,5 @@
+22:24:20 [INFO] [ScanEngine] Starting Discovery on http://localhost:4050/login.php...
+22:24:20 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:4050/login.php
+22:24:25 [INFO]      [+] Discovered: GET /login.php ['username', 'password']
+22:24:26 [INFO] [ScanEngine] Discovery finished. Unique targets found: 1
+22:24:26 [ERROR] ❌ Critical Error: 'content_type'
