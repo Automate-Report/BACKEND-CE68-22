@@ -1,0 +1,33 @@
+13:27:45 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+13:27:45 [INFO] [Crawler] Starting Crawl on: http://localhost:4040/#/
+13:27:47 [INFO]      [+] Discovered: GET /socket.io/ ['EIO', 'transport', 't']
+13:27:47 [INFO]      [+] Discovered: GET /api/Challenges/ ['name']
+13:27:47 [INFO]      [+] Discovered: POST /socket.io/ ['EIO', 'transport', 't', 'sid']
+13:27:47 [INFO]      [+] Discovered: GET /socket.io/ ['EIO', 'transport', 't', 'sid']
+13:27:47 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:27:47 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:27:47 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:27:47 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:27:47 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:28:21 [WARNING] [!] Skip http://localhost:4040/#/: Crawler._save_target() missing 1 required positional argumen
+13:28:21 [INFO] [ScanEngine] Discovery finished. Unique targets found: 4
+13:28:21 [INFO] --- SQLi Scan on: http://localhost:4040/socket.io/ (GET) ---
+13:28:21 [INFO] [SQLi] Scan: GET http://localhost:4040/socket.io/
+13:28:21 [INFO]     -> Testing Parameter: EIO
+13:28:22 [INFO]     -> Testing Parameter: transport
+13:28:22 [INFO]     -> Testing Parameter: t
+13:28:22 [INFO] --- SQLi Scan on: http://localhost:4040/api/Challenges/ (GET) ---
+13:28:22 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Challenges/
+13:28:22 [INFO]     -> Testing Parameter: name
+13:28:27 [INFO] --- SQLi Scan on: http://localhost:4040/socket.io/ (POST) ---
+13:28:27 [INFO] [SQLi] Scan: POST http://localhost:4040/socket.io/
+13:28:27 [INFO]     -> Testing Parameter: EIO
+13:28:30 [INFO]     -> Testing Parameter: transport
+13:28:33 [INFO]     -> Testing Parameter: t
+13:28:37 [INFO]     -> Testing Parameter: sid
+13:28:40 [INFO] --- SQLi Scan on: http://localhost:4040/socket.io/ (GET) ---
+13:28:40 [INFO] [SQLi] Scan: GET http://localhost:4040/socket.io/
+13:28:40 [INFO]     -> Testing Parameter: EIO
+13:28:40 [INFO]     -> Testing Parameter: transport
+13:28:40 [INFO]     -> Testing Parameter: t
+13:28:41 [INFO]     -> Testing Parameter: sid

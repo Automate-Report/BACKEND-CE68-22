@@ -1,0 +1,5 @@
+13:25:38 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+13:25:38 [INFO] [Crawler] Starting Crawl on: http://localhost:4040/#/
+13:25:40 [WARNING] [!] Skip http://localhost:4040/#/: Locator.count: Crawler._save_target() takes 4 positional arg
+13:25:40 [INFO] [ScanEngine] Discovery finished. Unique targets found: 0
+13:25:40 [ERROR] ❌ Critical Error: 'AuthHandler' object has no attribute 'cookies'

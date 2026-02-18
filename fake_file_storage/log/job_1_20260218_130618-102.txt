@@ -1,0 +1,31 @@
+13:05:21 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+13:05:21 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:4040/#/
+13:05:28 [INFO]      [+] Discovered: GET / ['mat-input-1']
+13:05:34 [INFO]      [+] Discovered: GET /about ['mat-input-1']
+13:05:39 [INFO]      [+] Discovered: GET /contact ['mat-input-1']
+13:05:44 [INFO]      [+] Discovered: GET /score-board ['mat-input-1']
+13:05:49 [INFO]      [+] Discovered: GET /photo-wall ['mat-input-1']
+13:05:54 [INFO]      [+] Discovered: GET /login ['mat-input-1']
+13:05:59 [INFO]      [+] Discovered: GET /search ['mat-input-1']
+13:06:00 [INFO] [ScanEngine] Discovery finished. Unique targets found: 7
+13:06:00 [INFO] --- SQLi Scan on: http://localhost:4040/#/ (GET) ---
+13:06:00 [INFO] [SQLi] Scan: GET http://localhost:4040/#/
+13:06:00 [INFO]     -> Testing Parameter: mat-input-1
+13:06:01 [INFO] --- SQLi Scan on: http://localhost:4040/about (GET) ---
+13:06:01 [INFO] [SQLi] Scan: GET http://localhost:4040/about
+13:06:01 [INFO]     -> Testing Parameter: mat-input-1
+13:06:03 [INFO] --- SQLi Scan on: http://localhost:4040/contact (GET) ---
+13:06:03 [INFO] [SQLi] Scan: GET http://localhost:4040/contact
+13:06:03 [INFO]     -> Testing Parameter: mat-input-1
+13:06:06 [INFO] --- SQLi Scan on: http://localhost:4040/score-board (GET) ---
+13:06:06 [INFO] [SQLi] Scan: GET http://localhost:4040/score-board
+13:06:06 [INFO]     -> Testing Parameter: mat-input-1
+13:06:08 [INFO] --- SQLi Scan on: http://localhost:4040/photo-wall (GET) ---
+13:06:08 [INFO] [SQLi] Scan: GET http://localhost:4040/photo-wall
+13:06:08 [INFO]     -> Testing Parameter: mat-input-1
+13:06:11 [INFO] --- SQLi Scan on: http://localhost:4040/login (GET) ---
+13:06:11 [INFO] [SQLi] Scan: GET http://localhost:4040/login
+13:06:11 [INFO]     -> Testing Parameter: mat-input-1
+13:06:13 [INFO] --- SQLi Scan on: http://localhost:4040/search (GET) ---
+13:06:13 [INFO] [SQLi] Scan: GET http://localhost:4040/search
+13:06:13 [INFO]     -> Testing Parameter: mat-input-1
