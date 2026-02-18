@@ -1,0 +1,12 @@
+14:42:29 [INFO] [ScanEngine] Starting Discovery on http://localhost:4050/vulnerabilities/sqli/...
+14:42:29 [INFO] [Crawler] Starting Crawl on: http://localhost:4050/vulnerabilities/sqli/
+14:42:30 [INFO] [*] Login detected at http://localhost:4050/vulnerabilities/sqli/
+14:42:31 [INFO]      [+] Discovered: POST /login.php ['username', 'password', 'Login', 'user_token']
+14:42:31 [WARNING] [!] Skip http://localhost:4050/vulnerabilities/sqli/: 'AuthHandler' object has no attribute '_try_default_creds'
+14:42:31 [INFO] [ScanEngine] Discovery finished. Unique targets found: 1
+14:42:31 [INFO] --- SQLi Scan on: http://localhost:4050/login.php (POST) ---
+14:42:31 [INFO] [SQLi] Scan: POST http://localhost:4050/login.php
+14:42:31 [INFO]     -> Testing Parameter: username
+14:42:39 [INFO]     -> Testing Parameter: password
+14:42:47 [INFO]     -> Testing Parameter: Login
+14:42:54 [INFO]     -> Testing Parameter: user_token

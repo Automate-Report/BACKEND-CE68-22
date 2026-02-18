@@ -1,0 +1,15 @@
+16:53:18 [INFO] [ScanEngine] Starting Discovery on http://localhost:3000/...
+16:53:18 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:3000/
+16:53:25 [INFO]      [+] Discovered: GET http://localhost:3000/register {'Firstname': 'test', 'Lastname': 'test', 'email': 'test', 'password': 'test'}
+16:53:27 [INFO]      [+] Discovered: GET http://localhost:3000/login {'email': 'test', 'password': 'test'}
+16:53:29 [INFO] [ScanEngine] Discovery finished. Unique targets found: 2
+16:53:29 [INFO] --- SQLi Scan on: http://localhost:3000/register (GET) ---
+16:53:29 [INFO] [SQLi] Scan: GET http://localhost:3000/register (form)
+16:53:29 [INFO]     -> Testing: Firstname
+16:53:46 [INFO]     -> Testing: Lastname
+16:54:03 [INFO]     -> Testing: email
+16:54:19 [INFO]     -> Testing: password
+16:54:36 [INFO] --- SQLi Scan on: http://localhost:3000/login (GET) ---
+16:54:36 [INFO] [SQLi] Scan: GET http://localhost:3000/login (form)
+16:54:36 [INFO]     -> Testing: email
+16:54:53 [INFO]     -> Testing: password

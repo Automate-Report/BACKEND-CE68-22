@@ -6,6 +6,7 @@ class JobWorkerPayload(BaseModel):
     job_id: int
     target_url: str
     attack_type: str
+    credential: Optional[dict] = None
 
 class JobStatusPayload(BaseModel):
     job_id: int

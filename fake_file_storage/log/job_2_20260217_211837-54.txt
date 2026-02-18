@@ -1,0 +1,31 @@
+21:16:07 [INFO] [ScanEngine] Starting Discovery on http://localhost:3000/...
+21:16:07 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:3000/
+21:16:16 [INFO]      [+] Discovered: GET http://localhost:3000/login {'email': '', 'password': ''}
+21:16:18 [INFO]      [+] Discovered: GET http://localhost:3000/register {'Firstname': '', 'Lastname': '', 'email': '', 'password': ''}
+21:16:20 [INFO] [ScanEngine] Discovery finished. Unique targets found: 2
+21:16:20 [INFO] --- XSS Scan on: http://localhost:3000/login (GET) ---
+21:16:20 [INFO] [XSS] Scanning GET on http://localhost:3000/login (Type: form)
+21:16:20 [INFO]     -> Analyzing: email
+21:16:20 [INFO]         [+] Found Reflection with GET!
+21:16:21 [INFO]     -> Analyzing: password
+21:16:21 [INFO]         [+] Found Reflection with GET!
+21:16:21 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:3000/login
+21:16:24 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:17:09 [INFO]     -> Testing Parameter: email
+21:17:09 [INFO]        [+] Found target via selector: #email
+21:17:16 [INFO]     -> Testing Parameter: password
+21:17:31 [INFO] --- XSS Scan on: http://localhost:3000/register (GET) ---
+21:17:31 [INFO] [XSS] Scanning GET on http://localhost:3000/register (Type: form)
+21:17:31 [INFO]     -> Analyzing: Firstname
+21:17:31 [INFO]         [+] Found Reflection with GET!
+21:17:31 [INFO]     -> Analyzing: Lastname
+21:17:32 [INFO]         [+] Found Reflection with GET!
+21:17:32 [INFO]     -> Analyzing: email
+21:17:32 [INFO]         [+] Found Reflection with GET!
+21:17:32 [INFO]     -> Analyzing: password
+21:17:32 [INFO]         [+] Found Reflection with GET!
+21:17:32 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:3000/register
+21:17:36 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:18:20 [INFO]     -> Testing Parameter: Firstname
+21:18:20 [INFO]        [+] Found target via selector: #Firstname
+21:18:27 [INFO]     -> Testing Parameter: Lastname

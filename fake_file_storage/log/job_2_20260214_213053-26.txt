@@ -1,0 +1,44 @@
+21:30:48 [INFO] [ScanEngine][Job 2] Starting Discovery Phase...
+21:30:48 [INFO] [Crawler] Starting Crawl on: http://localhost:4040/#/ (Depth: 2)
+21:30:49 [INFO]      [+] Target Discovered: GET http://localhost:4040/assets/i18n/en.json (0 params)
+21:30:49 [INFO]      [+] Target Discovered: GET http://localhost:4040/socket.io/ (0 params)
+21:30:49 [INFO]      [+] Target Discovered: GET http://localhost:4040/rest/admin/application-version (0 params)
+21:30:49 [INFO]      [+] Target Discovered: GET http://localhost:4040/rest/admin/application-configuration (0 params)
+21:30:49 [INFO]      [+] Target Discovered: GET http://localhost:4040/api/Challenges/ (0 params)
+21:30:49 [INFO]      [+] Target Discovered: GET http://localhost:4040/rest/languages (0 params)
+21:30:49 [INFO]      [+] Target Discovered: GET http://localhost:4040/api/Quantitys/ (0 params)
+21:30:49 [INFO]      [+] Target Discovered: GET http://localhost:4040/rest/products/search (0 params)
+21:30:49 [INFO]      [+] Target Discovered: POST http://localhost:4040/socket.io/ (0 params)
+21:30:49 [INFO]      [+] Target Discovered: GET http://localhost:4040/ (1 params)
+21:30:50 [INFO] [ScanEngine][Job 2] Discovery finished. Unique targets: 10
+21:30:50 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/assets/i18n/en.json ---
+21:30:50 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+21:30:50 [INFO] [SQLi] Scan: GET http://localhost:4040/assets/i18n/en.json (form)
+21:30:50 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/socket.io/ ---
+21:30:50 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+21:30:50 [INFO] [SQLi] Scan: GET http://localhost:4040/socket.io/ (form)
+21:30:50 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/rest/admin/application-version ---
+21:30:50 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+21:30:50 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/admin/application-version (form)
+21:30:50 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/rest/admin/application-configuration ---
+21:30:50 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+21:30:50 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/admin/application-configuration (form)
+21:30:50 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/api/Challenges/ ---
+21:30:50 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+21:30:50 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Challenges/ (form)
+21:30:50 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/rest/languages ---
+21:30:50 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+21:30:50 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/languages (form)
+21:30:50 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/api/Quantitys/ ---
+21:30:50 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+21:30:50 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Quantitys/ (form)
+21:30:50 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/rest/products/search ---
+21:30:50 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+21:30:50 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/products/search (form)
+21:30:50 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/socket.io/ ---
+21:30:50 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+21:30:50 [INFO] [SQLi] Scan: POST http://localhost:4040/socket.io/ (form)
+21:30:50 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/ ---
+21:30:50 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+21:30:50 [INFO] [SQLi] Scan: GET http://localhost:4040/ (form)
+21:30:50 [INFO]     -> Testing: mat-input-1

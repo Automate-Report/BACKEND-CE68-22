@@ -1,0 +1,49 @@
+20:54:45 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+20:54:45 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:4040/#/
+20:54:47 [INFO]      [+] Discovered: GET http://localhost:4040/api/Challenges/ {'name': 'Score Board'}
+20:54:47 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:54:47 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:54:49 [INFO]      [+] Discovered: GET http://localhost:4040/ {'mat-input-1': ''}
+20:54:49 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:54:49 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:54:52 [INFO]      [+] Discovered: GET http://localhost:4040/score-board {'mat-input-1': ''}
+20:54:53 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:54:53 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:54:55 [INFO]      [+] Discovered: GET http://localhost:4040/photo-wall {'mat-input-1': ''}
+20:54:55 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:54:55 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:54:57 [INFO]      [+] Discovered: GET http://localhost:4040/contact {'mat-input-1': ''}
+20:54:58 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:54:58 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:55:00 [INFO]      [+] Discovered: GET http://localhost:4040/about {'mat-input-1': ''}
+20:55:00 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:55:00 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:55:02 [INFO]      [+] Discovered: GET http://localhost:4040/search {'mat-input-1': ''}
+20:55:03 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:55:03 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+20:55:05 [INFO]      [+] Discovered: GET http://localhost:4040/login {'mat-input-1': ''}
+20:55:10 [INFO] [ScanEngine] Discovery finished. Unique targets found: 8
+20:55:10 [INFO] --- SQLi Scan on: http://localhost:4040/api/Challenges/ (GET) ---
+20:55:10 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Challenges/ (form)
+20:55:10 [INFO]     -> Testing: name
+20:55:15 [INFO] --- SQLi Scan on: http://localhost:4040/ (GET) ---
+20:55:15 [INFO] [SQLi] Scan: GET http://localhost:4040/ (form)
+20:55:15 [INFO]     -> Testing: mat-input-1
+20:55:16 [INFO] --- SQLi Scan on: http://localhost:4040/score-board (GET) ---
+20:55:16 [INFO] [SQLi] Scan: GET http://localhost:4040/score-board (form)
+20:55:16 [INFO]     -> Testing: mat-input-1
+20:55:18 [INFO] --- SQLi Scan on: http://localhost:4040/photo-wall (GET) ---
+20:55:18 [INFO] [SQLi] Scan: GET http://localhost:4040/photo-wall (form)
+20:55:18 [INFO]     -> Testing: mat-input-1
+20:55:21 [INFO] --- SQLi Scan on: http://localhost:4040/contact (GET) ---
+20:55:21 [INFO] [SQLi] Scan: GET http://localhost:4040/contact (form)
+20:55:21 [INFO]     -> Testing: mat-input-1
+20:55:23 [INFO] --- SQLi Scan on: http://localhost:4040/about (GET) ---
+20:55:23 [INFO] [SQLi] Scan: GET http://localhost:4040/about (form)
+20:55:23 [INFO]     -> Testing: mat-input-1
+20:55:26 [INFO] --- SQLi Scan on: http://localhost:4040/search (GET) ---
+20:55:26 [INFO] [SQLi] Scan: GET http://localhost:4040/search (form)
+20:55:26 [INFO]     -> Testing: mat-input-1
+20:55:29 [INFO] --- SQLi Scan on: http://localhost:4040/login (GET) ---
+20:55:29 [INFO] [SQLi] Scan: GET http://localhost:4040/login (form)
+20:55:29 [INFO]     -> Testing: mat-input-1

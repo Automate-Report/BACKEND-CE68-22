@@ -6,10 +6,10 @@
     "current_load": 0,
     "name": "XSS Worker2",
     "hostname": "test",
-    "status": "Revoked",
+    "status": "online",
     "isActive": true,
     "created_at": "2026-01-27T18:49:28.965751",
     "updated_at": "2026-01-27T18:49:28.965758",
-    "last_heartbeat": "2026-01-31T16:14:48.661335"
+    "last_heartbeat": "2026-02-18T09:35:49.072566"
   }
 ]

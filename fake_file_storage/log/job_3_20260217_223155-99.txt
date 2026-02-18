@@ -1,0 +1,8 @@
+22:31:46 [INFO] [ScanEngine] Starting Discovery on http://localhost:4050/login.php...
+22:31:46 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:4050/login.php
+22:31:51 [INFO]      [+] Discovered: GET /login.php ['username', 'password']
+22:31:52 [INFO] [ScanEngine] Discovery finished. Unique targets found: 1
+22:31:52 [INFO] --- SQLi Scan on: http://localhost:4050/login.php (GET) ---
+22:31:52 [INFO] [SQLi] Scan: GET http://localhost:4050/login.php (form)
+22:31:52 [INFO]     -> Testing: username
+22:31:52 [INFO]     -> Testing: password

@@ -1,0 +1,128 @@
+13:33:43 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+13:33:43 [INFO] [Crawler] Starting Crawl on: http://localhost:4040/#/
+13:33:45 [INFO]      [+] Discovered: GET /socket.io/ ['EIO', 'transport', 't']
+13:33:45 [INFO]      [+] Discovered: GET /api/Challenges/ ['name']
+13:33:45 [INFO]      [+] Discovered: POST /socket.io/ ['EIO', 'transport', 't', 'sid']
+13:33:45 [INFO]      [+] Discovered: GET /socket.io/ ['EIO', 'transport', 't', 'sid']
+13:33:45 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:33:45 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:33:45 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:33:45 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:33:45 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:19 [INFO]      [+] Discovered: GET / ['mat-input-1']
+13:34:19 [INFO]     [..] Extracting endpoints from JS files...
+13:34:19 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:34:22 [INFO]      [+] Discovered: GET /score-board/socket.io/ ['EIO', 'transport', 't']
+13:34:22 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:22 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:22 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:26 [INFO]      [+] Discovered: GET /score-board ['mat-input-1']
+13:34:26 [INFO]     [..] Extracting endpoints from JS files...
+13:34:26 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:34:27 [INFO]      [+] Discovered: GET /photo-wall/socket.io/ ['EIO', 'transport', 't']
+13:34:27 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:27 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:27 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:31 [INFO]      [+] Discovered: GET /photo-wall ['mat-input-1']
+13:34:31 [INFO]     [..] Extracting endpoints from JS files...
+13:34:31 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:34:32 [INFO]      [+] Discovered: GET /login/socket.io/ ['EIO', 'transport', 't']
+13:34:32 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:32 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:32 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:35 [INFO]      [+] Discovered: GET /login ['mat-input-1']
+13:34:35 [INFO]     [..] Extracting endpoints from JS files...
+13:34:35 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:34:37 [INFO]      [+] Discovered: GET /about/socket.io/ ['EIO', 'transport', 't']
+13:34:37 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:37 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:37 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:40 [INFO]      [+] Discovered: GET /about ['mat-input-1']
+13:34:40 [INFO]     [..] Extracting endpoints from JS files...
+13:34:40 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:34:42 [INFO]      [+] Discovered: GET /search/socket.io/ ['EIO', 'transport', 't']
+13:34:42 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:42 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:42 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:45 [INFO]      [+] Discovered: GET /search ['mat-input-1']
+13:34:45 [INFO]     [..] Extracting endpoints from JS files...
+13:34:45 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:34:47 [INFO]      [+] Discovered: GET /contact/socket.io/ ['EIO', 'transport', 't']
+13:34:47 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:47 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:47 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:34:50 [INFO]      [+] Discovered: GET /contact ['mat-input-1']
+13:34:50 [INFO]     [..] Extracting endpoints from JS files...
+13:34:50 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:34:52 [INFO] [ScanEngine] Discovery finished. Unique targets found: 17
+13:34:52 [INFO] --- SQLi Scan on: http://localhost:4040/socket.io/ (GET) ---
+13:34:52 [INFO] [SQLi] Scan: GET http://localhost:4040/socket.io/
+13:34:52 [INFO]     -> Testing Parameter: EIO
+13:34:52 [INFO]     -> Testing Parameter: transport
+13:34:52 [INFO]     -> Testing Parameter: t
+13:34:53 [INFO] --- SQLi Scan on: http://localhost:4040/api/Challenges/ (GET) ---
+13:34:53 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Challenges/
+13:34:53 [INFO]     -> Testing Parameter: name
+13:34:57 [INFO] --- SQLi Scan on: http://localhost:4040/socket.io/ (POST) ---
+13:34:57 [INFO] [SQLi] Scan: POST http://localhost:4040/socket.io/
+13:34:57 [INFO]     -> Testing Parameter: EIO
+13:35:00 [INFO]     -> Testing Parameter: transport
+13:35:04 [INFO]     -> Testing Parameter: t
+13:35:07 [INFO]     -> Testing Parameter: sid
+13:35:11 [INFO] --- SQLi Scan on: http://localhost:4040/socket.io/ (GET) ---
+13:35:11 [INFO] [SQLi] Scan: GET http://localhost:4040/socket.io/
+13:35:11 [INFO]     -> Testing Parameter: EIO
+13:35:11 [INFO]     -> Testing Parameter: transport
+13:35:12 [INFO]     -> Testing Parameter: t
+13:35:12 [INFO]     -> Testing Parameter: sid
+13:35:13 [INFO] --- SQLi Scan on: http://localhost:4040/#/ (GET) ---
+13:35:13 [INFO] [SQLi] Scan: GET http://localhost:4040/#/
+13:35:13 [INFO]     -> Testing Parameter: mat-input-1
+13:35:14 [INFO] --- SQLi Scan on: http://localhost:4040/score-board/socket.io/ (GET) ---
+13:35:14 [INFO] [SQLi] Scan: GET http://localhost:4040/score-board/socket.io/
+13:35:14 [INFO]     -> Testing Parameter: EIO
+13:35:17 [INFO]     -> Testing Parameter: transport
+13:35:20 [INFO]     -> Testing Parameter: t
+13:35:23 [INFO] --- SQLi Scan on: http://localhost:4040/score-board (GET) ---
+13:35:23 [INFO] [SQLi] Scan: GET http://localhost:4040/score-board
+13:35:23 [INFO]     -> Testing Parameter: mat-input-1
+13:35:26 [INFO] --- SQLi Scan on: http://localhost:4040/photo-wall/socket.io/ (GET) ---
+13:35:26 [INFO] [SQLi] Scan: GET http://localhost:4040/photo-wall/socket.io/
+13:35:26 [INFO]     -> Testing Parameter: EIO
+13:35:28 [INFO]     -> Testing Parameter: transport
+13:35:31 [INFO]     -> Testing Parameter: t
+13:35:33 [INFO] --- SQLi Scan on: http://localhost:4040/photo-wall (GET) ---
+13:35:33 [INFO] [SQLi] Scan: GET http://localhost:4040/photo-wall
+13:35:33 [INFO]     -> Testing Parameter: mat-input-1
+13:35:36 [INFO] --- SQLi Scan on: http://localhost:4040/login/socket.io/ (GET) ---
+13:35:36 [INFO] [SQLi] Scan: GET http://localhost:4040/login/socket.io/
+13:35:36 [INFO]     -> Testing Parameter: EIO
+13:35:39 [INFO]     -> Testing Parameter: transport
+13:35:42 [INFO]     -> Testing Parameter: t
+13:35:45 [INFO] --- SQLi Scan on: http://localhost:4040/login (GET) ---
+13:35:45 [INFO] [SQLi] Scan: GET http://localhost:4040/login
+13:35:45 [INFO]     -> Testing Parameter: mat-input-1
+13:35:47 [INFO] --- SQLi Scan on: http://localhost:4040/about/socket.io/ (GET) ---
+13:35:47 [INFO] [SQLi] Scan: GET http://localhost:4040/about/socket.io/
+13:35:47 [INFO]     -> Testing Parameter: EIO
+13:35:50 [INFO]     -> Testing Parameter: transport
+13:35:53 [INFO]     -> Testing Parameter: t
+13:35:56 [INFO] --- SQLi Scan on: http://localhost:4040/about (GET) ---
+13:35:56 [INFO] [SQLi] Scan: GET http://localhost:4040/about
+13:35:56 [INFO]     -> Testing Parameter: mat-input-1
+13:35:59 [INFO] --- SQLi Scan on: http://localhost:4040/search/socket.io/ (GET) ---
+13:35:59 [INFO] [SQLi] Scan: GET http://localhost:4040/search/socket.io/
+13:35:59 [INFO]     -> Testing Parameter: EIO
+13:36:01 [INFO]     -> Testing Parameter: transport
+13:36:04 [INFO]     -> Testing Parameter: t
+13:36:07 [INFO] --- SQLi Scan on: http://localhost:4040/search (GET) ---
+13:36:07 [INFO] [SQLi] Scan: GET http://localhost:4040/search
+13:36:07 [INFO]     -> Testing Parameter: mat-input-1
+13:36:10 [INFO] --- SQLi Scan on: http://localhost:4040/contact/socket.io/ (GET) ---
+13:36:10 [INFO] [SQLi] Scan: GET http://localhost:4040/contact/socket.io/
+13:36:10 [INFO]     -> Testing Parameter: EIO
+13:36:13 [INFO]     -> Testing Parameter: transport
+13:36:16 [INFO]     -> Testing Parameter: t
+13:36:19 [INFO] --- SQLi Scan on: http://localhost:4040/contact (GET) ---
+13:36:19 [INFO] [SQLi] Scan: GET http://localhost:4040/contact
+13:36:19 [INFO]     -> Testing Parameter: mat-input-1

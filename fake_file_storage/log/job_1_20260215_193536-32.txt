@@ -1,0 +1,32 @@
+19:35:06 [INFO] [ScanEngine][Job 1] Starting Discovery Phase...
+19:35:06 [INFO] [Crawler] Starting Modern Crawl: http://localhost:4040/#/
+19:35:07 [INFO] [*] Exploring: http://localhost:4040/#/
+19:35:08 [INFO]      [+] Discovered: GET http://localhost:4040/assets/i18n/en.json (0 params)
+19:35:08 [INFO]      [+] Discovered: GET http://localhost:4040/socket.io/ (0 params)
+19:35:08 [INFO]      [+] Discovered: GET http://localhost:4040/rest/admin/application-version (0 params)
+19:35:08 [INFO]      [+] Discovered: GET http://localhost:4040/rest/admin/application-configuration (0 params)
+19:35:08 [INFO]      [+] Discovered: GET http://localhost:4040/api/Challenges/ (0 params)
+19:35:08 [INFO]      [+] Discovered: GET http://localhost:4040/rest/languages (0 params)
+19:35:08 [INFO]      [+] Discovered: GET http://localhost:4040/api/Quantitys/ (0 params)
+19:35:08 [INFO]      [+] Discovered: GET http://localhost:4040/rest/products/search (0 params)
+19:35:08 [INFO]      [+] Discovered: POST http://localhost:4040/socket.io/ (0 params)
+19:35:09 [INFO]      [+] Discovered: GET http://localhost:4040/ (1 params)
+19:35:09 [INFO] [*] Exploring: http://localhost:4040/contact
+19:35:09 [INFO]      [+] Discovered: GET http://localhost:4040/contact/socket.io/ (0 params)
+19:35:11 [INFO]      [+] Discovered: GET http://localhost:4040/contact (1 params)
+19:35:11 [INFO] [*] Exploring: http://localhost:4040/login
+19:35:11 [INFO]      [+] Discovered: GET http://localhost:4040/login/socket.io/ (0 params)
+19:35:13 [INFO]      [+] Discovered: GET http://localhost:4040/login (1 params)
+19:35:13 [INFO] [*] Exploring: http://localhost:4040/photo-wall
+19:35:13 [INFO]      [+] Discovered: GET http://localhost:4040/photo-wall/socket.io/ (0 params)
+19:35:15 [INFO]      [+] Discovered: GET http://localhost:4040/photo-wall (1 params)
+19:35:15 [INFO] [*] Exploring: http://localhost:4040/assets/public/favicon_js.ico
+19:35:15 [INFO] [*] Exploring: http://localhost:4040/about
+19:35:15 [INFO]      [+] Discovered: GET http://localhost:4040/about/socket.io/ (0 params)
+19:35:17 [INFO]      [+] Discovered: GET http://localhost:4040/about (1 params)
+19:35:17 [INFO] [*] Exploring: http://localhost:4040/redirect?to=https://github.com/juice-shop/juice-shop
+19:35:32 [INFO] [*] Exploring: http://localhost:4040/search
+19:35:32 [INFO]      [+] Discovered: GET http://localhost:4040/search/socket.io/ (0 params)
+19:35:34 [INFO]      [+] Discovered: GET http://localhost:4040/search (1 params)
+19:35:34 [INFO] [ScanEngine][Job 1] Discovery finished. Unique targets: 20
+19:35:34 [ERROR] ❌ Critical Error: 'content_type'

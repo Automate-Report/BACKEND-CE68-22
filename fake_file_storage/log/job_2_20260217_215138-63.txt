@@ -1,0 +1,8 @@
+21:50:43 [INFO] [ScanEngine] Starting Discovery on http://localhost:3000/...
+21:50:43 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:3000/
+21:50:57 [INFO] [ScanEngine] Discovery finished. Unique targets found: 0
+21:50:57 [WARNING] [ScanEngine] No targets found during crawling. Scanning entry point only.
+21:50:57 [INFO] --- XSS Scan on: http://localhost:3000/ (GET) ---
+21:50:57 [INFO] [XSS] Scanning GET on http://localhost:3000/ (Type: form)
+21:50:57 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:3000/
+21:51:06 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...

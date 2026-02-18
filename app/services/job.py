@@ -228,6 +228,7 @@ class JobService:
         #     job_id=new_job["id"],
         #     target_url=asset["target"],
         #     attack_type=schedule_data["attack_type"],
+        #     credential=None
         # )
 
         # # ถ้ายังไม่มี ให้สร้าง Lock ไว้ (Expire ใน 60 วินาที)
