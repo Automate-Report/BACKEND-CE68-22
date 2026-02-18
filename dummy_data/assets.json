@@ -48,5 +48,15 @@
     "type": "URL",
     "created_at": "2026-01-06T21:12:51.429198",
     "updated_at": "2026-01-06T21:12:51.429206"
+  },
+  {
+    "id": 7,
+    "name": "URL หน้าหลัก",
+    "project_id": 22,
+    "description": "",
+    "target": "https://www.fastshop.com",
+    "type": "URL",
+    "created_at": "2026-01-06T21:12:51.429198",
+    "updated_at": "2026-01-06T21:12:51.429206"
   }
 ]

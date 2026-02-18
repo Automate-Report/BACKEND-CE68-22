@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "vuln_type": "SQL Injection",
+        "cvss_score": 9.8,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "recommendation": "Use parameterized queries to prevent SQL injection."
+    },
+    {
+        "id": 2,
+        "vuln_type": "Cross-Site Scripting (XSS)",
+        "cvss_score": 7.5,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+        "recommendation": "Implement proper output encoding."
+    }
+]

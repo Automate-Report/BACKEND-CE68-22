@@ -134,5 +134,21 @@
     "email": "user@example.com",
     "created_at": "2026-01-27T20:09:37.097169",
     "updated_at": "2026-01-27T20:09:37.097177"
+  },
+  {
+    "id": 21,
+    "name": "FastShop E-Commerce",
+    "description": "เว็บขายของออนไลน์ หลักของบริษัท",
+    "email": "somchai@tech.co.th",
+    "created_at": "2026-01-27T20:09:37.097169",
+    "updated_at": "2026-01-27T20:09:37.097177"
+  },
+  {
+    "id": 22,
+    "name": "HR Portal (Internal)",
+    "description": "ระบบจัดการพนักงานภายใน",
+    "email": "somchai@tech.co.th",
+    "created_at": "2026-01-27T20:09:37.097169",
+    "updated_at": "2026-01-27T20:09:37.097177"
   }
 ]

@@ -5,7 +5,7 @@
         "project_id": 2,
         "asset_id": 1,
         "worker_id": 3001,
-        "cron_expression": "0 0 * * *Z6 30 * * *",
+        "cron_expression": "0 0 * * *Z30 6 * * *",
         "attack_type": "sql_injection",
         "is_active": true,
         "next_run_at": "2026-01-25T00:00:00Z",

@@ -1,0 +1,40 @@
+[
+  {
+    "id": 1,
+    "asset_id": 1,
+    "job_id": 1,
+    "assigned_to": "sompong@shopdee.com",
+    "verified_by": "somying@shopdee.com",
+    "library_id": 1,
+    "vuln_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "target": "http://example.com/api/login",
+    "parameter": "username",
+    "method": "POST",
+    "severity": "critical",
+    "db_type": "PostgreSQL",
+    "status": "not_resolve",
+    "resolved_at": null,
+    "last_seen_at": "2026-02-13T10:00:00",
+    "first_seen_at": "2026-02-10T08:30:00",
+    "occurrence_cnt": 3
+  },
+  {
+    "id": 2,
+    "asset_id": 1,
+    "job_id": 1,
+    "assigned_to": "sompong@shopdee.com",
+    "verified_by": "somying@shopdee.com",
+    "library_id": 2,
+    "vuln_hash": "8f33230d5a3637e19335a8d9b6264d12",
+    "target": "http://example.com/profile",
+    "parameter": "user_id",
+    "method": "GET",
+    "severity": "high",
+    "db_type": null,
+    "status": "resolved",
+    "resolved_at": "2026-02-12T15:00:00",
+    "last_seen_at": "2026-02-12T15:00:00",
+    "first_seen_at": "2026-02-11T09:00:00",
+    "occurrence_cnt": 1
+  }
+]
