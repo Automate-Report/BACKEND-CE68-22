@@ -4,7 +4,10 @@ from datetime import datetime
 from typing import List, Optional
 
 from app.schemas.project import ProjectCreate
+from app.schemas.userauthen import UserInfo
+
 from app.services.project_member import project_member_service
+from app.services.userauthen import userauthen_service
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -94,6 +97,28 @@ class ProjectService:
                 return proj
             
         return None
+    
+    def get_user_info_by_project_id(self, project_id: int):
+        """Get User by Project ID"""
+
+        projects = self._read_json()
+
+        for proj in projects:
+            if proj["id"] == project_id:
+                user = userauthen_service.get_user_by_id(proj["email"])
+
+                user_info = UserInfo(
+                    email=user["email"],
+                    firstname=user["firstname"],
+                    lastname=user["lastname"],
+                    role="Owner",
+                    joinned_at=proj["created_at"]
+                )
+
+                return user_info
+            
+        return None
+
 
     def create_project(self, name: str, description: str, user_id: str) -> dict:
         """Service: สร้างโปรเจกต์ใหม่"""
