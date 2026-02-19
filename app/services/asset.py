@@ -151,6 +151,16 @@ class AssetService:
                 return True
         return False
     
+    def get_asset_ids_by_project_id(self, project_id: int):
+        assets = self._read_json()
+
+        result = []
+        for asset in assets:
+            if asset["project_id"] == project_id:
+                result.append(asset["id"])
+
+        return result
+    
     def cnt_asset_by_project_id(self, project_id: int):
         assets = self._read_json()
 
