@@ -56,12 +56,13 @@ class ProjectMemberService:
                 
                 user = userauthen_service.get_user_by_id(rel["email"])
 
-                user_info = UserInfo()
-                user_info.email = user["email"]
-                user_info.firstname = user["firstname"]
-                user_info.lastname = user["lastname"]
-                user_info.role = rel["role"]
-                user_info.joinned_at = rel["joinned_at"]
+                user_info = UserInfo(
+                    email=user["email"],
+                    firstname=user["firstname"],
+                    lastname=user["lastname"],
+                    role=rel["role"],
+                    joinned_at=rel["joinned_at"]
+                )
 
                 all_matches.append(user_info)
 
