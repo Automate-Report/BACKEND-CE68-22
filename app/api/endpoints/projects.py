@@ -42,12 +42,28 @@ async def get_all_projects(
 async def get_project_by_id(project_id: int, user = Depends(get_current_user)):
 
     project = project_service.get_project_by_id(project_id)
+    user_id = user["sub"]
+    user_role = ""
 
     if not project:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Project not found")
         
-    return project
+    if project["email"] == user_id:
+        user_role = "owner"
+    else:
+        member_role = project_member_service.get_role(user_id=user_id, project_id=project_id)
+        if not member_role:
+            raise HTTPException(status_code=403, detail="คุณไม่มีสิทธิ์เข้าถึงโปรเจกต์นี้")
+        user_role = member_role
+        
+    return ProjectResponse(
+        id=project["id"],
+        name= project["name"],
+        description=project["description"],
+        role=user_role,
+        created_at=project["created_at"],
+        updated_at=project["updated_at"]
+    )
 
 # POST /projects/ : สร้างโปรเจกต์ใหม่
 @router.post("/", response_model=ProjectResponse)

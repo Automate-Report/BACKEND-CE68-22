@@ -91,7 +91,10 @@ async def protected(user = Depends(get_current_user)):
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
     
+    user_info = userauthen_service.get_user_by_id(user["sub"])
+    
     return {
         "message": "You are authenticated",
-        "user": user["sub"]
+        "user": user["sub"],
+        "name": f"{user_info["firstname"]} {user_info["lastname"]}"
     }

@@ -95,7 +95,7 @@ class ProjectService:
         for proj in projects:
             if proj["id"] == project_id:
                 return proj
-            
+
         return None
     
     def get_owner_info_by_project_id(self, project_id: int):

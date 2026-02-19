@@ -11,6 +11,7 @@ class ProjectResponse(BaseModel):
     id: int
     name: str
     description: Optional[str] = None
+    role: str = "owner"
     created_at: datetime
     updated_at: datetime
 

@@ -67,8 +67,16 @@ class ProjectMemberService:
                 all_matches.append(user_info)
 
         return all_matches
+    
+    def get_role(self, user_id: str, project_id: int):
 
-   
+        relations = self._read_json()
+
+        for rel in relations:
+            if rel["project_id"] == project_id and rel["email"] == user_id:
+                return rel["role"]
+            
+        return None
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 project_member_service = ProjectMemberService()
