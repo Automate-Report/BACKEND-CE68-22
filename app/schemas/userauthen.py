@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 class LoginRequest(BaseModel):
     email: str
@@ -9,3 +10,13 @@ class UserCreate(BaseModel):
     lastName: str
     email: str
     password: str
+
+class UserInfo(BaseModel):
+    email: str
+    firstname: str
+    lastname: str
+    role: str
+    joinned_at: datetime
+
+    class Config:
+        orm_mode = True # เพื่อให้ Pydantic อ่านข้อมูลจาก ORM objects ได้ ไว้ใช้กับ SQLAlchemy ตอนทำ database
