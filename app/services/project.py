@@ -98,11 +98,10 @@ class ProjectService:
             
         return None
     
-    def get_user_info_by_project_id(self, project_id: int):
-        """Get User by Project ID"""
+    def get_owner_info_by_project_id(self, project_id: int):
+        """Get Owner Info by Project ID"""
 
         projects = self._read_json()
-
         for proj in projects:
             if proj["id"] == project_id:
                 user = userauthen_service.get_user_by_id(proj["email"])
@@ -111,10 +110,9 @@ class ProjectService:
                     email=user["email"],
                     firstname=user["firstname"],
                     lastname=user["lastname"],
-                    role="Owner",
+                    role="owner",
                     joinned_at=proj["created_at"]
                 )
-
                 return user_info
             
         return None

@@ -1,9 +1,11 @@
 from fastapi import APIRouter, HTTPException, Query, Depends
-from typing import Optional
+from typing import Optional, List
 
 from app.deps.auth import get_current_user
 from app.schemas.project import ProjectCreate, ProjectResponse
 from app.schemas.pagination import PaginatedResponse
+from app.schemas.userauthen import UserInfo
+
 from app.services.project import project_service 
 from app.services.project_tag import project_tag_service
 from app.services.project_member import project_member_service
@@ -100,11 +102,21 @@ async def delete_project(project_id: int):
     return {"detail": "Project deleted successfully"}
 
 
-@router.get("/user/{project_id}")
+@router.get("/user/{project_id}", response_model=List[UserInfo])
 async def get_users_in_project(project_id: int):
-    user_infos = project_member_service.get_user_info_by_project_id(project_id)
+    owner_info = project_service.get_owner_info_by_project_id(project_id)
 
-    if user_infos is not []:
-        return user_infos
+    member_infos = project_member_service.get_user_info_by_project_id(project_id)
+
+    if owner_info:
+        if owner_info not in member_infos:
+            member_infos.insert(0, owner_info)
+
+
+    return member_infos
+
     
-    return None
+
+    
+
+    
