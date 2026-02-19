@@ -138,6 +138,15 @@ class UserAuthenService:
                 "firstname": createUser.firstName,
                 "lastname": createUser.lastName
             }
+    
+    def get_user_by_id(self, user_id: str):
+        "Get User by ID"
+        users = self._read_json()
+
+        for user in users:
+            if user["email"] == user_id:
+                return user
+        return None
 
         
 # สร้าง instance ของ Service เพื่อใช้งาน
