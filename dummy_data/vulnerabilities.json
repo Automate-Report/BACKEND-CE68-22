@@ -1,8 +1,8 @@
 [
   {
     "id": 1,
-    "asset_id": 1,
-    "job_id": 1,
+    "asset_id": 6,
+    "job_id": 501,
     "assigned_to": "sompong@shopdee.com",
     "verified_by": "somying@shopdee.com",
     "library_id": 1,
@@ -20,8 +20,8 @@
   },
   {
     "id": 2,
-    "asset_id": 1,
-    "job_id": 1,
+    "asset_id": 6,
+    "job_id": 501,
     "assigned_to": "sompong@shopdee.com",
     "verified_by": "somying@shopdee.com",
     "library_id": 2,
