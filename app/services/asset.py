@@ -150,6 +150,16 @@ class AssetService:
                 self._save_json(assets)
                 return True
         return False
+    
+    def cnt_asset_by_project_id(self, project_id: int):
+        assets = self._read_json()
+
+        cnt = 0
+        for asset in assets:
+            if asset["project_id"] == project_id:
+                cnt += 1
+
+        return cnt
 
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
