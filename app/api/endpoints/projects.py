@@ -112,7 +112,6 @@ async def get_users_in_project(project_id: int):
         if owner_info not in member_infos:
             member_infos.insert(0, owner_info)
 
-
     return member_infos
 
     
