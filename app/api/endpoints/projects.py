@@ -55,7 +55,7 @@ async def get_project_by_id(project_id: int, user = Depends(get_current_user)):
         if not member_role:
             raise HTTPException(status_code=403, detail="คุณไม่มีสิทธิ์เข้าถึงโปรเจกต์นี้")
         user_role = member_role
-        
+
     return ProjectResponse(
         id=project["id"],
         name= project["name"],
