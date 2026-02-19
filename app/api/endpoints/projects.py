@@ -6,6 +6,7 @@ from app.schemas.project import ProjectCreate, ProjectResponse
 from app.schemas.pagination import PaginatedResponse
 from app.services.project import project_service 
 from app.services.project_tag import project_tag_service
+from app.services.project_member import project_member_service
 
 router = APIRouter()
 
@@ -101,4 +102,9 @@ async def delete_project(project_id: int):
 
 @router.get("/user/{project_id}")
 async def get_users_in_project(project_id: int):
-    return
+    user_infos = project_member_service.get_user_info_by_project_id(project_id)
+
+    if user_infos is not []:
+        return user_infos
+    
+    return None
