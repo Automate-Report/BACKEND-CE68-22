@@ -21,13 +21,13 @@ async def get_all_projects(
     order: Optional[str] = Query("asc", description="asc or desc"),
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
-    # user = Depends(get_current_user)
-    user: str = "somchai@tech.co.th"
+    user = Depends(get_current_user)
+    # user: str = "somchai@tech.co.th"
 ):
 
     result = project_service.get_all_projects(
-        # user_id=user["sub"],
-        user_id=user,
+        user_id=user["sub"],
+        # user_id=user,
         page=page,
         size=size,
         sort_by=sort_by, 
