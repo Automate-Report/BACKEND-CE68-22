@@ -137,32 +137,32 @@
   },
   {
     "id": 21,
-    "name": "FastShop E-Commerce",
-    "description": "เว็บขายของออนไลน์ หลักของบริษัท",
+    "name": "Enterprise API Shield",
+    "description": "Real-time monitoring and threat projection for core banking microserices and external gateway.",
     "email": "somchai@tech.co.th",
     "created_at": "2026-01-27T20:09:37.097169",
     "updated_at": "2026-01-27T20:09:37.097177"
   },
   {
     "id": 22,
-    "name": "HR Portal (Internal)",
-    "description": "ระบบจัดการพนักงานภายใน",
+    "name": "Client Portal V2",
+    "description": "Public facing application infrastructure security scanning and automated pentesting pipiline.",
     "email": "somchai@tech.co.th",
     "created_at": "2026-01-27T20:09:37.097169",
     "updated_at": "2026-01-27T20:09:37.097177"
   },
   {
     "id": 23,
-    "name": "Portfolio Website",
-    "description": "เว็บเก็บผลงานสำหรับรับสมัครงาน",
+    "name": "PCI-DSS Audit Node",
+    "description": "Automated compliance monitoring system for payment gateway security protocols and data encryption.",
     "email": "sompong@shopdee.com",
     "created_at": "2026-01-27T20:09:37.097169",
     "updated_at": "2026-01-27T20:09:37.097177"
   },
   {
     "id": 24,
-    "name": "Resource Manage Website",
-    "description": "เว็บเก็บผลงานสำหรับการจัดการ resource",
+    "name": "Legacy Auth System",
+    "description": "Old authentications service maintained for backwards compatibility with regional office hardware.",
     "email": "sompong@shopdee.com",
     "created_at": "2026-01-27T20:09:37.097169",
     "updated_at": "2026-01-27T20:09:37.097177"
