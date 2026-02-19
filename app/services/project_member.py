@@ -36,12 +36,23 @@ class ProjectMemberService:
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
     def get_project_id_by_user_id(self, user_id: str):
+        """Get Project ID from Relation Project and User using User ID"""
         relations = self._read_json()
 
         all_matches = []
         for rel in relations:
             if rel["email"] == user_id:
                 all_matches.append(rel["project_id"])
+
+        return all_matches
+    
+    def get_user_id_by_project_id(self, project_id: int):
+        relations = self._read_json()
+
+        all_matches = []
+        for rel in relations:
+            if rel["project_id"] == project_id:
+                all_matches.append(rel["email"])
 
         return all_matches
 
