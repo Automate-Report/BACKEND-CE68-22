@@ -12,7 +12,7 @@ from app.services.job import job_service
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "test_schedule.json")
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "schedule.json")
+JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "schedules.json")
 
 class ScheduleService:
     
