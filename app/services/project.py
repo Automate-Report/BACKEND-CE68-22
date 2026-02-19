@@ -43,25 +43,32 @@ class ProjectService:
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
         projects = self._read_json()
 
-        rel_project_id = project_member_service.get_project_id_by_user_id(user_id) # get project_id from relation project member
+        user_member_roles = project_member_service.get_user_roles_map(user_id)
         
         # 1. กรอง User
         all_matches = []
         for proj in projects:
-            if filter == "ALL":
-                if search:
-                    if proj["email"] == user_id and search in proj["name"]:
-                        all_matches.append(proj)
-                else:
-                    if proj["email"] == user_id:
-                        all_matches.append(proj)
-            else:
-                # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
-                pass
+            user_role = None
 
-        if rel_project_id is not []:
-            for id in rel_project_id:
-                all_matches.append(self.get_project_by_id(id))
+            if proj["email"] == user_id:
+                user_role = "owner"
+            elif proj["id"] in user_member_roles:
+                user_role = user_member_roles[proj["id"]]
+
+            if not user_role:
+                continue
+            
+            proj_with_role = {**proj, "role": user_role}
+
+            if search and search.lower() not in proj["name"].lower():
+                continue
+
+            if filter == "OWNED" and user_role != "owner":
+                continue
+            if filter == "SHARED" and user_role == "owner":
+                continue
+
+            all_matches.append(proj_with_role)
 
         if sort_by:
             reverse = (order == "desc")

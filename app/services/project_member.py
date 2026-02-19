@@ -36,16 +36,10 @@ class ProjectMemberService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def get_project_id_by_user_id(self, user_id: str):
-        """Get Project ID from Relation Project and User using User ID"""
-        relations = self._read_json()
-
-        all_matches = []
-        for rel in relations:
-            if rel["email"] == user_id:
-                all_matches.append(rel["project_id"])
-
-        return all_matches
+    def get_user_roles_map(self, user_id: str):
+        """คืนค่า {project_id: role} สำหรับโปรเจกต์ที่ user เป็นสมาชิก"""
+        relations = self._read_json() # อ่านไฟล์ relation json
+        return {rel["project_id"]: rel["role"] for rel in relations if rel["email"] == user_id}
     
     def get_user_info_by_project_id(self, project_id: int):
         relations = self._read_json()
