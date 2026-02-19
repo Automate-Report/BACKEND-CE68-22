@@ -41,20 +41,20 @@
   },
   {
     "id": 6,
-    "name": "test 2",
+    "name": "HR Web Server",
     "project_id": 21,
     "description": "",
-    "target": "gdgfgdg.com",
-    "type": "URL",
+    "target": "192.168.10.50",
+    "type": "ip",
     "created_at": "2026-01-06T21:12:51.429198",
     "updated_at": "2026-01-06T21:12:51.429206"
   },
   {
     "id": 7,
-    "name": "URL หน้าหลัก",
+    "name": "API Gateway",
     "project_id": 22,
     "description": "",
-    "target": "https://www.fastshop.com",
+    "target": "https://api.shop.com",
     "type": "URL",
     "created_at": "2026-01-06T21:12:51.429198",
     "updated_at": "2026-01-06T21:12:51.429206"

@@ -133,5 +133,19 @@
         "end_date": "2025-01-25",
         "created_at": "2025-01-25T08:45:00Z",
         "updated_at": "2025-01-30T12:30:00Z"
+    },
+    {
+        "schedule_id": 501,
+        "project_id": 22,
+        "asset_id": 1,
+        "schedule_name": "API Vulnerability Scan",
+        "cron_expression": "0 0 * * 0",
+        "attack_type": "XSS",
+        "is_active":true,
+        "next_run_at": "2026-01-27T01:00:00Z",
+        "start_date": "2025-01-25",
+        "end_date": "2025-01-25",
+        "created_at": "2025-01-25T08:45:00Z",
+        "updated_at": "2025-01-30T12:30:00Z"
     }
 ]
