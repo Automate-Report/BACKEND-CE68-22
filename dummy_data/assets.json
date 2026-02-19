@@ -12,7 +12,7 @@
   {
     "id": 3,
     "name": "Test Edit Asset to have Credential",
-    "project_id": 4,
+    "project_id": 23,
     "description": null,
     "target": "1.2.3.4",
     "type": "IP",
@@ -22,7 +22,7 @@
   {
     "id": 4,
     "name": "Test Edit Asset to Delete Credential",
-    "project_id": 4,
+    "project_id": 21,
     "description": "",
     "target": "www.test.xyz",
     "type": "URL",
@@ -32,7 +32,7 @@
   {
     "id": 5,
     "name": "test1",
-    "project_id": 4,
+    "project_id": 23,
     "description": "",
     "target": "2.2.2.2",
     "type": "IP",
@@ -42,7 +42,7 @@
   {
     "id": 6,
     "name": "test 2",
-    "project_id": 4,
+    "project_id": 21,
     "description": "",
     "target": "gdgfgdg.com",
     "type": "URL",

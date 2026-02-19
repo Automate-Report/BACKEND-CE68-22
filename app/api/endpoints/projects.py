@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import Optional, List
 
 from app.deps.auth import get_current_user
-from app.schemas.project import ProjectCreate, ProjectResponse
+from app.schemas.project import ProjectCreate, ProjectResponse, ProjectSummaryResponese
 from app.schemas.pagination import PaginatedResponse
 from app.schemas.userauthen import UserInfo
 
@@ -13,7 +13,7 @@ from app.services.project_member import project_member_service
 router = APIRouter()
 
 # GET /projects/ : ดึงโปรเจกต์ทั้งหมดของ user นั้น
-@router.get("/all", response_model=PaginatedResponse[ProjectResponse])
+@router.get("/all", response_model=PaginatedResponse[ProjectSummaryResponese])
 async def get_all_projects(
     page: int = Query(1, ge=1, description="Page number"), 
     size: int = Query(10, ge=1, le=100, description="Items per page"),

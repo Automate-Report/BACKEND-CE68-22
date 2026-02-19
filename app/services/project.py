@@ -1,5 +1,6 @@
 import json
 import os
+import math
 from datetime import datetime
 from typing import List, Optional
 
@@ -8,6 +9,8 @@ from app.schemas.userauthen import UserInfo
 
 from app.services.project_member import project_member_service
 from app.services.userauthen import userauthen_service
+from app.services.asset import asset_service
+from app.services.vulnerability import vuln_service
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -57,8 +60,17 @@ class ProjectService:
 
             if not user_role:
                 continue
+
+            asset_cnt = asset_service.cnt_asset_by_project_id(proj["id"])
+            asset_ids = asset_service.get_asset_ids_by_project_id(proj["id"])
+            vuln_cnt = vuln_service.cnt_vuln_by_asset_id(asset_ids)
             
-            proj_with_role = {**proj, "role": user_role}
+            proj_with_role = {
+                **proj, 
+                "role": user_role,
+                "assets_cnt": asset_cnt,
+                "vuln_cnt": vuln_cnt              
+            }
 
             if search and search.lower() not in proj["name"].lower():
                 continue
@@ -79,7 +91,6 @@ class ProjectService:
         total_count = len(all_matches)
             
         # 3. คำนวณ Pagination Logic
-        import math
         total_pages = math.ceil(total_count / size)
         
         offset = (page - 1) * size
