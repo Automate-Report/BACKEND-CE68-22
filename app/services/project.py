@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import List, Optional
 
 from app.schemas.project import ProjectCreate
+from app.services.project_member import project_member_service
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -38,6 +39,8 @@ class ProjectService:
     def get_all_projects(self, user_id: str, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
         projects = self._read_json()
+
+        rel_project_id = project_member_service.get_project_id_by_user_id(user_id) # get project_id from relation project member
         
         # 1. กรอง User
         all_matches = []
@@ -52,6 +55,10 @@ class ProjectService:
             else:
                 # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
                 pass
+
+        if rel_project_id is not []:
+            for id in rel_project_id:
+                all_matches.append(self.get_project_by_id(id))
 
         if sort_by:
             reverse = (order == "desc")
