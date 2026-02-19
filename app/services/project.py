@@ -8,6 +8,8 @@ from app.schemas.project import ProjectCreate
 from app.schemas.userauthen import UserInfo
 
 from app.services.project_member import project_member_service
+from app.services.project_tag import project_tag_service
+from app.services.tag import tag_service
 from app.services.userauthen import userauthen_service
 from app.services.asset import asset_service
 from app.services.vulnerability import vuln_service
@@ -64,12 +66,25 @@ class ProjectService:
             asset_cnt = asset_service.cnt_asset_by_project_id(proj["id"])
             asset_ids = asset_service.get_asset_ids_by_project_id(proj["id"])
             vuln_cnt = vuln_service.cnt_vuln_by_asset_id(asset_ids)
+
+            tag_ids = project_tag_service.get_all_tag_ids(proj["id"])
+
+            tag = []
+
+            for id in tag_ids:
+                t = tag_service.get_tag_by_id(id)
+                tag.append({
+                    "name": t["name"],
+                    "text_color": t["text_color"],
+                    "bg_color": t["bg_color"]
+                })
             
             proj_with_role = {
                 **proj, 
                 "role": user_role,
                 "assets_cnt": asset_cnt,
-                "vuln_cnt": vuln_cnt              
+                "vuln_cnt": vuln_cnt,
+                "tags": tag             
             }
 
             if search and search.lower() not in proj["name"].lower():
