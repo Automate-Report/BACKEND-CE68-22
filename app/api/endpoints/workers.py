@@ -49,7 +49,7 @@ async def get_all_workers_by_project_id(
     return result
 
 @router.get("/info/{project_id}")
-async def get_info_workers_in_project(self, project_id: int):
+async def get_info_workers_in_project(project_id: int):
     result = worker_service.get_summary_info(project_id=project_id)
     return result
 
