@@ -48,6 +48,11 @@ async def get_all_workers_by_project_id(
 
     return result
 
+@router.get("/info/{project_id}")
+async def get_info_workers_in_project(self, project_id: int):
+    result = worker_service.get_summary_info(project_id=project_id)
+    return result
+
 @router.get("/{worker_id}", response_model=WorkerResponse)
 async def get_worker_by_id(worker_id: int, user = Depends(get_current_user)):
     # เรียก Service เพื่อดึงข้อมูลตาม ID

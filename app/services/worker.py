@@ -178,6 +178,29 @@ class WorkerService:
                 return worker
         return None
     
+    def get_summary_info(self, project_id: int):
+        """Get Total Workers, Online Status, Busy(current_load != 0), total jobs"""
+        workers = self._read_json()
+        total_worker = 0
+        online = 0
+        busy = 0
+        total_job = 0
+
+        for worker in workers:
+            if worker["project_id"] == project_id:
+                total_worker+=1
+                if worker["status"] == "online":
+                    online+=1
+                if worker["current_load"] > 0:
+                    busy+=1
+
+        return {
+            "total": total_worker,
+            "online": online,
+            "busy": busy,
+            "total_jobs": total_job
+        }
+    
     def activate_access_key(self, worker_id):
         workers = self._read_json()
 
