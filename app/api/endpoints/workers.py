@@ -15,12 +15,12 @@ from app.deps.role import get_current_project_role
 
 router = APIRouter()
 
-@router.post("/")
-def create_worker(worker_in: WorkerCreate, user = Depends(get_current_user), role = Depends(get_current_project_role)):
+@router.post("/{project_id}")
+def create_worker(project_id: int, worker_in: WorkerCreate, user = Depends(get_current_user), role = Depends(get_current_project_role)):
     if role != "owner":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
-    worker = worker_service.create_worker(worker_in, user["sub"])
+    worker = worker_service.create_worker(worker_in, project_id)
 
     key = access_key_service.create_access_key(worker["id"])
 
