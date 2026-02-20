@@ -21,16 +21,17 @@ def create_worker(worker_in: WorkerCreate, user = Depends(get_current_user)):
 
     return new_worker
 
-@router.get("/all", response_model=PaginatedResponse[WorkerResponse])
-async def get_all_workers(
+@router.get("/{project_id}/all", response_model=PaginatedResponse[WorkerResponse])
+async def get_all_workers_by_project_id(
+    project_id: int,
     page: int = Query(1, ge=1, description="Page number"), 
     size: int = Query(10, ge=1, le=100, description="Items per page"),
     sort_by: Optional[str] = Query(None, description="Column to sort by"),
     order: Optional[str] = Query("asc", description="asc or desc"),
-    user = Depends(get_current_user)
+    # user = Depends(get_current_user)
 ):
-    result = worker_service.get_all_workers(
-        user_id=user["sub"],
+    result = worker_service.get_all_workers_by_project_id(
+        project_id=project_id,
         page=page,
         size=size,
         sort_by=sort_by, 

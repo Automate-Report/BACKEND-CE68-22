@@ -105,7 +105,7 @@ class WorkerService:
 
         return new_worker
     
-    def get_all_workers(self, user_id: str, page: int, size: int, sort_by: str = None, order: str = "asc"):
+    def get_all_workers_by_project_id(self, project_id: int, page: int, size: int, sort_by: str = None, order: str = "asc"):
         """Service: ดึงข้อมูล Worker ทั้งหมดของ user นั้น"""
         workers = self._read_json()
         
@@ -113,7 +113,7 @@ class WorkerService:
         all_matches = []
         for worker in workers:
             worker = self._enrich_worker_status(worker)
-            if worker["email"] == user_id:
+            if worker["project_id"] == project_id:
                 all_matches.append(worker)
 
 
