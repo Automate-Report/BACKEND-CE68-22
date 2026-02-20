@@ -42,7 +42,7 @@ class AccessKeyService:
 
 
 
-    def create_access_key(self, worker_id):
+    def create_access_key(self, worker_id: int):
         """Service: สร้าง API Key"""
         access_keys = self._read_json()
 
@@ -54,6 +54,7 @@ class AccessKeyService:
             "id": new_id,
             "worker_id": worker_id,
             "key": security.generate_access_key(),
+            "is_used": False,
             "created_at": datetime.now().isoformat(),
             "updated_at": datetime.now().isoformat(),
         }

@@ -10,16 +10,24 @@ from app.services.worker import worker_service
 from app.services.access_key import access_key_service
 
 from app.deps.auth import get_current_user
+from app.deps.role import get_current_project_role
 
 
 router = APIRouter()
 
-@router.post("/", response_model=WorkerResponse)
-def create_worker(worker_in: WorkerCreate, user = Depends(get_current_user)):
+@router.post("/")
+def create_worker(worker_in: WorkerCreate, user = Depends(get_current_user), role = Depends(get_current_project_role)):
+    if role != "owner":
+        raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
+    
+    worker = worker_service.create_worker(worker_in, user["sub"])
 
-    new_worker = worker_service.create_worker(worker_in, user["sub"])
+    key = access_key_service.create_access_key(worker["id"])
 
-    return new_worker
+    return { 
+        "status": "Successfully!",
+        "key": key["key"]
+    }
 
 @router.get("/{project_id}/all", response_model=PaginatedResponse[WorkerResponse])
 async def get_all_workers_by_project_id(
@@ -51,17 +59,18 @@ async def get_worker_by_id(worker_id: int, user = Depends(get_current_user)):
         
     return worker
 
-@router.post("/gen-key/{worker_id}")
-def gen_access_key(worker_id: int):
-    key = access_key_service.get_access_key_by_worker_id(worker_id)
-
-    if not key:
-        access_key_service.create_access_key(worker_id)
-        worker_service.activate_access_key(worker_id)
-        return key
+# @router.post("/gen-key/{worker_id}")
+# def gen_access_key(worker_id: int, role = Depends(get_current_project_role)):
+#     if role != "owner":
+#         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
-    return None
+#     key = access_key_service.create_access_key()
 
+#     access_key_service.create_access_key(worker_id)
+#     worker_service.activate_access_key(worker_id)
+#     return key
+    
+ 
 
 @router.post("/remove-key/{worker_id}")
 def remove_access_key(worker_id: int):
