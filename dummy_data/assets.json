@@ -41,13 +41,13 @@
   },
   {
     "id": 6,
-    "name": "HR Web Server",
+    "name": "OWASP Juice Shop",
     "project_id": 21,
-    "description": "",
-    "target": "192.168.10.50",
-    "type": "ip",
+    "description": null,
+    "target": "http://localhost:4040/",
+    "type": "URL",
     "created_at": "2026-01-06T21:12:51.429198",
-    "updated_at": "2026-01-06T21:12:51.429206"
+    "updated_at": "2026-02-21T16:59:15.145703"
   },
   {
     "id": 7,
