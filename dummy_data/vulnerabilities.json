@@ -36,5 +36,24 @@
     "last_seen_at": "2026-02-12T15:00:00",
     "first_seen_at": "2026-02-11T09:00:00",
     "occurrence_cnt": 1
+  },
+  {
+    "id": 3,
+    "asset_id": 6,
+    "vuln_hash": "fe8ec6fe2bfb4dc14d204bb7a29dfa28ae686044e145f8eb4ed9b7bac7e4e860",
+    "target_url": "http://localhost:4040/",
+    "parameter": "URL_FRAGMENT",
+    "method": "GET",
+    "vuln_type": "DOM XSS",
+    "severity": "MEDIUM",
+    "db_type": null,
+    "cvss_score": "6.1",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+    "status": "not_resolve",
+    "recommendation": "Use context-sensitive output encoding and avoid dangerous DOM sinks like innerHTML.",
+    "occurrance_count": 2,
+    "first_seen_at": "2026-02-21T20:18:49.281141",
+    "last_seen_at": "2026-02-21T20:28:21.006638",
+    "resolved_at": "2026-02-21T20:18:49.281150"
   }
 ]
