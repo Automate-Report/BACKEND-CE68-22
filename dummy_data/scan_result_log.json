@@ -1362,5 +1362,16 @@
     "created_at": "2026-02-18T16:22:50.664171",
     "file_type": "txt",
     "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_3_20260218_162250-120.txt"
+  },
+  {
+    "id": 121,
+    "job_id": 12,
+    "pentest_status": "not found",
+    "error_msg": null,
+    "file_name": "job_12_20260221_191727-121.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_12_20260221_191727-121.txt",
+    "created_at": "2026-02-21T19:17:27.607648",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_12_20260221_191727-121.txt"
   }
 ]
