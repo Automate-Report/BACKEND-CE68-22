@@ -4,7 +4,7 @@
     "project_id": 21,
     "access_key_id": 1,
     "thread_number": 3,
-    "current_load": 1,
+    "current_load": 0,
     "name": "Worker-01-DigitalOcean",
     "hostname": "test",
     "internal_ip": "161.246.5.57",
@@ -12,7 +12,7 @@
     "isActive": true,
     "created_at": "2026-01-27T18:49:28.965751",
     "updated_at": "2026-01-27T18:49:28.965758",
-    "last_heartbeat": "2026-02-21T12:18:33.983990"
+    "last_heartbeat": "2026-02-21T13:35:57.358066"
   },
   {
     "id": 2,
