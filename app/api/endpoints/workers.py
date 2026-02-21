@@ -95,19 +95,25 @@ async def get_worker_by_id(worker_id: int):
     
  
 
-@router.post("/remove-key/{worker_id}")
+@router.post("/regen-key/{worker_id}")
 def remove_access_key(worker_id: int):
 
-    key = access_key_service.get_access_key_by_worker_id(worker_id)
+    worker = worker_service.get_worker_by_id(worker_id)
 
-    if not key:
-        raise HTTPException(status_code=404, detail="This worker has not access key.")
+    if not worker:
+        raise HTTPException(status_code=404, detail="Worker not found.")
+    
+    result = access_key_service.delete_access_key_by_id(worker.get("access_key_id"))
 
-    worker = worker_service.remove_access_key(
+    key = access_key_service.create_access_key()
+    
+    result = worker_service.change_access_key(
+        access_key_id=key.get("id"),
         worker_id=worker_id
     )
 
-    return worker
+
+    return result
 
 @router.delete("/{worker_id}")
 async def delete_worker(worker_id: int, user = Depends(get_current_user)):

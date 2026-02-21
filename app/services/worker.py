@@ -201,28 +201,20 @@ class WorkerService:
             "total_jobs": total_job
         }
     
-    def activate_access_key(self, worker_id):
+    def change_access_key(self, access_key_id: int, worker_id: int):
         workers = self._read_json()
-
+        isChange = False
         for worker in workers:
-            if worker_id == worker["id"]:
-                worker["status"] = "offline"
-
-        self._save_json(workers)
-        return None
-       
-    def remove_access_key(self, worker_id:int):
-        """Service: remove access key id ให้ worker id"""
-        workers = self._read_json()
-
-        for worker in workers:
-            if worker_id == worker["id"]:
+            if worker["id"] == worker_id:
+                worker["access_key_id"] = access_key_id
+                worker["status"] = "Not Activated"
                 worker["isActive"] = False
-                worker["status"] = "Revoked"
                 worker["last_heartbeat"] = None
-
-        self._save_json(workers)
-        return None
+                isChange = True
+        if isChange:
+            self._save_json(workers)
+            return True
+        return False
 
     def verify_worker(self, req: VerifyRequest):
         workers = self._read_json()
