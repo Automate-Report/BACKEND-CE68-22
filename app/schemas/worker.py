@@ -13,7 +13,7 @@ class WorkerResponse(BaseModel):
     thread_number: int
     current_load: int
     hostname: Optional[str] = None
-    ip_address: Optional[str] = None
+    internal_ip: Optional[str] = None
     status: str
     isActive: bool
     access_key_id: Optional[int] = None
@@ -33,6 +33,7 @@ class VerifyRequest(BaseModel):
     key: str
     worker_id: int
     hostname: str
+    internal_ip: str
 
 class HandshakeRequest(BaseModel):
     registration_token: str
@@ -41,6 +42,7 @@ class HandshakeRequest(BaseModel):
 class HeartBeatPayload(BaseModel):
     current_load: int
     status: str
+    internal_ip: str
 
 class AuthRequest(BaseModel):
     api_key: str

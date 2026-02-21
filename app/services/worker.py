@@ -252,6 +252,7 @@ class WorkerService:
         target_worker["hostname"] = req.hostname
         target_worker["isActive"] = True
         target_worker["status"] = "online"
+        target_worker["internal_ip"] = req.internal_ip
 
         self._save_json(workers)
 
@@ -329,6 +330,7 @@ class WorkerService:
                 worker["last_heartbeat"] = datetime.utcnow().isoformat()
                 worker["status"] = payload.status
                 worker["isActive"] = True
+                worker["internal_ip"] = payload.internal_ip
                 found = True
                 break
 
