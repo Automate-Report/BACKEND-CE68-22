@@ -26,3 +26,9 @@ class CountStatusResponse(BaseModel):
     completed: int
     failed: int
 
+class SummaryInfoByWorker(BaseModel):
+    total_jobs: int
+    total_completed: int
+    total_failed: int
+    total_findings: int
+

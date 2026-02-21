@@ -163,7 +163,7 @@ class WorkerService:
 
         for worker in workers:
             if worker_id == worker["id"]:
-                return worker
+               return worker
             
         return None
     

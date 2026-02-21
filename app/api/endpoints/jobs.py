@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 from typing import List, Optional
-from app.schemas.job import JobStatusPayload, JobStatusResponse, CountStatusResponse
+from app.schemas.job import JobStatusPayload, JobStatusResponse, CountStatusResponse, SummaryInfoByWorker
 from app.schemas.pagination import PaginatedResponse
 from app.services.worker import worker_service
 from app.services.job import job_service
@@ -41,4 +41,9 @@ def get_number_job_status_by_schedule_id(schedule_id: int):
     result = job_service.get_number_job_status_by_schedule_id(schedule_id)
 
     return result
+
+@router.get("/summary/{worker_id}", response_model=SummaryInfoByWorker)
+def get_summary_info_job_by_worker_id(worker_id: int):
+    job_info = job_service.get_summary_info_by_worker_id(worker_id)
+    return job_info
 

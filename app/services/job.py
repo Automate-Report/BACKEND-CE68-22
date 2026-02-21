@@ -7,7 +7,9 @@ from app.core.redis import QUEUE_KEY, redis_jobs
 from app.services.asset import asset_service
 from app.services.worker import worker_service
 from app.services.project import project_service
-from app.schemas.job import JobWorkerPayload
+from app.services.vulnerability import vuln_service
+
+from app.schemas.job import JobWorkerPayload, SummaryInfoByWorker
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -164,8 +166,6 @@ class JobService:
             "failed": failed
         }
     
-
-    
     def update_job_status(self, job_id: int, status: str):
         jobs = self._read_json()
         print(status)
@@ -183,8 +183,34 @@ class JobService:
                 self._save_json(jobs)
                 return True
         return False
-
     
+    def get_summary_info_by_worker_id(self, worker_id: int):
+        jobs = self._read_json()
+
+        total_findings = 0
+
+        total_jobs = 0
+        completed = 0
+        failed = 0
+
+        for job in jobs:
+            if job["worker_id"] == worker_id:
+                total_jobs+=1
+                if job["status"] == "completed":
+                    completed+=1
+                elif job["status"] == "failed":
+                    failed+=1
+
+                cnt_findings = vuln_service.cnt_vuln_by_job_id(job["id"]) 
+                total_findings+=cnt_findings
+
+        return SummaryInfoByWorker(
+            total_jobs=total_jobs,
+            total_completed=completed,
+            total_failed=failed,
+            total_findings=total_findings
+        )
+
     def best_worker(self, project_id: int):
         workers = worker_service.read_all_worker(project_id)
         online_workers = [
