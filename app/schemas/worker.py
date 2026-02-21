@@ -43,6 +43,7 @@ class HeartBeatPayload(BaseModel):
     current_load: int
     status: str
     internal_ip: str
+    hostname: str
 
 class AuthRequest(BaseModel):
     api_key: str

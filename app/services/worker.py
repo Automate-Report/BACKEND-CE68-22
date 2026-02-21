@@ -333,6 +333,7 @@ class WorkerService:
                 worker["status"] = payload.status
                 worker["isActive"] = True
                 worker["internal_ip"] = payload.internal_ip
+                worker["hostname"] = payload.hostname
                 found = True
                 break
 
