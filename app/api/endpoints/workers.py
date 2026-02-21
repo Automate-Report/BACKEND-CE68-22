@@ -15,6 +15,25 @@ from app.deps.role import get_current_project_role
 
 router = APIRouter()
 
+# Verify Access Key for Get Token
+@router.post("/verify/")
+def verify_access_key(req: VerifyRequest):
+    result = worker_service.verify_worker(req)
+
+    return result
+
+#HeartBeat
+@router.post("/heartbeat/")
+def heartbeat(payload: HeartBeatPayload, worker_id: int = Depends(worker_service.verify_token)): 
+    # worker_id นี้ได้มาจากการแกะ Token ที่ถูกต้องแล้ว
+    
+    result = worker_service.update_heartbeat(worker_id, payload)
+    if not result:
+        # กรณีนี้ยากที่จะเกิด ถ้า Token ผ่านแล้ว แต่เผื่อไว้
+        raise HTTPException(status_code=404, detail="Worker not found")
+        
+    return {"status": "ok", "timestamp": datetime.utcnow()}
+
 @router.post("/{project_id}")
 def create_worker(project_id: int, worker_in: WorkerCreate, user = Depends(get_current_user), role = Depends(get_current_project_role)):
     if role != "owner":
@@ -54,7 +73,7 @@ async def get_info_workers_in_project(project_id: int):
     return result
 
 @router.get("/{worker_id}", response_model=WorkerResponse)
-async def get_worker_by_id(worker_id: int, user = Depends(get_current_user)):
+async def get_worker_by_id(worker_id: int):
     # เรียก Service เพื่อดึงข้อมูลตาม ID
     worker = worker_service.get_worker_by_id(worker_id)
 
@@ -120,25 +139,6 @@ def download_worker_zip(
     result = worker_service.download_worker(worker_id)
 
     return result
-
-# Verify Access Key for Get Token
-@router.post("/verify")
-def verify_access_key(req: VerifyRequest):
-    result = worker_service.verify_worker(req)
-
-    return result
-
-#HeartBeat
-@router.post("/heartbeat")
-def heartbeat(payload: HeartBeatPayload, worker_id: int = Depends(worker_service.verify_token)): 
-    # worker_id นี้ได้มาจากการแกะ Token ที่ถูกต้องแล้ว
-    
-    result = worker_service.update_heartbeat(worker_id, payload)
-    if not result:
-        # กรณีนี้ยากที่จะเกิด ถ้า Token ผ่านแล้ว แต่เผื่อไว้
-        raise HTTPException(status_code=404, detail="Worker not found")
-        
-    return {"status": "ok", "timestamp": datetime.utcnow()}
     
 #Dummy task
 @router.post("/submit-task")

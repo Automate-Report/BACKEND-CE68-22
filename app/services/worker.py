@@ -235,8 +235,8 @@ class WorkerService:
             # Use 404 for "Not Found"
             raise HTTPException(status_code=404, detail="Worker ID not found")
         
-        
-        access_key = access_key_service.get_access_key_by_worker_id(target_worker.get("id"))
+        access_key_id = target_worker["access_key_id"]
+        access_key = access_key_service.get_access_key_by_id(access_key_id)
 
         
         if not access_key:
@@ -289,11 +289,13 @@ class WorkerService:
             # สมมติว่ามี function ดึง key จาก worker_id
             # (คุณอาจต้องเรียก service หรือ query db ตรงนี้)
             fake_user_id = 1
-            worker = self.get_worker_by_id(user_id=fake_user_id, worker_id=worker_id) 
+            worker = self.get_worker_by_id(worker_id=worker_id) 
             if not worker:
                 raise HTTPException(status_code=401, detail="Worker not found (ID invalid)")
             
-            access_key = access_key_service.get_access_key_by_worker_id(worker.get("id"))
+            access_key_id = worker["access_key_id"]
+            
+            access_key = access_key_service.get_access_key_by_id(access_key_id)
 
             if not access_key:
                 # ถ้าไม่มี ID แสดงว่าโดนถอดสิทธิ์แล้ว
@@ -347,7 +349,7 @@ class WorkerService:
         }
 
         fake_user_id = 1
-        worker = self.get_worker_by_id(user_id=fake_user_id, worker_id=worker_id)
+        worker = self.get_worker_by_id(worker_id=worker_id)
 
         EMBEDED_KEY = b'JimGiFbXqlAwUAXu2PM1_eATccCMR7uAoB0wfI2DMgQ='
         DELIMITER = b"|||HIDDEN_DATA|||"

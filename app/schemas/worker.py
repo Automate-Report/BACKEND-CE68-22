@@ -30,8 +30,8 @@ class WorkerAccessKey(BaseModel):
 
 #-----------------Worker Agent----------------------#
 class VerifyRequest(BaseModel):
-    key: str
     worker_id: int
+    key: str
     hostname: str
     internal_ip: str
 
