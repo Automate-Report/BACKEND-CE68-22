@@ -185,8 +185,8 @@ class JobService:
         return False
 
     
-    def best_worker(self, user_id: str):
-        workers = worker_service.read_all_worker(user_id)
+    def best_worker(self, project_id: int):
+        workers = worker_service.read_all_worker(project_id)
         online_workers = [
             w for w in workers
             if w.get("status") == "online" and w.get("isActive") == True
@@ -203,26 +203,18 @@ class JobService:
         return best_worker
 
     async def dispatch_job(self, schedule_data):
-        lock_key = f"lock:schedule:{schedule_data["id"]}:{datetime.utcnow().strftime('%Y%m%d%H%M')}"
+        lock_key = f"lock:schedule:{schedule_data["schedule_id"]}:{datetime.utcnow().strftime('%Y%m%d%H%M')}"
     
         # ถ้ามี Lock นี้อยู่ใน Redis แล้ว แสดงว่านาทีนี้ส่งงานไปแล้ว
-
-
-
         if await redis_jobs.exists(lock_key):
             return
 
-        
-
         asset = asset_service.get_asset_by_id(schedule_data["asset_id"])
-
         project = project_service.get_project_by_id(schedule_data["project_id"])
+        project_id = project["id"]
+        best_worker = self.best_worker(project_id)
 
-        user_id = project["email"]
-
-        best_worker = self.best_worker(user_id)
-
-        new_job = self.create_job(schedule_data["id"], best_worker["id"], schedule_data["attack_type"], asset["target"])
+        new_job = self.create_job(schedule_data["schedule_id"], best_worker["id"], schedule_data["attack_type"], asset["target"])
 
         payload = JobWorkerPayload(
             job_id=new_job["id"],
