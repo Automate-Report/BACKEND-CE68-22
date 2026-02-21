@@ -195,32 +195,73 @@ class ScheduleService:
 
         return schedule_ids
     
-    async def _is_due_now(self, cron_string: str):
-        now = datetime.utcnow().replace(second=0, microsecond=0)
+    async def _is_due_now(self, schedule: dict):
+        now = datetime.now(timezone.utc)
+        
+        # 1. เช็คว่า Active หรือไม่
+        if not schedule.get("is_active", False):
+            return False
 
-        expressions = [e.strip() for e in cron_string.split("Z")]
+        # 2. เช็ค end_date (ถ้ามี)
+        end_date_str = schedule.get("end_date")
+        if end_date_str:
+            try:
+                # แปลง string เป็น datetime (รองรับ format ที่คุณให้มา)
+                # ตัดส่วน timezone หรือจัดการให้ตรงกับ format ใน JSON
+                end_date = datetime.fromisoformat(end_date_str.replace("Z", "+00:00"))
+                
+                if now > end_date:
+                    # ถ้าเลยเวลา end_date ให้ deactivate และไม่รัน
+                    await self.deactivate_schedule(schedule["schedule_id"])
+                    print(f"🚫 [Schedule] {schedule['schedule_id']} expired (Passed end_date)")
+                    return False
+            except Exception as e:
+                print(f"⚠️ Error parsing end_date: {e}")
+
+        # 3. จัดการ Not Repeat
+        cron_string = schedule.get("cron_expression", "")
+        if cron_string == "Not Repeat":
+            # คืนค่า True เพื่อให้ไป dispatch job และเราจะไปสั่ง deactivate ใน loop หลัก
+            return True
+
+        # 4. จัดการ Cron ปกติ
+        expressions = [e.strip() for e in cron_string.split("Z") if e.strip()]
+        now_truncated = now.replace(second=0, microsecond=0)
 
         for expr in expressions:
             try:
-                # คำนวณจุดรันล่าสุดของ Cron ตัวนั้นๆ
-                prev_run = croniter(expr, now + timedelta(seconds=1)).get_prev(datetime)
-                if prev_run == now:
+                prev_run = croniter(expr, now_truncated + timedelta(seconds=1)).get_prev(datetime)
+                if prev_run == now_truncated:
                     return True
-            except Exception as e:
-                print(f"❌ Invalid Cron: {expr} - {e}")
+            except Exception:
+                continue
                 
         return False
     
     async def get_due_schedules(self):
-        
         schedules = self._read_json()
 
         due_schedules = []
 
         for schedule in schedules:
-            if await self._is_due_now(schedule["cron_expression"]):
+            if await self._is_due_now(schedule):
                 due_schedules.append(schedule)
+
         return due_schedules
+    
+    async def deactivate_schedule(self, schedule_id: int):
+        schedules = self._read_json() # อ่านไฟล์ทั้งหมดออกมา
+        updated = False
+        
+        for s in schedules:
+            if s["schedule_id"] == schedule_id:
+                s["is_active"] = False
+                s["updated_at"] = datetime.now().isoformat()
+                updated = True
+                break
+                
+        if updated:
+            self._save_json(schedules) # ฟังก์ชันสำหรับเขียนทับไฟล์ JSON เดิม
 
         
 # สร้าง instance ของ Service เพื่อใช้งาน

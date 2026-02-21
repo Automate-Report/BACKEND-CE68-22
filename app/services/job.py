@@ -203,71 +203,71 @@ class JobService:
         return best_worker
 
     async def dispatch_job(self, schedule_data):
-        # lock_key = f"lock:schedule:{schedule_data["id"]}:{datetime.utcnow().strftime('%Y%m%d%H%M')}"
+        lock_key = f"lock:schedule:{schedule_data["id"]}:{datetime.utcnow().strftime('%Y%m%d%H%M')}"
     
-        # # ถ้ามี Lock นี้อยู่ใน Redis แล้ว แสดงว่านาทีนี้ส่งงานไปแล้ว
+        # ถ้ามี Lock นี้อยู่ใน Redis แล้ว แสดงว่านาทีนี้ส่งงานไปแล้ว
 
 
 
-        # if await redis_jobs.exists(lock_key):
-        #     return
+        if await redis_jobs.exists(lock_key):
+            return
 
         
 
-        # asset = asset_service.get_asset_by_id(schedule_data["asset_id"])
+        asset = asset_service.get_asset_by_id(schedule_data["asset_id"])
 
-        # project = project_service.get_project_by_id(schedule_data["project_id"])
+        project = project_service.get_project_by_id(schedule_data["project_id"])
 
-        # user_id = project["email"]
+        user_id = project["email"]
 
-        # best_worker = self.best_worker(user_id)
+        best_worker = self.best_worker(user_id)
 
-        # new_job = self.create_job(schedule_data["id"], best_worker["id"], schedule_data["attack_type"], asset["target"])
+        new_job = self.create_job(schedule_data["id"], best_worker["id"], schedule_data["attack_type"], asset["target"])
 
-        # payload = JobWorkerPayload(
-        #     job_id=new_job["id"],
-        #     target_url=asset["target"],
-        #     attack_type=schedule_data["attack_type"],
-        #     credential=None
-        # )
+        payload = JobWorkerPayload(
+            job_id=new_job["id"],
+            target_url=asset["target"],
+            attack_type=schedule_data["attack_type"],
+            credential=None
+        )
 
-        # # ถ้ายังไม่มี ให้สร้าง Lock ไว้ (Expire ใน 60 วินาที)
-        # await redis_jobs.setex(lock_key, 60, "locked")
-        # queue_name = f"{QUEUE_KEY}:{best_worker["id"]}"
-        # await redis_jobs.rpush(queue_name, payload.model_dump_json()) #"system:queue:{worker_id}"
-        # print(f"🚀 Job {new_job["id"]} dispatched to Redis!")
+        # ถ้ายังไม่มี ให้สร้าง Lock ไว้ (Expire ใน 60 วินาที)
+        await redis_jobs.setex(lock_key, 60, "locked")
+        queue_name = f"{QUEUE_KEY}:{best_worker["id"]}"
+        await redis_jobs.rpush(queue_name, payload.model_dump_json()) #"system:queue:{worker_id}"
+        print(f"🚀 Job {new_job["id"]} dispatched to Redis!")
         print(f"🚀 Job temp not dispatched to Redis!")
 
     async def run_watchdog(self):
-        # """🛡️ ตรวจสอบงานที่ค้างใน pending นานเกินไป (Watchdog)"""
-        # print("🛡️ [Watchdog] Started checking...")
-        # timeout_limit = datetime.utcnow() - timedelta(minutes=5)
-        # running_timeout_limit = datetime.utcnow() - timedelta(minutes=30)
-        # jobs = self._read_json()
-        # workers = worker_service._read_json()
+        """🛡️ ตรวจสอบงานที่ค้างใน pending นานเกินไป (Watchdog)"""
+        print("🛡️ [Watchdog] Started checking...")
+        timeout_limit = datetime.utcnow() - timedelta(minutes=5)
+        running_timeout_limit = datetime.utcnow() - timedelta(minutes=30)
+        jobs = self._read_json()
+        workers = worker_service._read_json()
 
-        # for job in jobs:
-        #     try:
-        #         # ใช้คีย์ให้ตรงกับใน JSON ของคุณ (ระวัง created_at vs create_at)
-        #         job_created_time = datetime.fromisoformat(job["created_at"])
-        #         if job["started_at"]:
-        #             job_startup_time = datetime.fromisoformat(job["started_at"])
-        #     except (ValueError, KeyError):
-        #         continue
+        for job in jobs:
+            try:
+                # ใช้คีย์ให้ตรงกับใน JSON ของคุณ (ระวัง created_at vs create_at)
+                job_created_time = datetime.fromisoformat(job["created_at"])
+                if job["started_at"]:
+                    job_startup_time = datetime.fromisoformat(job["started_at"])
+            except (ValueError, KeyError):
+                continue
             
-        #     if (job["status"] == "pending" and job_created_time < timeout_limit) or (job["started_at"] and job["status"] == "running" and job_startup_time < running_timeout_limit):
-        #         print(f'🕵️ [Watchdog] Job {job["id"]} is stuck. Marking as failed.')
-        #         job["status"] = "failed"
-        #         # คืนโหลดให้ Worker ตัวเดิม (ถ้ามี)
-        #         for w in workers:
-        #             if w["id"] == job["worker_id"]:
-        #                 if w and w["current_load"] > 0:
-        #                     w["current_load"] -= 1
+            if (job["status"] == "pending" and job_created_time < timeout_limit) or (job["started_at"] and job["status"] == "running" and job_startup_time < running_timeout_limit):
+                print(f'🕵️ [Watchdog] Job {job["id"]} is stuck. Marking as failed.')
+                job["status"] = "failed"
+                # คืนโหลดให้ Worker ตัวเดิม (ถ้ามี)
+                for w in workers:
+                    if w["id"] == job["worker_id"]:
+                        if w and w["current_load"] > 0:
+                            w["current_load"] -= 1
 
         
-        # self._save_json(jobs)
-        # worker_service._save_json(workers)
-        pass
+        self._save_json(jobs)
+        worker_service._save_json(workers)
+        # pass
 
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
