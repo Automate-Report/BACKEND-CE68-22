@@ -13,6 +13,7 @@ class WorkerResponse(BaseModel):
     thread_number: int
     current_load: int
     hostname: Optional[str] = None
+    ip_address: Optional[str] = None
     status: str
     isActive: bool
     access_key_id: Optional[int] = None
