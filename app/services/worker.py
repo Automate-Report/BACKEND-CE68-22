@@ -48,17 +48,12 @@ class WorkerService:
     def _enrich_worker_status(self, worker):
         """ฟังก์ชันช่วยคำนวณสถานะของ Worker"""
         OFFLINE_THRESHOLD_SECONDS = 600
-        
-        # 1. เช็คเรื่อง Key ก่อน (สำคัญสุด)
-        if not worker.get("access_key_id"):
-            worker["status"] = "Revoked" # โดนถอดสิทธิ์
-            return worker
 
-        # 2. เช็คเรื่องเวลา (Online/Offline)
+        # 1. เช็คเรื่องเวลา (Online/Offline)
         last_seen_str = worker.get("last_heartbeat")
         
         if not last_seen_str:
-            worker["status"] = "offline" # ไม่เคยต่อเน็ตเลย
+            worker["status"] = "notActivated" # ไม่เคยต่อเน็ตเลย
             return worker
 
         # แปลง String กลับเป็น datetime
@@ -207,12 +202,15 @@ class WorkerService:
         for worker in workers:
             if worker["id"] == worker_id:
                 worker["access_key_id"] = access_key_id
-                worker["status"] = "Not Activated"
+                worker["status"] = "notActivated"
                 worker["isActive"] = False
                 worker["last_heartbeat"] = None
+                worker["internal_ip"] = None
+                worker["hostname"] = None
                 isChange = True
-        if isChange:
-            self._save_json(workers)
+        self._save_json(workers)
+
+        if isChange: 
             return True
         return False
 
