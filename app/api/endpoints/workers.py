@@ -56,10 +56,9 @@ async def get_info_workers_in_project(project_id: int):
 @router.get("/{worker_id}", response_model=WorkerResponse)
 async def get_worker_by_id(worker_id: int, user = Depends(get_current_user)):
     # เรียก Service เพื่อดึงข้อมูลตาม ID
-    worker = worker_service.get_worker_by_id(user["sub"], worker_id)
+    worker = worker_service.get_worker_by_id(worker_id)
 
     if not worker:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Worker not found")
         
     return worker
