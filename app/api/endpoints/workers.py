@@ -8,6 +8,7 @@ from app.schemas.worker import WorkerCreate, WorkerResponse, VerifyRequest, Hear
 from app.schemas.pagination import PaginatedResponse
 from app.services.worker import worker_service
 from app.services.access_key import access_key_service
+from app.services.job import job_service
 
 from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role
@@ -72,6 +73,12 @@ async def get_all_workers_by_project_id(
 @router.get("/info/{project_id}")
 async def get_info_workers_in_project(project_id: int):
     result = worker_service.get_summary_info(project_id=project_id)
+
+    worker_ids = worker_service.get_all_worker_ids_by_project_id(project_id)
+
+    for wid in worker_ids:
+        total = job_service.get_total_job_by_worker_id(wid)
+        result["total_jobs"]+=total
     return result
 
 @router.get("/{worker_id}", response_model=WorkerResponse)

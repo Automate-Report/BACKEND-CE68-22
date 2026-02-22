@@ -195,6 +195,16 @@ class WorkerService:
             "total_jobs": total_job
         }
     
+    def get_all_worker_ids_by_project_id(self, project_id: int):
+        workers = self._read_json()
+
+        result = []
+        for worker in workers:
+            if worker["project_id"] == project_id:
+                result.append(worker["id"])
+        
+        return result
+    
     def change_access_key(self, access_key_id: int, worker_id: int):
         workers = self._read_json()
         isChange = False

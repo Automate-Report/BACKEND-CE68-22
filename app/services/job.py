@@ -260,6 +260,17 @@ class JobService:
             total_failed=failed,
             total_findings=total_findings
         )
+    
+    def get_total_job_by_worker_id(self, worker_id: int):
+        jobs = self._read_json()
+
+        total_jobs = 0
+
+        for job in jobs:
+            if job["worker_id"] == worker_id:
+                total_jobs+=1
+
+        return total_jobs
 
     def best_worker(self, project_id: int):
         workers = worker_service.read_all_worker(project_id)
