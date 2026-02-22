@@ -113,7 +113,6 @@ class WorkerService:
             if worker["project_id"] == project_id:
                 all_matches.append(worker)
 
-
         if sort_by:
             reverse = (order == "desc")
             # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
@@ -213,6 +212,28 @@ class WorkerService:
         if isChange: 
             return True
         return False
+    
+    def disconnect_worker(self, worker_id: int):
+        workers = self._read_json()
+        for worker in workers:
+            if worker["id"] == worker_id:
+                worker["isActive"] = False
+                worker["hostname"] = None
+                worker["internal_ip"] = None
+                worker["last_heartbeat"] = None
+
+        self._save_json(workers)
+
+    def disconnect_workers_in_project(self, project_id: int):
+        workers = self._read_json()
+        for worker in workers:
+            if worker["project_id"] == project_id:
+                worker["isActive"] = False
+                worker["hostname"] = None
+                worker["internal_ip"] = None
+                worker["last_heartbeat"] = None
+
+        self._save_json(workers)
 
     def verify_worker(self, req: VerifyRequest):
         workers = self._read_json()

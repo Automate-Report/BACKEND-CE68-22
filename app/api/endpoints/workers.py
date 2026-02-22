@@ -55,7 +55,9 @@ async def get_all_workers_by_project_id(
     size: int = Query(10, ge=1, le=100, description="Items per page"),
     sort_by: Optional[str] = Query(None, description="Column to sort by"),
     order: Optional[str] = Query("asc", description="asc or desc"),
-    # user = Depends(get_current_user)
+    search: Optional[str] = Query(None, description="Search box"),
+    filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
+    user = Depends(get_current_user),
 ):
     result = worker_service.get_all_workers_by_project_id(
         project_id=project_id,
@@ -112,7 +114,6 @@ def remove_access_key(worker_id: int):
         worker_id=worker_id
     )
 
-
     return result
 
 @router.delete("/{worker_id}")
@@ -145,6 +146,19 @@ def download_worker_zip(
     result = worker_service.download_worker(worker_id)
 
     return result
+
+
+@router.get("/unlink/{worker_id}")
+async def disconnect_worker_from_host(worker_id: int):
+    worker_service.disconnect_worker(
+        worker_id=worker_id
+    )
+
+@router.get("/unlink/all/{project_id}")
+async def disconnect_all_worker_from_host_by_project(project_id: int):
+    worker_service.disconnect_workers_in_project(
+        project_id=project_id
+    )
     
 #Dummy task
 @router.post("/submit-task")
