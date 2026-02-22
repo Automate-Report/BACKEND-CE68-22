@@ -58,7 +58,7 @@ class JobService:
             # เอา ID ตัวสุดท้ายมา + 1
             new_id = jobs[-1]["id"] + 1
         
-        job_name = self._generate_job_name()
+        job_name = f"job_{self._generate_job_name()}"
             
         # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_job= {
