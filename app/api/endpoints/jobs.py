@@ -55,7 +55,10 @@ async def get_jobs_by_worker(
     page: int = Query(1, ge=1, description="Page number"), 
     size: int = Query(10, ge=1, le=100, description="Items per page"),
     sort_by: Optional[str] = Query(None, description="Column to sort by"),
-    order: Optional[str] = Query("asc", description="asc or desc")
+    order: Optional[str] = Query("asc", description="asc or desc"),
+    search: Optional[str] = Query(None, description="Search box"),
+    filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
+    user = Depends(get_current_user),
 ):
     result = job_service.get_job_by_worker_id(
         worker_id=worker_id,
