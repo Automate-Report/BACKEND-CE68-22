@@ -97,6 +97,52 @@ class JobService:
                 job_ids.append(job["id"])
         return job_ids
     
+    def get_job_by_worker_id(self, worker_id: int,
+                            page: int, size: int, sort_by: str = None, order: str = "asc"):
+        """Service: ดึง Job ตาม Schedule"""
+        jobs = self._read_json()
+
+        result = []
+        n = 0
+        for job in jobs:
+            if job["worker_id"] == worker_id:
+                n += 1
+                temp = {
+                    "id": job["id"],
+                    "name": job["name"],
+                    "schedule_id": job["schedule_id"],
+                    "status": job["status"],
+                    "started_at": job["started_at"],
+                    "finished_at": job["finished_at"]
+                }
+                result.append(temp)
+
+        if sort_by:
+            reverse = (order == "desc")
+            # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
+            result.sort(key=lambda x: (x.get(sort_by) or ""), reverse=reverse)
+        
+        # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
+        total_count = len(result)
+            
+        # 3. คำนวณ Pagination Logic
+        import math
+        total_pages = math.ceil(total_count / size)
+        
+        offset = (page - 1) * size
+        
+        # --- จุดที่ต้องแก้: ตัดข้อมูล (Slicing) ---
+        # ใช้ Python Slice [start : end]
+        paginated_items = result[offset : offset + size]
+
+        return {
+            "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
+            "page": page,
+            "size": size,
+            "total_pages": total_pages,
+            "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
+        }
+
     def get_job_by_schedule_id(self, schedule_id: int, user_email: str, 
                             page: int, size: int, sort_by: str = None, order: str = "asc"):
         """Service: ดึง Job ตาม Schedule"""

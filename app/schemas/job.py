@@ -32,3 +32,13 @@ class SummaryInfoByWorker(BaseModel):
     total_failed: int
     total_findings: int
 
+class GetJobByWorker(BaseModel):
+    id: int
+    name: str
+    schedule_id: int
+    schedule_name: str
+    attack_type: str
+    status: str
+    started_at: datetime
+    finished_at: Optional[datetime] = None
+    vuln_count: int
