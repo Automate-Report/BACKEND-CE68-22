@@ -1,5 +1,8 @@
 import json
 import os
+import secrets
+import string
+
 from datetime import datetime, timedelta
 from typing import List
 
@@ -40,8 +43,12 @@ class JobService:
         with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
+
+    def _generate_job_name(self, length=12):
+        alphabet = string.ascii_letters + string.digits
+        return ''.join(secrets.choice(alphabet) for _ in range(length))
     
-    def create_job(self, schedule_id: int, worker_id: int, attack_type: str, target: str) -> dict:
+    def create_job(self, schedule_id: int, worker_id: int) -> dict:
         """Service: สร้าง Job ใหม่"""
         jobs = self._read_json()
         
@@ -51,10 +58,7 @@ class JobService:
             # เอา ID ตัวสุดท้ายมา + 1
             new_id = jobs[-1]["id"] + 1
         
-        if attack_type == "sql_intection":
-            job_name = f"SQLi - {target}"
-        else:
-            job_name = f"{attack_type.upper()} - {target}"
+        job_name = self._generate_job_name()
             
         # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_job= {
@@ -240,7 +244,7 @@ class JobService:
         project_id = project["id"]
         best_worker = self.best_worker(project_id)
 
-        new_job = self.create_job(schedule_data["schedule_id"], best_worker["id"], schedule_data["attack_type"], asset["target"])
+        new_job = self.create_job(schedule_data["schedule_id"], best_worker["id"])
 
         payload = JobWorkerPayload(
             job_id=new_job["id"],
