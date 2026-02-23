@@ -20,7 +20,6 @@ router = APIRouter()
 @router.post("/verify/")
 def verify_access_key(req: VerifyRequest):
     result = worker_service.verify_worker(req)
-
     return result
 
 #HeartBeat

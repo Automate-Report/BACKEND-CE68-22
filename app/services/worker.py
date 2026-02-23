@@ -252,6 +252,8 @@ class WorkerService:
             if worker["id"] == req.worker_id:
                 target_worker = worker
 
+        print(worker["id"])
+
         if not target_worker:
             # Use 404 for "Not Found"
             raise HTTPException(status_code=404, detail="Worker ID not found")
@@ -264,10 +266,10 @@ class WorkerService:
             raise HTTPException(status_code=400, detail="Worker missing access key")
         
         current_access_key = access_key.get("key")
+        print(current_access_key)
 
         if req.key != current_access_key:
-            # 🔥 CASE B: User กด "Generate New Key" ไปแล้ว
-            # Agent (ที่ถือ Key เก่า) ส่งมาจะไม่ตรงกับ current_secret
+            print(req.key)
             raise HTTPException(status_code=403, detail="Invalid Access Key (Key mismatch)")
         
         target_worker["hostname"] = req.hostname
