@@ -2,7 +2,7 @@
   {
     "id": 1,
     "asset_id": 6,
-    "job_id": 501,
+    "job_id": 1,
     "assigned_to": "sompong@shopdee.com",
     "verified_by": "somying@shopdee.com",
     "library_id": 1,
@@ -22,7 +22,7 @@
   {
     "id": 2,
     "asset_id": 6,
-    "job_id": 501,
+    "job_id": 1,
     "assigned_to": "sompong@shopdee.com",
     "verified_by": "somying@shopdee.com",
     "library_id": 2,
@@ -33,7 +33,7 @@
     "severity": "high",
     "db_type": null,
     "status": "fixed",
-    "verify": true,
+    "verify": "tp",
     "resolved_at": "2026-02-12T15:00:00",
     "last_seen_at": "2026-02-12T15:00:00",
     "first_seen_at": "2026-02-11T09:00:00",
