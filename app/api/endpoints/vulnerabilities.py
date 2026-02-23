@@ -1,10 +1,14 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
 
-from app.schemas.vulnerability import SummaryCntVlun
+from app.schemas.vulnerability import SummaryCntVlun, VulnIssue
+from app.schemas.pagination import PaginatedResponse
 
 from app.services.vulnerability import vuln_service
 from app.services.asset import asset_service
+
+from app.deps.auth import get_current_user
+from app.deps.role import get_current_project_role
 
 router = APIRouter()
 
@@ -55,4 +59,28 @@ async def get_summary_vuln_by_project_id(project_id: int):
         result.fixed_cnt+=value.fixed_cnt
 
     return result
-    
+
+@router.get("/all/{project_id}", response_model=PaginatedResponse[VulnIssue])
+async def get_all_vuln_by_project_id(
+    project_id: int,
+    page: int = Query(1, ge=1, description="Page number"), 
+    size: int = Query(10, ge=1, le=100, description="Items per page"),
+    sort_by: Optional[str] = Query(None, description="Column to sort by"),
+    order: Optional[str] = Query("asc", description="asc or desc"),
+    search: Optional[str] = Query(None, description="Search box"),
+    filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
+    # user = Depends(get_current_user),
+):
+    asset_ids = asset_service.get_asset_ids_by_project_id(project_id)
+
+    result = vuln_service.get_all_issue_by_project_id(
+        asset_ids=asset_ids,
+        page=page,
+        size=size,
+        sort_by=sort_by,
+        order=order,
+        search=search,
+        filter=filter,
+    )
+
+    return result
