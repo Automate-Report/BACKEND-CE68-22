@@ -252,8 +252,6 @@ class WorkerService:
             if worker["id"] == req.worker_id:
                 target_worker = worker
 
-        print(worker["id"])
-
         if not target_worker:
             # Use 404 for "Not Found"
             raise HTTPException(status_code=404, detail="Worker ID not found")
@@ -269,7 +267,6 @@ class WorkerService:
         print(current_access_key)
 
         if req.key != current_access_key:
-            print(req.key)
             raise HTTPException(status_code=403, detail="Invalid Access Key (Key mismatch)")
         
         target_worker["hostname"] = req.hostname
