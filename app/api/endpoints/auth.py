@@ -83,6 +83,12 @@ async def google_callback(request: Request):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+@router.get("/username/{user_id}")
+async def get_user_name_by_user_id(user_id: str):
+    username = userauthen_service.get_username_by_id(user_id)
+
+    return username
 
 
 # FOR TESTING COOKIES AND TOKEN BLACKLIST, DELETE LATER
