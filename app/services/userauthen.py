@@ -147,6 +147,15 @@ class UserAuthenService:
             if user["email"] == user_id:
                 return user
         return None
+    
+    def get_username_by_id(self, user_id: str):
+        users = self._read_json()
+
+        for user in users:
+            if user["email"] == user_id:
+                return f"{user["firstname"]} {user["lastname"]}"
+        
+        return None
 
         
 # สร้าง instance ของ Service เพื่อใช้งาน

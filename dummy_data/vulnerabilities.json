@@ -54,9 +54,9 @@
     "db_type": null,
     "status": "open",
     "verify": false,
-    "occurrance_count": 2,
+    "occurrance_count": 3,
     "first_seen_at": "2026-02-21T20:18:49.281141",
-    "last_seen_at": "2026-02-21T20:28:21.006638",
+    "last_seen_at": "2026-02-23T16:24:40.918819",
     "resolved_at": null
   }
 ]
