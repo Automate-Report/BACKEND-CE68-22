@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
 
-from app.schemas.vulnerability import SummaryCntVlun, VulnIssue
+from app.schemas.vulnerability import SummaryCntVlun, VulnIssue, VulnDetails
 from app.schemas.pagination import PaginatedResponse
 
 from app.services.vulnerability import vuln_service
@@ -84,3 +84,10 @@ async def get_all_vuln_by_project_id(
     )
 
     return result
+
+@router.get("/{vuln_id}", response_model=VulnDetails)
+async def get_vulnerability_details(vuln_id: int):
+    details = vuln_service.get_vuln_details_by_vuln_id(vuln_id)
+    if not details:
+        raise HTTPException(status_code=404, detail="Vulnerability not found")
+    return details
