@@ -24,7 +24,7 @@ async def get_cnt_vulns_by_project_id(project_id: int):
         "vuln_cnt": cnt
     }
 
-@router.get("/summary/vuln/{project_id}", response_model=SummaryCntVlun)
+@router.get("/summary/status/{project_id}", response_model=SummaryCntVlun)
 async def get_summary_vuln_by_project_id(project_id: int):
     asset_ids = asset_service.get_asset_ids_by_project_id(project_id)
 
