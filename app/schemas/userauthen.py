@@ -20,3 +20,7 @@ class UserInfo(BaseModel):
 
     class Config:
         orm_mode = True # เพื่อให้ Pydantic อ่านข้อมูลจาก ORM objects ได้ ไว้ใช้กับ SQLAlchemy ตอนทำ database
+
+class ChangeRole(BaseModel):
+    email: str
+    role: str

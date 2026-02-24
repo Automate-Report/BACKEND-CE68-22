@@ -71,6 +71,43 @@ class ProjectMemberService:
                 return rel["role"]
             
         return None
+    
+    def change_role(self, user_id: str, role: str, project_id: int):
+        relations = self._read_json()
+        new_user_info = None
+        for rel in relations:
+            if rel["project_id"] == project_id and rel["email"] == user_id:
+                rel["role"] = role
+                
+                user = userauthen_service.get_user_by_id(rel["email"])
+
+                user_info = UserInfo(
+                    email=user["email"],
+                    firstname=user["firstname"],
+                    lastname=user["lastname"],
+                    role=role,
+                    joinned_at=rel["joinned_at"]
+                )
+
+                new_user_info = user_info
+
+        if new_user_info:
+            self._save_json(relations)
+            return new_user_info
+            
+        return None
+    
+    def delete_member(self, user_id: str, project_id: int):
+
+        relations = self._read_json()
+
+        for i, rel in enumerate(relations):
+            if rel["project_id"] == project_id and rel["email"] == user_id:
+                del relations[i]
+                self._save_json(relations)
+                return True
+            
+        return False
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 project_member_service = ProjectMemberService()

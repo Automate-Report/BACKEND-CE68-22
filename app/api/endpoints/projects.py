@@ -1,10 +1,12 @@
+import math
+
 from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import Optional, List
 
 from app.deps.auth import get_current_user
 from app.schemas.project import ProjectCreate, ProjectResponse, ProjectSummaryResponese
 from app.schemas.pagination import PaginatedResponse
-from app.schemas.userauthen import UserInfo
+from app.schemas.userauthen import UserInfo, ChangeRole
 
 from app.services.project import project_service 
 from app.services.project_tag import project_tag_service
@@ -115,20 +117,94 @@ async def delete_project(project_id: int):
         raise HTTPException(status_code=404, detail="Project not found")
     return {"detail": "Project deleted successfully"}
 
-
-@router.get("/user/{project_id}", response_model=List[UserInfo])
-async def get_users_in_project(project_id: int):
+@router.get("/members/{project_id}", response_model=PaginatedResponse[UserInfo])
+async def get_users_in_project(
+    project_id: int,
+    page: int = Query(1, ge=1, description="Page number"), 
+    size: int = Query(10, ge=1, le=100, description="Items per page"),
+    sort_by: Optional[str] = Query(None, description="Column to sort by"),
+    order: Optional[str] = Query("asc", description="asc or desc"),
+    search: Optional[str] = Query(None, description="Search box"),
+    filter: Optional[str] = Query("ALL", description="filter"),
+    # user = Depends(get_current_user),
+):
+    # 1. ดึงข้อมูล Owner และ Members
     owner_info = project_service.get_owner_info_by_project_id(project_id)
-
     member_infos = project_member_service.get_user_info_by_project_id(project_id)
 
+    # 2. รวมข้อมูล (ถ้า Owner ไม่อยู่ในลิสต์สมาชิก ให้เพิ่มเข้าไปที่ตำแหน่งแรก)
+    all_users = member_infos
     if owner_info:
-        if owner_info not in member_infos:
-            member_infos.insert(0, owner_info)
+        # เช็คด้วย email หรือ id เพื่อป้องกันข้อมูลซ้ำ
+        is_owner_in_list = any(m.email == owner_info.email for m in all_users)
+        if not is_owner_in_list:
+            all_users.insert(0, owner_info)
 
-    return member_infos
+    # 3. Logic: Filter ตาม Role
+    if filter and filter.upper() != "ALL":
+        target_role = filter.lower()
+        # เปลี่ยนจาก u.get("role") เป็น u.role
+        all_users = [u for u in all_users if u.role.lower() == target_role]
 
+    # 4. Logic: Search
+    if search:
+        s = search.lower()
+        all_users = [
+            u for u in all_users 
+            if s in u.firstname.lower() 
+            or s in u.lastname.lower() 
+            or s in u.email.lower()
+        ]
+
+    # 5. Logic: Sorting
+    if sort_by:
+        reverse = (order.lower() == "desc")
+        # ใช้ getattr เพื่อดึง attribute ตามชื่อตัวแปร sort_by
+        all_users.sort(key=lambda x: str(getattr(x, sort_by, "")).lower(), reverse=reverse)
+
+    # 6. Logic: Pagination
+    total_count = len(all_users)
+    total_pages = math.ceil(total_count / size) if size > 0 else 1
+    current_page = max(1, min(page, total_pages))
+    offset = (current_page - 1) * size
     
+    paginated_items = all_users[offset : offset + size]
+
+    return {
+        "total": total_count,
+        "page": current_page,
+        "size": size,
+        "total_pages": total_pages,
+        "items": paginated_items
+    }
+
+@router.put("/change_role/{project_id}", response_model=UserInfo)
+async def update_project(
+    project_id: int, 
+    role_in: ChangeRole, 
+    # user = Depends(get_current_user)
+):
+    new_user_info = project_member_service.change_role(
+        user_id=role_in.email,
+        role=role_in.role,
+        project_id=project_id
+    )
+
+    return new_user_info
+
+# DELETE /projects/{project_id} : ลบโปรเจกต์
+@router.delete("/rel/{project_id}/{user_id}")
+async def delete_member(project_id: int, user_id: str):
+    success = project_member_service.delete_member(
+        user_id=user_id,
+        project_id=project_id
+    )
+
+    if not success:
+        raise HTTPException(status_code=404, detail="Member not found")
+    return {"detail": "Member deleted successfully"}
+
+
 
     
 
