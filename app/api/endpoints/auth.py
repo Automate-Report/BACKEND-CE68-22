@@ -1,8 +1,12 @@
 from app.deps.auth import get_current_user
+from typing import List
 from fastapi import APIRouter, HTTPException, Request, Depends
 from fastapi.responses import JSONResponse, RedirectResponse
-from app.schemas.userauthen import LoginRequest, UserCreate
-from app.services.userauthen import userauthen_service # เรียก Service ที่เราสร้างตะกี้
+from app.schemas.userauthen import LoginRequest, UserCreate, UserInfo
+
+from app.services.userauthen import userauthen_service
+from app.services.project_member import project_member_service
+
 from app.core.google_oauth import oauth
 from app.core.config import settings
 
@@ -89,7 +93,6 @@ async def get_user_name_by_user_id(user_id: str):
     username = userauthen_service.get_username_by_id(user_id)
 
     return username
-
 
 # FOR TESTING COOKIES AND TOKEN BLACKLIST, DELETE LATER
 @router.get("/me")

@@ -11,6 +11,8 @@ from app.core.redis import redis_client
 from app.core.jwt import create_access_token
 
 
+
+
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -156,6 +158,7 @@ class UserAuthenService:
                 return f"{user["firstname"]} {user["lastname"]}"
         
         return None
+
 
         
 # สร้าง instance ของ Service เพื่อใช้งาน
