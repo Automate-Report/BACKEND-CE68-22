@@ -1,0 +1,246 @@
+16:08:24 [INFO] [ScanEngine][Job 2] Starting Discovery Phase...
+16:08:24 [INFO] [Crawler] Starting Crawl on: http://localhost:4040/#/ (Depth: 2)
+16:08:25 [INFO]      [+] Target Discovered: GET http://localhost:4040/assets/i18n/en.json (0 params)
+16:08:25 [INFO]      [+] Target Discovered: GET http://localhost:4040/socket.io/ (0 params)
+16:08:25 [INFO]      [+] Target Discovered: GET http://localhost:4040/rest/admin/application-version (0 params)
+16:08:25 [INFO]      [+] Target Discovered: GET http://localhost:4040/rest/admin/application-configuration (0 params)
+16:08:25 [INFO]      [+] Target Discovered: GET http://localhost:4040/api/Challenges/ (0 params)
+16:08:25 [INFO]      [+] Target Discovered: GET http://localhost:4040/rest/languages (0 params)
+16:08:25 [INFO]      [+] Target Discovered: GET http://localhost:4040/api/Quantitys/ (0 params)
+16:08:25 [INFO]      [+] Target Discovered: GET http://localhost:4040/rest/products/search (0 params)
+16:08:25 [INFO]      [+] Target Discovered: POST http://localhost:4040/socket.io/ (0 params)
+16:08:26 [INFO]      [+] Target Discovered: GET http://localhost:4040/#/ (1 params)
+16:08:26 [INFO]      [+] Target Discovered: GET http://localhost:4040/rest/memories/ (0 params)
+16:08:30 [INFO]      [+] Target Discovered: GET http://localhost:4040/redirect (6 params)
+16:08:32 [INFO]      [+] Target Discovered: GET http://localhost:4040/api/Feedbacks/ (0 params)
+16:09:03 [INFO]      [+] Target Discovered: GET http://localhost:4040/#/about (1 params)
+16:09:09 [INFO]      [+] Target Discovered: GET https://www.youtube.com/watch (3 params)
+16:09:12 [INFO]      [+] Target Discovered: GET http://localhost:4040/#/login (4 params)
+16:09:12 [INFO]      [+] Target Discovered: GET http://localhost:4040/rest/user/whoami (0 params)
+16:09:12 [INFO]      [+] Target Discovered: GET http://localhost:4040/rest/captcha/ (0 params)
+16:09:13 [INFO]      [+] Target Discovered: GET http://localhost:4040/search/socket.io/ (0 params)
+16:09:14 [INFO]      [+] Target Discovered: GET http://localhost:4040/search (1 params)
+16:09:38 [INFO]      [+] Target Discovered: GET http://localhost:4040/contact/report-content (2 params)
+16:09:38 [INFO]      [+] Target Discovered: GET http://localhost:4040/signup/socket.io/ (0 params)
+16:09:40 [INFO]      [+] Target Discovered: GET http://localhost:4040/signup (6 params)
+16:09:42 [INFO]      [+] Target Discovered: GET http://localhost:4040/actions-user/socket.io/ (0 params)
+16:09:43 [INFO]      [+] Target Discovered: GET http://localhost:4040/actions-user (1 params)
+16:09:44 [INFO]      [+] Target Discovered: GET http://localhost:4040/contact/report-abuse (1 params)
+16:09:44 [INFO]      [+] Target Discovered: GET http://localhost:4040/OWASP/socket.io/ (0 params)
+16:09:45 [INFO]      [+] Target Discovered: GET http://localhost:4040/OWASP (1 params)
+16:10:01 [INFO]      [+] Target Discovered: GET http://localhost:4040/juice-shop/juice-shop/commits (1 params)
+16:10:05 [INFO]      [+] Target Discovered: GET http://localhost:4040/juice-shop/juice-shop/search (1 params)
+16:10:22 [INFO]      [+] Target Discovered: GET http://localhost:4040/juice-shop/socket.io/ (0 params)
+16:10:23 [INFO]      [+] Target Discovered: GET http://localhost:4040/juice-shop (1 params)
+16:10:55 [INFO]      [+] Target Discovered: GET http://localhost:4040/sponsors/socket.io/ (0 params)
+16:10:56 [INFO]      [+] Target Discovered: GET http://localhost:4040/sponsors (1 params)
+16:11:29 [INFO]      [+] Target Discovered: GET http://localhost:4040/ (1 params)
+16:11:43 [INFO]      [+] Target Discovered: GET http://localhost:4040/login/socket.io/ (0 params)
+16:11:44 [INFO]      [+] Target Discovered: GET http://localhost:4040/login (2 params)
+16:12:08 [INFO]      [+] Target Discovered: GET http://localhost:4040/api/SecurityQuestions/ (0 params)
+16:12:09 [INFO]      [+] Target Discovered: GET http://localhost:4040/#/register (5 params)
+16:12:11 [INFO]      [+] Target Discovered: GET http://localhost:4040/search#/contact (5 params)
+16:12:15 [INFO] [ScanEngine][Job 2] Discovery finished. Unique targets: 40
+16:12:15 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/assets/i18n/en.json ---
+16:12:15 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:12:15 [INFO] [SQLi] Scan: GET http://localhost:4040/assets/i18n/en.json (json)
+16:12:15 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/socket.io/ ---
+16:12:15 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:12:15 [INFO] [SQLi] Scan: GET http://localhost:4040/socket.io/ (json)
+16:12:15 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/rest/admin/application-version ---
+16:12:15 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:12:15 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/admin/application-version (json)
+16:12:15 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/rest/admin/application-configuration ---
+16:12:15 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:12:15 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/admin/application-configuration (json)
+16:12:15 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/api/Challenges/ ---
+16:12:15 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:12:15 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Challenges/ (json)
+16:12:15 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/rest/languages ---
+16:12:15 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:12:15 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/languages (json)
+16:12:15 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/api/Quantitys/ ---
+16:12:15 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:12:15 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Quantitys/ (json)
+16:12:15 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/rest/products/search ---
+16:12:15 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:12:15 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/products/search (json)
+16:12:15 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/socket.io/ ---
+16:12:15 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:12:15 [INFO] [SQLi] Scan: POST http://localhost:4040/socket.io/ (json)
+16:12:15 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/#/ ---
+16:12:15 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:12:15 [INFO] [SQLi] Scan: GET http://localhost:4040/#/ (form)
+16:12:15 [INFO]     -> Testing: mat-input-1
+16:12:16 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/rest/memories/ ---
+16:12:16 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:12:16 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/memories/ (json)
+16:12:16 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/redirect ---
+16:12:16 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:12:16 [INFO] [SQLi] Scan: GET http://localhost:4040/redirect (form)
+16:12:16 [INFO]     -> Testing: to
+16:12:18 [INFO]     -> Testing: query-builder-test
+16:12:30 [INFO]     -> Testing: include_email
+16:12:41 [INFO]     -> Testing: custom_scope_name
+16:12:52 [INFO]     -> Testing: custom_scope_query
+16:13:06 [INFO]     -> Testing: input_4
+16:13:19 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/api/Feedbacks/ ---
+16:13:19 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:19 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Feedbacks/ (json)
+16:13:19 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/#/about ---
+16:13:19 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:19 [INFO] [SQLi] Scan: GET http://localhost:4040/#/about (form)
+16:13:19 [INFO]     -> Testing: mat-input-1
+16:13:20 [INFO] [ScanEngine] --- Analyzing: https://www.youtube.com/watch ---
+16:13:20 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:20 [INFO] [SQLi] Scan: GET https://www.youtube.com/watch (form)
+16:13:22 [INFO]     -> Testing: v
+16:13:24 [INFO]        [!!!] Boolean-Based SQLi Found!
+16:13:24 [INFO]              Param: v | Payload:  AND 1=1
+16:13:24 [INFO]              Info: Diff: 411 bytes
+16:13:24 [INFO]       [..] Capturing evidence with Playwright...
+16:13:24 [ERROR]       [-] Evidence capture failed: BrowserType.launch: Executable doesn't exist at Z:\Thesis\Code\AGENT-CE68-22\.venv\Lib\site-packages\playwright\driver\package\.local-browsers\chromium_headless_shell-1200\chrome-headless-shell-win64\chrome-headless-shell.exe
+╔════════════════════════════════════════════════════════════╗
+║ Looks like Playwright was just installed or updated.       ║
+║ Please run the following command to download new browsers: ║
+║                                                            ║
+║     playwright install                                     ║
+║                                                            ║
+║ <3 Playwright Team                                         ║
+╚════════════════════════════════════════════════════════════╝
+16:13:25 [INFO]     -> Testing: search_query
+16:13:28 [INFO]        [!!!] Boolean-Based SQLi Found!
+16:13:28 [INFO]              Param: search_query | Payload:  AND 1=1
+16:13:28 [INFO]              Info: Diff: 67 bytes
+16:13:28 [INFO]       [..] Capturing evidence with Playwright...
+16:13:29 [ERROR]       [-] Evidence capture failed: BrowserType.launch: Executable doesn't exist at Z:\Thesis\Code\AGENT-CE68-22\.venv\Lib\site-packages\playwright\driver\package\.local-browsers\chromium_headless_shell-1200\chrome-headless-shell-win64\chrome-headless-shell.exe
+╔════════════════════════════════════════════════════════════╗
+║ Looks like Playwright was just installed or updated.       ║
+║ Please run the following command to download new browsers: ║
+║                                                            ║
+║     playwright install                                     ║
+║                                                            ║
+║ <3 Playwright Team                                         ║
+╚════════════════════════════════════════════════════════════╝
+16:13:29 [INFO]     -> Testing: input_1
+16:13:33 [INFO]        [!!!] Boolean-Based SQLi Found!
+16:13:33 [INFO]              Param: input_1 | Payload:  AND 1=1
+16:13:33 [INFO]              Info: Diff: 288 bytes
+16:13:33 [INFO]       [..] Capturing evidence with Playwright...
+16:13:33 [ERROR]       [-] Evidence capture failed: BrowserType.launch: Executable doesn't exist at Z:\Thesis\Code\AGENT-CE68-22\.venv\Lib\site-packages\playwright\driver\package\.local-browsers\chromium_headless_shell-1200\chrome-headless-shell-win64\chrome-headless-shell.exe
+╔════════════════════════════════════════════════════════════╗
+║ Looks like Playwright was just installed or updated.       ║
+║ Please run the following command to download new browsers: ║
+║                                                            ║
+║     playwright install                                     ║
+║                                                            ║
+║ <3 Playwright Team                                         ║
+╚════════════════════════════════════════════════════════════╝
+16:13:33 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/#/login ---
+16:13:33 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:33 [INFO] [SQLi] Scan: GET http://localhost:4040/#/login (form)
+16:13:33 [INFO]     -> Testing: mat-input-1
+16:13:34 [INFO]     -> Testing: email
+16:13:35 [INFO]     -> Testing: password
+16:13:36 [INFO]     -> Testing: rememberMe-input
+16:13:37 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/rest/user/whoami ---
+16:13:37 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:37 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/user/whoami (json)
+16:13:37 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/rest/captcha/ ---
+16:13:37 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:37 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/captcha/ (json)
+16:13:37 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/search/socket.io/ ---
+16:13:37 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:37 [INFO] [SQLi] Scan: GET http://localhost:4040/search/socket.io/ (json)
+16:13:37 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/search ---
+16:13:37 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:37 [INFO] [SQLi] Scan: GET http://localhost:4040/search (form)
+16:13:37 [INFO]     -> Testing: mat-input-1
+16:13:39 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/contact/report-content ---
+16:13:39 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:39 [INFO] [SQLi] Scan: GET http://localhost:4040/contact/report-content (form)
+16:13:39 [INFO]     -> Testing: content_url
+16:13:41 [INFO]     -> Testing: report
+16:13:42 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/signup/socket.io/ ---
+16:13:42 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:42 [INFO] [SQLi] Scan: GET http://localhost:4040/signup/socket.io/ (json)
+16:13:42 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/signup ---
+16:13:42 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:42 [INFO] [SQLi] Scan: GET http://localhost:4040/signup (form)
+16:13:42 [INFO]     -> Testing: ref_cta
+16:13:44 [INFO]     -> Testing: ref_loc
+16:13:45 [INFO]     -> Testing: ref_page
+16:13:47 [INFO]     -> Testing: source
+16:13:49 [INFO]     -> Testing: source_repo
+16:13:50 [INFO]     -> Testing: mat-input-1
+16:13:52 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/actions-user/socket.io/ ---
+16:13:52 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:52 [INFO] [SQLi] Scan: GET http://localhost:4040/actions-user/socket.io/ (json)
+16:13:52 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/actions-user ---
+16:13:52 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:52 [INFO] [SQLi] Scan: GET http://localhost:4040/actions-user (form)
+16:13:52 [INFO]     -> Testing: mat-input-1
+16:13:53 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/contact/report-abuse ---
+16:13:53 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:53 [INFO] [SQLi] Scan: GET http://localhost:4040/contact/report-abuse (form)
+16:13:53 [INFO]     -> Testing: report
+16:13:55 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/OWASP/socket.io/ ---
+16:13:55 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:55 [INFO] [SQLi] Scan: GET http://localhost:4040/OWASP/socket.io/ (json)
+16:13:55 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/OWASP ---
+16:13:55 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:55 [INFO] [SQLi] Scan: GET http://localhost:4040/OWASP (form)
+16:13:55 [INFO]     -> Testing: mat-input-1
+16:13:56 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/juice-shop/juice-shop/commits ---
+16:13:56 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:56 [INFO] [SQLi] Scan: GET http://localhost:4040/juice-shop/juice-shop/commits (form)
+16:13:56 [INFO]     -> Testing: author
+16:13:58 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/juice-shop/juice-shop/search ---
+16:13:58 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:13:58 [INFO] [SQLi] Scan: GET http://localhost:4040/juice-shop/juice-shop/search (form)
+16:13:58 [INFO]     -> Testing: l
+16:14:00 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/juice-shop/socket.io/ ---
+16:14:00 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:14:00 [INFO] [SQLi] Scan: GET http://localhost:4040/juice-shop/socket.io/ (json)
+16:14:00 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/juice-shop ---
+16:14:00 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:14:00 [INFO] [SQLi] Scan: GET http://localhost:4040/juice-shop (form)
+16:14:00 [INFO]     -> Testing: mat-input-1
+16:14:01 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/sponsors/socket.io/ ---
+16:14:01 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:14:01 [INFO] [SQLi] Scan: GET http://localhost:4040/sponsors/socket.io/ (json)
+16:14:01 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/sponsors ---
+16:14:01 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:14:01 [INFO] [SQLi] Scan: GET http://localhost:4040/sponsors (form)
+16:14:01 [INFO]     -> Testing: mat-input-1
+16:14:03 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/ ---
+16:14:03 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:14:03 [INFO] [SQLi] Scan: GET http://localhost:4040/ (form)
+16:14:03 [INFO]     -> Testing: mat-input-1
+16:14:04 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/login/socket.io/ ---
+16:14:04 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:14:04 [INFO] [SQLi] Scan: GET http://localhost:4040/login/socket.io/ (json)
+16:14:04 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/login ---
+16:14:04 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:14:04 [INFO] [SQLi] Scan: GET http://localhost:4040/login (form)
+16:14:04 [INFO]     -> Testing: return_to
+16:14:05 [INFO]     -> Testing: mat-input-1
+16:14:07 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/api/SecurityQuestions/ ---
+16:14:07 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:14:07 [INFO] [SQLi] Scan: GET http://localhost:4040/api/SecurityQuestions/ (json)
+16:14:07 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/#/register ---
+16:14:07 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:14:07 [INFO] [SQLi] Scan: GET http://localhost:4040/#/register (form)
+16:14:07 [INFO]     -> Testing: mat-input-1
+16:14:08 [INFO]     -> Testing: emailControl
+16:14:09 [INFO]     -> Testing: passwordControl
+16:14:09 [INFO]     -> Testing: repeatPasswordControl
+16:14:10 [INFO]     -> Testing: securityAnswerControl
+16:14:11 [INFO] [ScanEngine] --- Analyzing: http://localhost:4040/search#/contact ---
+16:14:11 [INFO] [ScanEngine][Job 2] Running SQLi Scan...
+16:14:11 [INFO] [SQLi] Scan: GET http://localhost:4040/search#/contact (form)
+16:14:11 [INFO]     -> Testing: mat-input-1
+16:14:13 [INFO]     -> Testing: userId
+16:14:15 [INFO]     -> Testing: mat-input-2
+16:14:17 [INFO]     -> Testing: input_3
+16:14:18 [INFO]     -> Testing: captchaControl

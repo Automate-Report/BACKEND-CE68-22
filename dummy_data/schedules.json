@@ -1,0 +1,41 @@
+[
+  {
+    "schedule_id": 1,
+    "schedule_name": "OWASP Juice Shop",
+    "project_id": 21,
+    "asset_id": 6,
+    "cron_expression": "Not Repeat",
+    "attack_type": "XSS",
+    "is_active": false,
+    "start_date": "2026-02-21 13:24:33.549000+00:00",
+    "end_date": "2026-02-21 13:24:33.549000+00:00",
+    "created_at": "2026-02-21T20:23:34.176432",
+    "updated_at": "2026-02-21T20:23:42.626829"
+  },
+  {
+    "schedule_id": 2,
+    "schedule_name": "OWASP Juice Shop",
+    "project_id": 21,
+    "asset_id": 6,
+    "cron_expression": "Not Repeat",
+    "attack_type": "XSS",
+    "is_active": false,
+    "start_date": "2026-02-23 09:20:59.536000+00:00",
+    "end_date": "2026-02-23 09:20:59.536000+00:00",
+    "created_at": "2026-02-23T16:19:59.854774",
+    "updated_at": "2026-02-23T16:20:06.624820"
+  },
+  {
+    "schedule_id": 3,
+    "schedule_name": "DVWA1",
+    "project_id": 21,
+    "asset_id": 8,
+    "cron_expression": "Not Repeat",
+    "attack_type": "XSS",
+    "is_active": false,
+    "start_date": "2026-02-23 09:27:46.647000+00:00",
+    "end_date": "2026-02-23 09:27:46.647000+00:00",
+    "created_at": "2026-02-23T16:26:46.652321",
+    "updated_at": "2026-02-23T16:26:47.270076"
+  }
+]

@@ -6,6 +6,7 @@ class JobWorkerPayload(BaseModel):
     job_id: int
     target_url: str
     attack_type: str
+    credential: Optional[dict] = None
 
 class JobStatusPayload(BaseModel):
     job_id: int
@@ -25,3 +26,19 @@ class CountStatusResponse(BaseModel):
     completed: int
     failed: int
 
+class SummaryInfoByWorker(BaseModel):
+    total_jobs: int
+    total_completed: int
+    total_failed: int
+    total_findings: int
+
+class GetJobByWorker(BaseModel):
+    id: int
+    name: str
+    schedule_id: int
+    schedule_name: str
+    attack_type: str
+    status: str
+    started_at: datetime
+    finished_at: Optional[datetime] = None
+    vuln_count: int

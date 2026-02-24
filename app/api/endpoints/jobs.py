@@ -1,16 +1,18 @@
 from fastapi import APIRouter, Depends, Query
 from typing import List, Optional
-from app.schemas.job import JobStatusPayload, JobStatusResponse, CountStatusResponse
+from app.schemas.job import JobStatusPayload, JobStatusResponse, CountStatusResponse, SummaryInfoByWorker, GetJobByWorker
 from app.schemas.pagination import PaginatedResponse
 from app.services.worker import worker_service
 from app.services.job import job_service
+from app.services.schedule import schedule_service
+from app.services.vulnerability import vuln_service
 from app.deps.auth import get_current_user
 
 router = APIRouter()
 
 # update job status
 @router.post("/update_status/", status_code=210)
-def update_status_job(payload:  JobStatusPayload, current_worker: int = Depends(worker_service.verify_token)):
+async def update_status_job(payload:  JobStatusPayload, current_worker: int = Depends(worker_service.verify_token)):
     success = job_service.update_job_status(payload.job_id, payload.status)
     return success
 
@@ -36,9 +38,45 @@ async def get_jobs_by_schedule(
     return result
 
 @router.get("/number/{schedule_id}", response_model=CountStatusResponse)
-def get_number_job_status_by_schedule_id(schedule_id: int):
+async def get_number_job_status_by_schedule_id(schedule_id: int):
 
     result = job_service.get_number_job_status_by_schedule_id(schedule_id)
 
+    return result
+
+@router.get("/summary/{worker_id}", response_model=SummaryInfoByWorker)
+async def get_summary_info_job_by_worker_id(worker_id: int):
+    job_info = job_service.get_summary_info_by_worker_id(worker_id)
+    return job_info
+
+@router.get("/worker/{worker_id}", response_model=PaginatedResponse[GetJobByWorker])
+async def get_jobs_by_worker(
+    worker_id: int,
+    page: int = Query(1, ge=1, description="Page number"), 
+    size: int = Query(10, ge=1, le=100, description="Items per page"),
+    sort_by: Optional[str] = Query(None, description="Column to sort by"),
+    order: Optional[str] = Query("asc", description="asc or desc"),
+    search: Optional[str] = Query(None, description="Search box"),
+    filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
+    user = Depends(get_current_user),
+):
+    result = job_service.get_job_by_worker_id(
+        worker_id=worker_id,
+        page=page,
+        size=size,
+        sort_by=sort_by,
+        order=order
+    )
+
+    items = result.get("items")
+
+    for job in items:
+        schedule = schedule_service.get_by_id(job.get("schedule_id", -1))
+        vuln_cnt = vuln_service.cnt_vuln_by_job_id(job.get("id", -1))
+        job["schedule_name"] = schedule["schedule_name"]
+        job["attack_type"] = schedule["attack_type"]
+        job["vuln_count"] = vuln_cnt
+
+    result["items"] = items
     return result
 

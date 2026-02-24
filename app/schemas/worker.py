@@ -13,13 +13,14 @@ class WorkerResponse(BaseModel):
     thread_number: int
     current_load: int
     hostname: Optional[str] = None
+    internal_ip: Optional[str] = None
     status: str
     isActive: bool
     access_key_id: Optional[int] = None
     created_at: datetime
     updated_at: datetime
-    last_heatbeat: Optional[datetime] = None
-
+    last_heartbeat: Optional[datetime] = None
+    
     class Config:
         orm_mode = True # เพื่อให้ Pydantic อ่านข้อมูลจาก ORM objects ได้ ไว้ใช้กับ SQLAlchemy ตอนทำ database
 
@@ -29,9 +30,10 @@ class WorkerAccessKey(BaseModel):
 
 #-----------------Worker Agent----------------------#
 class VerifyRequest(BaseModel):
-    key: str
     worker_id: int
+    key: str
     hostname: str
+    internal_ip: str
 
 class HandshakeRequest(BaseModel):
     registration_token: str
@@ -40,6 +42,8 @@ class HandshakeRequest(BaseModel):
 class HeartBeatPayload(BaseModel):
     current_load: int
     status: str
+    internal_ip: str
+    hostname: str
 
 class AuthRequest(BaseModel):
     api_key: str

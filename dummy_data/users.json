@@ -6,7 +6,6 @@
     "password": "securepassword",
     "created_at": "2025-12-05T18:48:00",
     "updated_at": "2025-12-05T18:48:00",
-    "session_token": null,
     "google_id": null,
     "picture": "path/to/pic.png"
   },
@@ -17,7 +16,6 @@
     "password": "securepassword",
     "created_at": "2025-12-05T18:48:00",
     "updated_at": "2025-12-05T18:48:00",
-    "session_token": null,
     "google_id": null,
     "picture": "path/to/pic.png"
   },
@@ -28,7 +26,6 @@
     "password": "string",
     "created_at": "2025-12-13T14:01:18.919868",
     "updated_at": "2025-12-13T14:01:18.919868",
-    "session_token": null,
     "google_id": null,
     "picture": null
   },
@@ -39,7 +36,6 @@
     "password": "asdfjkl;",
     "created_at": "2025-12-13T14:11:41.806507",
     "updated_at": "2025-12-13T14:11:41.806507",
-    "session_token": null,
     "google_id": null,
     "picture": null
   },
@@ -50,7 +46,6 @@
     "password": null,
     "created_at": "2026-01-09T16:43:55.691781",
     "updated_at": "2026-01-09T16:43:55.691781",
-    "session_token": null,
     "google_id": "111177598431067623614",
     "picture": "https://lh3.googleusercontent.com/a/ACg8ocJBGGLYVnK3AzXKyY7o-1W6MZNicyUagVyhC-OQq_QPY7ioL1k=s96-c"
   },
@@ -61,7 +56,6 @@
     "password": "string",
     "created_at": "2026-01-06T16:52:58.638287",
     "updated_at": "2026-01-06T16:52:58.638307",
-    "session_token": null,
     "google_id": null,
     "picture": null
   },
@@ -72,8 +66,37 @@
     "password": null,
     "created_at": "2026-01-31T13:38:16.664029",
     "updated_at": "2026-01-31T13:38:16.664029",
-    "session_token": null,
     "google_id": "109708549547678263729",
     "picture": "https://lh3.googleusercontent.com/a/ACg8ocK7lph6gvzbhGSMPyo-ZUURMpxdfjiWRTM-dmXEacpRtdb9dA=s96-c"
+  },
+  {
+    "firstname": "Somchai",
+    "lastname": "Jaidee",
+    "email": "somchai@tech.co.th",
+    "password": "securepassword",
+    "created_at": "2026-01-31T13:38:16.664029",
+    "updated_at": "2026-01-31T13:38:16.664029",
+    "google_id": null,
+    "picture": null
+  },
+  {
+    "firstname": "Somying",
+    "lastname": "Rakdee",
+    "email": "somying@shopdee.com",
+    "password": "securepassword",
+    "created_at": "2026-01-31T13:38:16.664029",
+    "updated_at": "2026-01-31T13:38:16.664029",
+    "google_id": null,
+    "picture": null
+  },
+  {
+    "firstname": "Sompong",
+    "lastname": "Kean-code",
+    "email": "sompong@shopdee.com",
+    "password": "securepassword",
+    "created_at": "2026-01-31T13:38:16.664029",
+    "updated_at": "2026-01-31T13:38:16.664029",
+    "google_id": null,
+    "picture": null
   }
 ]

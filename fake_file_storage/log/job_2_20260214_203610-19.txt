@@ -1,0 +1,122 @@
+20:34:59 [INFO] [ScanEngine][Job 2] Starting Discovery Phase...
+20:34:59 [INFO] [Crawler] Starting Crawl on: http://testphp.vulnweb.com/search.php (Depth: 2)
+20:35:01 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/search.php (2 params)
+20:35:01 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/index.php (2 params)
+20:35:02 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/guestbook.php (4 params)
+20:35:38 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/userinfo.php (5 params)
+20:35:38 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/artists.php (2 params)
+20:35:38 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/categories.php (2 params)
+20:35:39 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/disclaimer.php (2 params)
+20:35:43 [INFO] [Crawler] Found a way in! Session captured.
+20:35:43 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/login.php (5 params)
+20:35:45 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/cart.php (2 params)
+20:35:47 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/ (2 params)
+20:35:47 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/logout.php (2 params)
+20:35:47 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/listproducts.php (2 params)
+20:35:47 [INFO] [ScanEngine][Job 2] Discovery finished. Unique targets: 12
+20:35:47 [INFO] [Orchestrator] 🍪 Passing session cookies to all scanners.
+20:35:47 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+20:35:47 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/search.php ---
+20:35:47 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:35:47 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/search.php (Type: form)
+20:35:47 [INFO]     -> Analyzing: searchFor
+20:35:48 [INFO]     -> Analyzing: goButton
+20:35:48 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:35:48 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/search.php
+20:35:49 [ERROR]     [-] DOM Scan Critical Error: DOMScanner._run_scan_logic() takes 5 positional arguments but 6 were given
+20:35:49 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/index.php ---
+20:35:49 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:35:49 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/index.php (Type: form)
+20:35:49 [INFO]     -> Analyzing: searchFor
+20:35:49 [INFO]     -> Analyzing: goButton
+20:35:49 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:35:49 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/index.php
+20:35:50 [ERROR]     [-] DOM Scan Critical Error: DOMScanner._run_scan_logic() takes 5 positional arguments but 6 were given
+20:35:50 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/guestbook.php ---
+20:35:50 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:35:50 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/guestbook.php (Type: form)
+20:35:50 [INFO]     -> Analyzing: text
+20:35:50 [INFO]     -> Analyzing: submit
+20:35:51 [INFO]     -> Analyzing: searchFor
+20:35:51 [INFO]     -> Analyzing: goButton
+20:35:51 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:35:51 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/guestbook.php
+20:35:52 [ERROR]     [-] DOM Scan Critical Error: DOMScanner._run_scan_logic() takes 5 positional arguments but 6 were given
+20:35:52 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/userinfo.php ---
+20:35:52 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:35:52 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/userinfo.php (Type: form)
+20:35:52 [INFO]     -> Analyzing: uname
+20:35:52 [INFO]     -> Analyzing: pass
+20:35:53 [INFO]     -> Analyzing: anonymous_input_3
+20:35:53 [INFO]     -> Analyzing: searchFor
+20:35:54 [INFO]     -> Analyzing: goButton
+20:35:55 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:35:55 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/userinfo.php
+20:35:56 [ERROR]     [-] DOM Scan Critical Error: DOMScanner._run_scan_logic() takes 5 positional arguments but 6 were given
+20:35:56 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/artists.php ---
+20:35:56 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:35:56 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/artists.php (Type: form)
+20:35:56 [INFO]     -> Analyzing: searchFor
+20:35:56 [INFO]     -> Analyzing: goButton
+20:35:56 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:35:56 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/artists.php
+20:35:57 [ERROR]     [-] DOM Scan Critical Error: DOMScanner._run_scan_logic() takes 5 positional arguments but 6 were given
+20:35:57 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/categories.php ---
+20:35:57 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:35:57 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/categories.php (Type: form)
+20:35:57 [INFO]     -> Analyzing: searchFor
+20:35:57 [INFO]     -> Analyzing: goButton
+20:35:58 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:35:58 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/categories.php
+20:35:58 [ERROR]     [-] DOM Scan Critical Error: DOMScanner._run_scan_logic() takes 5 positional arguments but 6 were given
+20:35:58 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/disclaimer.php ---
+20:35:58 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:35:58 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/disclaimer.php (Type: form)
+20:35:58 [INFO]     -> Analyzing: searchFor
+20:35:59 [INFO]     -> Analyzing: goButton
+20:35:59 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:35:59 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/disclaimer.php
+20:35:59 [ERROR]     [-] DOM Scan Critical Error: DOMScanner._run_scan_logic() takes 5 positional arguments but 6 were given
+20:36:00 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/login.php ---
+20:36:00 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:36:00 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/login.php (Type: form)
+20:36:00 [INFO]     -> Analyzing: uname
+20:36:00 [INFO]     -> Analyzing: pass
+20:36:00 [INFO]     -> Analyzing: anonymous_input_3
+20:36:00 [INFO]     -> Analyzing: searchFor
+20:36:00 [INFO]     -> Analyzing: goButton
+20:36:01 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:36:01 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/login.php
+20:36:01 [ERROR]     [-] DOM Scan Critical Error: DOMScanner._run_scan_logic() takes 5 positional arguments but 6 were given
+20:36:02 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/cart.php ---
+20:36:02 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:36:02 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/cart.php (Type: form)
+20:36:02 [INFO]     -> Analyzing: searchFor
+20:36:02 [INFO]     -> Analyzing: goButton
+20:36:02 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:36:02 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/cart.php
+20:36:03 [ERROR]     [-] DOM Scan Critical Error: DOMScanner._run_scan_logic() takes 5 positional arguments but 6 were given
+20:36:03 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/ ---
+20:36:03 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:36:03 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/ (Type: form)
+20:36:03 [INFO]     -> Analyzing: searchFor
+20:36:03 [INFO]     -> Analyzing: goButton
+20:36:04 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:36:04 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/
+20:36:04 [ERROR]     [-] DOM Scan Critical Error: DOMScanner._run_scan_logic() takes 5 positional arguments but 6 were given
+20:36:04 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/logout.php ---
+20:36:04 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:36:04 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/logout.php (Type: form)
+20:36:04 [INFO]     -> Analyzing: searchFor
+20:36:05 [INFO]     -> Analyzing: goButton
+20:36:06 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:36:06 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/logout.php
+20:36:06 [ERROR]     [-] DOM Scan Critical Error: DOMScanner._run_scan_logic() takes 5 positional arguments but 6 were given
+20:36:06 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/listproducts.php ---
+20:36:06 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:36:06 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/listproducts.php (Type: form)
+20:36:06 [INFO]     -> Analyzing: searchFor
+20:36:07 [INFO]     -> Analyzing: goButton
+20:36:07 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:36:07 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/listproducts.php
+20:36:07 [ERROR]     [-] DOM Scan Critical Error: DOMScanner._run_scan_logic() takes 5 positional arguments but 6 were given

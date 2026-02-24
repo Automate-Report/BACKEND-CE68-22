@@ -34,3 +34,5 @@ pyjwt
 croniter
 httpx
 cvss
+jwt
+cvss

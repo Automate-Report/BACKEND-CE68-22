@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "vuln_type": "SQL Injection",
+        "sub_types": ["Error-Based SQLi", "Time-Based SQLi", "Boolean-Based SQLi", "Union-Based SQLi"],
+        "cvss_score": 9.8,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "severity": "CRITICAL",
+        "description": "The application constructs SQL queries by concatenating user-supplied data without proper sanitization. An attacker can manipulate these queries to access, modify, or delete sensitive data in the database.",
+        "recommendation": "1. Use Parameterized Queries (Prepared Statements).\n2. Implement robust input validation using an allow-list.\n3. Enforce the Principle of Least Privilege for database accounts."
+    },
+    {
+        "id": 2,
+        "vuln_type": "Cross-Site Scripting (XSS)",
+        "sub_types": ["Reflected XSS", "Stored XSS", "DOM XSS"],
+        "cvss_score": 6.1,
+        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+        "severity": "MEDIUM",
+        "description": "The application includes untrusted data in a web page without proper validation or escaping. This allows an attacker to execute malicious scripts in the victim's browser, leading to session hijacking or unauthorized actions.",
+        "recommendation": "1. Apply Context-Aware Output Encoding (e.g., HTML, JS, CSS encoding).\n2. Implement a strong Content Security Policy (CSP).\n3. Use modern web frameworks that automatically handle XSS protection."
+    }
+]

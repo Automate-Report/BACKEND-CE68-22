@@ -1,0 +1,228 @@
+16:26:47 [INFO] [ScanEngine] Starting Discovery on http://localhost:4050...
+16:26:47 [INFO] [Crawler] Starting Crawl on: http://localhost:4050
+16:26:49 [INFO] [*] Login form detected at http://localhost:4050
+16:26:50 [INFO]      [+] Discovered: POST /login.php ['username', 'password', 'Login', 'user_token']
+16:26:54 [INFO] [+] Login Successful! Restarting discovery for internal pages...
+16:27:03 [INFO]     [..] Extracting endpoints from JS files...
+16:27:03 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:27:12 [INFO]      [+] Discovered: GET /vulnerabilities/captcha/ ['password_new', 'password_conf']
+16:27:12 [INFO]     [..] Extracting endpoints from JS files...
+16:27:12 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:27:16 [INFO]      [+] Discovered: GET /vulnerabilities/exec/ ['ip']
+16:27:16 [INFO]     [..] Extracting endpoints from JS files...
+16:27:16 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:27:25 [INFO]     [..] Extracting endpoints from JS files...
+16:27:25 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:27:29 [INFO]      [+] Discovered: GET /vulnerabilities/xss_s/ ['txtName', 'mtxMessage']
+16:27:29 [INFO]     [..] Extracting endpoints from JS files...
+16:27:29 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:27:33 [INFO]      [+] Discovered: GET /logout.php ['username', 'password']
+16:27:33 [INFO]     [..] Extracting endpoints from JS files...
+16:27:33 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:27:37 [INFO]      [+] Discovered: GET /security.php ['username', 'password']
+16:27:37 [INFO]     [..] Extracting endpoints from JS files...
+16:27:37 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:27:45 [INFO]     [..] Extracting endpoints from JS files...
+16:27:45 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:27:49 [INFO]      [+] Discovered: GET /vulnerabilities/sqli/ ['username', 'password']
+16:27:49 [INFO]     [..] Extracting endpoints from JS files...
+16:27:49 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:27:53 [INFO]      [+] Discovered: GET /vulnerabilities/xss_r/ ['username', 'password']
+16:27:53 [INFO]     [..] Extracting endpoints from JS files...
+16:27:53 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:28:02 [INFO]     [..] Extracting endpoints from JS files...
+16:28:02 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:28:05 [INFO]      [+] Discovered: GET /vulnerabilities/upload/ ['username', 'password']
+16:28:05 [INFO]     [..] Extracting endpoints from JS files...
+16:28:05 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:28:09 [INFO]      [+] Discovered: GET /vulnerabilities/sqli_blind/ ['username', 'password']
+16:28:09 [INFO]     [..] Extracting endpoints from JS files...
+16:28:09 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:28:13 [INFO]      [+] Discovered: GET /phpinfo.php ['username', 'password']
+16:28:13 [INFO]     [..] Extracting endpoints from JS files...
+16:28:13 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:28:16 [INFO]      [+] Discovered: GET /vulnerabilities/brute/ ['username', 'password']
+16:28:16 [INFO]     [..] Extracting endpoints from JS files...
+16:28:16 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:28:20 [INFO]      [+] Discovered: GET /vulnerabilities/csrf/ ['username', 'password']
+16:28:20 [INFO]     [..] Extracting endpoints from JS files...
+16:28:20 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:28:20 [INFO]      [+] Discovered: GET /vulnerabilities/fi ['page']
+16:28:23 [INFO]      [+] Discovered: GET /vulnerabilities/fi/ ['username', 'password']
+16:28:23 [INFO]     [..] Extracting endpoints from JS files...
+16:28:23 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:28:27 [INFO]     [..] Extracting endpoints from JS files...
+16:28:27 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:28:27 [INFO]      [+] Discovered: GET /instructions.php ['doc']
+16:28:36 [INFO]     [..] Extracting endpoints from JS files...
+16:28:36 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:28:44 [INFO]     [..] Extracting endpoints from JS files...
+16:28:44 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:28:53 [INFO]     [..] Extracting endpoints from JS files...
+16:28:53 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:29:01 [INFO]     [..] Extracting endpoints from JS files...
+16:29:01 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:29:10 [INFO]     [..] Extracting endpoints from JS files...
+16:29:10 [INFO]     [..] Triggering smart interactions to discover APIs...
+16:29:10 [INFO] [ScanEngine] Discovery finished. Unique targets found: 16
+16:29:10 [INFO] [Orchestrator] 🍪 Session captured. Syncing with scanners...
+16:29:10 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+16:29:10 [INFO] --- XSS Scan on: http://localhost:4050/login.php (POST) ---
+16:29:10 [INFO] [XSS] Scanning POST on http://localhost:4050/login.php (Type: form)
+16:29:10 [INFO]     -> Analyzing: username
+16:29:10 [INFO]     -> Analyzing: password
+16:29:10 [INFO]     -> Analyzing: Login
+16:29:10 [INFO]     -> Analyzing: user_token
+16:29:10 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/login.php
+16:29:12 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:29:13 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:29:43 [INFO]     -> Testing Parameter: username
+16:29:43 [INFO]        [+] Found target via selector: [name='username']
+16:29:49 [INFO]     -> Testing Parameter: password
+16:29:49 [INFO]        [+] Found target via selector: [name='password']
+16:29:55 [INFO]     -> Testing Parameter: Login
+16:29:55 [INFO]        [+] Found target via selector: [name='Login']
+16:29:56 [INFO]     -> Testing Parameter: user_token
+16:30:08 [INFO] --- XSS Scan on: http://localhost:4050/vulnerabilities/captcha/ (GET) ---
+16:30:08 [INFO] [XSS] Scanning GET on http://localhost:4050/vulnerabilities/captcha/ (Type: form)
+16:30:08 [INFO]     -> Analyzing: password_new
+16:30:08 [INFO]     -> Analyzing: password_conf
+16:30:08 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/vulnerabilities/captcha/
+16:30:10 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:30:11 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:30:50 [INFO]     -> Testing Parameter: password_new
+16:31:02 [INFO]     -> Testing Parameter: password_conf
+16:31:14 [INFO] --- XSS Scan on: http://localhost:4050/vulnerabilities/exec/ (GET) ---
+16:31:14 [INFO] [XSS] Scanning GET on http://localhost:4050/vulnerabilities/exec/ (Type: form)
+16:31:14 [INFO]     -> Analyzing: ip
+16:31:14 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/vulnerabilities/exec/
+16:31:16 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:31:17 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:31:56 [INFO]     -> Testing Parameter: ip
+16:32:08 [INFO] --- XSS Scan on: http://localhost:4050/vulnerabilities/xss_s/ (GET) ---
+16:32:08 [INFO] [XSS] Scanning GET on http://localhost:4050/vulnerabilities/xss_s/ (Type: form)
+16:32:08 [INFO]     -> Analyzing: txtName
+16:32:08 [INFO]     -> Analyzing: mtxMessage
+16:32:08 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/vulnerabilities/xss_s/
+16:32:10 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:32:11 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:32:50 [INFO]     -> Testing Parameter: txtName
+16:33:02 [INFO]     -> Testing Parameter: mtxMessage
+16:33:14 [INFO] --- XSS Scan on: http://localhost:4050/logout.php (GET) ---
+16:33:14 [INFO] [XSS] Scanning GET on http://localhost:4050/logout.php (Type: form)
+16:33:14 [INFO]     -> Analyzing: username
+16:33:14 [INFO]     -> Analyzing: password
+16:33:14 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/logout.php
+16:33:16 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:33:17 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:33:20 [INFO]     -> Testing Parameter: username
+16:33:20 [INFO]     -> Testing Parameter: password
+16:33:20 [INFO] --- XSS Scan on: http://localhost:4050/security.php (GET) ---
+16:33:20 [INFO] [XSS] Scanning GET on http://localhost:4050/security.php (Type: form)
+16:33:20 [INFO]     -> Analyzing: username
+16:33:20 [INFO]     -> Analyzing: password
+16:33:20 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/security.php
+16:33:23 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:33:23 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:33:27 [INFO]     -> Testing Parameter: username
+16:33:27 [INFO]     -> Testing Parameter: password
+16:33:27 [INFO] --- XSS Scan on: http://localhost:4050/vulnerabilities/sqli/ (GET) ---
+16:33:27 [INFO] [XSS] Scanning GET on http://localhost:4050/vulnerabilities/sqli/ (Type: form)
+16:33:27 [INFO]     -> Analyzing: username
+16:33:27 [INFO]     -> Analyzing: password
+16:33:27 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/vulnerabilities/sqli/
+16:33:30 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:33:31 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:34:10 [INFO]     -> Testing Parameter: username
+16:34:10 [INFO]        [+] Found target via selector: [name='username']
+16:34:15 [INFO]     -> Testing Parameter: password
+16:34:15 [INFO]        [+] Found target via selector: [name='password']
+16:34:22 [INFO] --- XSS Scan on: http://localhost:4050/vulnerabilities/xss_r/ (GET) ---
+16:34:22 [INFO] [XSS] Scanning GET on http://localhost:4050/vulnerabilities/xss_r/ (Type: form)
+16:34:22 [INFO]     -> Analyzing: username
+16:34:22 [INFO]     -> Analyzing: password
+16:34:22 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/vulnerabilities/xss_r/
+16:34:24 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:34:24 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:35:04 [INFO]     -> Testing Parameter: username
+16:35:04 [INFO]        [+] Found target via selector: [name='username']
+16:35:10 [INFO]     -> Testing Parameter: password
+16:35:10 [INFO]        [+] Found target via selector: [name='password']
+16:35:16 [INFO] --- XSS Scan on: http://localhost:4050/vulnerabilities/upload/ (GET) ---
+16:35:16 [INFO] [XSS] Scanning GET on http://localhost:4050/vulnerabilities/upload/ (Type: form)
+16:35:16 [INFO]     -> Analyzing: username
+16:35:16 [INFO]     -> Analyzing: password
+16:35:16 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/vulnerabilities/upload/
+16:35:18 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:35:19 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:35:58 [INFO]     -> Testing Parameter: username
+16:35:58 [INFO]        [+] Found target via selector: [name='username']
+16:36:04 [INFO]     -> Testing Parameter: password
+16:36:04 [INFO]        [+] Found target via selector: [name='password']
+16:36:10 [INFO] --- XSS Scan on: http://localhost:4050/vulnerabilities/sqli_blind/ (GET) ---
+16:36:10 [INFO] [XSS] Scanning GET on http://localhost:4050/vulnerabilities/sqli_blind/ (Type: form)
+16:36:10 [INFO]     -> Analyzing: username
+16:36:10 [INFO]     -> Analyzing: password
+16:36:10 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/vulnerabilities/sqli_blind/
+16:36:12 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:36:13 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:36:52 [INFO]     -> Testing Parameter: username
+16:36:52 [INFO]        [+] Found target via selector: [name='username']
+16:36:58 [INFO]     -> Testing Parameter: password
+16:36:58 [INFO]        [+] Found target via selector: [name='password']
+16:37:04 [INFO] --- XSS Scan on: http://localhost:4050/phpinfo.php (GET) ---
+16:37:04 [INFO] [XSS] Scanning GET on http://localhost:4050/phpinfo.php (Type: form)
+16:37:04 [INFO]     -> Analyzing: username
+16:37:04 [INFO]     -> Analyzing: password
+16:37:04 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/phpinfo.php
+16:37:06 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:37:07 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:37:10 [INFO]     -> Testing Parameter: username
+16:37:10 [INFO]     -> Testing Parameter: password
+16:37:10 [INFO] --- XSS Scan on: http://localhost:4050/vulnerabilities/brute/ (GET) ---
+16:37:10 [INFO] [XSS] Scanning GET on http://localhost:4050/vulnerabilities/brute/ (Type: form)
+16:37:10 [INFO]     -> Analyzing: username
+16:37:10 [INFO]     -> Analyzing: password
+16:37:10 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/vulnerabilities/brute/
+16:37:13 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:37:13 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:37:52 [INFO]     -> Testing Parameter: username
+16:37:52 [INFO]        [+] Found target via selector: [name='username']
+16:37:58 [INFO]     -> Testing Parameter: password
+16:37:58 [INFO]        [+] Found target via selector: [name='password']
+16:38:04 [INFO] --- XSS Scan on: http://localhost:4050/vulnerabilities/csrf/ (GET) ---
+16:38:04 [INFO] [XSS] Scanning GET on http://localhost:4050/vulnerabilities/csrf/ (Type: form)
+16:38:04 [INFO]     -> Analyzing: username
+16:38:04 [INFO]     -> Analyzing: password
+16:38:04 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/vulnerabilities/csrf/
+16:38:06 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:38:07 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:38:46 [INFO]     -> Testing Parameter: username
+16:38:46 [INFO]        [+] Found target via selector: [name='username']
+16:38:52 [INFO]     -> Testing Parameter: password
+16:38:52 [INFO]        [+] Found target via selector: [name='password']
+16:38:58 [INFO] --- XSS Scan on: http://localhost:4050/vulnerabilities/fi (GET) ---
+16:38:58 [INFO] [XSS] Scanning GET on http://localhost:4050/vulnerabilities/fi (Type: form)
+16:38:58 [INFO]     -> Analyzing: page
+16:38:58 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/vulnerabilities/fi
+16:39:00 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:39:01 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:39:40 [INFO]     -> Testing Parameter: page
+16:39:52 [INFO] --- XSS Scan on: http://localhost:4050/vulnerabilities/fi/ (GET) ---
+16:39:52 [INFO] [XSS] Scanning GET on http://localhost:4050/vulnerabilities/fi/ (Type: form)
+16:39:52 [INFO]     -> Analyzing: username
+16:39:52 [INFO]     -> Analyzing: password
+16:39:52 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/vulnerabilities/fi/
+16:39:54 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:39:55 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:40:34 [INFO]     -> Testing Parameter: username
+16:40:34 [INFO]        [+] Found target via selector: [name='username']
+16:40:40 [INFO]     -> Testing Parameter: password
+16:40:40 [INFO]        [+] Found target via selector: [name='password']
+16:40:46 [INFO] --- XSS Scan on: http://localhost:4050/instructions.php (GET) ---
+16:40:46 [INFO] [XSS] Scanning GET on http://localhost:4050/instructions.php (Type: form)
+16:40:46 [INFO]     -> Analyzing: doc
+16:40:46 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/instructions.php
+16:40:48 [INFO] [DOM Scanner] LocalStorage injected successfully.
+16:40:53 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+16:41:23 [INFO]     -> Testing Parameter: doc

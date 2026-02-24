@@ -1,0 +1,3 @@
+Scanning started
+Found 1 vulnerability
+Scan finished

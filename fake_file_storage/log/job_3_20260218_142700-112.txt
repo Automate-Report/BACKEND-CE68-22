@@ -1,0 +1,12 @@
+14:26:24 [INFO] [ScanEngine] Starting Discovery on http://localhost:4050/login.php...
+14:26:24 [INFO] [Crawler] Starting Crawl on: http://localhost:4050/login.php
+14:26:26 [INFO] [*] Login detected at http://localhost:4050/login.php
+14:26:26 [INFO]      [+] Discovered: POST /login.php ['username', 'password', 'Login', 'user_token']
+14:26:26 [WARNING] [!] Skip http://localhost:4050/login.php: 'AuthHandler' object has no attribute '_try_default_creds'
+14:26:27 [INFO] [ScanEngine] Discovery finished. Unique targets found: 1
+14:26:27 [INFO] --- SQLi Scan on: http://localhost:4050/login.php (POST) ---
+14:26:27 [INFO] [SQLi] Scan: POST http://localhost:4050/login.php
+14:26:27 [INFO]     -> Testing Parameter: username
+14:26:35 [INFO]     -> Testing Parameter: password
+14:26:42 [INFO]     -> Testing Parameter: Login
+14:26:50 [INFO]     -> Testing Parameter: user_token

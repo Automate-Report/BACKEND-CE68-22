@@ -1,8 +1,12 @@
 from app.deps.auth import get_current_user
+from typing import List
 from fastapi import APIRouter, HTTPException, Request, Depends
 from fastapi.responses import JSONResponse, RedirectResponse
-from app.schemas.userauthen import LoginRequest, UserCreate
-from app.services.userauthen import userauthen_service # เรียก Service ที่เราสร้างตะกี้
+from app.schemas.userauthen import LoginRequest, UserCreate, UserInfo
+
+from app.services.userauthen import userauthen_service
+from app.services.project_member import project_member_service
+
 from app.core.google_oauth import oauth
 from app.core.config import settings
 
@@ -83,7 +87,12 @@ async def google_callback(request: Request):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+@router.get("/username/{user_id}")
+async def get_user_name_by_user_id(user_id: str):
+    username = userauthen_service.get_username_by_id(user_id)
 
+    return username
 
 # FOR TESTING COOKIES AND TOKEN BLACKLIST, DELETE LATER
 @router.get("/me")
@@ -91,7 +100,10 @@ async def protected(user = Depends(get_current_user)):
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
     
+    user_info = userauthen_service.get_user_by_id(user["sub"])
+    
     return {
         "message": "You are authenticated",
-        "user": user["sub"]
+        "user": user["sub"],
+        "name": f"{user_info["firstname"]} {user_info["lastname"]}"
     }

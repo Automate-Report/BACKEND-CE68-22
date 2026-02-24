@@ -1,0 +1,45 @@
+20:08:42 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/...
+20:08:42 [INFO] [Crawler] Starting Crawl on: http://localhost:4040/
+20:08:44 [INFO]      [+] Discovered: GET /api/Challenges ['name']
+20:08:44 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:08:44 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:08:44 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:08:45 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:08:45 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:08:48 [INFO]      [+] Discovered: GET / ['mat-input-1']
+20:08:48 [INFO]     [..] Extracting endpoints from JS files...
+20:08:48 [INFO]     [..] Triggering smart interactions to discover APIs...
+20:08:51 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:08:51 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:08:51 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:08:51 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:08:51 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:08:55 [INFO]      [+] Discovered: GET /photo-wall ['mat-input-1']
+20:08:55 [INFO]     [..] Extracting endpoints from JS files...
+20:08:55 [INFO]     [..] Triggering smart interactions to discover APIs...
+20:08:57 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:08:57 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:08:57 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:09:00 [INFO]      [+] Discovered: GET /search ['mat-input-1']
+20:09:00 [INFO]     [..] Extracting endpoints from JS files...
+20:09:00 [INFO]     [..] Triggering smart interactions to discover APIs...
+20:09:02 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:09:02 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:09:02 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:09:05 [INFO]      [+] Discovered: GET /login ['mat-input-1']
+20:09:05 [INFO]     [..] Extracting endpoints from JS files...
+20:09:05 [INFO]     [..] Triggering smart interactions to discover APIs...
+20:09:07 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:09:07 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:09:07 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:09:11 [INFO]      [+] Discovered: GET /about ['mat-input-1']
+20:09:11 [INFO]     [..] Extracting endpoints from JS files...
+20:09:11 [INFO]     [..] Triggering smart interactions to discover APIs...
+20:09:13 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:09:13 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:09:13 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:09:16 [INFO]      [+] Discovered: GET /contact ['mat-input-1']
+20:09:16 [INFO]     [..] Extracting endpoints from JS files...
+20:09:16 [INFO]     [..] Triggering smart interactions to discover APIs...
+20:09:17 [INFO] [ScanEngine] Discovery finished. Unique targets found: 7
+20:09:17 [WARNING] [ScanEngine] Unknown attack type: XSS

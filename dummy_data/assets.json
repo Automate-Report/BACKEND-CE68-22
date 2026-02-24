@@ -12,7 +12,7 @@
   {
     "id": 3,
     "name": "Test Edit Asset to have Credential",
-    "project_id": 4,
+    "project_id": 23,
     "description": null,
     "target": "1.2.3.4",
     "type": "IP",
@@ -22,7 +22,7 @@
   {
     "id": 4,
     "name": "Test Edit Asset to Delete Credential",
-    "project_id": 4,
+    "project_id": 21,
     "description": "",
     "target": "www.test.xyz",
     "type": "URL",
@@ -32,7 +32,7 @@
   {
     "id": 5,
     "name": "test1",
-    "project_id": 4,
+    "project_id": 23,
     "description": "",
     "target": "2.2.2.2",
     "type": "IP",
@@ -41,12 +41,32 @@
   },
   {
     "id": 6,
-    "name": "test 2",
-    "project_id": 4,
+    "name": "OWASP Juice Shop",
+    "project_id": 21,
+    "description": null,
+    "target": "http://localhost:4040/",
+    "type": "URL",
+    "created_at": "2026-01-06T21:12:51.429198",
+    "updated_at": "2026-02-21T16:59:15.145703"
+  },
+  {
+    "id": 7,
+    "name": "API Gateway",
+    "project_id": 22,
     "description": "",
-    "target": "gdgfgdg.com",
+    "target": "https://api.shop.com",
     "type": "URL",
     "created_at": "2026-01-06T21:12:51.429198",
     "updated_at": "2026-01-06T21:12:51.429206"
+  },
+  {
+    "id": 8,
+    "name": "DVWA",
+    "project_id": 21,
+    "description": "",
+    "target": "http://localhost:4050",
+    "type": "URL",
+    "created_at": "2026-02-23T16:26:28.149450",
+    "updated_at": "2026-02-23T16:26:28.149464"
   }
 ]

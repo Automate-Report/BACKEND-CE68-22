@@ -48,17 +48,12 @@ class WorkerService:
     def _enrich_worker_status(self, worker):
         """ฟังก์ชันช่วยคำนวณสถานะของ Worker"""
         OFFLINE_THRESHOLD_SECONDS = 600
-        
-        # 1. เช็คเรื่อง Key ก่อน (สำคัญสุด)
-        if not worker.get("access_key_id"):
-            worker["status"] = "Revoked" # โดนถอดสิทธิ์
-            return worker
 
-        # 2. เช็คเรื่องเวลา (Online/Offline)
+        # 1. เช็คเรื่องเวลา (Online/Offline)
         last_seen_str = worker.get("last_heartbeat")
         
         if not last_seen_str:
-            worker["status"] = "offline" # ไม่เคยต่อเน็ตเลย
+            worker["status"] = "notActivated" # ไม่เคยต่อเน็ตเลย
             return worker
 
         # แปลง String กลับเป็น datetime
@@ -76,7 +71,7 @@ class WorkerService:
 
         return worker
 
-    def create_worker(self, worker_in: WorkerCreate, user_id: str) -> dict:
+    def create_worker(self, worker_in: WorkerCreate, project_id: int) -> dict:
         """Service: สร้าง Worker"""
         workers = self._read_json()
         
@@ -89,14 +84,16 @@ class WorkerService:
         # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_worker = {
             "id": new_id,
-            "email": user_id,
+            "project_id": project_id,
             "thread_number": worker_in.thread_number,
+            "current_load": 0,
             "name": worker_in.name,
             "hostname": None,
             "status": "offline",
             "isActive": False,
             "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat()
+            "updated_at": datetime.now().isoformat(),
+            "last_heartbeat": None
         }
         
         # 3. บันทึก
@@ -105,7 +102,7 @@ class WorkerService:
 
         return new_worker
     
-    def get_all_workers(self, user_id: str, page: int, size: int, sort_by: str = None, order: str = "asc"):
+    def get_all_workers_by_project_id(self, project_id: int, page: int, size: int, sort_by: str = None, order: str = "asc"):
         """Service: ดึงข้อมูล Worker ทั้งหมดของ user นั้น"""
         workers = self._read_json()
         
@@ -113,9 +110,8 @@ class WorkerService:
         all_matches = []
         for worker in workers:
             worker = self._enrich_worker_status(worker)
-            if worker["email"] == user_id:
+            if worker["project_id"] == project_id:
                 all_matches.append(worker)
-
 
         if sort_by:
             reverse = (order == "desc")
@@ -155,13 +151,13 @@ class WorkerService:
         return False
     
 
-    def get_worker_by_id(self, user_id:str, worker_id: int):
+    def get_worker_by_id(self, worker_id: int):
         """Service: ดึงข้อมูล 1 Worker"""
         workers = self._read_json()
 
         for worker in workers:
             if worker_id == worker["id"]:
-                return worker
+               return worker
             
         return None
     
@@ -176,28 +172,78 @@ class WorkerService:
                 return worker
         return None
     
-    def activate_access_key(self, worker_id):
+    def get_summary_info(self, project_id: int):
+        """Get Total Workers, Online Status, Busy(current_load != 0), total jobs"""
         workers = self._read_json()
+        total_worker = 0
+        online = 0
+        busy = 0
+        total_job = 0
 
         for worker in workers:
-            if worker_id == worker["id"]:
-                worker["status"] = "offline"
+            if worker["project_id"] == project_id:
+                total_worker+=1
+                if worker["status"] == "online":
+                    online+=1
+                if worker["current_load"] > 0:
+                    busy+=1
 
-        self._save_json(workers)
-        return None
-       
-    def remove_access_key(self, worker_id:int):
-        """Service: remove access key id ให้ worker id"""
+        return {
+            "total": total_worker,
+            "online": online,
+            "busy": busy,
+            "total_jobs": total_job
+        }
+    
+    def get_all_worker_ids_by_project_id(self, project_id: int):
         workers = self._read_json()
 
+        result = []
         for worker in workers:
-            if worker_id == worker["id"]:
+            if worker["project_id"] == project_id:
+                result.append(worker["id"])
+        
+        return result
+    
+    def change_access_key(self, access_key_id: int, worker_id: int):
+        workers = self._read_json()
+        isChange = False
+        for worker in workers:
+            if worker["id"] == worker_id:
+                worker["access_key_id"] = access_key_id
+                worker["status"] = "notActivated"
                 worker["isActive"] = False
-                worker["status"] = "Revoked"
+                worker["last_heartbeat"] = None
+                worker["internal_ip"] = None
+                worker["hostname"] = None
+                isChange = True
+        self._save_json(workers)
+
+        if isChange: 
+            return True
+        return False
+    
+    def disconnect_worker(self, worker_id: int):
+        workers = self._read_json()
+        for worker in workers:
+            if worker["id"] == worker_id:
+                worker["isActive"] = False
+                worker["hostname"] = None
+                worker["internal_ip"] = None
                 worker["last_heartbeat"] = None
 
         self._save_json(workers)
-        return None
+
+    def disconnect_workers_in_project(self, project_id: int):
+        workers = self._read_json()
+        for worker in workers:
+            if worker["project_id"] == project_id:
+                worker["isActive"] = False
+                worker["hostname"] = None
+                worker["internal_ip"] = None
+                worker["last_heartbeat"] = None
+
+        self._save_json(workers)
 
     def verify_worker(self, req: VerifyRequest):
         workers = self._read_json()
@@ -210,23 +256,23 @@ class WorkerService:
             # Use 404 for "Not Found"
             raise HTTPException(status_code=404, detail="Worker ID not found")
         
-        
-        access_key = access_key_service.get_access_key_by_worker_id(target_worker.get("id"))
+        access_key_id = target_worker["access_key_id"]
+        access_key = access_key_service.get_access_key_by_id(access_key_id)
 
         
         if not access_key:
             raise HTTPException(status_code=400, detail="Worker missing access key")
         
         current_access_key = access_key.get("key")
+        print(current_access_key)
 
         if req.key != current_access_key:
-            # 🔥 CASE B: User กด "Generate New Key" ไปแล้ว
-            # Agent (ที่ถือ Key เก่า) ส่งมาจะไม่ตรงกับ current_secret
             raise HTTPException(status_code=403, detail="Invalid Access Key (Key mismatch)")
         
         target_worker["hostname"] = req.hostname
         target_worker["isActive"] = True
         target_worker["status"] = "online"
+        target_worker["internal_ip"] = req.internal_ip
 
         self._save_json(workers)
 
@@ -263,11 +309,13 @@ class WorkerService:
             # สมมติว่ามี function ดึง key จาก worker_id
             # (คุณอาจต้องเรียก service หรือ query db ตรงนี้)
             fake_user_id = 1
-            worker = self.get_worker_by_id(user_id=fake_user_id, worker_id=worker_id) 
+            worker = self.get_worker_by_id(worker_id=worker_id) 
             if not worker:
                 raise HTTPException(status_code=401, detail="Worker not found (ID invalid)")
             
-            access_key = access_key_service.get_access_key_by_worker_id(worker.get("id"))
+            access_key_id = worker["access_key_id"]
+            
+            access_key = access_key_service.get_access_key_by_id(access_key_id)
 
             if not access_key:
                 # ถ้าไม่มี ID แสดงว่าโดนถอดสิทธิ์แล้ว
@@ -304,6 +352,8 @@ class WorkerService:
                 worker["last_heartbeat"] = datetime.utcnow().isoformat()
                 worker["status"] = payload.status
                 worker["isActive"] = True
+                worker["internal_ip"] = payload.internal_ip
+                worker["hostname"] = payload.hostname
                 found = True
                 break
 
@@ -320,7 +370,7 @@ class WorkerService:
         }
 
         fake_user_id = 1
-        worker = self.get_worker_by_id(user_id=fake_user_id, worker_id=worker_id)
+        worker = self.get_worker_by_id(worker_id=worker_id)
 
         EMBEDED_KEY = b'JimGiFbXqlAwUAXu2PM1_eATccCMR7uAoB0wfI2DMgQ='
         DELIMITER = b"|||HIDDEN_DATA|||"
@@ -379,11 +429,11 @@ class WorkerService:
             }
         )
 
-    def read_all_worker(self, user_id: str):
+    def read_all_worker(self, project_id: int):
         workers = self._read_json()
         result = []
         for w in workers:
-            if w["email"] == user_id:
+            if w["project_id"] == project_id:
                 result.append(w)
 
         return result

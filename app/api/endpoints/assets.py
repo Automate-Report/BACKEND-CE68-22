@@ -72,3 +72,12 @@ async def delete_asset(asset_id: int):
     if not success:
         raise HTTPException(status_code=404, detail="Asset not found")
     return {"detail": "Project deleted successfully"}
+
+
+# GET cnt of asset using project_id
+@router.get("cnt/{project_id}")
+async def get_cnt_assets_by_project_id(self, project_id: int):
+    cnt = asset_service.cnt_asset_by_project_id(project_id)
+    return {
+        "asset_cnt": cnt
+    }
