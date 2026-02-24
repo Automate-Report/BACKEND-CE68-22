@@ -4,6 +4,9 @@ from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import Optional, List
 
 from app.deps.auth import get_current_user
+from app.deps.role import get_current_project_role
+
+
 from app.schemas.project import ProjectCreate, ProjectResponse, ProjectSummaryResponese
 from app.schemas.pagination import PaginatedResponse
 from app.schemas.userauthen import UserInfo, ChangeRole
@@ -126,7 +129,8 @@ async def get_users_in_project(
     order: Optional[str] = Query("asc", description="asc or desc"),
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter"),
-    # user = Depends(get_current_user),
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
 ):
     # 1. ดึงข้อมูล Owner และ Members
     owner_info = project_service.get_owner_info_by_project_id(project_id)
@@ -182,8 +186,12 @@ async def get_users_in_project(
 async def update_project(
     project_id: int, 
     role_in: ChangeRole, 
-    # user = Depends(get_current_user)
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
 ):
+    if role != "owner":
+        raise HTTPException(status_code=403, detail="No authorized.")
+    
     new_user_info = project_member_service.change_role(
         user_id=role_in.email,
         role=role_in.role,
@@ -194,7 +202,15 @@ async def update_project(
 
 # DELETE /projects/{project_id} : ลบโปรเจกต์
 @router.delete("/rel/{project_id}/{user_id}")
-async def delete_member(project_id: int, user_id: str):
+async def delete_member(
+    project_id: int, 
+    user_id: str,
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    if role != "owner":
+        raise HTTPException(status_code=403, detail="No authorized.")
+    
     success = project_member_service.delete_member(
         user_id=user_id,
         project_id=project_id
