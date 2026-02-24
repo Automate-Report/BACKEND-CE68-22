@@ -25,6 +25,7 @@ from app.api.endpoints import project_tags
 from app.api.endpoints import schedule
 from app.api.endpoints import jobs
 from app.api.endpoints import pentest_reports
+from app.api.endpoints import notification
 
 # --- Lifespan Management ---
 @asynccontextmanager
@@ -90,6 +91,7 @@ app.include_router(schedule.router, prefix="/schedule", tags=["Schedule"])
 app.include_router(workers.router, prefix="/workers", tags=["Workers"])
 app.include_router(access_keys.router, prefix="/access-keys", tags=["Access Keys"])
 app.include_router(pentest_log.router, prefix="/pentest-logs", tags=["Pentest Logs"])
+app.include_router(notification.router, prefix="/notification", tags=["Notification"])
 
 app.include_router(tag.router, prefix="/tags", tags=["Tags"])
 app.include_router(project_tags.router, prefix="/project-tags", tags=["Project Tags"])
