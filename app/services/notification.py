@@ -1,5 +1,7 @@
+import datetime
 import json
 import os
+from turtle import title
 from typing import List
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
@@ -59,5 +61,30 @@ class NotificationService:
 
         # Send back
         return paginated
+
+    def create_notification(self, user_email:str, type:str, message:str, link:str):
+        allnoti = self._read_json()
+        latest_id = max([noti["id"] for noti in allnoti], default=0)
+
+        new_noti = {
+            "id": latest_id + 1,
+            "user_email": user_email,
+            "type": type,
+            "message": message,
+            "hyperlink": link,
+            "created_at": datetime.now().isoformat(),
+            "status": "unread"
+        }
+
+        allnoti.append(new_noti)
+        self._save_json(allnoti)
+
+    def change_status_to_read(self, noti_id:int):
+        allnoti = self._read_json()
+        for noti in allnoti:
+            if noti["id"] == noti_id:
+                noti["status"] = "read"
+                break
+        self._save_json(allnoti)
 
 notification_service = NotificationService()

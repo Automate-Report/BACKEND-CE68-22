@@ -23,3 +23,22 @@ async def get_notifications(
 
     return notificationList
 
+@router.post("/read")
+async def mark_as_read(noti_id: int ):
+    notification_service.change_status_to_read(noti_id)
+    return JSONResponse(content={"message": "Notification marked as read"})
+
+@router.post("/create")
+async def create_notification(
+    type: str,
+    message: str,
+    link: str,
+    user_email: dict = Depends(get_current_user)
+):
+    notification_service.create_notification(
+        user_email=user_email,
+        type=type,
+        message=message,
+        link=link
+    )
+    return JSONResponse(content={"message": "Notification created successfully"})
