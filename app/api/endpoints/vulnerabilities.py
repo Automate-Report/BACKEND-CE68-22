@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
 
-from app.schemas.vulnerability import SummaryCntVlun, VulnIssue, VulnDetails
+from app.schemas.vulnerability import SummaryCntVlun, VulnIssue, VulnDetails, AssignedJobPayload
 from app.schemas.pagination import PaginatedResponse
 
 from app.services.vulnerability import vuln_service
@@ -91,3 +91,13 @@ async def get_vulnerability_details(vuln_id: int):
     if not details:
         raise HTTPException(status_code=404, detail="Vulnerability not found")
     return details
+
+
+@router.post("/assign/")
+async def assign_vulnerability_to_user(payload: AssignedJobPayload):
+    vuln_service.assign_vulnerability_to_user(
+        vuln_id=payload.vuln_id,
+        position=payload.position,
+        user_id=payload.user_id
+    )
+    return {"message": "Vulnerability assigned successfully"}
