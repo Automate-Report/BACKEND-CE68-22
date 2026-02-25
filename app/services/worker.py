@@ -93,7 +93,8 @@ class WorkerService:
             "isActive": False,
             "created_at": datetime.now().isoformat(),
             "updated_at": datetime.now().isoformat(),
-            "last_heartbeat": None
+            "last_heartbeat": None,
+            "owner": None,
         }
         
         # 3. บันทึก
