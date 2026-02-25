@@ -232,6 +232,7 @@ class WorkerService:
                 worker["hostname"] = None
                 worker["internal_ip"] = None
                 worker["last_heartbeat"] = None
+                worker["owner"] = None
 
         self._save_json(workers)
 
@@ -243,6 +244,7 @@ class WorkerService:
                 worker["hostname"] = None
                 worker["internal_ip"] = None
                 worker["last_heartbeat"] = None
+                worker["owner"] = None
 
         self._save_json(workers)
 
@@ -365,10 +367,14 @@ class WorkerService:
     
     def download_worker(self, worker_id: int, user_id: str):
         """Service: download Worker"""
+        workers = self._read_json()
 
+        for w in workers:
+            if w["id"] == worker_id:
+                w["owner"] = user_id
+
+        self._save_json(workers)
         worker = self.get_worker_by_id(worker_id=worker_id)
-        worker["owner"] = user_id
-        self._save_json(self._read_json())
 
         hidden_payload = {
             "WORKER_ID": worker_id,
@@ -376,7 +382,7 @@ class WorkerService:
             "BACKEND_URL": "http://127.0.0.1:8000"
         }
 
-        worker = self.get_worker_by_id(worker_id=worker_id)
+        
 
         EMBEDED_KEY = settings.EMBEDED_KEY.encode()
         DELIMITER = b"|||HIDDEN_DATA|||"

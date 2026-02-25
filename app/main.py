@@ -73,6 +73,7 @@ app.add_middleware(
     allow_credentials=True,       # อนุญาตให้ส่ง Cookie/Token
     allow_methods=["*"],          # อนุญาตทุกท่า (GET, POST, PUT, DELETE)
     allow_headers=["*"],          # อนุญาตทุก Header
+    expose_headers=["Content-Disposition"],
 )
 
 # Session (required by Authlib)

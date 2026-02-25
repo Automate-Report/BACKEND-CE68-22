@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "job_1C2n83hUklWH",
+    "schedule_id": 4,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-02-25T20:25:06.984717",
+    "started_at": "2026-02-25T13:25:07.034269",
+    "finished_at": "2026-02-25T13:26:58.810603"
+  },
+  {
+    "id": 2,
+    "name": "job_CzMYgAa5I9lc",
+    "schedule_id": 5,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-02-25T20:26:17.154164",
+    "started_at": "2026-02-25T13:26:17.191951",
+    "finished_at": "2026-02-25T13:28:09.029185"
+  },
+  {
+    "id": 3,
+    "name": "job_iofzwWxs90G7",
+    "schedule_id": 6,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-02-25T20:26:47.250408",
+    "started_at": "2026-02-25T13:26:47.315494",
+    "finished_at": "2026-02-25T13:28:42.356875"
+  },
+  {
+    "id": 4,
+    "name": "job_uXTtOIcEWKKO",
+    "schedule_id": 7,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-02-25T20:26:57.304836",
+    "started_at": "2026-02-25T13:26:57.364544",
+    "finished_at": "2026-02-25T13:29:22.608118"
+  }
+]

@@ -9,6 +9,7 @@ from app.schemas.pagination import PaginatedResponse
 from app.services.worker import worker_service
 from app.services.access_key import access_key_service
 from app.services.job import job_service
+from app.services.userauthen import userauthen_service
 
 from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role
@@ -66,6 +67,13 @@ async def get_all_workers_by_project_id(
         sort_by=sort_by, 
         order=order
     )
+
+    items = result["items"]
+
+    for worker in items:
+        worker["owner"] = userauthen_service.get_username_by_id(worker["owner"])
+
+    result["items"] = items
 
     return result
 
