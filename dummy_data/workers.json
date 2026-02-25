@@ -16,22 +16,6 @@
     "owner": null
   },
   {
-    "id": 3,
-    "project_id": 21,
-    "access_key_id": 4,
-    "thread_number": 1,
-    "current_load": 0,
-    "name": "Node-02",
-    "hostname": null,
-    "internal_ip": null,
-    "status": "notActivated",
-    "isActive": false,
-    "created_at": "2026-02-20T19:16:22.628579",
-    "updated_at": "2026-02-20T19:16:22.628595",
-    "last_heartbeat": null,
-    "owner": null
-  },
-  {
     "id": 4,
     "project_id": 22,
     "thread_number": 2,

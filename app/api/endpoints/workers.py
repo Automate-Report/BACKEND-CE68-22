@@ -144,11 +144,10 @@ async def update_worker(worker_id: int, worker_in: WorkerCreate, user = Depends(
 
 @router.get("/download/{worker_id}")
 def download_worker_zip(
-    # ใช้ Deps: ตรวจสอบว่าคนเรียกคือ User เว็บที่ล็อกอินแล้วเท่านั้น
-    # current_user: dict = Depends(deps.get_current_web_user)
     worker_id: int,
+    user = Depends(get_current_user)
 ):
-    result = worker_service.download_worker(worker_id)
+    result = worker_service.download_worker(worker_id, user["sub"])
 
     return result
 

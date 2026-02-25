@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     # Session Secret Key
     SESSION_SECRET_KEY: str
 
+    EMBEDED_KEY: str
+
     class Config:
         env_file = ".env"
 

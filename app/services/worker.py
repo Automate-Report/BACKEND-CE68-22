@@ -11,7 +11,7 @@ from fastapi import HTTPException, Header
 from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
 
-from app.core import security
+from app.core.config import settings
 from app.schemas.worker import WorkerCreate, VerifyRequest, HeartBeatPayload
 from app.services.access_key import access_key_service
 
@@ -53,7 +53,7 @@ class WorkerService:
         last_seen_str = worker.get("last_heartbeat")
         
         if not last_seen_str:
-            worker["status"] = "notActivated" # ไม่เคยต่อเน็ตเลย
+            worker["status"] = "notActivated" 
             return worker
 
         # แปลง String กลับเป็น datetime
@@ -363,17 +363,22 @@ class WorkerService:
             return True
         return False
     
-    def download_worker(self, worker_id: int):
+    def download_worker(self, worker_id: int, user_id: str):
         """Service: download Worker"""
+
+        worker = self.get_worker_by_id(worker_id=worker_id)
+        worker["owner"] = user_id
+        self._save_json(self._read_json())
+
         hidden_payload = {
             "WORKER_ID": worker_id,
+            "NUMBER_OF_THREADS": worker.get("thread_number"),
             "BACKEND_URL": "http://127.0.0.1:8000"
         }
 
-        fake_user_id = 1
         worker = self.get_worker_by_id(worker_id=worker_id)
 
-        EMBEDED_KEY = b'JimGiFbXqlAwUAXu2PM1_eATccCMR7uAoB0wfI2DMgQ='
+        EMBEDED_KEY = settings.EMBEDED_KEY.encode()
         DELIMITER = b"|||HIDDEN_DATA|||"
 
 
