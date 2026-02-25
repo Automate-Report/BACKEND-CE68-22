@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
 
-from app.schemas.vulnerability import SummaryCntVlun, VulnIssue, VulnDetails, AssignedJobPayload
+from app.schemas.vulnerability import SummaryCntVlun, VulnIssue, VulnDetails, AssignedJobPayload, ChangeStatusPayload, ChangeVerifyPayload
 from app.schemas.pagination import PaginatedResponse
 
 from app.services.vulnerability import vuln_service
@@ -101,3 +101,19 @@ async def assign_vulnerability_to_user(payload: AssignedJobPayload):
         user_id=payload.user_id
     )
     return {"message": "Vulnerability assigned successfully"}
+
+@router.post("/change-status/")
+async def change_vulnerability_status(payload: ChangeStatusPayload):
+    vuln_service.change_vulnerability_status(
+        vuln_id=payload.vuln_id,
+        new_status=payload.new_status
+    )
+    return {"message": "Vulnerability status updated successfully"}
+
+@router.post("/change-verify/")
+async def change_vulnerability_verify(payload: ChangeVerifyPayload):
+    vuln_service.change_vulnerability_verify(
+        vuln_id=payload.vuln_id,
+        new_verify=payload.new_verify
+    )
+    return {"message": "Vulnerability verify updated successfully"}
