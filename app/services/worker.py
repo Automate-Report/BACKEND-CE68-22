@@ -141,11 +141,11 @@ class WorkerService:
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
     
-    def delete_worker(self, worker_id: int, user_id: str) -> bool:
+    def delete_worker(self, worker_id: int) -> bool:
         """Service: ลบ Worker"""
         workers = self._read_json()
         for i, worker in enumerate(workers):
-            if worker["id"] == worker_id and worker["email"] == user_id:
+            if worker["id"] == worker_id:
                 del workers[i]
                 self._save_json(workers)
                 return True

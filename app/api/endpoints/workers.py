@@ -125,8 +125,7 @@ def remove_access_key(worker_id: int):
 @router.delete("/{worker_id}")
 async def delete_worker(worker_id: int, user = Depends(get_current_user)):
     success = worker_service.delete_worker(
-        worker_id=worker_id,
-        user_id=user["sub"]
+        worker_id=worker_id
     )
     if not success:
         raise HTTPException(status_code=404, detail="Worker not found")
