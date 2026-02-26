@@ -212,8 +212,9 @@ class ScheduleService:
                 
                 if now > end_date:
                     # ถ้าเลยเวลา end_date ให้ deactivate และไม่รัน
-                    await self.deactivate_schedule(schedule["schedule_id"])
-                    print(f"🚫 [Schedule] {schedule['schedule_id']} expired (Passed end_date)")
+                    schedule_id = schedule.get("schedule_id")
+                    await self.deactivate_schedule(schedule_id)
+                    print(f"🚫 [Schedule] {schedule_id} expired (Passed end_date)")
                     return False
             except Exception as e:
                 print(f"⚠️ Error parsing end_date: {e}")

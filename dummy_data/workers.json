@@ -6,14 +6,14 @@
     "thread_number": 3,
     "current_load": 0,
     "name": "Worker-01-DigitalOcean",
-    "hostname": null,
-    "internal_ip": null,
-    "status": "notActivated",
-    "isActive": false,
+    "hostname": "Nattharika-J",
+    "internal_ip": "161.246.5.57",
+    "status": "online",
+    "isActive": true,
     "created_at": "2026-01-27T18:49:28.965751",
     "updated_at": "2026-01-27T18:49:28.965758",
-    "last_heartbeat": null,
-    "owner": null
+    "last_heartbeat": "2026-02-26T07:50:23.015010",
+    "owner": "somchai@tech.co.th"
   },
   {
     "id": 4,

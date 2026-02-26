@@ -66,28 +66,54 @@
   },
   {
     "schedule_id": 6,
-    "schedule_name": "dfsdf",
+    "schedule_name": "qewrtrt",
     "project_id": 21,
     "asset_id": 6,
     "cron_expression": "Not Repeat",
     "attack_type": "XSS",
     "is_active": false,
-    "start_date": "2026-02-25 13:27:45.567000+00:00",
-    "end_date": "2026-02-25 13:27:45.567000+00:00",
-    "created_at": "2026-02-25T20:26:45.882010",
-    "updated_at": "2026-02-25T20:26:47.259258"
+    "start_date": "2026-02-26 07:37:26.410000+00:00",
+    "end_date": "2026-02-26 07:37:26.410000+00:00",
+    "created_at": "2026-02-26T14:36:26.417278",
+    "updated_at": "2026-02-26T14:37:35.701917"
   },
   {
     "schedule_id": 7,
-    "schedule_name": "sdfsfghh",
+    "schedule_name": "jhklhkjh",
     "project_id": 21,
     "asset_id": 6,
     "cron_expression": "Not Repeat",
     "attack_type": "XSS",
     "is_active": false,
-    "start_date": "2026-02-25 13:27:52.357000+00:00",
-    "end_date": "2026-02-25 13:27:52.357000+00:00",
-    "created_at": "2026-02-25T20:26:52.390613",
-    "updated_at": "2026-02-25T20:26:57.312049"
+    "start_date": "2026-02-26 07:41:00.355000+00:00",
+    "end_date": "2026-02-26 07:41:00.355000+00:00",
+    "created_at": "2026-02-26T14:40:00.360587",
+    "updated_at": "2026-02-26T14:41:02.399053"
+  },
+  {
+    "schedule_id": 8,
+    "schedule_name": "bvnbvnvb",
+    "project_id": 21,
+    "asset_id": 6,
+    "cron_expression": "Not Repeat",
+    "attack_type": "XSS",
+    "is_active": false,
+    "start_date": "2026-02-26 07:41:48.896000+00:00",
+    "end_date": "2026-02-26 07:41:48.896000+00:00",
+    "created_at": "2026-02-26T14:40:48.900991",
+    "updated_at": "2026-02-26T14:41:52.547195"
+  },
+  {
+    "schedule_id": 9,
+    "schedule_name": "dfgetrrthh",
+    "project_id": 21,
+    "asset_id": 6,
+    "cron_expression": "Not Repeat",
+    "attack_type": "XSS",
+    "is_active": false,
+    "start_date": "2026-02-26 07:47:23.482000+00:00",
+    "end_date": "2026-02-26 07:47:23.482000+00:00",
+    "created_at": "2026-02-26T14:46:23.485933",
+    "updated_at": "2026-02-26T14:47:25.557765"
   }
 ]

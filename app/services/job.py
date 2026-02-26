@@ -6,11 +6,15 @@ import string
 from datetime import datetime, timedelta
 from typing import List
 
+from fastapi import Depends
+from app.deps.auth import get_current_user
+
 from app.core.redis import QUEUE_KEY, redis_jobs
 from app.services.asset import asset_service
 from app.services.worker import worker_service
-from app.services.project import project_service
+from app.services.notification import notification_service
 from app.services.vulnerability import vuln_service
+from app.services.project import project_service
 
 from app.schemas.job import JobWorkerPayload, SummaryInfoByWorker
 
@@ -272,81 +276,143 @@ class JobService:
 
         return total_jobs
 
-    def best_worker(self, project_id: int):
+    async def get_best_worker(self, project_id: int):
         workers = worker_service.read_all_worker(project_id)
+
+        if not workers:
+            return "No Worker", 0
+        
         online_workers = [
             w for w in workers
             if w.get("status") == "online" and w.get("isActive") == True
         ]
 
         if not online_workers:
-            return None
+            return None, 0
         
-        best_worker = min(
-            online_workers, 
-            key=lambda w: w.get("current_load", 0) / w.get("thread_number", 1)
-        )
-        
-        return best_worker
+        worker_scores = []
+        for w in online_workers:
+            current_load = w.get("current_load", 0)
+            worker_id = w.get("id")
+            queue_name = f"{QUEUE_KEY}:{worker_id}"
+            
+            try:
+                pending_jobs = await redis_jobs.llen(queue_name)
+            except Exception:
+                pending_jobs = 0
+                
+            threads = w.get("thread_number", 1)
+            # สูตร: (งานที่ทำอยู่ + งานที่รอคิว) / จำนวน Thread
+            # ยิ่งค่าน้อย แปลว่ายิ่งมีโอกาสทำงานเสร็จไวที่สุด
+            score = (current_load + pending_jobs) / threads
+            worker_scores.append((w, score))
 
-    async def dispatch_job(self, schedule_data):
-        lock_key = f"lock:schedule:{schedule_data["schedule_id"]}:{datetime.utcnow().strftime('%Y%m%d%H%M')}"
-    
-        # ถ้ามี Lock นี้อยู่ใน Redis แล้ว แสดงว่านาทีนี้ส่งงานไปแล้ว
+        # เลือก Worker ที่ Score น้อยที่สุด (ว่างสุด หรือคิวสั้นสุดเมื่อเทียบกับกำลังเครื่อง)
+        best_w, best_score = min(worker_scores, key=lambda x: x[1])
+        print(best_w)
+        return best_w, best_score
+
+    async def dispatch_job(self, schedule_data: dict):
+        # 1. ตรวจสอบ Lock ป้องกันการส่งซ้ำ
+        now_str = datetime.utcnow().strftime('%Y%m%d%H%M')
+        lock_key = f"lock:schedule:{schedule_data['schedule_id']}:{now_str}"
         if await redis_jobs.exists(lock_key):
             return
 
+        # 2. ดึงข้อมูล Asset และค้นหา Best Worker
         asset = asset_service.get_asset_by_id(schedule_data["asset_id"])
-        project = project_service.get_project_by_id(schedule_data["project_id"])
-        project_id = project["id"]
-        best_worker = self.best_worker(project_id)
+        best_worker, score = await self.get_best_worker(schedule_data.get("project_id"))
 
+        project = project_service.get_project_by_id(schedule_data.get("project_id"))
+        user_id = project["email"] if project else "Unknown User"
+
+        # กรณีไม่มี Worker ออนไลน์เลย
+        if best_worker in ["No Worker", None]:
+            error_msg = f"❌ ไม่สามารถเริ่มงานสแกน {asset['name']} ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้"
+            notification_service.create_notification(user_id, "error", error_msg, f"/projects/{schedule_data.get("project_id")}/workers")
+            return None
+
+        # 3. สร้างเงื่อนไข Message ตามความยุ่งของ Worker
+        if score == 0:
+            # กรณี Worker ว่างกริบ ไม่มีงานรัน ไม่มีคิว
+            display_message = f"🚀 เริ่มงานสแกนสำหรับ {asset['name']} ทันทีบน Worker {best_worker['name']}"
+        else:
+            # กรณีต้องไปต่อคิว (หาตัวที่คิวน้อยที่สุดมาให้แล้ว)
+            display_message = (
+                f"⏳ ขณะนี้ Worker ทุกตัวกำลังติดงานสแกนอื่นอยู่ "
+                f"ระบบได้ส่งงานของ {asset['name']} เข้าคิวของ Worker {best_worker.get('name', 'Unknown')} "
+                f"ซึ่งคาดว่าจะพร้อมทำงานให้คุณได้เร็วที่สุดครับ"
+            )
+
+        # 4. สร้าง Job ในระบบ
         new_job = self.create_job(schedule_data["schedule_id"], best_worker["id"])
 
+        # 5. ส่งงานเข้า Redis Queue เฉพาะตัว
         payload = JobWorkerPayload(
             job_id=new_job["id"],
             target_url=asset["target"],
-            attack_type=schedule_data["attack_type"],
-            credential=None
+            attack_type=schedule_data["attack_type"]
+        )
+        
+        await redis_jobs.setex(lock_key, 60, "locked")
+        queue_name = f"{QUEUE_KEY}:{best_worker['id']}"
+        await redis_jobs.rpush(queue_name, payload.model_dump_json())
+
+        # 6. บันทึกการแจ้งเตือน (Notification)
+        notification_service.create_notification(
+            user_email=user_id,
+            type="info" if score > 0 else "success",
+            message=display_message,
+            link=f"/jobs/{new_job['id']}"
         )
 
-        # ถ้ายังไม่มี ให้สร้าง Lock ไว้ (Expire ใน 60 วินาที)
-        await redis_jobs.setex(lock_key, 60, "locked")
-        queue_name = f"{QUEUE_KEY}:{best_worker["id"]}"
-        await redis_jobs.rpush(queue_name, payload.model_dump_json()) #"system:queue:{worker_id}"
-        print(f"🚀 Job {new_job["id"]} dispatched to Redis!")
-        print(f"🚀 Job temp not dispatched to Redis!")
+        print(f"📢 Notification: {display_message}")
+        return new_job
 
     async def run_watchdog(self):
         """🛡️ ตรวจสอบงานที่ค้างใน pending นานเกินไป (Watchdog)"""
         print("🛡️ [Watchdog] Started checking...")
         timeout_limit = datetime.utcnow() - timedelta(minutes=5)
         running_timeout_limit = datetime.utcnow() - timedelta(minutes=30)
+        
         jobs = self._read_json()
         workers = worker_service._read_json()
 
+        updated = False
         for job in jobs:
+            # ตรวจสอบว่าเป็น dict และมีคีย์ที่จำเป็น
+            if not isinstance(job, dict) or "status" not in job:
+                continue
+
             try:
-                # ใช้คีย์ให้ตรงกับใน JSON ของคุณ (ระวัง created_at vs create_at)
-                job_created_time = datetime.fromisoformat(job["created_at"])
-                if job["started_at"]:
+                job_created_time = datetime.fromisoformat(job.get("created_at", datetime.utcnow().isoformat()))
+                job_startup_time = None
+                if job.get("started_at"):
                     job_startup_time = datetime.fromisoformat(job["started_at"])
-            except (ValueError, KeyError):
+            except (ValueError, TypeError):
                 continue
             
-            if (job["status"] == "pending" and job_created_time < timeout_limit) or (job["started_at"] and job["status"] == "running" and job_startup_time < running_timeout_limit):
-                print(f'🕵️ [Watchdog] Job {job["id"]} is stuck. Marking as failed.')
-                job["status"] = "failed"
-                # คืนโหลดให้ Worker ตัวเดิม (ถ้ามี)
-                for w in workers:
-                    if w["id"] == job["worker_id"]:
-                        if w and w["current_load"] > 0:
-                            w["current_load"] -= 1
+            # เช็คเงื่อนไข Stuck
+            is_pending_stuck = (job["status"] == "pending" and job_created_time < timeout_limit)
+            is_running_stuck = (job["status"] == "running" and job_startup_time and job_startup_time < running_timeout_limit)
 
+            if is_pending_stuck or is_running_stuck:
+                print(f'🕵️ [Watchdog] Job {job.get("id")} is stuck. Marking as failed.')
+                job["status"] = "failed"
+                updated = True
+                
+                # คืนโหลดให้ Worker (ใช้วิธีที่ปลอดภัยขึ้น)
+                target_worker_id = job.get("worker_id")
+                if target_worker_id:
+                    for w in workers:
+                        if isinstance(w, dict) and w.get("id") == target_worker_id:
+                            if w.get("current_load", 0) > 0:
+                                w["current_load"] -= 1
+                            break
         
-        self._save_json(jobs)
-        worker_service._save_json(workers)
-        # pass
+        if updated:
+            self._save_json(jobs)
+            worker_service._save_json(workers)
 
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้

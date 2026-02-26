@@ -1,6 +1,8 @@
 import asyncio
 import time
+
 from datetime import datetime, timezone
+
 from app.services.schedule import schedule_service
 from app.services.job import job_service
 
@@ -25,7 +27,9 @@ async def system_schedule_task():
                     continue
 
                 # สร้าง Job + ส่ง Redis
-                await job_service.dispatch_job(schedule)
+                success = await job_service.dispatch_job(schedule)
+                if not success:
+                    continue
                 
                 # ตรวจสอบเงื่อนไข Deactivate
                 cron_exp = schedule.get("cron_expression")
@@ -43,8 +47,9 @@ async def system_schedule_task():
                         print(f"⚠️ Date parsing error: {e}")
 
                 if is_not_repeat or is_expired:
-                    await schedule_service.deactivate_schedule(schedule["schedule_id"])
-                    print(f"🔒 [System Task] Deactivated: {schedule['schedule_id']}")
+                    schedule_id = schedule.get("schedule_id")
+                    await schedule_service.deactivate_schedule(schedule_id)
+                    print(f"🔒 [System Task] Deactivated: {schedule_id}")
 
             # Watchdog...
             current_time = time.time()
