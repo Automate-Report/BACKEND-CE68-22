@@ -1,8 +1,9 @@
-import datetime
+
 import json
 import os
 from turtle import title
-from typing import List, Optional
+from typing import List
+from datetime import datetime
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -64,10 +65,10 @@ class NotificationService:
 
     def create_notification(self, user_email:str, type:str, message:str, link:str = None):
         allnoti = self._read_json()
-        latest_id = max([noti["id"] for noti in allnoti], default=0)
+        latest_id = max([noti["noti_id"] for noti in allnoti], default=0)
 
         new_noti = {
-            "id": latest_id + 1,
+            "noti_id": latest_id + 1,
             "user_email": user_email,
             "type": type,
             "message": message,
@@ -78,6 +79,8 @@ class NotificationService:
 
         allnoti.append(new_noti)
         self._save_json(allnoti)
+
+        return new_noti
 
     def change_status_to_read(self, noti_id:int):
         allnoti = self._read_json()

@@ -1,5 +1,8 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
+
+from app.deps.auth import get_current_user
+
 from app.schemas.pagination import PaginatedResponse
 from app.schemas.schedule import ScheduleCreate, ScheduleResponse, ScheduleItem
 from app.services.schedule import schedule_service 
@@ -43,8 +46,8 @@ async def get_schedule(schedule_id: int):
 
 # POST new schedule
 @router.post("/create")
-async def create_schedule(schedule_input: ScheduleCreate):
-    status_message = schedule_service.create_schedule(schedule_input)
+async def create_schedule(schedule_input: ScheduleCreate, user = Depends(get_current_user)):
+    status_message = schedule_service.create_schedule(schedule_input, user["sub"])
     return {"message": status_message}
 
 # PUT update via edit schedule

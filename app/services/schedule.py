@@ -124,7 +124,7 @@ class ScheduleService:
         return "Schedule Not Found"
     
     
-    def create_schedule(self, schedule_input: ScheduleCreate):
+    def create_schedule(self, schedule_input: ScheduleCreate, user_id: str):
         schedules = self._read_json()
         latest_id = max([s["schedule_id"] for s in schedules], default=0)
         
@@ -139,7 +139,8 @@ class ScheduleService:
             "start_date": schedule_input.start_date,
             "end_date": schedule_input.end_date,
             "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat()
+            "updated_at": datetime.now().isoformat(),
+            "created_by": user_id,
         }
         
         schedules.append(new_schedule)
@@ -212,8 +213,9 @@ class ScheduleService:
                 
                 if now > end_date:
                     # ถ้าเลยเวลา end_date ให้ deactivate และไม่รัน
-                    await self.deactivate_schedule(schedule["schedule_id"])
-                    print(f"🚫 [Schedule] {schedule['schedule_id']} expired (Passed end_date)")
+                    schedule_id = schedule.get("schedule_id")
+                    await self.deactivate_schedule(schedule_id)
+                    print(f"🚫 [Schedule] {schedule_id} expired (Passed end_date)")
                     return False
             except Exception as e:
                 print(f"⚠️ Error parsing end_date: {e}")

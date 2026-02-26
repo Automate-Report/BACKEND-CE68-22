@@ -52,7 +52,7 @@ class WorkerService:
         # 1. เช็คเรื่องเวลา (Online/Offline)
         last_seen_str = worker.get("last_heartbeat")
         
-        if not last_seen_str:
+        if not last_seen_str or not worker.get("owner"):
             worker["status"] = "notActivated" 
             return worker
 
@@ -233,6 +233,7 @@ class WorkerService:
                 worker["internal_ip"] = None
                 worker["last_heartbeat"] = None
                 worker["owner"] = None
+                worker["status"] = "notActivated"
 
         self._save_json(workers)
 
@@ -251,9 +252,14 @@ class WorkerService:
     def verify_worker(self, req: VerifyRequest):
         workers = self._read_json()
         target_worker = None
+        
         for worker in workers:
             if worker["id"] == req.worker_id:
                 target_worker = worker
+
+        if not target_worker.get("owner"):
+            print("Worker has no owner, cannot verify")
+            return False
 
         if not target_worker:
             # Use 404 for "Not Found"
@@ -295,6 +301,7 @@ class WorkerService:
     
     def verify_token(self, authorization: str = Header(None)):
         # ... extraction logic ...
+        
         token = authorization.split(" ")[1]
 
         try:
@@ -347,10 +354,14 @@ class WorkerService:
     
     def update_heartbeat(self, worker_id: int, payload: HeartBeatPayload):
         workers = self._read_json()
+
         found = False
 
         for worker in workers:
             if worker["id"] == int(worker_id):
+                if not worker.get("owner"):
+                    print("Worker has no owner, cannot verify")
+                    return False
                 worker["current_load"] = payload.current_load
                 worker["last_heartbeat"] = datetime.utcnow().isoformat()
                 worker["status"] = payload.status
