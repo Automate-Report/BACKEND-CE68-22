@@ -124,7 +124,7 @@ class ScheduleService:
         return "Schedule Not Found"
     
     
-    def create_schedule(self, schedule_input: ScheduleCreate):
+    def create_schedule(self, schedule_input: ScheduleCreate, user_id: str):
         schedules = self._read_json()
         latest_id = max([s["schedule_id"] for s in schedules], default=0)
         
@@ -139,7 +139,8 @@ class ScheduleService:
             "start_date": schedule_input.start_date,
             "end_date": schedule_input.end_date,
             "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat()
+            "updated_at": datetime.now().isoformat(),
+            "created_by": user_id,
         }
         
         schedules.append(new_schedule)

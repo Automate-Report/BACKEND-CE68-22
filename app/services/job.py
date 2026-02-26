@@ -157,7 +157,7 @@ class JobService:
         for job in jobs:
             if job["schedule_id"] == schedule_id:
                 n += 1
-                worker = worker_service.get_worker_by_id(user_email, job["worker_id"])
+                worker = worker_service.get_worker_by_id(job["worker_id"])
                 temp = {
                     "id": job["id"],
                     "name": f'Job #{n} {job["name"]}',
@@ -322,8 +322,7 @@ class JobService:
         asset = asset_service.get_asset_by_id(schedule_data["asset_id"])
         best_worker, score = await self.get_best_worker(schedule_data.get("project_id"))
 
-        project = project_service.get_project_by_id(schedule_data.get("project_id"))
-        user_id = project["email"] if project else "Unknown User"
+        user_id = schedule_data.get("created_by", "Unknown User")
 
         # กรณีไม่มี Worker ออนไลน์เลย
         if best_worker in ["No Worker", None]:
@@ -345,7 +344,6 @@ class JobService:
 
         # 4. สร้าง Job ในระบบ
         new_job = self.create_job(schedule_data["schedule_id"], best_worker["id"])
-        print(new_job)
 
         # 5. ส่งงานเข้า Redis Queue เฉพาะตัว
         payload = JobWorkerPayload(
@@ -360,12 +358,13 @@ class JobService:
         await redis_jobs.rpush(queue_name, payload.model_dump_json())
 
         # 6. บันทึกการแจ้งเตือน (Notification)
-        notification_service.create_notification(
+        new_noti = notification_service.create_notification(
             user_email=user_id,
             type="info" if score > 0 else "success",
             message=display_message,
             link=f"/jobs/{new_job['id']}"
         )
+        print(new_noti)
 
         print(f"📢 Notification: {display_message}")
         return new_job
