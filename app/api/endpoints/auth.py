@@ -105,5 +105,5 @@ async def protected(user = Depends(get_current_user)):
     return {
         "message": "You are authenticated",
         "user": user["sub"],
-        "name": f"{user_info["firstname"]} {user_info["lastname"]}"
+        "name": f'{user_info["firstname"]} {user_info["lastname"]}'
     }

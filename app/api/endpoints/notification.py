@@ -1,3 +1,4 @@
+from typing import Optional
 from app.deps.auth import get_current_user
 from fastapi import APIRouter, Query, Depends
 from fastapi.responses import JSONResponse, RedirectResponse
@@ -32,7 +33,7 @@ async def mark_as_read(noti_id: int ):
 async def create_notification(
     type: str,
     message: str,
-    link: str,
+    link: Optional[str] = None,
     user_email: dict = Depends(get_current_user)
 ):
     notification_service.create_notification(

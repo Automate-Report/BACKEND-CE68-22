@@ -290,7 +290,7 @@ class JobService:
         return best_worker
 
     async def dispatch_job(self, schedule_data):
-        lock_key = f"lock:schedule:{schedule_data["schedule_id"]}:{datetime.utcnow().strftime('%Y%m%d%H%M')}"
+        lock_key = f"lock:schedule:{schedule_data['schedule_id']}:{datetime.utcnow().strftime('%Y%m%d%H%M')}"
     
         # ถ้ามี Lock นี้อยู่ใน Redis แล้ว แสดงว่านาทีนี้ส่งงานไปแล้ว
         if await redis_jobs.exists(lock_key):
@@ -312,9 +312,9 @@ class JobService:
 
         # ถ้ายังไม่มี ให้สร้าง Lock ไว้ (Expire ใน 60 วินาที)
         await redis_jobs.setex(lock_key, 60, "locked")
-        queue_name = f"{QUEUE_KEY}:{best_worker["id"]}"
+        queue_name = f"{QUEUE_KEY}:{best_worker['id']}"
         await redis_jobs.rpush(queue_name, payload.model_dump_json()) #"system:queue:{worker_id}"
-        print(f"🚀 Job {new_job["id"]} dispatched to Redis!")
+        print(f"🚀 Job {new_job['id']} dispatched to Redis!")
         print(f"🚀 Job temp not dispatched to Redis!")
 
     async def run_watchdog(self):

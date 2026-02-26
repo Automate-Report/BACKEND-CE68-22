@@ -2,7 +2,7 @@ import datetime
 import json
 import os
 from turtle import title
-from typing import List
+from typing import List, Optional
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -62,7 +62,7 @@ class NotificationService:
         # Send back
         return paginated
 
-    def create_notification(self, user_email:str, type:str, message:str, link:str):
+    def create_notification(self, user_email:str, type:str, message:str, link:str = None):
         allnoti = self._read_json()
         latest_id = max([noti["id"] for noti in allnoti], default=0)
 

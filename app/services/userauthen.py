@@ -155,7 +155,7 @@ class UserAuthenService:
 
         for user in users:
             if user["email"] == user_id:
-                return f"{user["firstname"]} {user["lastname"]}"
+                return f'{user["firstname"]} {user["lastname"]}'
         
         return None
 
