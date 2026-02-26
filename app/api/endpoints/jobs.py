@@ -71,8 +71,8 @@ async def get_jobs_by_worker(
     items = result.get("items")
 
     for job in items:
-        schedule = schedule_service.get_by_id(job.get("schedule_id", -1))
-        vuln_cnt = vuln_service.cnt_vuln_by_job_id(job.get("id", -1))
+        schedule = schedule_service.get_by_id(job.get("schedule_id"))
+        vuln_cnt = vuln_service.cnt_vuln_by_job_id(job.get("id"))
         job["schedule_name"] = schedule["schedule_name"]
         job["attack_type"] = schedule["attack_type"]
         job["vuln_count"] = vuln_cnt
