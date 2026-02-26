@@ -374,7 +374,7 @@
     "name": "job_8YMRWZ7SVC1L",
     "schedule_id": 6,
     "worker_id": 1,
-    "status": "running",
+    "status": "failed",
     "created_at": "2026-02-26T15:39:17.486480",
     "started_at": "2026-02-26T08:39:17.540126",
     "finished_at": null
