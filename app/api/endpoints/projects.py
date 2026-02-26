@@ -7,13 +7,14 @@ from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role
 
 
-from app.schemas.project import ProjectCreate, ProjectResponse, ProjectSummaryResponese
+from app.schemas.project import ProjectCreate, ProjectResponse, ProjectSummaryResponese, ProjectOverviewResponse
 from app.schemas.pagination import PaginatedResponse
 from app.schemas.userauthen import UserInfo, ChangeRole
 
 from app.services.project import project_service 
 from app.services.project_tag import project_tag_service
 from app.services.project_member import project_member_service
+from app.services.project_overview import project_overview_service
 
 router = APIRouter()
 
@@ -219,6 +220,14 @@ async def delete_member(
     if not success:
         raise HTTPException(status_code=404, detail="Member not found")
     return {"detail": "Member deleted successfully"}
+
+
+@router.get("/{project_id}/overview", response_model=ProjectOverviewResponse)
+async def get_project_dashboard(project_id: int):
+    data = project_overview_service.get_project_overview(project_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return data
 
 
 

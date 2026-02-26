@@ -78,5 +78,32 @@
     "type": "URL",
     "created_at": "2026-02-25T15:50:17.205614",
     "updated_at": "2026-02-25T15:50:17.205625"
+  },
+  {
+    "id": 10,
+    "name": "Production API Gateway",
+    "project_id": 21,
+    "description": "Main entry point for customer traffic",
+    "target": "https://api.enterprise.com",
+    "type": "URL",
+    "created_at": "2026-02-01T09:00:00.000000"
+  },
+  {
+    "id": 11,
+    "name": "Customer Database Server",
+    "project_id": 21,
+    "description": "Internal DB storing user credentials",
+    "target": "10.0.1.55",
+    "type": "IP",
+    "created_at": "2026-02-01T09:15:00.000000"
+  },
+  {
+    "id": 12,
+    "name": "Staging Web Portal",
+    "project_id": 21,
+    "description": "Test environment for new features",
+    "target": "https://staging.enterprise.com",
+    "type": "URL",
+    "created_at": "2026-02-01T10:00:00.000000"
   }
 ]
