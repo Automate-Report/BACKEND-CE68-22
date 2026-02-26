@@ -4,7 +4,7 @@
     "project_id": 21,
     "access_key_id": 3,
     "thread_number": 3,
-    "current_load": 0,
+    "current_load": 3,
     "name": "Worker-01-DigitalOcean",
     "hostname": "Nattharika-J",
     "internal_ip": "161.246.5.57",
@@ -12,7 +12,7 @@
     "isActive": true,
     "created_at": "2026-01-27T18:49:28.965751",
     "updated_at": "2026-01-27T18:49:28.965758",
-    "last_heartbeat": "2026-02-26T07:50:23.015010",
+    "last_heartbeat": "2026-02-26T08:15:28.045459",
     "owner": "somchai@tech.co.th"
   },
   {

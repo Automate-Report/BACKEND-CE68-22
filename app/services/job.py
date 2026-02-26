@@ -309,7 +309,6 @@ class JobService:
 
         # เลือก Worker ที่ Score น้อยที่สุด (ว่างสุด หรือคิวสั้นสุดเมื่อเทียบกับกำลังเครื่อง)
         best_w, best_score = min(worker_scores, key=lambda x: x[1])
-        print(best_w)
         return best_w, best_score
 
     async def dispatch_job(self, schedule_data: dict):
@@ -346,12 +345,14 @@ class JobService:
 
         # 4. สร้าง Job ในระบบ
         new_job = self.create_job(schedule_data["schedule_id"], best_worker["id"])
+        print(new_job)
 
         # 5. ส่งงานเข้า Redis Queue เฉพาะตัว
         payload = JobWorkerPayload(
             job_id=new_job["id"],
             target_url=asset["target"],
-            attack_type=schedule_data["attack_type"]
+            attack_type=schedule_data["attack_type"],
+            credential=None
         )
         
         await redis_jobs.setex(lock_key, 60, "locked")
