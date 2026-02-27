@@ -71,7 +71,7 @@ async def get_all_workers_by_project_id(
     items = result["items"]
 
     for worker in items:
-        worker["owner"] = userauthen_service.get_username_by_id(worker["owner"])
+        worker["owner_name"] = userauthen_service.get_username_by_id(worker["owner"])
 
     result["items"] = items
 
