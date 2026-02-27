@@ -112,20 +112,6 @@
     "created_by": "user@example.com"
   },
   {
-    "schedule_id": 10,
-    "schedule_name": "aupix test",
-    "project_id": 5,
-    "asset_id": 14,
-    "cron_expression": "0 0 * * 5",
-    "attack_type": "SQL Injection",
-    "is_active": true,
-    "start_date": "2026-03-23 09:30:00+00:00",
-    "end_date": "2026-03-23 00:00:00+00:00",
-    "created_at": "2026-02-27T10:24:47.851176",
-    "updated_at": "2026-02-27T10:24:47.851176",
-    "created_by": "user@example.com"
-  },
-  {
     "schedule_id": 11,
     "schedule_name": "Weekly testing on AUPIX website",
     "project_id": 5,
@@ -137,6 +123,48 @@
     "end_date": "2026-03-23 00:00:00+00:00",
     "created_at": "2026-02-27T10:28:32.178522",
     "updated_at": "2026-02-27T10:28:32.178522",
+    "created_by": "user@example.com"
+  },
+  {
+    "schedule_id": 14,
+    "schedule_name": "Aupix XSS",
+    "project_id": 5,
+    "asset_id": 14,
+    "cron_expression": "Not Repeat",
+    "attack_type": "XSS",
+    "is_active": false,
+    "start_date": "2026-02-27 08:16:42.702000+00:00",
+    "end_date": "2026-02-27 08:16:42.702000+00:00",
+    "created_at": "2026-02-27T15:15:42.705601",
+    "updated_at": "2026-02-27T15:16:46.713484",
+    "created_by": "user@example.com"
+  },
+  {
+    "schedule_id": 15,
+    "schedule_name": "Hinoshii is the coolest guy ever exist in the planet earth",
+    "project_id": 5,
+    "asset_id": 13,
+    "cron_expression": "Not Repeat",
+    "attack_type": "SQL Injection",
+    "is_active": false,
+    "start_date": "2026-02-27 08:17:13.982000+00:00",
+    "end_date": "2026-02-27 08:17:13.982000+00:00",
+    "created_at": "2026-02-27T15:16:14.312129",
+    "updated_at": "2026-02-27T15:17:17.034180",
+    "created_by": "user@example.com"
+  },
+  {
+    "schedule_id": 16,
+    "schedule_name": "Test pagination",
+    "project_id": 5,
+    "asset_id": 14,
+    "cron_expression": "Not Repeat",
+    "attack_type": "SQL Injection",
+    "is_active": false,
+    "start_date": "2026-02-27 08:17:30.566000+00:00",
+    "end_date": "2026-02-27 08:17:30.566000+00:00",
+    "created_at": "2026-02-27T15:16:30.884529",
+    "updated_at": "2026-02-27T15:17:37.176475",
     "created_by": "user@example.com"
   }
 ]

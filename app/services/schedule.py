@@ -7,6 +7,7 @@ from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from croniter import croniter
 from app.services.job import job_service
+from app.services.asset import asset_service
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -40,8 +41,7 @@ class ScheduleService:
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
 
-    def get_all_schedules(self, project_id: int, page: int, size: int, sort_by: str = None, 
-                          order: str = "asc", search: str = None, filter: str = "ALL"):
+    def get_all_schedules(self, project_id: int, page: int, size: int, search: str = None, filter: str = "ALL"):
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
         schedules = self._read_json()
         # 1. กรอง Project
@@ -55,6 +55,7 @@ class ScheduleService:
                             "id": sch["schedule_id"],
                             "project_id": sch["project_id"],
                             "name": sch["schedule_name"],
+                            "asset_name": asset_service.get_asset_by_id(sch["asset_id"])["name"],
                             "atk_type": sch["attack_type"],
                             "start_date": sch["start_date"],
                             "end_date": sch["end_date"],
@@ -73,6 +74,7 @@ class ScheduleService:
                             "id": sch["schedule_id"],
                             "project_id": sch["project_id"],
                             "name": sch["schedule_name"],
+                            "asset_name": asset_service.get_asset_by_id(sch["asset_id"])["name"],
                             "atk_type": sch["attack_type"],
                             "start_date": sch["start_date"],
                             "end_date": sch["end_date"],
@@ -87,11 +89,6 @@ class ScheduleService:
             else:
                 # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
                 pass
-
-        if sort_by:
-            reverse = (order == "desc")
-            # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
-            all_matches.sort(key=lambda x: (x.get(sort_by) or ""), reverse=reverse)
         
         # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
         total_count = len(all_matches)
