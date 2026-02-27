@@ -327,7 +327,7 @@ class JobService:
         # กรณีไม่มี Worker ออนไลน์เลย
         if best_worker in ["No Worker", None]:
             error_msg = f"❌ ไม่สามารถเริ่มงานสแกน {asset['name']} ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้"
-            notification_service.create_notification(user_id, "error", error_msg, f"/projects/{schedule_data.get("project_id")}/workers")
+            notification_service.create_notification(user_id, "error", error_msg, f'/projects/{schedule_data.get("project_id")}/workers')
             return None
 
         # 3. สร้างเงื่อนไข Message ตามความยุ่งของ Worker
