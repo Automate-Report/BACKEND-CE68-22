@@ -96,5 +96,47 @@
     "created_at": "2026-02-26T15:50:02.735430",
     "updated_at": "2026-02-26T15:51:02.888683",
     "created_by": "somchai@tech.co.th"
+  },
+  {
+    "schedule_id": 8,
+    "schedule_name": "Weekly API scan on Sukondese",
+    "project_id": 4,
+    "asset_id": 2,
+    "cron_expression": "Not Repeat",
+    "attack_type": "SQL Injection",
+    "is_active": true,
+    "start_date": "2026-03-07 09:24:00+00:00",
+    "end_date": "2026-03-07 00:00:00+00:00",
+    "created_at": "2026-02-27T10:20:09.299882",
+    "updated_at": "2026-02-27T10:20:09.299882",
+    "created_by": "user@example.com"
+  },
+  {
+    "schedule_id": 10,
+    "schedule_name": "aupix test",
+    "project_id": 5,
+    "asset_id": 14,
+    "cron_expression": "0 0 * * 5",
+    "attack_type": "SQL Injection",
+    "is_active": true,
+    "start_date": "2026-03-23 09:30:00+00:00",
+    "end_date": "2026-03-23 00:00:00+00:00",
+    "created_at": "2026-02-27T10:24:47.851176",
+    "updated_at": "2026-02-27T10:24:47.851176",
+    "created_by": "user@example.com"
+  },
+  {
+    "schedule_id": 11,
+    "schedule_name": "Weekly testing on AUPIX website",
+    "project_id": 5,
+    "asset_id": 14,
+    "cron_expression": "0 0 * * 1",
+    "attack_type": "SQL Injection",
+    "is_active": true,
+    "start_date": "2026-02-26 17:00:00+00:00",
+    "end_date": "2026-03-23 00:00:00+00:00",
+    "created_at": "2026-02-27T10:28:32.178522",
+    "updated_at": "2026-02-27T10:28:32.178522",
+    "created_by": "user@example.com"
   }
 ]
