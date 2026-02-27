@@ -224,14 +224,16 @@ class WorkerService:
             return True
         return False
     
-    def disconnect_worker(self, worker_id: int):
+    def disconnect_worker(self, worker_id: int, user_id: str):
         workers = self._read_json()
         for worker in workers:
-            access_key_id = worker.get("access_key_id")
-            if access_key_id:
-                access_key_service.delete_access_key_by_id(access_key_id)
-            key = access_key_service.create_access_key()
             if worker["id"] == worker_id:
+                if worker.get("owner") != user_id:
+                    raise HTTPException(status_code=403, detail="Worker does not belong to the user")
+                access_key_id = worker.get("access_key_id")
+                if access_key_id:
+                    access_key_service.delete_access_key_by_id(access_key_id)
+                key = access_key_service.create_access_key()
                 worker["isActive"] = False
                 worker["hostname"] = None
                 worker["internal_ip"] = None
