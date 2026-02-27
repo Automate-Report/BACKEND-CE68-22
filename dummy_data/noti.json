@@ -7000,5 +7000,1040 @@
     "hyperlink": "/projects/4/workers",
     "created_at": "2026-02-28T03:36:41.703947",
     "status": "unread"
+  },
+  {
+    "noti_id": 779,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:36:51.754419",
+    "status": "unread"
+  },
+  {
+    "noti_id": 780,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:37:01.803057",
+    "status": "unread"
+  },
+  {
+    "noti_id": 781,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:37:11.861900",
+    "status": "unread"
+  },
+  {
+    "noti_id": 782,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:37:21.904503",
+    "status": "unread"
+  },
+  {
+    "noti_id": 783,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:37:31.960608",
+    "status": "unread"
+  },
+  {
+    "noti_id": 784,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:37:42.002327",
+    "status": "unread"
+  },
+  {
+    "noti_id": 785,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:37:52.042440",
+    "status": "unread"
+  },
+  {
+    "noti_id": 786,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:38:02.097958",
+    "status": "unread"
+  },
+  {
+    "noti_id": 787,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:38:12.152685",
+    "status": "unread"
+  },
+  {
+    "noti_id": 788,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:38:22.196567",
+    "status": "unread"
+  },
+  {
+    "noti_id": 789,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:38:32.253270",
+    "status": "unread"
+  },
+  {
+    "noti_id": 790,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:38:42.306573",
+    "status": "unread"
+  },
+  {
+    "noti_id": 791,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:38:52.357399",
+    "status": "unread"
+  },
+  {
+    "noti_id": 792,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:39:02.418930",
+    "status": "unread"
+  },
+  {
+    "noti_id": 793,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:39:12.477486",
+    "status": "unread"
+  },
+  {
+    "noti_id": 794,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:39:22.533033",
+    "status": "unread"
+  },
+  {
+    "noti_id": 795,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:39:32.602017",
+    "status": "unread"
+  },
+  {
+    "noti_id": 796,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:39:42.662907",
+    "status": "unread"
+  },
+  {
+    "noti_id": 797,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:39:52.720378",
+    "status": "unread"
+  },
+  {
+    "noti_id": 798,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:40:02.775384",
+    "status": "unread"
+  },
+  {
+    "noti_id": 799,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:40:12.833784",
+    "status": "unread"
+  },
+  {
+    "noti_id": 800,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:40:22.884864",
+    "status": "unread"
+  },
+  {
+    "noti_id": 801,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:40:32.930756",
+    "status": "unread"
+  },
+  {
+    "noti_id": 802,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:40:42.994125",
+    "status": "unread"
+  },
+  {
+    "noti_id": 803,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:40:53.049531",
+    "status": "unread"
+  },
+  {
+    "noti_id": 804,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:41:03.111322",
+    "status": "unread"
+  },
+  {
+    "noti_id": 805,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:41:13.176885",
+    "status": "unread"
+  },
+  {
+    "noti_id": 806,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:41:23.226996",
+    "status": "unread"
+  },
+  {
+    "noti_id": 807,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:41:33.278168",
+    "status": "unread"
+  },
+  {
+    "noti_id": 808,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:41:43.328224",
+    "status": "unread"
+  },
+  {
+    "noti_id": 809,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:41:53.378542",
+    "status": "unread"
+  },
+  {
+    "noti_id": 810,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:42:03.431454",
+    "status": "unread"
+  },
+  {
+    "noti_id": 811,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:42:13.487402",
+    "status": "unread"
+  },
+  {
+    "noti_id": 812,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:42:23.546780",
+    "status": "unread"
+  },
+  {
+    "noti_id": 813,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:42:33.630351",
+    "status": "unread"
+  },
+  {
+    "noti_id": 814,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:42:43.702359",
+    "status": "unread"
+  },
+  {
+    "noti_id": 815,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:42:53.794167",
+    "status": "unread"
+  },
+  {
+    "noti_id": 816,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:43:03.845980",
+    "status": "unread"
+  },
+  {
+    "noti_id": 817,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:43:13.895582",
+    "status": "unread"
+  },
+  {
+    "noti_id": 818,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:43:23.950374",
+    "status": "unread"
+  },
+  {
+    "noti_id": 819,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:43:33.997797",
+    "status": "unread"
+  },
+  {
+    "noti_id": 820,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:43:44.042808",
+    "status": "unread"
+  },
+  {
+    "noti_id": 821,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:43:54.100193",
+    "status": "unread"
+  },
+  {
+    "noti_id": 822,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:44:04.159836",
+    "status": "unread"
+  },
+  {
+    "noti_id": 823,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:44:14.218974",
+    "status": "unread"
+  },
+  {
+    "noti_id": 824,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:44:24.265475",
+    "status": "unread"
+  },
+  {
+    "noti_id": 825,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:44:34.329900",
+    "status": "unread"
+  },
+  {
+    "noti_id": 826,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:44:44.392292",
+    "status": "unread"
+  },
+  {
+    "noti_id": 827,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:44:54.454397",
+    "status": "unread"
+  },
+  {
+    "noti_id": 828,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:45:04.528012",
+    "status": "unread"
+  },
+  {
+    "noti_id": 829,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:45:14.580129",
+    "status": "unread"
+  },
+  {
+    "noti_id": 830,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:45:24.645813",
+    "status": "unread"
+  },
+  {
+    "noti_id": 831,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:45:34.696881",
+    "status": "unread"
+  },
+  {
+    "noti_id": 832,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:45:44.767054",
+    "status": "unread"
+  },
+  {
+    "noti_id": 833,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:45:54.814519",
+    "status": "unread"
+  },
+  {
+    "noti_id": 834,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:46:04.866745",
+    "status": "unread"
+  },
+  {
+    "noti_id": 835,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:46:14.938580",
+    "status": "unread"
+  },
+  {
+    "noti_id": 836,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:46:24.998999",
+    "status": "unread"
+  },
+  {
+    "noti_id": 837,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:46:35.057543",
+    "status": "unread"
+  },
+  {
+    "noti_id": 838,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:46:45.131163",
+    "status": "unread"
+  },
+  {
+    "noti_id": 839,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:46:55.200867",
+    "status": "unread"
+  },
+  {
+    "noti_id": 840,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:47:05.264519",
+    "status": "unread"
+  },
+  {
+    "noti_id": 841,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:47:15.323760",
+    "status": "unread"
+  },
+  {
+    "noti_id": 842,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:47:25.387811",
+    "status": "unread"
+  },
+  {
+    "noti_id": 843,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:47:35.451021",
+    "status": "unread"
+  },
+  {
+    "noti_id": 844,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:47:45.512360",
+    "status": "unread"
+  },
+  {
+    "noti_id": 845,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:47:55.568671",
+    "status": "unread"
+  },
+  {
+    "noti_id": 846,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:48:05.616529",
+    "status": "unread"
+  },
+  {
+    "noti_id": 847,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:48:15.711209",
+    "status": "unread"
+  },
+  {
+    "noti_id": 848,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:48:25.780740",
+    "status": "unread"
+  },
+  {
+    "noti_id": 849,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:48:35.842985",
+    "status": "unread"
+  },
+  {
+    "noti_id": 850,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:48:45.906888",
+    "status": "unread"
+  },
+  {
+    "noti_id": 851,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:48:55.970858",
+    "status": "unread"
+  },
+  {
+    "noti_id": 852,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:49:06.034382",
+    "status": "unread"
+  },
+  {
+    "noti_id": 853,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:49:16.098109",
+    "status": "unread"
+  },
+  {
+    "noti_id": 854,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:49:26.182598",
+    "status": "unread"
+  },
+  {
+    "noti_id": 855,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:49:36.263679",
+    "status": "unread"
+  },
+  {
+    "noti_id": 856,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:49:46.328264",
+    "status": "unread"
+  },
+  {
+    "noti_id": 857,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:49:56.376049",
+    "status": "unread"
+  },
+  {
+    "noti_id": 858,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:50:06.445247",
+    "status": "unread"
+  },
+  {
+    "noti_id": 859,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:50:16.507301",
+    "status": "unread"
+  },
+  {
+    "noti_id": 860,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:50:26.559487",
+    "status": "unread"
+  },
+  {
+    "noti_id": 861,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:50:36.624379",
+    "status": "unread"
+  },
+  {
+    "noti_id": 862,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:50:46.672081",
+    "status": "unread"
+  },
+  {
+    "noti_id": 863,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:50:56.712054",
+    "status": "unread"
+  },
+  {
+    "noti_id": 864,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:51:06.761015",
+    "status": "unread"
+  },
+  {
+    "noti_id": 865,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:51:16.815879",
+    "status": "unread"
+  },
+  {
+    "noti_id": 866,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:51:26.860424",
+    "status": "unread"
+  },
+  {
+    "noti_id": 867,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:51:36.906996",
+    "status": "unread"
+  },
+  {
+    "noti_id": 868,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:51:46.954871",
+    "status": "unread"
+  },
+  {
+    "noti_id": 869,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:51:57.000973",
+    "status": "unread"
+  },
+  {
+    "noti_id": 870,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:52:07.065265",
+    "status": "unread"
+  },
+  {
+    "noti_id": 871,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:52:17.127204",
+    "status": "unread"
+  },
+  {
+    "noti_id": 872,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:52:27.184356",
+    "status": "unread"
+  },
+  {
+    "noti_id": 873,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:52:37.243327",
+    "status": "unread"
+  },
+  {
+    "noti_id": 874,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:52:47.293898",
+    "status": "unread"
+  },
+  {
+    "noti_id": 875,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:52:57.354707",
+    "status": "unread"
+  },
+  {
+    "noti_id": 876,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:53:07.411343",
+    "status": "unread"
+  },
+  {
+    "noti_id": 877,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:53:17.467230",
+    "status": "unread"
+  },
+  {
+    "noti_id": 878,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:53:27.516927",
+    "status": "unread"
+  },
+  {
+    "noti_id": 879,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:53:37.575724",
+    "status": "unread"
+  },
+  {
+    "noti_id": 880,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:53:47.628226",
+    "status": "unread"
+  },
+  {
+    "noti_id": 881,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:53:57.708130",
+    "status": "unread"
+  },
+  {
+    "noti_id": 882,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:54:07.777077",
+    "status": "unread"
+  },
+  {
+    "noti_id": 883,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:54:17.828449",
+    "status": "unread"
+  },
+  {
+    "noti_id": 884,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:54:27.889944",
+    "status": "unread"
+  },
+  {
+    "noti_id": 885,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:54:37.943565",
+    "status": "unread"
+  },
+  {
+    "noti_id": 886,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:54:48.003571",
+    "status": "unread"
+  },
+  {
+    "noti_id": 887,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:54:58.076360",
+    "status": "unread"
+  },
+  {
+    "noti_id": 888,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:55:08.144285",
+    "status": "unread"
+  },
+  {
+    "noti_id": 889,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:55:18.198064",
+    "status": "unread"
+  },
+  {
+    "noti_id": 890,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:55:31.861979",
+    "status": "unread"
+  },
+  {
+    "noti_id": 891,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:55:41.942437",
+    "status": "unread"
+  },
+  {
+    "noti_id": 892,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:55:51.999365",
+    "status": "unread"
+  },
+  {
+    "noti_id": 893,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T03:56:02.057378",
+    "status": "unread"
   }
 ]

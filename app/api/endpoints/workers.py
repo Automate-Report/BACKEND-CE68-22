@@ -42,7 +42,7 @@ def create_worker(project_id: int, worker_in: WorkerCreate, user = Depends(get_c
     
     worker = worker_service.create_worker(worker_in, project_id)
 
-    key = access_key_service.create_access_key(worker["id"])
+    key = access_key_service.create_access_key()
 
     return { 
         "status": "Successfully!",
