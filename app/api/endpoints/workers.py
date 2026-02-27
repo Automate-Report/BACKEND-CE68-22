@@ -162,8 +162,10 @@ def download_worker_zip(
 
 @router.get("/unlink/{worker_id}")
 async def disconnect_worker_from_host(worker_id: int):
+
     worker_service.disconnect_worker(
-        worker_id=worker_id
+        worker_id=worker_id,
+        access_key_id=key.get("id")
     )
 
 @router.get("/unlink/all/{project_id}")

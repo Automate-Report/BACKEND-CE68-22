@@ -227,6 +227,10 @@ class WorkerService:
     def disconnect_worker(self, worker_id: int):
         workers = self._read_json()
         for worker in workers:
+            access_key_id = worker.get("access_key_id")
+            if access_key_id:
+                access_key_service.delete_access_key_by_id(access_key_id)
+            key = access_key_service.create_access_key()
             if worker["id"] == worker_id:
                 worker["isActive"] = False
                 worker["hostname"] = None
@@ -234,18 +238,25 @@ class WorkerService:
                 worker["last_heartbeat"] = None
                 worker["owner"] = None
                 worker["status"] = "notActivated"
+                worker["access_key_id"] = key.get("id")
 
         self._save_json(workers)
 
     def disconnect_workers_in_project(self, project_id: int):
         workers = self._read_json()
         for worker in workers:
+            access_key_id = worker.get("access_key_id")
+            if access_key_id:
+                access_key_service.delete_access_key_by_id(access_key_id)
+            key = access_key_service.create_access_key()
             if worker["project_id"] == project_id:
                 worker["isActive"] = False
                 worker["hostname"] = None
                 worker["internal_ip"] = None
                 worker["last_heartbeat"] = None
                 worker["owner"] = None
+                worker["status"] = "notActivated"
+                worker["access_key_id"] = key.get("id")
 
         self._save_json(workers)
 
@@ -258,8 +269,7 @@ class WorkerService:
                 target_worker = worker
 
         if not target_worker.get("owner"):
-            print("Worker has no owner, cannot verify")
-            return False
+            raise HTTPException(status_code=420, detail="Worker has no owner, cannot verify. Please download worker again to bind with your account.")
 
         if not target_worker:
             # Use 404 for "Not Found"
