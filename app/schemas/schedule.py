@@ -23,6 +23,7 @@ class ScheduleResponse(BaseModel):
     id: int
     project_id: int
     name: str
+    asset_name: str
     atk_type: str
     start_date: datetime
     end_date: datetime

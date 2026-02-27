@@ -31,4 +31,10 @@ redis_jobs = redis.Redis(connection_pool=pool_jobs)
 
 QUEUE_KEY = "system:queue:work" #เก็บงานที่พร้อมทำ
 
-#docker run -d --name redis -p 5678  redis:6379 redis
+# For localhost user
+
+# docker pull redis:7
+# docker run -d ^
+#   --name redis-server ^
+#   -p 5678:6379 ^
+#   redis:7

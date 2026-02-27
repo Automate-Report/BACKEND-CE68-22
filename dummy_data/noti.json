@@ -181,38 +181,20 @@
   },
   {
     "noti_id": 21,
-    "user_email": "somchai@tech.co.th",
+    "user_email": "user@example.com",
     "type": "error",
-    "message": "❌ ไม่สามารถเริ่มงานสแกน OWASP Juice Shop ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
-    "hyperlink": "/projects/21/workers",
-    "created_at": "2026-02-26T15:50:22.676697",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-27T16:55:06.480519",
     "status": "unread"
   },
   {
     "noti_id": 22,
-    "user_email": "somchai@tech.co.th",
+    "user_email": "user@example.com",
     "type": "error",
-    "message": "❌ ไม่สามารถเริ่มงานสแกน OWASP Juice Shop ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
-    "hyperlink": "/projects/21/workers",
-    "created_at": "2026-02-26T15:50:32.712065",
-    "status": "unread"
-  },
-  {
-    "noti_id": 23,
-    "user_email": "somchai@tech.co.th",
-    "type": "error",
-    "message": "❌ ไม่สามารถเริ่มงานสแกน OWASP Juice Shop ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
-    "hyperlink": "/projects/21/workers",
-    "created_at": "2026-02-26T15:50:42.742406",
-    "status": "unread"
-  },
-  {
-    "noti_id": 24,
-    "user_email": "somchai@tech.co.th",
-    "type": "error",
-    "message": "❌ ไม่สามารถเริ่มงานสแกน OWASP Juice Shop ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
-    "hyperlink": "/projects/21/workers",
-    "created_at": "2026-02-26T15:50:52.884213",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-27T16:55:16.499855",
     "status": "unread"
   }
 ]
