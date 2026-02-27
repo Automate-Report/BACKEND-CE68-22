@@ -162,11 +162,13 @@ class WorkerService:
             
         return None
     
-    def update_worker(self, worker_id: int, worker_in: WorkerCreate, user_id: str) -> Optional[dict]:
+    def update_worker(self, worker_id: int, worker_in: WorkerCreate, user_id: str, role: str) -> Optional[dict]:
         """Service: อัปเดต Worker"""
         workers = self._read_json()
         for worker in workers:
             if worker["id"] == worker_id and worker["email"] == user_id:
+                if worker.get("owner") != user_id and role == "pentester":
+                    raise HTTPException(status_code=403, detail="Worker does not belong to the user")
                 worker["name"] = worker_in.name
                 worker["updated_at"] = datetime.now().isoformat()
                 self._save_json(workers)

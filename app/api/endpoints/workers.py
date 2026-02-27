@@ -154,7 +154,8 @@ async def update_worker(
     updated_worker = worker_service.update_worker(
         worker_id=worker_id,
         worker_in=worker_in,
-        user_id=user["sub"]
+        user_id=user["sub"],
+        role=role
     )
     if not updated_worker:
         raise HTTPException(status_code=404, detail="Worker not found")
