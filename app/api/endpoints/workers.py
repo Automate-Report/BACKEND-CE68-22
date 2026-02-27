@@ -164,8 +164,7 @@ def download_worker_zip(
 async def disconnect_worker_from_host(worker_id: int):
 
     worker_service.disconnect_worker(
-        worker_id=worker_id,
-        access_key_id=key.get("id")
+        worker_id=worker_id
     )
 
 @router.get("/unlink/all/{project_id}")
@@ -173,6 +172,11 @@ async def disconnect_all_worker_from_host_by_project(project_id: int):
     worker_service.disconnect_workers_in_project(
         project_id=project_id
     )
+
+@router.post("/{worker_id}/mark-downloaded")
+def mark_worker_as_downloaded(worker_id: int, user = Depends(get_current_user)):
+    worker_service.download_success(worker_id, user["sub"])
+    return {"detail": "Worker marked as downloaded"}
     
 #Dummy task
 @router.post("/submit-task")

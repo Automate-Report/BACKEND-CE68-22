@@ -86,7 +86,8 @@
     "description": "Main entry point for customer traffic",
     "target": "https://api.enterprise.com",
     "type": "URL",
-    "created_at": "2026-02-01T09:00:00.000000"
+    "created_at": "2026-02-01T09:00:00.000000",
+    "updated_at": "2026-02-27T10:21:49.295379"
   },
   {
     "id": 11,
@@ -95,7 +96,8 @@
     "description": "Internal DB storing user credentials",
     "target": "10.0.1.55",
     "type": "IP",
-    "created_at": "2026-02-01T09:15:00.000000"
+    "created_at": "2026-02-01T09:15:00.000000",
+    "updated_at": "2026-02-27T10:21:49.295379"
   },
   {
     "id": 12,
@@ -104,7 +106,9 @@
     "description": "Test environment for new features",
     "target": "https://staging.enterprise.com",
     "type": "URL",
-    "created_at": "2026-02-01T10:00:00.000000"
+    "created_at": "2026-02-01T10:00:00.000000",
+    "updated_at": "2026-02-27T10:21:49.295379"
+
   },
   {
     "id": 13,

@@ -260,6 +260,15 @@ class WorkerService:
 
         self._save_json(workers)
 
+    def download_success(self, worker_id: int, user_id: str):
+        workers = self._read_json()
+
+        for w in workers:
+            if w["id"] == worker_id:
+                w["owner"] = user_id
+
+        self._save_json(workers)
+
     def verify_worker(self, req: VerifyRequest):
         workers = self._read_json()
         target_worker = None
@@ -389,10 +398,6 @@ class WorkerService:
     def download_worker(self, worker_id: int, user_id: str):
         """Service: download Worker"""
         workers = self._read_json()
-
-        for w in workers:
-            if w["id"] == worker_id:
-                w["owner"] = user_id
 
         self._save_json(workers)
         worker = self.get_worker_by_id(worker_id=worker_id)
