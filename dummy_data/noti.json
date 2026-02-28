@@ -124,5 +124,14 @@
     "hyperlink": "/projects/4/workers",
     "created_at": "2026-02-28T21:35:02.493875",
     "status": "unread"
+  },
+  {
+    "noti_id": 15,
+    "user_email": "user@example.com",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน Test Create Asset with Credential ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/4/workers",
+    "created_at": "2026-02-28T21:35:12.528458",
+    "status": "unread"
   }
 ]
