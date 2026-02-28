@@ -17,7 +17,7 @@
     "resolved_at": null,
     "last_seen_at": "2026-02-13T10:00:00",
     "first_seen_at": "2026-02-10T08:30:00",
-    "occurrence_cnt": 3
+    "occurrence_count": 3
   },
   {
     "id": 2,
@@ -37,7 +37,7 @@
     "resolved_at": "2026-02-12T15:00:00",
     "last_seen_at": "2026-02-12T15:00:00",
     "first_seen_at": "2026-02-11T09:00:00",
-    "occurrence_cnt": 1
+    "occurrence_count": 1
   },
   {
     "id": 3,
@@ -54,7 +54,7 @@
     "db_type": null,
     "status": "in_progress",
     "verify": "tp",
-    "occurrance_count": 3,
+    "occurrence_count": 3,
     "first_seen_at": "2026-02-21T20:18:49.281141",
     "last_seen_at": "2026-02-23T16:24:40.918819",
     "resolved_at": null
@@ -78,7 +78,7 @@
     "first_seen_at": "2026-02-26T10:00:00Z",
     "last_seen_at": "2026-02-26T21:00:00Z",
     "updated_at": "2026-02-26T21:05:00Z",
-    "occurrence_cnt": 5,
+    "occurrence_count": 5,
     "description_override": null
   },
   {
@@ -100,7 +100,7 @@
     "first_seen_at": "2026-02-25T08:30:00Z",
     "last_seen_at": "2026-02-26T14:00:00Z",
     "updated_at": "2026-02-26T14:10:00Z",
-    "occurrence_cnt": 2,
+    "occurrence_count": 2,
     "description_override": "พบความพยายามทำ SQL Injection ผ่านพอร์ตฐานข้อมูลโดยตรง"
   },
   {
@@ -121,7 +121,7 @@
     "first_seen_at": "2026-02-22T09:00:00Z",
     "last_seen_at": "2026-02-26T18:00:00Z",
     "updated_at": "2026-02-26T18:00:00Z",
-    "occurrence_cnt": 12,
+    "occurrence_count": 12,
     "description_override": null
   },
   {
@@ -142,7 +142,7 @@
     "first_seen_at": "2026-02-22T09:00:00Z",
     "last_seen_at": "2026-02-24T10:00:00Z",
     "updated_at": "2026-02-24T15:05:00Z",
-    "occurrence_cnt": 1,
+    "occurrence_count": 1,
     "description_override": "Fixed by implementing input sanitization middleware."
   },
   {
@@ -163,7 +163,7 @@
     "first_seen_at": "2026-02-20T11:00:00Z",
     "last_seen_at": "2026-02-20T11:00:00Z",
     "updated_at": "2026-02-21T09:00:00Z",
-    "occurrence_cnt": 1,
+    "occurrence_count": 1,
     "description_override": "Risk accepted: Internal network only."
   }
 ]
