@@ -117,7 +117,6 @@ async def get_vulnerability_details(
         raise HTTPException(status_code=404, detail="Vulnerability not found")
     return details
 
-
 @router.post("/assign/")
 async def assign_vulnerability_to_user(
     payload: AssignedJobPayload,
