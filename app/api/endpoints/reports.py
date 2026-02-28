@@ -10,6 +10,7 @@ from app.schemas.report import CreateReportPayload
 from app.services.asset import asset_service
 from app.services.vulnerability import vuln_service
 from app.services.project import project_service
+from app.services.userauthen import userauthen_service
 
 
 router = APIRouter()
@@ -38,14 +39,14 @@ async def create_report(
         if not asset: continue
 
         report_asset.append({
-            "asset_id": f"AS-{i+1}",
+            "asset_id": f"AS-{i+1:03}",
             "asset_name": asset["name"],
             "target": asset["target"]
         })
 
         vulns = vuln_service.get_vulns_by_asset_id(asset_id)
 
-        for v in vulns:
+        for j, v in enumerate(vulns):
             # first_seen = datetime.fromisoformat(v["first_seen_at"].replace("Z", "+00:00"))
     
             # # ตรวจสอบว่ามี timezone หรือไม่ ถ้าไม่มีให้ใส่ UTC เข้าไป (ป้องกันเหนียว)
@@ -71,8 +72,21 @@ async def create_report(
             #         continue
 
             detail = vuln_service.get_vuln_details_by_vuln_id(v["id"])
-            detail["asset_related"] = f"AS-{i+1}"
-            vuln_details.append(detail)
+            detail["asset_related"] = f"AS-{i+1:03}"
+           
+            vuln_details.append({
+                "vuln_id": f"V-{j+1:03}",
+                "vuln_type": detail["vuln_type"],
+                "severity": detail["severity"],
+                "cvss_score": detail["cvss_details"]["score"],
+                "cvss_vector": detail["cvss_details"]["vector"],
+                "status": detail["status"],
+
+                "dev_name": userauthen_service.get_username_by_id(detail["assigned_to"]),
+                "tester_name": userauthen_service.get_username_by_id(detail["verified_by"]),
+
+
+            })
 
     stats = {
         "critical_cnt": len([v for v in vuln_details if v["severity"] == "CRITICAL"]),
