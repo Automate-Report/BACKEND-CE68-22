@@ -10,7 +10,7 @@ from app.schemas.report import CreateReportPayload
 from app.services.asset import asset_service
 from app.services.vulnerability import vuln_service
 from app.services.project import project_service
-from app.services.userauthen import userauthen_service
+from app.services.reports.pentest_report import pen_test_report_service
 
 
 router = APIRouter()
@@ -27,87 +27,61 @@ async def create_report(
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     
-    asset_ids = report_in.asset_ids
-    if not asset_ids:
-        asset_ids = asset_service.get_asset_ids_by_project_id(project_id)
+    # ดึง asset_ids มาก่อน
+    asset_ids_to_process = report_in.asset_ids
+    if not asset_ids_to_process:
+        asset_ids_to_process = asset_service.get_asset_ids_by_project_id(project_id)
+    
+    if not asset_ids_to_process:
+        raise HTTPException(
+            status_code=400, 
+            detail="ไม่สามารถสร้างรายงานได้ เนื่องจากไม่พบ Asset ในโปรเจกต์นี้"
+        )
 
     vuln_details = []   
-    report_asset = []
+    assets_for_report = []
 
-    for i, asset_id in enumerate(asset_ids):
+    # ป้องกันกรณี asset_ids_to_process ยังเป็น None หรือไม่ใช่ list
+    if not isinstance(asset_ids_to_process, list):
+        asset_ids_to_process = list(asset_ids_to_process)
+
+    # --- เริ่ม Loop ---
+    for i, asset_id in enumerate(asset_ids_to_process):
         asset = asset_service.get_asset_by_id(asset_id)
-        if not asset: continue
+        if not asset:
+            print(f"⚠️ Asset ID {asset_id} not found, skipping...")
+            continue
 
-        report_asset.append({
-            "asset_id": f"AS-{i+1:03}",
-            "asset_name": asset["name"],
-            "target": asset["target"]
-        })
+        # ✅ ประกาศตัวแปรอ้างอิงให้ชัดเจนภายใน Loop
+        current_asset_ref = f"AS-{i+1:03}"
+        
+        # ใส่ ID อ้างอิงลงในตัวแปร asset เพื่อไปโชว์ในเล่มรายงาน
+        asset["asset_ref_id"] = current_asset_ref 
+        assets_for_report.append(asset)
 
+        # ดึงช่องโหว่ของ Asset ตัวนี้
         vulns = vuln_service.get_vulns_by_asset_id(asset_id)
+        if vulns:
+            for v in vulns:
+                detail = vuln_service.get_vuln_details_by_vuln_id(v["id"])
+                if detail:
+                    # ✅ ใช้ตัวแปรที่ประกาศไว้ข้างบน (current_asset_ref)
+                    detail["asset_related"] = current_asset_ref
+                    vuln_details.append(detail)
+        
+    # --- จบ Loop ---
 
-        for j, v in enumerate(vulns):
-            # first_seen = datetime.fromisoformat(v["first_seen_at"].replace("Z", "+00:00"))
+    # ตรวจสอบว่ามีข้อมูลส่งไปทำรายงานไหม
+    if not vuln_details and not assets_for_report:
+         raise HTTPException(status_code=400, detail="No data found for the selected assets/time range.")
+
+    # เรียก Service สร้างรายงาน
+    pen_test_report_service.create_report(
+        project=project,
+        vuln_details=vuln_details,
+        assets=assets_for_report,
+        report_name=report_in.report_name
+    )
     
-            # # ตรวจสอบว่ามี timezone หรือไม่ ถ้าไม่มีให้ใส่ UTC เข้าไป (ป้องกันเหนียว)
-            # if first_seen.tzinfo is None:
-            #     first_seen = first_seen.replace(tzinfo=timezone.utc)
-
-            # # 2. จัดการ start_date จาก Payload ให้เป็น Aware (UTC)
-            # if report_in.start_date:
-            #     start_date = report_in.start_date
-            #     if start_date.tzinfo is None:
-            #         start_date = start_date.replace(tzinfo=timezone.utc)
-                
-            #     if first_seen < start_date:
-            #         continue
-
-            # # 3. จัดการ end_date จาก Payload ให้เป็น Aware (UTC)
-            # if report_in.end_date:
-            #     end_date = report_in.end_date
-            #     if end_date.tzinfo is None:
-            #         end_date = end_date.replace(tzinfo=timezone.utc)
-                    
-            #     if first_seen > end_date:
-            #         continue
-
-            detail = vuln_service.get_vuln_details_by_vuln_id(v["id"])
-            detail["asset_related"] = f"AS-{i+1:03}"
-           
-            vuln_details.append({
-                "vuln_id": f"V-{j+1:03}",
-                "vuln_type": detail["vuln_type"],
-                "severity": detail["severity"],
-                "cvss_score": detail["cvss_details"]["score"],
-                "cvss_vector": detail["cvss_details"]["vector"],
-                "status": detail["status"],
-
-                "dev_name": userauthen_service.get_username_by_id(detail["assigned_to"]),
-                "tester_name": userauthen_service.get_username_by_id(detail["verified_by"]),
-
-
-            })
-
-    stats = {
-        "critical_cnt": len([v for v in vuln_details if v["severity"] == "CRITICAL"]),
-        "high_cnt": len([v for v in vuln_details if v["severity"] == "HIGH"]),
-        "medium_cnt": len([v for v in vuln_details if v["severity"] == "MEDIUM"]),
-        "low_cnt": len([v for v in vuln_details if v["severity"] == "LOW"]),
-        "total_vulns": len(vuln_details),
-        "total_assets": len(vuln_details)
-    }
-
-    context = {
-        "project_name": project["name"],
-        "job_started_date": report_in.start_date.strftime("%d/%m/%Y") if report_in.start_date else "All Time",
-        "job_ended_date": report_in.end_date.strftime("%d/%m/%Y") if report_in.end_date else datetime.now().strftime("%d/%m/%Y"),
-        "scanner_name": "Automated Pen-test Worker",
-        **stats,
-        "assets": report_asset,
-        "vulns": vuln_details
-    }
-
-    
-    
-    return context
+    return "PDF generated successfully."
 
