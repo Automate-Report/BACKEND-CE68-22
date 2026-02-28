@@ -127,7 +127,7 @@ class WorkerService:
                     continue
                 elif filter == "notActivated" and worker["status"] != "notActivated":
                     continue
-                elif filter == "available" and worker["onwer"]:
+                elif filter == "available" and worker["owner"]:
                     continue
                 elif filter == "inUse" and not worker["owner"]:
                     continue
