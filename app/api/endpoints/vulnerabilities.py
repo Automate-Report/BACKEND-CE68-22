@@ -69,8 +69,12 @@ async def get_all_vuln_by_project_id(
     order: Optional[str] = Query("asc", description="asc or desc"),    
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
-    # user = Depends(get_current_user),
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
 ):
+    if not role:
+        raise HTTPException(status_code=403, detail="User does not have access to this project")
+    
     asset_ids = asset_service.get_asset_ids_by_project_id(project_id)
 
     result = vuln_service.get_all_issue_by_project_id(
@@ -86,7 +90,14 @@ async def get_all_vuln_by_project_id(
     return result
 
 @router.get("/{vuln_id}", response_model=VulnDetails)
-async def get_vulnerability_details(vuln_id: int):
+async def get_vulnerability_details(
+    vuln_id: int,
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    if not role:
+        raise HTTPException(status_code=403, detail="User does not have access to this vulnerability")
+    
     details = vuln_service.get_vuln_details_by_vuln_id(vuln_id)
     if not details:
         raise HTTPException(status_code=404, detail="Vulnerability not found")
@@ -94,7 +105,14 @@ async def get_vulnerability_details(vuln_id: int):
 
 
 @router.post("/assign/")
-async def assign_vulnerability_to_user(payload: AssignedJobPayload):
+async def assign_vulnerability_to_user(
+    payload: AssignedJobPayload,
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    if role != "owner":
+        raise HTTPException(status_code=403, detail="User does not have access to this project")
+
     vuln_service.assign_vulnerability_to_user(
         vuln_id=payload.vuln_id,
         position=payload.position,
@@ -103,7 +121,14 @@ async def assign_vulnerability_to_user(payload: AssignedJobPayload):
     return {"message": "Vulnerability assigned successfully"}
 
 @router.post("/change-status/")
-async def change_vulnerability_status(payload: ChangeStatusPayload):
+async def change_vulnerability_status(
+    payload: ChangeStatusPayload,
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    if role == "pentester":
+        raise HTTPException(status_code=403, detail="User does not have access to this project")
+
     vuln_service.change_vulnerability_status(
         vuln_id=payload.vuln_id,
         new_status=payload.new_status
@@ -111,7 +136,14 @@ async def change_vulnerability_status(payload: ChangeStatusPayload):
     return {"message": "Vulnerability status updated successfully"}
 
 @router.post("/change-verify/")
-async def change_vulnerability_verify(payload: ChangeVerifyPayload):
+async def change_vulnerability_verify(
+    payload: ChangeVerifyPayload,
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    if role == "developer":
+        raise HTTPException(status_code=403, detail="User does not have access to this project")
+
     vuln_service.change_vulnerability_verify(
         vuln_id=payload.vuln_id,
         new_verify=payload.new_verify
