@@ -1,4 +1,5 @@
 # Lib imports
+from pathlib import Path
 from functools import partial
 from reportlab.platypus import PageBreak, SimpleDocTemplate
 from reportlab.lib.pagesizes import A4
@@ -191,14 +192,21 @@ for vuln in context.vulns:
 # ==========================
 # Import Styles and Register Fonts
 # ==========================
-register_fonts("Fonts/")
+register_fonts("static/Fonts/")
 styles = get_styles()
 
 # ==========================
 # Create document
 # ==========================
+# สร้าง Path โดยอ้างอิงจากตำแหน่งไฟล์ Python นี้ (Current Script Directory)
+base_dir = Path(__file__).parent.parent.parent.parent.parent
+file_path = base_dir / "fake_file_storage" / "report" / "penetration_testing_report.pdf"
+
+# สร้างโฟลเดอร์ (สร้างซ้อนกันกี่ชั้นก็ได้ ถ้ามีอยู่แล้วก็ไม่ Error)
+file_path.parent.mkdir(parents=True, exist_ok=True)
+
 doc = SimpleDocTemplate(
-    "penetration_testing_report.pdf",
+    str(file_path),
     pagesize=A4,
     topMargin=28 * mm,   # space for header
     bottomMargin=20 * mm # space for footer
