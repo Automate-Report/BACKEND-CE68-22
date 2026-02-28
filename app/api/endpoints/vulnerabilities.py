@@ -15,7 +15,14 @@ router = APIRouter()
 
 # GET cnt of vuln using project_id
 @router.get("/cnt/{project_id}")
-async def get_cnt_vulns_by_project_id(project_id: int):
+async def get_cnt_vulns_by_project_id(
+    project_id: int,
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    if not role:
+        raise HTTPException(status_code=403, detail="User does not have access to this project")
+    
     asset_ids = asset_service.get_asset_ids_by_project_id(project_id)
 
     if not asset_ids:
@@ -29,7 +36,14 @@ async def get_cnt_vulns_by_project_id(project_id: int):
     }
 
 @router.get("/summary/status/{project_id}", response_model=SummaryCntVlun)
-async def get_summary_vuln_by_project_id(project_id: int):
+async def get_summary_vuln_by_project_id(
+    project_id: int,
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    if not role:
+        raise HTTPException(status_code=403, detail="User does not have access to this project")
+
     asset_ids = asset_service.get_asset_ids_by_project_id(project_id)
 
     if not asset_ids:
