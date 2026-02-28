@@ -199,8 +199,19 @@ class ScheduleService:
         # 1. เช็คว่า Active หรือไม่
         if not schedule.get("is_active", False):
             return False
+        
+        # 2. เช็ค start_date (ห้ามรันก่อนเวลา)
+        start_date_str = schedule.get("start_date")
+        if start_date_str:
+            try:
+                # แปลง format "2026-03-07 09:24:00+00:00"
+                start_date = datetime.fromisoformat(start_date_str.replace(" ", "T"))
+                if now < start_date:
+                    return False # ยังไม่ถึงเวลาเริ่ม
+            except Exception as e:
+                print(f"⚠️ Error parsing start_date: {e}")
 
-        # 2. เช็ค end_date (ถ้ามี)
+        # 3. เช็ค end_date (ถ้ามี)
         end_date_str = schedule.get("end_date")
         if end_date_str:
             try:
@@ -217,13 +228,13 @@ class ScheduleService:
             except Exception as e:
                 print(f"⚠️ Error parsing end_date: {e}")
 
-        # 3. จัดการ Not Repeat
+        # 4. จัดการ Not Repeat
         cron_string = schedule.get("cron_expression", "")
         if cron_string == "Not Repeat":
             # คืนค่า True เพื่อให้ไป dispatch job และเราจะไปสั่ง deactivate ใน loop หลัก
             return True
 
-        # 4. จัดการ Cron ปกติ
+        # 5. จัดการ Cron ปกติ
         expressions = [e.strip() for e in cron_string.split("Z") if e.strip()]
         now_truncated = now.replace(second=0, microsecond=0)
 
