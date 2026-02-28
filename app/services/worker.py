@@ -103,16 +103,36 @@ class WorkerService:
 
         return new_worker
     
-    def get_all_workers_by_project_id(self, project_id: int, page: int, size: int, sort_by: str = None, order: str = "asc"):
+    def get_all_workers_by_project_id(self, project_id: int, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
         """Service: ดึงข้อมูล Worker ทั้งหมดของ user นั้น"""
         workers = self._read_json()
         
         # 1. กรอง User
         all_matches = []
         for worker in workers:
+
+            if worker.get("project_id") != project_id:
+                continue
+
             worker = self._enrich_worker_status(worker)
-            if worker["project_id"] == project_id:
-                all_matches.append(worker)
+            
+            if search:
+                if search.lower() not in worker.get("name", "").lower():
+                    continue
+
+            if filter and filter != "ALL":
+                if filter == "online" and worker["status"] != "online":
+                    continue
+                elif filter == "offline" and worker["status"] != "offline":
+                    continue
+                elif filter == "notActivated" and worker["status"] != "notActivated":
+                    continue
+                elif filter == "available" and worker["owner"]:
+                    continue
+                elif filter == "inUse" and not worker["owner"]:
+                    continue
+
+            all_matches.append(worker)
 
         if sort_by:
             reverse = (order == "desc")
@@ -151,7 +171,6 @@ class WorkerService:
                 return True
         return False
     
-
     def get_worker_by_id(self, worker_id: int):
         """Service: ดึงข้อมูล 1 Worker"""
         workers = self._read_json()
@@ -162,11 +181,13 @@ class WorkerService:
             
         return None
     
-    def update_worker(self, worker_id: int, worker_in: WorkerCreate, user_id: str) -> Optional[dict]:
+    def update_worker(self, worker_id: int, worker_in: WorkerCreate, user_id: str, role: str) -> Optional[dict]:
         """Service: อัปเดต Worker"""
         workers = self._read_json()
         for worker in workers:
-            if worker["id"] == worker_id and worker["email"] == user_id:
+            if worker["id"] == worker_id:
+                if worker.get("owner") != user_id and role == "pentester":
+                    raise HTTPException(status_code=403, detail="Worker does not belong to the user")
                 worker["name"] = worker_in.name
                 worker["updated_at"] = datetime.now().isoformat()
                 self._save_json(workers)
@@ -224,28 +245,55 @@ class WorkerService:
             return True
         return False
     
-    def disconnect_worker(self, worker_id: int):
+    def disconnect_worker(self, worker_id: int, user_id: str, role: str):
         workers = self._read_json()
+        is_system_owner = (role == "owner")
         for worker in workers:
             if worker["id"] == worker_id:
+                is_worker_owner = (worker.get("owner") == user_id)
+                if not (is_system_owner or is_worker_owner):
+                    raise HTTPException(
+                        status_code=403, 
+                        detail="Access denied: You do not have permission to manage this worker"
+                    )
+                access_key_id = worker.get("access_key_id")
+                if access_key_id:
+                    access_key_service.delete_access_key_by_id(access_key_id)
+                key = access_key_service.create_access_key()
                 worker["isActive"] = False
                 worker["hostname"] = None
                 worker["internal_ip"] = None
                 worker["last_heartbeat"] = None
                 worker["owner"] = None
                 worker["status"] = "notActivated"
+                worker["access_key_id"] = key.get("id")
 
         self._save_json(workers)
 
     def disconnect_workers_in_project(self, project_id: int):
         workers = self._read_json()
         for worker in workers:
+            access_key_id = worker.get("access_key_id")
+            if access_key_id:
+                access_key_service.delete_access_key_by_id(access_key_id)
+            key = access_key_service.create_access_key()
             if worker["project_id"] == project_id:
                 worker["isActive"] = False
                 worker["hostname"] = None
                 worker["internal_ip"] = None
                 worker["last_heartbeat"] = None
                 worker["owner"] = None
+                worker["status"] = "notActivated"
+                worker["access_key_id"] = key.get("id")
+
+        self._save_json(workers)
+
+    def download_success(self, worker_id: int, user_id: str):
+        workers = self._read_json()
+
+        for w in workers:
+            if w["id"] == worker_id:
+                w["owner"] = user_id
 
         self._save_json(workers)
 
@@ -258,8 +306,7 @@ class WorkerService:
                 target_worker = worker
 
         if not target_worker.get("owner"):
-            print("Worker has no owner, cannot verify")
-            return False
+            raise HTTPException(status_code=420, detail="Worker has no owner, cannot verify. Please download worker again to bind with your account.")
 
         if not target_worker:
             # Use 404 for "Not Found"
@@ -380,12 +427,11 @@ class WorkerService:
         """Service: download Worker"""
         workers = self._read_json()
 
-        for w in workers:
-            if w["id"] == worker_id:
-                w["owner"] = user_id
-
         self._save_json(workers)
         worker = self.get_worker_by_id(worker_id=worker_id)
+
+        if worker.get("owner"):
+            raise HTTPException(status_code=403, detail="Worker already has an owner, cannot download.")
 
         hidden_payload = {
             "WORKER_ID": worker_id,
@@ -393,7 +439,6 @@ class WorkerService:
             "BACKEND_URL": "http://127.0.0.1:8000"
         }
 
-        
 
         EMBEDED_KEY = settings.EMBEDED_KEY.encode()
         DELIMITER = b"|||HIDDEN_DATA|||"
