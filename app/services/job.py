@@ -312,16 +312,28 @@ class JobService:
         return best_w, best_score
 
     async def dispatch_job(self, schedule_data: dict):
+        schedule_id = schedule_data.get("schedule_id")
+
         # 1. ตรวจสอบ Lock ป้องกันการส่งซ้ำ
         now_str = datetime.utcnow().strftime('%Y%m%d%H%M')
-        lock_key = f"lock:schedule:{schedule_data['schedule_id']}:{now_str}"
-        if await redis_jobs.exists(lock_key):
-            return
+        minute_lock_key = f"lock:schedule:{schedule_data['schedule_id']}:{now_str}"
+
+        is_not_repeat = (schedule_data.get("cron_expression") == "Not Repeat")
+        once_lock_key = f"lock:schedule:once:{schedule_id}"
+
+        if is_not_repeat:
+            # ถ้าเคยรันไปแล้ว (มี Key ใน Redis) ให้หยุดทันที
+            if await redis_jobs.exists(once_lock_key):
+                print(f"🚫 [Dispatch] Schedule {schedule_id} (Not Repeat) already dispatched. Skipping.")
+                return None
+        else:
+            # ถ้าเป็นงาน Cron ปกติ เช็ค Lock รายนาที
+            if await redis_jobs.exists(minute_lock_key):
+                return None
 
         # 2. ดึงข้อมูล Asset และค้นหา Best Worker
         asset = asset_service.get_asset_by_id(schedule_data["asset_id"])
         best_worker, score = await self.get_best_worker(schedule_data.get("project_id"))
-
         user_id = schedule_data.get("created_by", "Unknown User")
 
         # กรณีไม่มี Worker ออนไลน์เลย
@@ -329,6 +341,12 @@ class JobService:
             error_msg = f"❌ ไม่สามารถเริ่มงานสแกน {asset['name']} ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้"
             notification_service.create_notification(user_id, "error", error_msg, f'/projects/{schedule_data.get("project_id")}/workers')
             return None
+        
+        if is_not_repeat:
+            # ล็อกไว้ 24 ชม. หรือจนกว่าจะมีการลบออก เพื่อให้มั่นใจว่ารอบถัดไปจะไม่รันอีก
+            await redis_jobs.setex(once_lock_key, 86400, "dispatched")
+        else:
+            await redis_jobs.setex(minute_lock_key, 60, "locked")
 
         # 3. สร้างเงื่อนไข Message ตามความยุ่งของ Worker
         if score == 0:
@@ -353,7 +371,6 @@ class JobService:
             credential=None
         )
         
-        await redis_jobs.setex(lock_key, 60, "locked")
         queue_name = f"{QUEUE_KEY}:{best_worker['id']}"
         await redis_jobs.rpush(queue_name, payload.model_dump_json())
 
@@ -364,7 +381,6 @@ class JobService:
             message=display_message,
             link=f"/jobs/{new_job['id']}"
         )
-        print(new_noti)
 
         print(f"📢 Notification: {display_message}")
         return new_job
