@@ -59,13 +59,19 @@ async def get_all_workers_by_project_id(
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
     user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
 ):
+    if not role:
+        raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
+
     result = worker_service.get_all_workers_by_project_id(
         project_id=project_id,
         page=page,
         size=size,
         sort_by=sort_by, 
-        order=order
+        order=order,
+        search=search,
+        filter=filter
     )
 
     items = result["items"]
@@ -78,7 +84,14 @@ async def get_all_workers_by_project_id(
     return result
 
 @router.get("/info/{project_id}")
-async def get_info_workers_in_project(project_id: int):
+async def get_info_workers_in_project(
+    project_id: int,
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    if not role:
+        raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
+
     result = worker_service.get_summary_info(project_id=project_id)
 
     worker_ids = worker_service.get_all_worker_ids_by_project_id(project_id)
@@ -89,10 +102,15 @@ async def get_info_workers_in_project(project_id: int):
     return result
 
 @router.get("/{worker_id}", response_model=WorkerResponse)
-async def get_worker_by_id(worker_id: int):
-    # เรียก Service เพื่อดึงข้อมูลตาม ID
+async def get_worker_by_id(
+    worker_id: int,
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    if not role:
+        raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
+    
     worker = worker_service.get_worker_by_id(worker_id)
-
     if not worker:
         raise HTTPException(status_code=404, detail="Worker not found")
         
@@ -100,11 +118,12 @@ async def get_worker_by_id(worker_id: int):
  
 
 @router.post("/regen-key/{worker_id}")
-def remove_access_key(
+def re_access_key(
     worker_id: int,
     user = Depends(get_current_user),
     role = Depends(get_current_project_role)
 ):
+    
     if role == "developer":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
 
@@ -112,6 +131,9 @@ def remove_access_key(
 
     if not worker:
         raise HTTPException(status_code=404, detail="Worker not found.")
+    
+    if role == "pentester" and worker.get("owner") != user["sub"]:
+        raise HTTPException(status_code=403, detail="Worker does not belong to the user.")
     
     result = access_key_service.delete_access_key_by_id(worker.get("access_key_id"))
 
@@ -179,10 +201,11 @@ def download_worker_zip(
 async def disconnect_worker_from_host(worker_id: int, role = Depends(get_current_project_role), user = Depends(get_current_user)):
     if role == "developer":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
-
+    
     worker_service.disconnect_worker(
         worker_id=worker_id,
-        user_id=user["sub"]
+        user_id=user["sub"],
+        role=role
     )
 
 @router.get("/unlink/all/{project_id}")
