@@ -127,6 +127,10 @@ class WorkerService:
                     continue
                 elif filter == "notActivated" and worker["status"] != "notActivated":
                     continue
+                elif filter == "available" and worker["onwer"]:
+                    continue
+                elif filter == "inUse" and not worker["owner"]:
+                    continue
 
             all_matches.append(worker)
 
