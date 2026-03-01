@@ -1,13 +1,14 @@
 import redis.asyncio as redis
+from config import settings
 
 pool_blacklist = redis.ConnectionPool.from_url(
-    url="redis://10.60.1.214:5678/0",
+    url=settings.BACKLIST_REDIS_URL,
     # url="redis://localhost:5678/0",
     decode_responses=True
 )
 
 pool_jobs = redis.ConnectionPool.from_url(
-    url="redis://10.60.1.214:5678/1",
+    url=settings.JOBS_REDIS_URL,
     # url="redis://localhost:5678/1",
     decode_responses=True
 )
