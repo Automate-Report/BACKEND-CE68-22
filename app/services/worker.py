@@ -436,7 +436,8 @@ class WorkerService:
         hidden_payload = {
             "WORKER_ID": worker_id,
             "NUMBER_OF_THREADS": worker.get("thread_number"),
-            "BACKEND_URL": "http://127.0.0.1:8000"
+            "BACKEND_URL": "http://127.0.0.1:8000",
+            "REDIS_URL": settings.JOBS_REDIS_URL
         }
 
 
