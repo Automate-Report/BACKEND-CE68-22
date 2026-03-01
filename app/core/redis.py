@@ -1,5 +1,5 @@
 import redis.asyncio as redis
-from config import settings
+from app.core.config import settings
 
 pool_blacklist = redis.ConnectionPool.from_url(
     url=settings.BACKLIST_REDIS_URL,
