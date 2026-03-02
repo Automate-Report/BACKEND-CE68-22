@@ -184,7 +184,7 @@ async def get_users_in_project(
     }
 
 @router.put("/change_role/{project_id}", response_model=UserInfo)
-async def update_project(
+async def update_role(
     project_id: int, 
     role_in: ChangeRole, 
     user = Depends(get_current_user),
