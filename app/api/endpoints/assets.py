@@ -16,8 +16,6 @@ async def get_all_assets(
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    ")
 ):
-    # ในอนาคตต้องดึง user_id จาก Token (Auth) 
-    # แต่ตอนนี้ Mock เป็น user_id = 1 ไปก่อน
 
     result = asset_service.get_all_assets(
         project_id=project_id,

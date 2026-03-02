@@ -72,7 +72,6 @@ async def get_jobs_by_worker(
 
     for job in items:
         schedule = schedule_service.get_by_id(job.get("schedule_id"))
-        print(schedule)
         vuln_cnt = vuln_service.cnt_vuln_by_job_id(job.get("id"))
         job["schedule_name"] = schedule["schedule_name"] if schedule else "Unknown"
         job["attack_type"] = schedule["attack_type"] if schedule else "Unknown"
