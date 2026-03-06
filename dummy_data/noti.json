@@ -1798,5 +1798,23 @@
     "hyperlink": "/projects/4/workers",
     "created_at": "2026-02-28T22:06:24.098802",
     "status": "unread"
+  },
+  {
+    "noti_id": 201,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ GuardianLeaks ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/39",
+    "created_at": "2026-03-06T21:27:08.048733",
+    "status": "unread"
+  },
+  {
+    "noti_id": 202,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/40",
+    "created_at": "2026-03-06T21:41:49.477192",
+    "status": "unread"
   }
 ]

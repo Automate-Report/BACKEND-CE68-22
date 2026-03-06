@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     BACKLIST_REDIS_URL: str
     JOBS_REDIS_URL: str
 
+    BACKLIST_REDIS_URL: str
+    JOBS_REDIS_URL: str
+
     # Authentication Settings
     SECRET_KEY: str 
     ALGORITHM: str 

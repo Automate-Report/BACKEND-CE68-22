@@ -1,5 +1,5 @@
 from reportlab.platypus import PageBreak, Paragraph, Spacer, ListFlowable, ListItem, Image
-from reportlab.lib.units import inch
+from reportlab.lib import utils
 
 def create_technical_findings(context, styles):
 
@@ -103,36 +103,31 @@ def create_technical_findings(context, styles):
         elements.append(Paragraph("<font name='Sarabun-Semibold'>ภาพถ่ายหน้าจอหลักฐาน (Visual Evidence):</font>", styles["body"]))
         elements.append(Spacer(1, 4))
 
-        img_reader = vuln.get("evidence") # นี่คือ ImageReader
+        img_path = vuln.get("evidence") # ตอนนี้เป็น String (Path)
         
-        if img_reader:
+        if img_path:
             try:
-                # 🚨 ตรวจสอบก่อนว่า img_reader ไม่ใช่ None และเป็น ImageReader จริง
-                # ดึงขนาดภาพ
-                img_w, img_h = img_reader.getSize()
-                max_width = 440.0
+                # 1. ใช้ utils.ImageReader เพื่อดึงขนาดภาพจาก Path
+                img_data = utils.ImageReader(img_path)
+                img_w, img_h = img_data.getSize()
                 
+                max_width = 440.0
                 if img_w > 0:
                     scaling_factor = max_width / float(img_w)
                     draw_w = max_width
                     draw_h = img_h * scaling_factor
                     
-                    # ✅ ใช้ ImageReader ส่งเข้าไปตรงๆ
-                    evidence_img = Image(img_reader, width=draw_w, height=draw_h)
+                    # 2. สร้าง Image โดยส่ง Path เข้าไปตรงๆ
+                    evidence_img = Image(img_path, width=draw_w, height=draw_h)
                     evidence_img.hAlign = 'CENTER'
                     elements.append(evidence_img)
                     elements.append(Spacer(1, 10))
                 else:
                     elements.append(Paragraph("<i>(ไม่สามารถระบุขนาดของรูปภาพได้)</i>", styles["body"]))
-
             except Exception as e:
-                # ถ้า Error ฟ้องเรื่อง Path แสดงว่า ReportLab พยายามหาไฟล์บนเครื่อง
-                # ให้ลองใช้แนวทางส่งผ่าน BytesIO แทน
-                elements.append(Paragraph(f"<font color='red'><i>(Error rendering image: {str(e)})</i></font>", styles["body"]))
+                elements.append(Paragraph(f"<font color='red'><i>(ไม่สามารถโหลดรูปภาพจากไฟล์ได้: {str(e)})</i></font>", styles["body"]))
         else:
-            elements.append(Paragraph("<i>(ไม่พบภาพถ่ายหน้าจอหลักฐาน)</i>", styles["body"]))
-
-        elements.append(Spacer(1, 12))
+            elements.append(Paragraph("<i>(ไม่พบไฟล์ภาพถ่ายหน้าจอหลักฐานในระบบ)</i>", styles["body"]))
 
         # --- Recommendation ---
         elements.append(Paragraph("<font name='Sarabun-Bold'>[ คำแนะนำในการแก้ไข (Recommendation) ]</font>", styles["body"]))

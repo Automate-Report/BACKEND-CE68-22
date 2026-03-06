@@ -52,11 +52,11 @@
     "method": "GET",
     "severity": "MEDIUM",
     "db_type": null,
-    "status": "in_progress",
+    "status": "open",
     "verify": "tp",
-    "occurrence_count": 3,
+    "occurrence_count": 4,
     "first_seen_at": "2026-02-21T20:18:49.281141",
-    "last_seen_at": "2026-02-23T16:24:40.918819",
+    "last_seen_at": "2026-03-06T21:46:03.123235",
     "resolved_at": null
   },
   {

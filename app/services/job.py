@@ -309,9 +309,11 @@ class JobService:
 
         # เลือก Worker ที่ Score น้อยที่สุด (ว่างสุด หรือคิวสั้นสุดเมื่อเทียบกับกำลังเครื่อง)
         best_w, best_score = min(worker_scores, key=lambda x: x[1])
+        print(best_w)
         return best_w, best_score
 
     async def dispatch_job(self, schedule_data: dict):
+        print(f"DEBUG: Starting dispatch for {schedule_data.get('schedule_id')}")
         schedule_id = schedule_data.get("schedule_id")
 
         # 1. ตรวจสอบ Lock ป้องกันการส่งซ้ำ

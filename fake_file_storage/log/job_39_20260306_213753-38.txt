@@ -1,0 +1,167 @@
+21:27:08 [INFO] [ScanEngine] Starting Discovery on https://pentest-ground.com:81/...
+21:27:08 [INFO] [Crawler] Starting Crawl on: https://pentest-ground.com:81/
+21:27:27 [INFO]      [+] Discovered: GET / ['Search', 'Your Name', 'Email', 'Phone Number', 'Message', 'ENTER YOUR EMAIL']
+21:27:27 [INFO]     [..] Extracting endpoints from JS files...
+21:27:27 [INFO]     [..] Triggering smart interactions to discover APIs...
+21:27:33 [INFO]      [+] Discovered: GET /services ['Search', 'ENTER YOUR EMAIL']
+21:27:33 [INFO]     [..] Extracting endpoints from JS files...
+21:27:33 [INFO]     [..] Triggering smart interactions to discover APIs...
+21:27:38 [INFO]      [+] Discovered: GET /blog ['Search', 'ENTER YOUR EMAIL']
+21:27:38 [INFO]     [..] Extracting endpoints from JS files...
+21:27:38 [INFO]     [..] Triggering smart interactions to discover APIs...
+21:27:44 [INFO]      [+] Discovered: GET /about ['Search', 'ENTER YOUR EMAIL']
+21:27:44 [INFO]     [..] Extracting endpoints from JS files...
+21:27:44 [INFO]     [..] Triggering smart interactions to discover APIs...
+21:27:46 [INFO] [*] Login form detected at https://pentest-ground.com:81/login
+21:27:56 [INFO]      [+] Discovered: GET /login ['Search', 'username', 'password', 'remember_me', 'ENTER YOUR EMAIL']
+21:27:56 [INFO]     [..] Extracting endpoints from JS files...
+21:27:56 [INFO]     [..] Triggering smart interactions to discover APIs...
+21:28:04 [INFO]      [+] Discovered: GET /contact ['Search', 'Your Name', 'Email', 'Phone Number', 'Message', 'ENTER YOUR EMAIL']
+21:28:04 [INFO]     [..] Extracting endpoints from JS files...
+21:28:04 [INFO]     [..] Triggering smart interactions to discover APIs...
+21:28:10 [INFO]      [+] Discovered: GET /2/edit ['Search', 'title', 'content', 'ENTER YOUR EMAIL']
+21:28:10 [INFO]     [..] Extracting endpoints from JS files...
+21:28:10 [INFO]     [..] Triggering smart interactions to discover APIs...
+21:28:10 [INFO]      [+] Discovered: POST /2/edit ['title', 'content']
+21:28:45 [INFO]      [+] Discovered: GET /post/2 ['Search', 'ENTER YOUR EMAIL']
+21:28:45 [INFO]     [..] Extracting endpoints from JS files...
+21:28:45 [INFO]     [..] Triggering smart interactions to discover APIs...
+21:28:50 [INFO]      [+] Discovered: GET /post/1 ['Search', 'ENTER YOUR EMAIL']
+21:28:50 [INFO]     [..] Extracting endpoints from JS files...
+21:28:50 [INFO]     [..] Triggering smart interactions to discover APIs...
+21:28:55 [INFO]      [+] Discovered: GET /1/edit ['Search', 'title', 'content', 'ENTER YOUR EMAIL']
+21:28:55 [INFO]     [..] Extracting endpoints from JS files...
+21:28:55 [INFO]     [..] Triggering smart interactions to discover APIs...
+21:28:56 [INFO]      [+] Discovered: POST /1/edit ['title', 'content']
+21:29:27 [INFO] [ScanEngine] Discovery finished. Unique targets found: 12
+21:29:27 [INFO] --- XSS Scan on: https://pentest-ground.com:81/ (GET) ---
+21:29:27 [INFO] [XSS] Scanning GET on https://pentest-ground.com:81/ (Type: form)
+21:29:27 [INFO]     -> Analyzing: Search
+21:29:28 [INFO]     -> Analyzing: Your Name
+21:29:28 [INFO]     -> Analyzing: Email
+21:29:28 [INFO]     -> Analyzing: Phone Number
+21:29:28 [INFO]     -> Analyzing: Message
+21:29:28 [INFO]     -> Analyzing: ENTER YOUR EMAIL
+21:29:29 [INFO] [*] Starting Advanced DOM Scan on: https://pentest-ground.com:81/
+21:29:38 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:30:07 [INFO]     -> Testing Parameter: Search
+21:30:26 [INFO]     -> Testing Parameter: Your Name
+21:30:26 [INFO]        [+] Found target via selector: input[placeholder*='Your Name']
+21:30:30 [INFO] --- XSS Scan on: https://pentest-ground.com:81/services (GET) ---
+21:30:30 [INFO] [XSS] Scanning GET on https://pentest-ground.com:81/services (Type: form)
+21:30:30 [INFO]     -> Analyzing: Search
+21:30:31 [INFO]     -> Analyzing: ENTER YOUR EMAIL
+21:30:31 [INFO] [*] Starting Advanced DOM Scan on: https://pentest-ground.com:81/services
+21:30:40 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:31:09 [INFO]     -> Testing Parameter: Search
+21:31:09 [INFO]     -> Testing Parameter: ENTER YOUR EMAIL
+21:31:10 [INFO] --- XSS Scan on: https://pentest-ground.com:81/blog (GET) ---
+21:31:10 [INFO] [XSS] Scanning GET on https://pentest-ground.com:81/blog (Type: form)
+21:31:10 [INFO]     -> Analyzing: Search
+21:31:10 [INFO]     -> Analyzing: ENTER YOUR EMAIL
+21:31:10 [INFO] [*] Starting Advanced DOM Scan on: https://pentest-ground.com:81/blog
+21:31:19 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:31:49 [INFO]     -> Testing Parameter: Search
+21:31:49 [INFO]     -> Testing Parameter: ENTER YOUR EMAIL
+21:31:49 [INFO] --- XSS Scan on: https://pentest-ground.com:81/about (GET) ---
+21:31:49 [INFO] [XSS] Scanning GET on https://pentest-ground.com:81/about (Type: form)
+21:31:49 [INFO]     -> Analyzing: Search
+21:31:49 [INFO]     -> Analyzing: ENTER YOUR EMAIL
+21:31:49 [INFO] [*] Starting Advanced DOM Scan on: https://pentest-ground.com:81/about
+21:31:58 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:32:28 [INFO]     -> Testing Parameter: Search
+21:32:28 [INFO]     -> Testing Parameter: ENTER YOUR EMAIL
+21:32:28 [INFO] --- XSS Scan on: https://pentest-ground.com:81/login (GET) ---
+21:32:28 [INFO] [XSS] Scanning GET on https://pentest-ground.com:81/login (Type: form)
+21:32:28 [INFO]     -> Analyzing: Search
+21:32:28 [INFO]     -> Analyzing: username
+21:32:29 [INFO]     -> Analyzing: password
+21:32:29 [INFO]     -> Analyzing: remember_me
+21:32:29 [INFO]     -> Analyzing: ENTER YOUR EMAIL
+21:32:29 [INFO] [*] Starting Advanced DOM Scan on: https://pentest-ground.com:81/login
+21:32:38 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:33:08 [INFO]     -> Testing Parameter: Search
+21:33:08 [INFO]     -> Testing Parameter: username
+21:33:08 [INFO]     -> Testing Parameter: password
+21:33:08 [INFO]     -> Testing Parameter: remember_me
+21:33:08 [INFO]     -> Testing Parameter: ENTER YOUR EMAIL
+21:33:09 [INFO] --- XSS Scan on: https://pentest-ground.com:81/contact (GET) ---
+21:33:09 [INFO] [XSS] Scanning GET on https://pentest-ground.com:81/contact (Type: form)
+21:33:09 [INFO]     -> Analyzing: Search
+21:33:09 [INFO]     -> Analyzing: Your Name
+21:33:09 [INFO]     -> Analyzing: Email
+21:33:09 [INFO]     -> Analyzing: Phone Number
+21:33:09 [INFO]     -> Analyzing: Message
+21:33:09 [INFO]     -> Analyzing: ENTER YOUR EMAIL
+21:33:10 [INFO] [*] Starting Advanced DOM Scan on: https://pentest-ground.com:81/contact
+21:33:18 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:33:48 [INFO]     -> Testing Parameter: Search
+21:33:48 [INFO]     -> Testing Parameter: Your Name
+21:33:48 [INFO]     -> Testing Parameter: Email
+21:33:48 [INFO]     -> Testing Parameter: Phone Number
+21:33:48 [INFO]     -> Testing Parameter: Message
+21:33:48 [INFO]     -> Testing Parameter: ENTER YOUR EMAIL
+21:33:49 [INFO] --- XSS Scan on: https://pentest-ground.com:81/2/edit (GET) ---
+21:33:49 [INFO] [XSS] Scanning GET on https://pentest-ground.com:81/2/edit (Type: form)
+21:33:49 [INFO]     -> Analyzing: Search
+21:33:49 [INFO]     -> Analyzing: title
+21:33:49 [INFO]     -> Analyzing: content
+21:33:49 [INFO]     -> Analyzing: ENTER YOUR EMAIL
+21:33:49 [INFO] [*] Starting Advanced DOM Scan on: https://pentest-ground.com:81/2/edit
+21:33:58 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:34:28 [INFO]     -> Testing Parameter: Search
+21:34:28 [INFO]     -> Testing Parameter: title
+21:34:28 [INFO]     -> Testing Parameter: content
+21:34:28 [INFO]     -> Testing Parameter: ENTER YOUR EMAIL
+21:34:28 [INFO] --- XSS Scan on: https://pentest-ground.com:81/2/edit (POST) ---
+21:34:28 [INFO] [XSS] Scanning POST on https://pentest-ground.com:81/2/edit (Type: form)
+21:34:28 [INFO]     -> Analyzing: title
+21:34:29 [INFO]         [+] Found Reflection with POST!
+21:34:29 [INFO]        [?] Reflected in POST response. Verifying...
+21:34:30 [INFO]        [?] Reflected in POST response. Verifying...
+21:34:31 [INFO]     -> Analyzing: content
+21:34:31 [INFO]         [+] Found Reflection with POST!
+21:34:31 [INFO] [*] Starting Advanced DOM Scan on: https://pentest-ground.com:81/2/edit
+21:34:40 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:35:10 [INFO]     -> Testing Parameter: title
+21:35:10 [INFO]     -> Testing Parameter: content
+21:35:10 [INFO] --- XSS Scan on: https://pentest-ground.com:81/post/2 (GET) ---
+21:35:10 [INFO] [XSS] Scanning GET on https://pentest-ground.com:81/post/2 (Type: form)
+21:35:10 [INFO]     -> Analyzing: Search
+21:35:11 [INFO]     -> Analyzing: ENTER YOUR EMAIL
+21:35:11 [INFO] [*] Starting Advanced DOM Scan on: https://pentest-ground.com:81/post/2
+21:35:20 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:35:50 [INFO]     -> Testing Parameter: Search
+21:35:50 [INFO]     -> Testing Parameter: ENTER YOUR EMAIL
+21:35:50 [INFO] --- XSS Scan on: https://pentest-ground.com:81/post/1 (GET) ---
+21:35:50 [INFO] [XSS] Scanning GET on https://pentest-ground.com:81/post/1 (Type: form)
+21:35:50 [INFO]     -> Analyzing: Search
+21:35:50 [INFO]     -> Analyzing: ENTER YOUR EMAIL
+21:35:50 [INFO] [*] Starting Advanced DOM Scan on: https://pentest-ground.com:81/post/1
+21:35:59 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:36:29 [INFO]     -> Testing Parameter: Search
+21:36:29 [INFO]     -> Testing Parameter: ENTER YOUR EMAIL
+21:36:29 [INFO] --- XSS Scan on: https://pentest-ground.com:81/1/edit (GET) ---
+21:36:29 [INFO] [XSS] Scanning GET on https://pentest-ground.com:81/1/edit (Type: form)
+21:36:29 [INFO]     -> Analyzing: Search
+21:36:29 [INFO]     -> Analyzing: title
+21:36:30 [INFO]     -> Analyzing: content
+21:36:30 [INFO]     -> Analyzing: ENTER YOUR EMAIL
+21:36:30 [INFO] [*] Starting Advanced DOM Scan on: https://pentest-ground.com:81/1/edit
+21:36:39 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:37:08 [INFO]     -> Testing Parameter: Search
+21:37:08 [INFO]     -> Testing Parameter: title
+21:37:08 [INFO]     -> Testing Parameter: content
+21:37:08 [INFO]     -> Testing Parameter: ENTER YOUR EMAIL
+21:37:09 [INFO] --- XSS Scan on: https://pentest-ground.com:81/1/edit (POST) ---
+21:37:09 [INFO] [XSS] Scanning POST on https://pentest-ground.com:81/1/edit (Type: form)
+21:37:09 [INFO]     -> Analyzing: title
+21:37:09 [INFO]         [+] Found Reflection with POST!
+21:37:09 [INFO]        [?] Reflected in POST response. Verifying...
+21:37:10 [INFO]        [?] Reflected in POST response. Verifying...
+21:37:11 [INFO]     -> Analyzing: content
+21:37:11 [INFO]         [+] Found Reflection with POST!
+21:37:12 [INFO] [*] Starting Advanced DOM Scan on: https://pentest-ground.com:81/1/edit
+21:37:20 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:37:50 [INFO]     -> Testing Parameter: title
+21:37:50 [INFO]     -> Testing Parameter: content
