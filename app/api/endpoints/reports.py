@@ -76,7 +76,7 @@ async def create_report(
          raise HTTPException(status_code=400, detail="No data found for the selected assets/time range.")
 
     # เรียก Service สร้างรายงาน
-    pen_test_report_service.create_report(
+    pen_test_report_service._create_report_file(
         project=project,
         vuln_details=vuln_details,
         assets=assets_for_report,
