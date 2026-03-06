@@ -74,7 +74,6 @@ async def create_report(
                     vuln_details.append(detail)
         
     # --- จบ Loop ---
-
     # ตรวจสอบว่ามีข้อมูลส่งไปทำรายงานไหม
     if not vuln_details and not assets_for_report:
          raise HTTPException(status_code=400, detail="No data found for the selected assets/time range.")
@@ -124,7 +123,6 @@ async def get_all_pentest_reports(
         search=search,
         filter=filter
     )
-    
 
     return result
 
