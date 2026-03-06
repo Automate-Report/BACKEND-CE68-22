@@ -113,6 +113,14 @@ async def get_all_pentest_reports(
 
     return result
 
+@router.get("/{report_id}/draft")
+async def get_draft_report_by_report_id(
+    report_id: int
+):
+    result = pen_test_report_service.get_report_draft(report_id)
+    return result
+
+
 @router.get("/download/{report_id}")
 def download_report(report_id: int, user = Depends(get_current_user)):
     result = pen_test_report_service.dowload_by_id(report_id)
