@@ -24,7 +24,6 @@ from app.api.endpoints import tag
 from app.api.endpoints import project_tags
 from app.api.endpoints import schedule
 from app.api.endpoints import jobs
-from app.api.endpoints import pentest_reports
 from app.api.endpoints import notification
 from app.api.endpoints import vulnerabilities
 from app.api.endpoints import reports
@@ -100,7 +99,6 @@ app.include_router(tag.router, prefix="/tags", tags=["Tags"])
 app.include_router(project_tags.router, prefix="/project-tags", tags=["Project Tags"])
 
 app.include_router(jobs.router, prefix="/jobs", tags=["Jobs"])
-app.include_router(pentest_reports.router, prefix="/pentest_reports", tags=["Pentest Reports"])
 
 app.include_router(vulnerabilities.router, prefix="/vulns", tags=["Vulnerabilities"])
 app.include_router(reports.router,prefix="/reports", tags=["Reports"])
