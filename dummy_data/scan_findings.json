@@ -17,5 +17,15 @@
     "curl_command": "curl -X GET 'http://localhost:4040/?URL_FRAGMENT=#/search?q=<img src=x onerror=alert(1)>'",
     "response_details": "DOM Sink Triggered with message: 1",
     "timestamp": "2026-02-23T16:24:40.918819"
+  },
+  {
+    "id": 3,
+    "job_id": 40,
+    "vuln_id": 3,
+    "payload": "#/search?q=<img src=x onerror=alert(1)>",
+    "screenshot_path": "fake_file_storage/img/job_40/finding_3/evidence_505006fd781d43e9bf47a0be800bd08a.png",
+    "curl_command": "curl -X GET 'http://localhost:4040/?URL_FRAGMENT=#/search?q=<img src=x onerror=alert(1)>'",
+    "response_details": "DOM Sink Triggered with message: 1",
+    "timestamp": "2026-03-06T21:46:03.123235"
   }
 ]

@@ -213,14 +213,13 @@ class ScheduleService:
 
         # 3. เช็ค end_date (ถ้ามี)
         end_date_str = schedule.get("end_date")
-        if end_date_str:
+        cron_string = schedule.get("cron_expression", "") # ดึงค่า cron มาไว้เช็คตรงนี้
+
+        if end_date_str and cron_string != "Not Repeat": # 💡 เพิ่มเงื่อนไข: ถ้าไม่ใช่ Not Repeat ถึงจะเช็ค Expired
             try:
-                # แปลง string เป็น datetime (รองรับ format ที่คุณให้มา)
-                # ตัดส่วน timezone หรือจัดการให้ตรงกับ format ใน JSON
                 end_date = datetime.fromisoformat(end_date_str.replace("Z", "+00:00"))
                 
                 if now > end_date:
-                    # ถ้าเลยเวลา end_date ให้ deactivate และไม่รัน
                     schedule_id = schedule.get("schedule_id")
                     await self.deactivate_schedule(schedule_id)
                     print(f"🚫 [Schedule] {schedule_id} expired (Passed end_date)")
@@ -228,10 +227,8 @@ class ScheduleService:
             except Exception as e:
                 print(f"⚠️ Error parsing end_date: {e}")
 
-        # 4. จัดการ Not Repeat
-        cron_string = schedule.get("cron_expression", "")
+        # 4. จัดการ Not Repeat (จะรันได้ปกติแล้ว)
         if cron_string == "Not Repeat":
-            # คืนค่า True เพื่อให้ไป dispatch job และเราจะไปสั่ง deactivate ใน loop หลัก
             return True
 
         # 5. จัดการ Cron ปกติ
