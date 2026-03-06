@@ -24,8 +24,8 @@ router = APIRouter()
 async def create_report(
     project_id: int,
     report_in: CreateReportPayload,
-    # user = Depends(get_current_user),
-    # role = Depends(get_current_project_role)
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
 ):
     project = project_service.get_project_by_id(project_id)
     if not project:
@@ -79,11 +79,12 @@ async def create_report(
          raise HTTPException(status_code=400, detail="No data found for the selected assets/time range.")
 
     # เรียก Service สร้างรายงาน
-    pen_test_report_service._create_report_file(
+    pen_test_report_service.create_pentest_report(
         project=project,
         vuln_details=vuln_details,
         assets=assets_for_report,
-        report_name=report_in.report_name
+        report_name=report_in.report_name,
+        user_id=user["sub"]
     )
     
     return "PDF generated successfully."
@@ -97,25 +98,11 @@ async def get_all_pentest_reports(
     order: Optional[str] = Query("asc", description="asc or desc"),
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
-    user = Depends(get_current_user)
+    # user = Depends(get_current_user)
 ):
-    schedule_ids = schedule_service.get_schedule_ids_by_project_id(project_id=project_id)
 
-    if not schedule_ids:
-        raise HTTPException(status_code=210, detail="Not have schedules")
-    
-    match_ids = []
-    for schedule_id in schedule_ids:
-        job_ids = job_service.get_job_ids_by_schedule_id(schedule_id)
-        if job_ids:
-            for job_id in job_ids:
-                match_ids.append(f"{schedule_id}_{job_id}")
-
-    if not match_ids:
-        raise HTTPException(status_code=211, detail="Not have jobs")
-    
     result = pen_test_report_service.get_all_pentest_reports(
-        match=match_ids,
+        project_id=project_id,
         page=page,
         size=size,
         sort_by=sort_by,
