@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
-from datetime import datetime, timezone
+
 
 from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role
@@ -14,8 +14,7 @@ from app.services.asset import asset_service
 from app.services.vulnerability import vuln_service
 from app.services.project import project_service
 from app.services.reports.pentest_report import pen_test_report_service
-from app.services.schedule import schedule_service
-from app.services.job import job_service
+
 
 router = APIRouter()
 
@@ -84,6 +83,7 @@ async def create_report(
         vuln_details=vuln_details,
         assets=assets_for_report,
         report_name=report_in.report_name,
+        report_type=report_in.type,
         user_id=user["sub"]
     )
     
