@@ -398,5 +398,15 @@
     "created_at": "2026-03-06T21:41:49.431682",
     "started_at": "2026-03-06T14:41:51.507519",
     "finished_at": "2026-03-06T14:46:03.141925"
+  },
+  {
+    "id": 41,
+    "name": "job_7Nf8BcEtDKTc",
+    "schedule_id": 18,
+    "worker_id": 1,
+    "status": "running",
+    "created_at": "2026-03-09T18:28:11.985074",
+    "started_at": "2026-03-09T11:28:14.041088",
+    "finished_at": null
   }
 ]

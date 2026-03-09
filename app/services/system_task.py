@@ -15,9 +15,9 @@ async def system_schedule_task():
             due_schedules = await schedule_service.get_due_schedules()
 
             # --- เพิ่มส่วน Debug ตรงนี้ ---
-            # print(f"DEBUG: due_schedules type: {type(due_schedules)}")
-            # if due_schedules:
-            #     print(f"DEBUG: first item type: {type(due_schedules[0])}")
+            print(f"DEBUG: due_schedules type: {type(due_schedules)}")
+            if due_schedules:
+                print(f"DEBUG: first item type: {type(due_schedules[0])}")
             # --------------------------
 
             for schedule in due_schedules:
