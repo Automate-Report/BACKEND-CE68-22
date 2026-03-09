@@ -120,6 +120,8 @@ async def get_draft_report_by_report_id(
     result = pen_test_report_service.get_report_draft(report_id)
     return result
 
+@router.put("/{report_id}/save-draft")
+
 
 @router.get("/download/{report_id}")
 def download_report(report_id: int, user = Depends(get_current_user)):
