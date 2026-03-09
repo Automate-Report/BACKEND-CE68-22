@@ -1,0 +1,55 @@
+01:47:24 [INFO] ============================================================
+01:47:24 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+01:47:24 [INFO] ============================================================
+01:47:24 [INFO] 🔍 Testing connectivity to http://localhost:4040/...
+01:47:24 [INFO] ✅ Target is reachable! (Status: 200)
+01:47:24 [INFO] [+] Starting Public Discovery...
+01:47:24 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+01:47:27 [INFO]     [+] Target Saved: GET http://localhost:4040/assets/i18n/en.json
+01:47:27 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-version
+01:47:27 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-configuration
+01:47:27 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+01:47:27 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/languages
+01:47:27 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Quantitys/
+01:47:27 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/search?q=
+01:47:30 [INFO]     [..] Executing behavioral exploration...
+01:47:44 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/user/whoami
+01:47:44 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/42/reviews
+01:47:47 [INFO]     [+] Target Saved: GET http://localhost:4040/
+01:47:48 [INFO] ============================================================
+01:47:48 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+01:47:48 [INFO] ============================================================
+01:47:49 [INFO] 🌐 Loading target page: http://localhost:4040/
+01:47:51 [INFO] ✅ Page loaded successfully
+01:47:51 [INFO] 🔨 Attempting aggressive login (SQLi bypass, default creds)...
+01:47:51 [INFO] 🍪 Captured 1 session cookies
+01:47:51 [INFO] ============================================================
+01:47:51 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+01:47:51 [INFO] ============================================================
+01:47:51 [INFO] [ScanEngine] Syncing session state to scanners...
+01:47:51 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+01:47:51 [INFO] 💉 Running XSS scans on 10 endpoints...
+01:47:51 [INFO] [1/10] XSS Scan: GET http://localhost:4040/assets/i18n/en.json
+01:47:51 [INFO] [XSS] Scanning GET on http://localhost:4040/assets/i18n/en.json (Type: json)
+01:47:51 [INFO] [2/10] XSS Scan: GET http://localhost:4040/rest/admin/application-version
+01:47:51 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/admin/application-version (Type: json)
+01:47:51 [INFO] [3/10] XSS Scan: GET http://localhost:4040/rest/admin/application-configuration
+01:47:51 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/admin/application-configuration (Type: json)
+01:47:51 [INFO] [4/10] XSS Scan: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+01:47:51 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Challenges/?name=Score%20Board (Type: json)
+01:47:51 [INFO]     -> Analyzing: name
+01:47:51 [INFO] [5/10] XSS Scan: GET http://localhost:4040/rest/languages
+01:47:51 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/languages (Type: json)
+01:47:51 [INFO] [6/10] XSS Scan: GET http://localhost:4040/api/Quantitys/
+01:47:51 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Quantitys/ (Type: json)
+01:47:51 [INFO] [7/10] XSS Scan: GET http://localhost:4040/rest/products/search?q=
+01:47:51 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/products/search?q= (Type: json)
+01:47:51 [INFO]     -> Analyzing: q
+01:47:51 [INFO] [8/10] XSS Scan: GET http://localhost:4040/rest/user/whoami
+01:47:51 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/user/whoami (Type: json)
+01:47:51 [INFO] [9/10] XSS Scan: GET http://localhost:4040/rest/products/42/reviews
+01:47:51 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/products/42/reviews (Type: json)
+01:47:51 [INFO]     -> Analyzing: path_id_3
+01:47:51 [INFO] [10/10] XSS Scan: GET http://localhost:4040/
+01:47:51 [INFO] [XSS] Scanning GET on http://localhost:4040/ (Type: form)
+01:47:51 [INFO] ✅ No vulnerabilities found

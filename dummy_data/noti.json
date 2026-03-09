@@ -16,5 +16,293 @@
     "hyperlink": "/jobs/41",
     "created_at": "2026-03-09T18:28:12.016707",
     "status": "unread"
+  },
+  {
+    "noti_id": 3,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ CE Website ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/42",
+    "created_at": "2026-03-09T18:47:10.243068",
+    "status": "unread"
+  },
+  {
+    "noti_id": 4,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/43",
+    "created_at": "2026-03-09T18:49:38.275218",
+    "status": "unread"
+  },
+  {
+    "noti_id": 5,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/44",
+    "created_at": "2026-03-09T19:16:16.848024",
+    "status": "unread"
+  },
+  {
+    "noti_id": 6,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/45",
+    "created_at": "2026-03-09T19:18:24.612450",
+    "status": "unread"
+  },
+  {
+    "noti_id": 7,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/46",
+    "created_at": "2026-03-09T19:23:53.969743",
+    "status": "unread"
+  },
+  {
+    "noti_id": 8,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/47",
+    "created_at": "2026-03-09T19:25:55.273642",
+    "status": "unread"
+  },
+  {
+    "noti_id": 9,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/48",
+    "created_at": "2026-03-09T19:34:42.023379",
+    "status": "unread"
+  },
+  {
+    "noti_id": 10,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/49",
+    "created_at": "2026-03-09T19:37:02.774820",
+    "status": "unread"
+  },
+  {
+    "noti_id": 11,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/50",
+    "created_at": "2026-03-09T19:48:42.315770",
+    "status": "unread"
+  },
+  {
+    "noti_id": 12,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/51",
+    "created_at": "2026-03-09T20:02:01.059158",
+    "status": "unread"
+  },
+  {
+    "noti_id": 13,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/52",
+    "created_at": "2026-03-09T20:10:06.720770",
+    "status": "unread"
+  },
+  {
+    "noti_id": 14,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/53",
+    "created_at": "2026-03-09T20:12:44.346151",
+    "status": "unread"
+  },
+  {
+    "noti_id": 15,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/54",
+    "created_at": "2026-03-09T20:14:13.966910",
+    "status": "unread"
+  },
+  {
+    "noti_id": 16,
+    "user_email": "somchai@tech.co.th",
+    "type": "info",
+    "message": "⏳ ขณะนี้ Worker ทุกตัวกำลังติดงานสแกนอื่นอยู่ ระบบได้ส่งงานของ OWASP Juice Shop เข้าคิวของ Worker Worker-01-DigitalOcean ซึ่งคาดว่าจะพร้อมทำงานให้คุณได้เร็วที่สุดครับ",
+    "hyperlink": "/jobs/55",
+    "created_at": "2026-03-09T20:14:40.607883",
+    "status": "unread"
+  },
+  {
+    "noti_id": 17,
+    "user_email": "somchai@tech.co.th",
+    "type": "info",
+    "message": "⏳ ขณะนี้ Worker ทุกตัวกำลังติดงานสแกนอื่นอยู่ ระบบได้ส่งงานของ OWASP Juice Shop เข้าคิวของ Worker Worker-01-DigitalOcean ซึ่งคาดว่าจะพร้อมทำงานให้คุณได้เร็วที่สุดครับ",
+    "hyperlink": "/jobs/56",
+    "created_at": "2026-03-09T20:15:15.582909",
+    "status": "unread"
+  },
+  {
+    "noti_id": 18,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/57",
+    "created_at": "2026-03-10T00:24:38.790885",
+    "status": "unread"
+  },
+  {
+    "noti_id": 19,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/58",
+    "created_at": "2026-03-10T00:29:58.825094",
+    "status": "unread"
+  },
+  {
+    "noti_id": 20,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/59",
+    "created_at": "2026-03-10T00:33:18.067664",
+    "status": "unread"
+  },
+  {
+    "noti_id": 21,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/60",
+    "created_at": "2026-03-10T00:34:09.013761",
+    "status": "unread"
+  },
+  {
+    "noti_id": 22,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/61",
+    "created_at": "2026-03-10T00:37:20.628272",
+    "status": "unread"
+  },
+  {
+    "noti_id": 23,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/62",
+    "created_at": "2026-03-10T00:51:41.238333",
+    "status": "unread"
+  },
+  {
+    "noti_id": 24,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/63",
+    "created_at": "2026-03-10T00:53:15.229533",
+    "status": "unread"
+  },
+  {
+    "noti_id": 25,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/64",
+    "created_at": "2026-03-10T00:57:37.655260",
+    "status": "unread"
+  },
+  {
+    "noti_id": 26,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/65",
+    "created_at": "2026-03-10T01:47:24.697270",
+    "status": "unread"
+  },
+  {
+    "noti_id": 27,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/66",
+    "created_at": "2026-03-10T01:47:55.552992",
+    "status": "unread"
+  },
+  {
+    "noti_id": 28,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/67",
+    "created_at": "2026-03-10T01:55:47.352756",
+    "status": "unread"
+  },
+  {
+    "noti_id": 29,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/68",
+    "created_at": "2026-03-10T02:00:31.009106",
+    "status": "unread"
+  },
+  {
+    "noti_id": 30,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/69",
+    "created_at": "2026-03-10T02:06:15.272265",
+    "status": "unread"
+  },
+  {
+    "noti_id": 31,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/70",
+    "created_at": "2026-03-10T02:08:42.818345",
+    "status": "unread"
+  },
+  {
+    "noti_id": 32,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/71",
+    "created_at": "2026-03-10T02:11:34.915180",
+    "status": "unread"
+  },
+  {
+    "noti_id": 33,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/72",
+    "created_at": "2026-03-10T02:20:30.610501",
+    "status": "unread"
+  },
+  {
+    "noti_id": 34,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ GuardianLeaks ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/73",
+    "created_at": "2026-03-10T03:16:20.078028",
+    "status": "unread"
   }
 ]

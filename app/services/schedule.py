@@ -121,9 +121,11 @@ class ScheduleService:
         return "Schedule Not Found"
     
     
-    def create_schedule(self, schedule_input: ScheduleCreate, user_id: str):
+    async def create_schedule(self, schedule_input: ScheduleCreate, user_id: str):
         schedules = self._read_json()
         latest_id = max([s["schedule_id"] for s in schedules], default=0)
+
+        is_immediate = schedule_input.cron_expression in ["Not Repeat", "now", ""]
         
         new_schedule = {
             "schedule_id": latest_id + 1,
@@ -142,6 +144,11 @@ class ScheduleService:
         
         schedules.append(new_schedule)
         self._save_json(schedules)
+
+        if is_immediate:
+            import asyncio
+            from app.services.job import job_service
+            asyncio.create_task(job_service.dispatch_job(new_schedule))
         
         # Only return non-sensitive info
         return {

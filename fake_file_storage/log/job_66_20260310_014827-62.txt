@@ -1,0 +1,48 @@
+01:47:55 [INFO] ============================================================
+01:47:55 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+01:47:55 [INFO] ============================================================
+01:47:55 [INFO] 🔍 Testing connectivity to http://localhost:4040/...
+01:47:55 [INFO] ✅ Target is reachable! (Status: 200)
+01:47:55 [INFO] [+] Starting Public Discovery...
+01:47:55 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+01:47:57 [INFO]     [+] Target Saved: GET http://localhost:4040/assets/i18n/en.json
+01:47:57 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-version
+01:47:57 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-configuration
+01:47:57 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+01:47:57 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/languages
+01:47:57 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Quantitys/
+01:47:57 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/search?q=
+01:48:00 [INFO]     [..] Executing behavioral exploration...
+01:48:20 [INFO]     [+] Target Saved: GET http://localhost:4040/
+01:48:21 [INFO] ============================================================
+01:48:21 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+01:48:21 [INFO] ============================================================
+01:48:22 [INFO] 🌐 Loading target page: http://localhost:4040/
+01:48:24 [INFO] ✅ Page loaded successfully
+01:48:24 [INFO] 🔨 Attempting aggressive login (SQLi bypass, default creds)...
+01:48:24 [INFO] 🍪 Captured 1 session cookies
+01:48:25 [INFO] ============================================================
+01:48:25 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+01:48:25 [INFO] ============================================================
+01:48:25 [INFO] [ScanEngine] Syncing session state to scanners...
+01:48:25 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+01:48:25 [INFO] 💉 Running XSS scans on 8 endpoints...
+01:48:25 [INFO] [1/8] XSS Scan: GET http://localhost:4040/assets/i18n/en.json
+01:48:25 [INFO] [XSS] Scanning GET on http://localhost:4040/assets/i18n/en.json (Type: json)
+01:48:25 [INFO] [2/8] XSS Scan: GET http://localhost:4040/rest/admin/application-version
+01:48:25 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/admin/application-version (Type: json)
+01:48:25 [INFO] [3/8] XSS Scan: GET http://localhost:4040/rest/admin/application-configuration
+01:48:25 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/admin/application-configuration (Type: json)
+01:48:25 [INFO] [4/8] XSS Scan: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+01:48:25 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Challenges/?name=Score%20Board (Type: json)
+01:48:25 [INFO]     -> Analyzing: name
+01:48:25 [INFO] [5/8] XSS Scan: GET http://localhost:4040/rest/languages
+01:48:25 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/languages (Type: json)
+01:48:25 [INFO] [6/8] XSS Scan: GET http://localhost:4040/api/Quantitys/
+01:48:25 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Quantitys/ (Type: json)
+01:48:25 [INFO] [7/8] XSS Scan: GET http://localhost:4040/rest/products/search?q=
+01:48:25 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/products/search?q= (Type: json)
+01:48:25 [INFO]     -> Analyzing: q
+01:48:25 [INFO] [8/8] XSS Scan: GET http://localhost:4040/
+01:48:25 [INFO] [XSS] Scanning GET on http://localhost:4040/ (Type: form)
+01:48:25 [INFO] ✅ No vulnerabilities found

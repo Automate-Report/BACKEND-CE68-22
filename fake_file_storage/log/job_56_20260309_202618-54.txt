@@ -1,0 +1,44 @@
+20:25:28 [INFO] ============================================================
+20:25:28 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+20:25:28 [INFO] ============================================================
+20:25:28 [INFO] 🔍 Testing connectivity to http://localhost:4040/...
+20:25:28 [INFO] ✅ Target is reachable! (Status: 200)
+20:25:28 [INFO] ============================================================
+20:25:28 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+20:25:28 [INFO] ============================================================
+20:25:30 [INFO] 🌐 Loading target page: http://localhost:4040/
+20:25:31 [INFO] ✅ Page loaded successfully
+20:25:31 [INFO] 🔨 Attempting aggressive login (SQLi bypass, default creds)...
+20:25:31 [INFO] 🍪 Captured 1 session cookies
+20:25:32 [WARNING] [ScanEngine] Authentication failed, continuing with unauthenticated access...
+20:25:32 [INFO] ============================================================
+20:25:32 [INFO] [PHASE 3] DISCOVERY / CRAWLING
+20:25:32 [INFO] ============================================================
+20:25:32 [INFO] 🕷️ Starting crawl of http://localhost:4040/...
+20:25:32 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+20:25:33 [INFO] [*] Visiting: http://localhost:4040/ (Depth: 0)
+20:25:34 [INFO]     [+] Target Discovered: GET http://localhost:4040/api/Challenges/
+20:25:34 [WARNING]  [!] PII Leak (Email) detected: http://localhost:4040/rest/admin/application-configuration
+20:25:35 [INFO]     [..] Triggering smart interactions...
+20:25:40 [INFO] [*] Visiting: http://localhost:4040/photo-wall (Depth: 1)
+20:25:42 [INFO]     [..] Triggering smart interactions...
+20:25:47 [INFO] [*] Visiting: http://localhost:4040/contact (Depth: 1)
+20:25:49 [INFO]     [..] Triggering smart interactions...
+20:25:54 [INFO] [*] Visiting: http://localhost:4040/search (Depth: 1)
+20:25:56 [INFO]     [..] Triggering smart interactions...
+20:26:01 [INFO] [*] Visiting: http://localhost:4040/login (Depth: 1)
+20:26:03 [INFO]     [..] Triggering smart interactions...
+20:26:08 [INFO] [*] Visiting: http://localhost:4040/about (Depth: 1)
+20:26:10 [INFO]     [..] Triggering smart interactions...
+20:26:16 [INFO] ✅ Crawl complete. Discovered 1 endpoints
+20:26:16 [INFO]    - http://localhost:4040/api/Challenges
+20:26:16 [INFO] ============================================================
+20:26:16 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+20:26:16 [INFO] ============================================================
+20:26:16 [INFO] [ScanEngine] Syncing session state to scanners...
+20:26:16 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+20:26:16 [INFO] 💉 Running XSS scans on 1 endpoints...
+20:26:16 [INFO] [1/1] XSS Scan: GET http://localhost:4040/api/Challenges
+20:26:16 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Challenges (Type: json)
+20:26:16 [INFO]     -> Analyzing: name
+20:26:16 [INFO] ✅ No vulnerabilities found

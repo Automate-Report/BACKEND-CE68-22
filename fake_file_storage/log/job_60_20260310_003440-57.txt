@@ -1,0 +1,57 @@
+00:34:08 [INFO] ============================================================
+00:34:08 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+00:34:09 [INFO] ============================================================
+00:34:09 [INFO] 🔍 Testing connectivity to http://localhost:4040/...
+00:34:09 [INFO] ✅ Target is reachable! (Status: 200)
+00:34:09 [INFO] ============================================================
+00:34:09 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+00:34:09 [INFO] ============================================================
+00:34:10 [INFO] 🌐 Loading target page: http://localhost:4040/
+00:34:12 [INFO] ✅ Page loaded successfully
+00:34:12 [INFO] 🔨 Attempting aggressive login (SQLi bypass, default creds)...
+00:34:12 [INFO] 🍪 Captured 1 session cookies
+00:34:13 [WARNING] [ScanEngine] Authentication failed, continuing with unauthenticated access...
+00:34:13 [INFO] ============================================================
+00:34:13 [INFO] [PHASE 3] DISCOVERY / CRAWLING
+00:34:13 [INFO] ============================================================
+00:34:13 [INFO] 🕷️ Starting crawl of http://localhost:4040/...
+00:34:13 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+00:34:15 [INFO]     [+] Target Saved: GET http://localhost:4040/assets/i18n/en.json
+00:34:15 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-version
+00:34:15 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-configuration
+00:34:15 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+00:34:15 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/languages
+00:34:15 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Quantitys/
+00:34:15 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/search?q=
+00:34:18 [INFO]     [..] Executing behavioral exploration...
+00:34:30 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/user/whoami
+00:34:30 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/6/reviews
+00:34:34 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/30/reviews
+00:34:37 [INFO]     [+] Target Saved: GET http://localhost:4040/
+00:34:38 [INFO] ✅ Crawl complete. Discovered 11 endpoints
+00:34:38 [INFO]    - http://localhost:4040/assets/i18n/en.json
+00:34:38 [INFO]    - http://localhost:4040/rest/admin/application-version
+00:34:38 [INFO]    - http://localhost:4040/rest/admin/application-configuration
+00:34:38 [INFO]    - http://localhost:4040/api/Challenges
+00:34:38 [INFO]    - http://localhost:4040/rest/languages
+00:34:38 [INFO]    - http://localhost:4040/api/Quantitys
+00:34:38 [INFO]    - http://localhost:4040/rest/products/search
+00:34:38 [INFO]    - http://localhost:4040/rest/user/whoami
+00:34:38 [INFO]    - http://localhost:4040/rest/products/6/reviews
+00:34:38 [INFO]    - http://localhost:4040/rest/products/30/reviews
+00:34:38 [INFO]    ... and 1 more
+00:34:38 [INFO] ============================================================
+00:34:38 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+00:34:38 [INFO] ============================================================
+00:34:38 [INFO] [ScanEngine] Syncing session state to scanners...
+00:34:38 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+00:34:38 [INFO] 💉 Running XSS scans on 11 endpoints...
+00:34:38 [ERROR] ❌ Critical Error: object of type 'coroutine' has no len()
+00:34:38 [ERROR] Traceback (most recent call last):
+  File "z:\Thesis\Code\AGENT-CE68-22\src\scanner\scan_engine.py", line 260, in run_workflow
+    findings = await self.attack(crawled_targets)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "z:\Thesis\Code\AGENT-CE68-22\src\scanner\scan_engine.py", line 231, in attack
+    self.logger.info(f"✅ Found {len(findings)} vulnerabilities!")
+                                 ~~~^^^^^^^^^^
+TypeError: object of type 'coroutine' has no len()

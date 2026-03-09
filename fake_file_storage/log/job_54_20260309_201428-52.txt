@@ -1,0 +1,14 @@
+20:14:13 [INFO] [ScanEngine] Pre-authentication phase on http://localhost:4040/
+20:14:17 [INFO] [ScanEngine] No valid creds or login failed. Trying aggressive entry...
+20:14:17 [WARNING] [ScanEngine] Could not authenticate. Discovery will be limited.
+20:14:18 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/...
+20:14:18 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+20:14:19 [INFO] [*] Visiting: http://localhost:4040/ (Depth: 0)
+20:14:20 [INFO]     [+] Target Discovered: GET http://localhost:4040/api/Challenges/
+20:14:20 [WARNING]  [!] PII Leak (Email) detected: http://localhost:4040/rest/admin/application-configuration
+20:14:21 [INFO]     [..] Triggering smart interactions...
+20:14:25 [ERROR] [!] Failed to process http://localhost:4040/: Page.evaluate: Target page, context or browser has been closed
+20:14:25 [INFO] [ScanEngine] Discovery finished. Unique targets found: 1
+20:14:25 [INFO] --- XSS Scan on: http://localhost:4040/api/Challenges/ (GET) ---
+20:14:25 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Challenges/ (Type: json)
+20:14:25 [INFO]     -> Analyzing: name

@@ -1,0 +1,45 @@
+02:08:42 [INFO] ============================================================
+02:08:42 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+02:08:42 [INFO] ============================================================
+02:08:42 [INFO] 🔍 Testing connectivity to http://localhost:4040/...
+02:08:42 [INFO] ✅ Target is reachable! (Status: 200)
+02:08:42 [INFO] [+] Starting Public Discovery...
+02:08:42 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+02:08:45 [INFO]     [+] Target Saved: GET http://localhost:4040/assets/i18n/en.json
+02:08:45 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-version
+02:08:45 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-configuration
+02:08:45 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+02:08:45 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/languages
+02:08:45 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Quantitys/
+02:08:45 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/search?q=
+02:08:48 [INFO]     [..] Executing behavioral exploration...
+02:09:06 [INFO]     [+] Target Saved: GET http://localhost:4040/
+02:09:07 [INFO] ============================================================
+02:09:07 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+02:09:07 [INFO] ============================================================
+02:09:08 [INFO] 🌐 Loading target page: http://localhost:4040/
+02:09:10 [INFO] ✅ Page loaded successfully
+02:09:10 [INFO] 🕵️ No login form on landing page, searching for entry...
+02:09:10 [INFO] Trying login path: /login
+02:09:11 [INFO] Trying login path: /signin
+02:09:13 [INFO] Trying login path: /#/login
+02:09:14 [INFO] ✅ Found login form at http://localhost:4040/#/login
+02:09:14 [INFO] 🔨 Attempting aggressive login (SQLi bypass, default creds)...
+02:09:14 [INFO] [Auth] 🛡️ Attempting Aggressive Entry at http://localhost:4040/#/login
+02:09:16 [INFO] ✅ Aggressive login successful!
+02:09:16 [INFO] 🍪 Captured 4 session cookies
+02:09:16 [INFO] [+] Starting Authenticated Discovery...
+02:09:16 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+02:09:21 [INFO]     [..] Executing behavioral exploration...
+02:09:34 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/user/whoami
+02:09:34 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/6/reviews
+02:09:38 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/30/reviews
+02:09:42 [INFO] [Requester] 💉 Header set: Authorization
+02:09:42 [INFO] [ScanEngine] 🔑 Bearer Token Injected for Phase 4
+02:09:42 [INFO] ============================================================
+02:09:42 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+02:09:42 [INFO] ============================================================
+02:09:42 [INFO] [ScanEngine] Syncing session state to scanners...
+02:09:42 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+02:09:42 [WARNING] ⚠️ Unknown attack type: SQL Injection
+02:09:42 [INFO] ✅ No vulnerabilities found

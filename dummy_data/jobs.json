@@ -404,9 +404,329 @@
     "name": "job_7Nf8BcEtDKTc",
     "schedule_id": 18,
     "worker_id": 1,
-    "status": "running",
+    "status": "failed",
     "created_at": "2026-03-09T18:28:11.985074",
     "started_at": "2026-03-09T11:28:14.041088",
     "finished_at": null
+  },
+  {
+    "id": 42,
+    "name": "job_Ma04YTJYXOJj",
+    "schedule_id": 18,
+    "worker_id": 1,
+    "status": "failed",
+    "created_at": "2026-03-09T18:47:10.219471",
+    "started_at": "2026-03-09T11:47:22.349727",
+    "finished_at": "2026-03-09T11:47:22.349727"
+  },
+  {
+    "id": 43,
+    "name": "job_g4c6YSaCbNFv",
+    "schedule_id": 19,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-09T18:49:38.242059",
+    "started_at": "2026-03-09T11:49:40.282005",
+    "finished_at": "2026-03-09T11:52:59.242485"
+  },
+  {
+    "id": 44,
+    "name": "job_kAXa2pWsvnhS",
+    "schedule_id": 20,
+    "worker_id": 1,
+    "status": "failed",
+    "created_at": "2026-03-09T19:16:16.796707",
+    "started_at": "2026-03-09T12:16:18.964414",
+    "finished_at": "2026-03-09T12:16:18.964414"
+  },
+  {
+    "id": 45,
+    "name": "job_8UmgpPL0obsC",
+    "schedule_id": 21,
+    "worker_id": 1,
+    "status": "failed",
+    "created_at": "2026-03-09T19:18:24.580551",
+    "started_at": "2026-03-09T12:18:26.729377",
+    "finished_at": "2026-03-09T12:18:26.729377"
+  },
+  {
+    "id": 46,
+    "name": "job_jTcGZoZmz3Tg",
+    "schedule_id": 22,
+    "worker_id": 1,
+    "status": "failed",
+    "created_at": "2026-03-09T19:23:53.935359",
+    "started_at": "2026-03-09T12:23:57.270399",
+    "finished_at": "2026-03-09T12:23:57.270399"
+  },
+  {
+    "id": 47,
+    "name": "job_laS5OIpOnjya",
+    "schedule_id": 23,
+    "worker_id": 1,
+    "status": "failed",
+    "created_at": "2026-03-09T19:25:55.239475",
+    "started_at": "2026-03-09T12:25:58.400984",
+    "finished_at": "2026-03-09T12:25:58.400984"
+  },
+  {
+    "id": 48,
+    "name": "job_eZ6jJIlkf7Ja",
+    "schedule_id": 24,
+    "worker_id": 1,
+    "status": "failed",
+    "created_at": "2026-03-09T19:34:41.990279",
+    "started_at": "2026-03-09T12:35:33.884876",
+    "finished_at": "2026-03-09T12:35:33.884876"
+  },
+  {
+    "id": 49,
+    "name": "job_74Kfg9fqtL48",
+    "schedule_id": 25,
+    "worker_id": 1,
+    "status": "failed",
+    "created_at": "2026-03-09T19:37:02.735167",
+    "started_at": "2026-03-09T12:41:41.613091",
+    "finished_at": "2026-03-09T12:41:41.613091"
+  },
+  {
+    "id": 50,
+    "name": "job_6zHty0JIGmmp",
+    "schedule_id": 26,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-09T19:48:42.277301",
+    "started_at": "2026-03-09T12:48:44.326422",
+    "finished_at": "2026-03-09T12:49:27.121733"
+  },
+  {
+    "id": 51,
+    "name": "job_IfBIYvhYqvyb",
+    "schedule_id": 27,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-09T20:02:01.025913",
+    "started_at": "2026-03-09T13:02:17.835686",
+    "finished_at": "2026-03-09T13:03:01.491765"
+  },
+  {
+    "id": 52,
+    "name": "job_W1Q2oZaYIM0C",
+    "schedule_id": 28,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-09T20:10:06.689357",
+    "started_at": "2026-03-09T13:10:08.775552",
+    "finished_at": "2026-03-09T13:10:54.560216"
+  },
+  {
+    "id": 53,
+    "name": "job_kYOOvZtTwmeh",
+    "schedule_id": 29,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-09T20:12:44.316263",
+    "started_at": "2026-03-09T13:12:46.382798",
+    "finished_at": "2026-03-09T13:13:31.009688"
+  },
+  {
+    "id": 54,
+    "name": "job_4jYfczGWzyeQ",
+    "schedule_id": 30,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-09T20:14:13.940272",
+    "started_at": "2026-03-09T13:14:15.995547",
+    "finished_at": "2026-03-09T13:14:28.013537"
+  },
+  {
+    "id": 55,
+    "name": "job_iwb4sImoij6G",
+    "schedule_id": 31,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-09T20:14:40.578153",
+    "started_at": "2026-03-09T13:25:28.845773",
+    "finished_at": "2026-03-09T13:26:16.242722"
+  },
+  {
+    "id": 56,
+    "name": "job_9aHeeXVC2UlR",
+    "schedule_id": 32,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-09T20:15:15.553783",
+    "started_at": "2026-03-09T13:25:30.951660",
+    "finished_at": "2026-03-09T13:26:18.201873"
+  },
+  {
+    "id": 57,
+    "name": "job_0MCBokSeE8KP",
+    "schedule_id": 33,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-10T00:24:38.751935",
+    "started_at": "2026-03-09T17:24:41.306332",
+    "finished_at": "2026-03-09T17:25:11.376274"
+  },
+  {
+    "id": 58,
+    "name": "job_Ag5BBGNFwKEI",
+    "schedule_id": 34,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-10T00:29:58.781848",
+    "started_at": "2026-03-09T17:30:00.826787",
+    "finished_at": "2026-03-09T17:30:28.995274"
+  },
+  {
+    "id": 59,
+    "name": "job_9v6Sjr5i7tPR",
+    "schedule_id": 35,
+    "worker_id": 1,
+    "status": "failed",
+    "created_at": "2026-03-10T00:33:18.033651",
+    "started_at": "2026-03-09T17:33:20.105975",
+    "finished_at": null
+  },
+  {
+    "id": 60,
+    "name": "job_mOZgf5CtuBLg",
+    "schedule_id": 36,
+    "worker_id": 1,
+    "status": "failed",
+    "created_at": "2026-03-10T00:34:08.974367",
+    "started_at": "2026-03-09T17:34:40.682323",
+    "finished_at": "2026-03-09T17:34:40.682323"
+  },
+  {
+    "id": 61,
+    "name": "job_rZ3lKOLoEMKe",
+    "schedule_id": 37,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-10T00:37:20.595207",
+    "started_at": "2026-03-09T17:37:22.664199",
+    "finished_at": "2026-03-09T17:37:51.734426"
+  },
+  {
+    "id": 62,
+    "name": "job_562OHWLrqGuF",
+    "schedule_id": 18,
+    "worker_id": 1,
+    "status": "failed",
+    "created_at": "2026-03-10T00:51:41.209037",
+    "started_at": "2026-03-09T17:51:59.187913",
+    "finished_at": null
+  },
+  {
+    "id": 63,
+    "name": "job_NYrB3PI80TEI",
+    "schedule_id": 18,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-10T00:53:15.194533",
+    "started_at": "2026-03-09T17:53:17.259606",
+    "finished_at": "2026-03-09T17:53:47.719616"
+  },
+  {
+    "id": 64,
+    "name": "job_1UzbyhHxSfHL",
+    "schedule_id": 18,
+    "worker_id": 1,
+    "status": "failed",
+    "created_at": "2026-03-10T00:57:37.626423",
+    "started_at": "2026-03-09T18:45:18.902637",
+    "finished_at": "2026-03-09T18:45:18.902637"
+  },
+  {
+    "id": 65,
+    "name": "job_vl0unzQ1BYrE",
+    "schedule_id": 20,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-10T01:47:24.655841",
+    "started_at": "2026-03-09T18:47:26.716360",
+    "finished_at": "2026-03-09T18:47:53.840145"
+  },
+  {
+    "id": 66,
+    "name": "job_oBQgRbZqJ5Na",
+    "schedule_id": 19,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-10T01:47:55.528240",
+    "started_at": "2026-03-09T18:47:57.629283",
+    "finished_at": "2026-03-09T18:48:27.536643"
+  },
+  {
+    "id": 67,
+    "name": "job_Z72cCfB3t7PA",
+    "schedule_id": 21,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-10T01:55:47.319876",
+    "started_at": "2026-03-09T18:55:49.369942",
+    "finished_at": "2026-03-09T18:56:16.658519"
+  },
+  {
+    "id": 68,
+    "name": "job_9PdZk1QDWqQz",
+    "schedule_id": 22,
+    "worker_id": 1,
+    "status": "failed",
+    "created_at": "2026-03-10T02:00:30.975798",
+    "started_at": "2026-03-09T19:01:32.157087",
+    "finished_at": "2026-03-09T19:01:32.157087"
+  },
+  {
+    "id": 69,
+    "name": "job_7qfGlh3bj9os",
+    "schedule_id": 23,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-10T02:06:15.238862",
+    "started_at": "2026-03-09T19:06:17.297677",
+    "finished_at": "2026-03-09T19:07:15.109164"
+  },
+  {
+    "id": 70,
+    "name": "job_JGrJV8NLDXbN",
+    "schedule_id": 24,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-10T02:08:42.787198",
+    "started_at": "2026-03-09T19:08:44.850755",
+    "finished_at": "2026-03-09T19:09:44.214136"
+  },
+  {
+    "id": 71,
+    "name": "job_oY9T54MnqZ8v",
+    "schedule_id": 25,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-10T02:11:34.879005",
+    "started_at": "2026-03-09T19:11:36.940415",
+    "finished_at": "2026-03-09T19:13:06.048787"
+  },
+  {
+    "id": 72,
+    "name": "job_n6C4rjY9IDGu",
+    "schedule_id": 26,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-10T02:20:30.576467",
+    "started_at": "2026-03-09T19:20:45.628606",
+    "finished_at": "2026-03-09T19:22:12.113327"
+  },
+  {
+    "id": 73,
+    "name": "job_8nT4XjMU7jLX",
+    "schedule_id": 18,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-10T03:16:20.039342",
+    "started_at": "2026-03-09T20:16:34.188242",
+    "finished_at": "2026-03-09T20:17:25.870826"
   }
 ]

@@ -43,7 +43,7 @@ async def get_schedule(schedule_id: int):
 # POST new schedule
 @router.post("/create")
 async def create_schedule(schedule_input: ScheduleCreate, user = Depends(get_current_user)):
-    status_message = schedule_service.create_schedule(schedule_input, user["sub"])
+    status_message = await schedule_service.create_schedule(schedule_input, user["sub"])
     return {"message": status_message}
 
 # PUT update via edit schedule

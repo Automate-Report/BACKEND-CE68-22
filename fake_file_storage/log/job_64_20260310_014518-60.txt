@@ -1,0 +1,29 @@
+01:44:47 [INFO] ============================================================
+01:44:47 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+01:44:47 [INFO] ============================================================
+01:44:47 [INFO] 🔍 Testing connectivity to http://localhost:4040/...
+01:44:47 [INFO] ✅ Target is reachable! (Status: 200)
+01:44:47 [INFO] [+] Starting Public Discovery...
+01:44:47 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+01:44:50 [INFO]     [+] Target Saved: GET http://localhost:4040/assets/i18n/en.json
+01:44:50 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-version
+01:44:50 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-configuration
+01:44:50 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+01:44:50 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/languages
+01:44:50 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Quantitys/
+01:44:50 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/search?q=
+01:44:53 [INFO]     [..] Executing behavioral exploration...
+01:45:11 [INFO]     [+] Target Saved: GET http://localhost:4040/
+01:45:12 [INFO] ============================================================
+01:45:12 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+01:45:12 [INFO] ============================================================
+01:45:14 [INFO] 🌐 Loading target page: http://localhost:4040/
+01:45:16 [INFO] ✅ Page loaded successfully
+01:45:16 [INFO] 🔨 Attempting aggressive login (SQLi bypass, default creds)...
+01:45:16 [INFO] 🍪 Captured 1 session cookies
+01:45:16 [ERROR] ❌ Critical Error: 'Crawler' object has no attribute 'auth_token'
+01:45:16 [ERROR] Traceback (most recent call last):
+  File "z:\Thesis\Code\AGENT-CE68-22\src\scanner\scan_engine.py", line 267, in run_workflow
+    if self.crawler.auth_token: # Token ที่ AuthHandler เก็บมา
+       ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Crawler' object has no attribute 'auth_token'

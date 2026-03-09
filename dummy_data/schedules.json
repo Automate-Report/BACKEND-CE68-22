@@ -85,30 +85,16 @@
   },
   {
     "schedule_id": 18,
-    "schedule_name": "ce-kmitl",
+    "schedule_name": "fdsfsdfssd",
     "project_id": 21,
-    "asset_id": 16,
+    "asset_id": 15,
     "cron_expression": "Not Repeat",
     "attack_type": "XSS",
-    "is_active": false,
-    "start_date": "2026-03-09 11:29:56.067000+00:00",
-    "end_date": "2026-03-09 11:29:56.067000+00:00",
-    "created_at": "2026-03-09T18:28:56.075547",
-    "updated_at": "2026-03-09T18:28:56.075561",
-    "created_by": "somchai@tech.co.th"
-  },
-  {
-    "schedule_id": 19,
-    "schedule_name": "ce kmitl -2",
-    "project_id": 21,
-    "asset_id": 16,
-    "cron_expression": "35 18 * * *",
-    "attack_type": "XSS",
     "is_active": true,
-    "start_date": "2026-03-09 12:33:00+00:00",
-    "end_date": "2026-03-09 00:00:00+00:00",
-    "created_at": "2026-03-09T18:34:14.743859",
-    "updated_at": "2026-03-09T18:34:14.743876",
+    "start_date": "2026-03-09 20:17:19.700000+00:00",
+    "end_date": "2026-03-09 20:17:19.700000+00:00",
+    "created_at": "2026-03-10T03:16:20.024610",
+    "updated_at": "2026-03-10T03:16:20.024621",
     "created_by": "somchai@tech.co.th"
   }
 ]

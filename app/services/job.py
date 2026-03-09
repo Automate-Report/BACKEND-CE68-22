@@ -323,7 +323,7 @@ class JobService:
         minute_lock_key = f"lock:schedule:{schedule_data['schedule_id']}:{now_str}"
 
         is_not_repeat = (schedule_data.get("cron_expression") == "Not Repeat")
-        once_lock_key = f"lock:schedule:once:{schedule_id}"
+        once_lock_key = f"lock:schedule:once:{schedule_id}:{schedule_data["created_at"]}"
 
         if is_not_repeat:
             # ถ้าเคยรันไปแล้ว (มี Key ใน Redis) ให้หยุดทันที
@@ -370,11 +370,16 @@ class JobService:
         # 4. สร้าง Job ในระบบ
         new_job = self.create_job(schedule_data["schedule_id"], best_worker["id"])
 
+        if schedule_data.get("attack_type") == "SQL Injection":
+            attack_type = "sql_injection"
+        else:
+            attack_type = "xss"
+
         # 5. ส่งงานเข้า Redis Queue เฉพาะตัว
         payload = JobWorkerPayload(
             job_id=new_job["id"],
             target_url=asset["target"],
-            attack_type=schedule_data["attack_type"],
+            attack_type=attack_type,
             credential=None
         )
         

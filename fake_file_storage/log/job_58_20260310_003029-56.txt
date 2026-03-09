@@ -1,0 +1,71 @@
+00:29:58 [INFO] ============================================================
+00:29:58 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+00:29:58 [INFO] ============================================================
+00:29:58 [INFO] 🔍 Testing connectivity to http://localhost:4040/...
+00:29:58 [INFO] ✅ Target is reachable! (Status: 200)
+00:29:58 [INFO] ============================================================
+00:29:58 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+00:29:58 [INFO] ============================================================
+00:30:00 [INFO] 🌐 Loading target page: http://localhost:4040/
+00:30:02 [INFO] ✅ Page loaded successfully
+00:30:02 [INFO] 🔨 Attempting aggressive login (SQLi bypass, default creds)...
+00:30:02 [INFO] 🍪 Captured 2 session cookies
+00:30:02 [WARNING] [ScanEngine] Authentication failed, continuing with unauthenticated access...
+00:30:02 [INFO] ============================================================
+00:30:02 [INFO] [PHASE 3] DISCOVERY / CRAWLING
+00:30:02 [INFO] ============================================================
+00:30:02 [INFO] 🕷️ Starting crawl of http://localhost:4040/...
+00:30:02 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+00:30:05 [INFO]     [+] Target Saved: GET http://localhost:4040/assets/i18n/en.json
+00:30:05 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-version
+00:30:05 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-configuration
+00:30:05 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+00:30:05 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/languages
+00:30:05 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Quantitys/
+00:30:05 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/search?q=
+00:30:08 [INFO]     [..] Executing behavioral exploration...
+00:30:22 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/user/whoami
+00:30:22 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/42/reviews
+00:30:25 [INFO]     [+] Target Saved: GET http://localhost:4040/
+00:30:26 [INFO] ✅ Crawl complete. Discovered 10 endpoints
+00:30:26 [INFO]    - http://localhost:4040/assets/i18n/en.json
+00:30:26 [INFO]    - http://localhost:4040/rest/admin/application-version
+00:30:26 [INFO]    - http://localhost:4040/rest/admin/application-configuration
+00:30:26 [INFO]    - http://localhost:4040/api/Challenges
+00:30:26 [INFO]    - http://localhost:4040/rest/languages
+00:30:26 [INFO]    - http://localhost:4040/api/Quantitys
+00:30:26 [INFO]    - http://localhost:4040/rest/products/search
+00:30:26 [INFO]    - http://localhost:4040/rest/user/whoami
+00:30:26 [INFO]    - http://localhost:4040/rest/products/42/reviews
+00:30:26 [INFO]    - http://localhost:4040
+00:30:26 [INFO] ============================================================
+00:30:26 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+00:30:26 [INFO] ============================================================
+00:30:26 [INFO] [ScanEngine] Syncing session state to scanners...
+00:30:26 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+00:30:26 [INFO] 💉 Running XSS scans on 10 endpoints...
+00:30:26 [INFO] [1/10] XSS Scan: GET http://localhost:4040/assets/i18n/en.json
+00:30:26 [INFO] [XSS] Scanning GET on http://localhost:4040/assets/i18n/en.json (Type: json)
+00:30:26 [INFO] [2/10] XSS Scan: GET http://localhost:4040/rest/admin/application-version
+00:30:26 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/admin/application-version (Type: json)
+00:30:26 [INFO] [3/10] XSS Scan: GET http://localhost:4040/rest/admin/application-configuration
+00:30:26 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/admin/application-configuration (Type: json)
+00:30:26 [INFO] [4/10] XSS Scan: GET http://localhost:4040/api/Challenges
+00:30:26 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Challenges (Type: json)
+00:30:26 [INFO]     -> Analyzing: name
+00:30:26 [INFO] [5/10] XSS Scan: GET http://localhost:4040/rest/languages
+00:30:26 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/languages (Type: json)
+00:30:26 [INFO] [6/10] XSS Scan: GET http://localhost:4040/api/Quantitys
+00:30:26 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Quantitys (Type: json)
+00:30:26 [INFO] [7/10] XSS Scan: GET http://localhost:4040/rest/products/search
+00:30:26 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/products/search (Type: json)
+00:30:26 [INFO]     -> Analyzing: q
+00:30:26 [INFO] [8/10] XSS Scan: GET http://localhost:4040/rest/user/whoami
+00:30:26 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/user/whoami (Type: json)
+00:30:26 [INFO] [9/10] XSS Scan: GET http://localhost:4040/rest/products/42/reviews
+00:30:26 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/products/42/reviews (Type: json)
+00:30:26 [INFO]     -> Analyzing: path_id_3
+00:30:26 [INFO] [10/10] XSS Scan: GET http://localhost:4040
+00:30:26 [INFO] [XSS] Scanning GET on http://localhost:4040 (Type: form)
+00:30:26 [WARNING]   └─ Error scanning http://localhost:4040: 'coroutine' object is not iterable
+00:30:26 [INFO] ✅ No vulnerabilities found
