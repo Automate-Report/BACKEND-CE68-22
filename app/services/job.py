@@ -1,3 +1,5 @@
+
+
 import json
 import os
 import secrets
@@ -14,7 +16,7 @@ from app.services.asset import asset_service
 from app.services.worker import worker_service
 from app.services.notification import notification_service
 from app.services.vulnerability import vuln_service
-from app.services.project import project_service
+
 
 from app.schemas.job import JobWorkerPayload, SummaryInfoByWorker
 
@@ -342,6 +344,9 @@ class JobService:
         if best_worker in ["No Worker", None]:
             error_msg = f"❌ ไม่สามารถเริ่มงานสแกน {asset['name']} ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้"
             notification_service.create_notification(user_id, "error", error_msg, f'/projects/{schedule_data.get("project_id")}/workers')
+            from app.services.schedule import schedule_service
+            await schedule_service.deactivate_schedule(schedule_id)
+            print(f"🔒 [Dispatch] No worker online, deactivating schedule: {schedule_id}")
             return None
         
         if is_not_repeat:
