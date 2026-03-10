@@ -1,0 +1,39 @@
+04:00:22 [INFO] ============================================================
+04:00:22 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+04:00:22 [INFO] ============================================================
+04:00:22 [INFO] 🔍 Testing connectivity to http://localhost:4050...
+04:00:22 [INFO] ✅ Target is reachable! (Status: 200)
+04:00:22 [INFO] [+] Starting Public Discovery...
+04:00:22 [INFO] 🚀 Starting Async Crawl: http://localhost:4050
+04:00:26 [INFO]     [..] Executing behavioral exploration...
+04:00:28 [INFO]     [!] Injected & Pressed Enter on input 0
+04:00:29 [INFO]     [!] Injected & Pressed Enter on input 1
+04:00:32 [INFO]     [+] Target Saved: GET http://localhost:4050
+04:00:33 [INFO] ============================================================
+04:00:33 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+04:00:33 [INFO] ============================================================
+04:00:34 [INFO] 🌐 Loading target page: http://localhost:4050
+04:00:35 [INFO] ✅ Page loaded successfully
+04:00:35 [INFO] 🔨 Attempting aggressive login (SQLi bypass, default creds)...
+04:00:35 [INFO] [Auth] 🛡️ Attempting Aggressive Entry at http://localhost:4050/login.php
+04:01:35 [INFO] [Auth] 🔑 Testing default credentials...
+04:01:36 [INFO] ✅ Aggressive login successful!
+04:01:36 [INFO] 🍪 Captured 2 session cookies
+04:01:37 [INFO] [+] Starting Authenticated Discovery...
+04:01:37 [INFO] 🚀 Starting Async Crawl: http://localhost:4050
+04:01:41 [INFO]     [..] Executing behavioral exploration...
+04:01:43 [INFO]     [!] Injected & Pressed Enter on input 0
+04:01:44 [INFO]     [!] Injected & Pressed Enter on input 1
+04:01:48 [INFO] ============================================================
+04:01:48 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+04:01:48 [INFO] ============================================================
+04:01:48 [INFO] 📊 Deduplication: 2 -> 1 unique targets
+04:01:48 [INFO] [ScanEngine] Syncing session state to scanners...
+04:01:48 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+04:01:48 [INFO] 🔓 Running SQL Injection scans on 1 endpoints...
+04:01:48 [INFO] [1/1] SQLi Scan: GET http://localhost:4050
+04:01:48 [INFO] [SQLi] Scan: GET http://localhost:4050
+04:01:48 [INFO]     -> Testing Parameter: username
+04:01:49 [INFO]     -> Testing Parameter: password
+04:01:50 [INFO]     -> Testing Parameter: login
+04:01:52 [INFO] ✅ No vulnerabilities found

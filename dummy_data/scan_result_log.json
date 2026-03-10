@@ -757,5 +757,203 @@
     "created_at": "2026-03-10T03:17:25.895228",
     "file_type": "txt",
     "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_73_20260310_031725-69.txt"
+  },
+  {
+    "id": 70,
+    "job_id": 74,
+    "pentest_status": "not found",
+    "error_msg": null,
+    "file_name": "job_74_20260310_035306-70.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_74_20260310_035306-70.txt",
+    "created_at": "2026-03-10T03:53:06.738159",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_74_20260310_035306-70.txt"
+  },
+  {
+    "id": 71,
+    "job_id": 75,
+    "pentest_status": "not found",
+    "error_msg": null,
+    "file_name": "job_75_20260310_035637-71.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_75_20260310_035637-71.txt",
+    "created_at": "2026-03-10T03:56:37.272563",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_75_20260310_035637-71.txt"
+  },
+  {
+    "id": 72,
+    "job_id": 76,
+    "pentest_status": "not found",
+    "error_msg": null,
+    "file_name": "job_76_20260310_040154-72.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_76_20260310_040154-72.txt",
+    "created_at": "2026-03-10T04:01:54.093981",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_76_20260310_040154-72.txt"
+  },
+  {
+    "id": 73,
+    "job_id": 77,
+    "pentest_status": "not found",
+    "error_msg": null,
+    "file_name": "job_77_20260310_040524-73.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_77_20260310_040524-73.txt",
+    "created_at": "2026-03-10T04:05:24.955243",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_77_20260310_040524-73.txt"
+  },
+  {
+    "id": 74,
+    "job_id": 78,
+    "pentest_status": "not found",
+    "error_msg": null,
+    "file_name": "job_78_20260310_041409-74.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_78_20260310_041409-74.txt",
+    "created_at": "2026-03-10T04:14:09.090951",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_78_20260310_041409-74.txt"
+  },
+  {
+    "id": 75,
+    "job_id": 79,
+    "pentest_status": "not found",
+    "error_msg": null,
+    "file_name": "job_79_20260310_041654-75.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_79_20260310_041654-75.txt",
+    "created_at": "2026-03-10T04:16:54.581875",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_79_20260310_041654-75.txt"
+  },
+  {
+    "id": 76,
+    "job_id": 80,
+    "pentest_status": "not found",
+    "error_msg": null,
+    "file_name": "job_80_20260310_042957-76.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_80_20260310_042957-76.txt",
+    "created_at": "2026-03-10T04:29:57.775074",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_80_20260310_042957-76.txt"
+  },
+  {
+    "id": 77,
+    "job_id": 81,
+    "pentest_status": "not found",
+    "error_msg": null,
+    "file_name": "job_81_20260310_043122-77.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_81_20260310_043122-77.txt",
+    "created_at": "2026-03-10T04:31:22.967530",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_81_20260310_043122-77.txt"
+  },
+  {
+    "id": 78,
+    "job_id": 82,
+    "pentest_status": "found",
+    "error_msg": null,
+    "file_name": "job_82_20260310_043529-78.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_82_20260310_043529-78.txt",
+    "created_at": "2026-03-10T04:35:29.469941",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_82_20260310_043529-78.txt"
+  },
+  {
+    "id": 79,
+    "job_id": 83,
+    "pentest_status": "not found",
+    "error_msg": null,
+    "file_name": "job_83_20260310_161808-79.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_83_20260310_161808-79.txt",
+    "created_at": "2026-03-10T16:18:08.722763",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_83_20260310_161808-79.txt"
+  },
+  {
+    "id": 80,
+    "job_id": 84,
+    "pentest_status": "not found",
+    "error_msg": null,
+    "file_name": "job_84_20260310_162129-80.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_84_20260310_162129-80.txt",
+    "created_at": "2026-03-10T16:21:29.789449",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_84_20260310_162129-80.txt"
+  },
+  {
+    "id": 81,
+    "job_id": 85,
+    "pentest_status": "not found",
+    "error_msg": null,
+    "file_name": "job_85_20260310_162427-81.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_85_20260310_162427-81.txt",
+    "created_at": "2026-03-10T16:24:27.118417",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_85_20260310_162427-81.txt"
+  },
+  {
+    "id": 82,
+    "job_id": 86,
+    "pentest_status": "found",
+    "error_msg": null,
+    "file_name": "job_86_20260310_164328-82.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_86_20260310_164328-82.txt",
+    "created_at": "2026-03-10T16:43:28.232488",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_86_20260310_164328-82.txt"
+  },
+  {
+    "id": 83,
+    "job_id": 87,
+    "pentest_status": "found",
+    "error_msg": null,
+    "file_name": "job_87_20260310_164838-83.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_87_20260310_164838-83.txt",
+    "created_at": "2026-03-10T16:48:38.610277",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_87_20260310_164838-83.txt"
+  },
+  {
+    "id": 84,
+    "job_id": 88,
+    "pentest_status": "found",
+    "error_msg": null,
+    "file_name": "job_88_20260310_165033-84.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_88_20260310_165033-84.txt",
+    "created_at": "2026-03-10T16:50:33.790072",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_88_20260310_165033-84.txt"
+  },
+  {
+    "id": 85,
+    "job_id": 89,
+    "pentest_status": "found",
+    "error_msg": null,
+    "file_name": "job_89_20260310_165621-85.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_89_20260310_165621-85.txt",
+    "created_at": "2026-03-10T16:56:21.382578",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_89_20260310_165621-85.txt"
+  },
+  {
+    "id": 86,
+    "job_id": 90,
+    "pentest_status": "found",
+    "error_msg": null,
+    "file_name": "job_90_20260310_165845-86.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_90_20260310_165845-86.txt",
+    "created_at": "2026-03-10T16:58:45.135318",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_90_20260310_165845-86.txt"
+  },
+  {
+    "id": 87,
+    "job_id": 91,
+    "pentest_status": "found",
+    "error_msg": null,
+    "file_name": "job_91_20260310_170146-87.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_91_20260310_170146-87.txt",
+    "created_at": "2026-03-10T17:01:46.391435",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_91_20260310_170146-87.txt"
   }
 ]

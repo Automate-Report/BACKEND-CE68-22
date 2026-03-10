@@ -1,0 +1,42 @@
+04:12:25 [INFO] ============================================================
+04:12:25 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+04:12:25 [INFO] ============================================================
+04:12:25 [INFO] 🔍 Testing connectivity to http://localhost:4050/vulnerabilities/sqli/...
+04:12:25 [INFO] ✅ Target is reachable! (Status: 200)
+04:12:25 [INFO] [+] Starting Public Discovery...
+04:12:25 [INFO] 🚀 Starting Async Crawl: http://localhost:4050/vulnerabilities/sqli/
+04:12:29 [INFO]     [..] Executing behavioral exploration...
+04:12:31 [INFO]     [!] Injected & Pressed Enter on input 0
+04:12:33 [INFO]     [!] Injected & Pressed Enter on input 1
+04:12:35 [INFO]     [+] Target Saved: GET http://localhost:4050/vulnerabilities/sqli/
+04:12:36 [INFO] ============================================================
+04:12:36 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+04:12:36 [INFO] ============================================================
+04:12:38 [INFO] 🌐 Loading target page: http://localhost:4050/vulnerabilities/sqli/
+04:12:38 [INFO] ✅ Page loaded successfully
+04:12:38 [INFO] 🔨 Attempting aggressive login (SQLi bypass, default creds)...
+04:12:38 [INFO] [Auth] 🛡️ Attempting Aggressive Entry at http://localhost:4050/login.php
+04:13:39 [INFO] [Auth] 🔑 Testing default credentials...
+04:13:40 [INFO] ✅ Aggressive login successful!
+04:13:40 [INFO] 🍪 Captured 3 session cookies
+04:13:40 [INFO] [Crawler] 🍪 External cookies set. Total: 3
+04:13:40 [INFO] [PHASE 3] DEEP CRAWLING WITH SESSION...
+04:13:40 [INFO] 🚀 Starting Async Crawl: http://localhost:4050/vulnerabilities/sqli/
+04:13:41 [INFO] [Crawler] 🍪 Context initialized with 3 cookies
+04:13:44 [INFO]     [..] Executing behavioral exploration...
+04:13:47 [INFO]     [!] Injected & Pressed Enter on input 0
+04:13:59 [INFO]     [+] Target Saved: GET http://localhost:4050/vulnerabilities/sqli/
+04:14:00 [INFO] ============================================================
+04:14:00 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+04:14:00 [INFO] ============================================================
+04:14:00 [INFO] 📊 Deduplication: 4 -> 1 unique targets
+04:14:00 [INFO] [ScanEngine] Syncing session state to scanners...
+04:14:00 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+04:14:00 [INFO] 🔓 Running SQL Injection scans on 1 endpoints...
+04:14:00 [INFO] [1/1] SQLi Scan: GET http://localhost:4050/vulnerabilities/sqli/
+04:14:00 [INFO] [SQLi] Scan: GET http://localhost:4050/vulnerabilities/sqli/
+04:14:00 [INFO]     -> Testing Parameter: id
+04:14:02 [INFO]     -> Testing Parameter: submit
+04:14:03 [INFO]     -> Testing Parameter: field_2
+04:14:05 [INFO]     -> Testing Parameter: field_3
+04:14:07 [INFO] ✅ No vulnerabilities found

