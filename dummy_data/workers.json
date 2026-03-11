@@ -8,7 +8,7 @@
     "name": "Worker-01-DigitalOcean",
     "hostname": "Nattharika-J",
     "internal_ip": "161.246.5.57",
-    "status": "online",
+    "status": "offline",
     "isActive": true,
     "created_at": "2026-01-27T18:49:28.965751",
     "updated_at": "2026-02-28T19:52:40.335973",
