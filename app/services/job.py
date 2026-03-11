@@ -100,6 +100,7 @@ class JobService:
         for job in jobs:
             if job["schedule_id"] == schedule_id:
                 job_ids.append(job["id"])
+
         return job_ids
     
     def get_job_by_worker_id(self, worker_id: int,

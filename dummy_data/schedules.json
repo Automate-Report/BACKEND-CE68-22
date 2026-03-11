@@ -82,5 +82,19 @@
     "created_at": "2026-03-06T21:40:43.997503",
     "updated_at": "2026-03-06T21:41:49.485575",
     "created_by": "somchai@tech.co.th"
+  },
+  {
+    "schedule_id": 18,
+    "schedule_name": "gdfgdfgddf",
+    "project_id": 21,
+    "asset_id": 6,
+    "cron_expression": "Not Repeat",
+    "attack_type": "SQL Injection",
+    "is_active": true,
+    "start_date": "2026-03-11 12:17:31.224000+00:00",
+    "end_date": "2026-03-11 12:17:31.224000+00:00",
+    "created_at": "2026-03-11T19:16:31.545893",
+    "updated_at": "2026-03-11T19:16:31.545908",
+    "created_by": "somchai@tech.co.th"
   }
 ]
