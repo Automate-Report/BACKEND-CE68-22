@@ -89,7 +89,7 @@ async def google_callback(request: Request):
         raise HTTPException(status_code=400, detail=str(e))
     
 @router.get("/username/{user_id}")
-async def get_user_name_by_user_id(user_id: str):
+async def get_user_name_by_user_id(user_id: str, user = Depends(get_current_user)):
     username = userauthen_service.get_username_by_id(user_id)
 
     return username
