@@ -17,7 +17,6 @@ from app.services.worker import worker_service
 from app.services.notification import notification_service
 from app.services.vulnerability import vuln_service
 
-
 from app.schemas.job import JobWorkerPayload, SummaryInfoByWorker
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
@@ -375,12 +374,19 @@ class JobService:
         else:
             attack_type = "xss"
 
+        from app.services.asset_credential import asset_credential_service
+        credential = asset_credential_service.get_credential_by_asset_id(asset["id"])
+       
+
         # 5. ส่งงานเข้า Redis Queue เฉพาะตัว
         payload = JobWorkerPayload(
             job_id=new_job["id"],
             target_url=asset["target"],
             attack_type=attack_type,
-            credential=None
+            credential={
+                "username": credential["username"] if credential else None,
+                "password": credential["password"] if credential else None
+            }
         )
         
         queue_name = f"{QUEUE_KEY}:{best_worker['id']}"
