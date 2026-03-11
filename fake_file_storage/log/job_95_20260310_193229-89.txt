@@ -1,0 +1,50 @@
+19:31:54 [INFO] ============================================================
+19:31:54 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+19:31:54 [INFO] ============================================================
+19:31:54 [INFO] 🔍 Testing connectivity to http://localhost:4050...
+19:31:54 [INFO] ✅ Target is reachable! (Status: 200)
+19:31:54 [INFO] [+] Starting Public Discovery...
+19:31:54 [INFO] 🚀 Starting Async Crawl: http://localhost:4050
+19:31:59 [INFO]     [..] Executing behavioral exploration...
+19:32:01 [INFO]     [!] Injected & Pressed Enter on input 0
+19:32:02 [INFO]     [!] Injected & Pressed Enter on input 1
+19:32:05 [INFO]     [+] Target Saved: GET http://localhost:4050
+19:32:06 [INFO] ============================================================
+19:32:06 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+19:32:06 [INFO] ============================================================
+19:32:07 [INFO] 🌐 Loading target page: http://localhost:4050
+19:32:08 [INFO] ✅ Page loaded successfully
+19:32:08 [INFO] [Auth] 🛡️ Attempting Aggressive Entry at http://localhost:4050/login.php
+19:32:26 [ERROR] [-] Error during SQLi Bypass attempt: Locator.click: Target page, context or browser has been closed
+Call log:
+  - waiting for locator("button[type=\"submit\"], button#loginButton, button:has-text(\"Login\")").first
+
+19:32:26 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:26 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:26 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:26 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [INFO] [Auth] 🔑 Testing default credentials...
+19:32:27 [ERROR] ❌ Critical error during authentication: Locator.is_visible: Target page, context or browser has been closed
+19:32:27 [INFO] ============================================================
+19:32:27 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+19:32:27 [INFO] ============================================================
+19:32:27 [INFO] 📊 Deduplication: 1 -> 1 unique targets
+19:32:27 [INFO] 💉 Running XSS scans on 1 endpoints...
+19:32:27 [INFO] [1/1] XSS Scan: GET http://localhost:4050
+19:32:27 [INFO] [XSS] Scanning GET on http://localhost:4050 (Type: form)
+19:32:27 [INFO]     -> Analyzing: username
+19:32:27 [INFO]     -> Analyzing: password
+19:32:27 [INFO]     -> Analyzing: login
+19:32:27 [INFO] ✅ No vulnerabilities found

@@ -484,5 +484,194 @@
     "hyperlink": "/jobs/93",
     "created_at": "2026-03-10T17:31:09.432111",
     "status": "unread"
+  },
+  {
+    "noti_id": 55,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/94",
+    "created_at": "2026-03-10T19:29:37.655153",
+    "status": "unread"
+  },
+  {
+    "noti_id": 56,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/95",
+    "created_at": "2026-03-10T19:31:54.602244",
+    "status": "unread"
+  },
+  {
+    "noti_id": 57,
+    "user_email": "somchai@tech.co.th",
+    "type": "info",
+    "message": "⏳ ขณะนี้ Worker ทุกตัวกำลังติดงานสแกนอื่นอยู่ ระบบได้ส่งงานของ DVWA เข้าคิวของ Worker Worker-01-DigitalOcean ซึ่งคาดว่าจะพร้อมทำงานให้คุณได้เร็วที่สุดครับ",
+    "hyperlink": "/jobs/96",
+    "created_at": "2026-03-10T19:32:34.871104",
+    "status": "unread"
+  },
+  {
+    "noti_id": 58,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/97",
+    "created_at": "2026-03-10T19:37:20.069798",
+    "status": "unread"
+  },
+  {
+    "noti_id": 59,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/98",
+    "created_at": "2026-03-10T20:27:09.149223",
+    "status": "unread"
+  },
+  {
+    "noti_id": 60,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/99",
+    "created_at": "2026-03-10T20:33:04.709354",
+    "status": "unread"
+  },
+  {
+    "noti_id": 61,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/100",
+    "created_at": "2026-03-10T20:38:24.793164",
+    "status": "unread"
+  },
+  {
+    "noti_id": 62,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/101",
+    "created_at": "2026-03-10T20:41:33.432621",
+    "status": "unread"
+  },
+  {
+    "noti_id": 63,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/102",
+    "created_at": "2026-03-10T20:46:53.210671",
+    "status": "unread"
+  },
+  {
+    "noti_id": 64,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/103",
+    "created_at": "2026-03-10T20:50:16.731716",
+    "status": "unread"
+  },
+  {
+    "noti_id": 65,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/104",
+    "created_at": "2026-03-10T20:56:29.672075",
+    "status": "unread"
+  },
+  {
+    "noti_id": 66,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/105",
+    "created_at": "2026-03-10T21:06:40.836776",
+    "status": "unread"
+  },
+  {
+    "noti_id": 67,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/106",
+    "created_at": "2026-03-10T21:13:05.284481",
+    "status": "unread"
+  },
+  {
+    "noti_id": 68,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/107",
+    "created_at": "2026-03-10T21:16:20.179410",
+    "status": "unread"
+  },
+  {
+    "noti_id": 69,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/108",
+    "created_at": "2026-03-10T21:18:27.989790",
+    "status": "unread"
+  },
+  {
+    "noti_id": 70,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/109",
+    "created_at": "2026-03-10T21:20:04.918462",
+    "status": "unread"
+  },
+  {
+    "noti_id": 71,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/110",
+    "created_at": "2026-03-10T21:41:42.246412",
+    "status": "unread"
+  },
+  {
+    "noti_id": 72,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/111",
+    "created_at": "2026-03-10T21:45:03.555467",
+    "status": "unread"
+  },
+  {
+    "noti_id": 73,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/112",
+    "created_at": "2026-03-10T21:48:39.104301",
+    "status": "unread"
+  },
+  {
+    "noti_id": 74,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ DVWA ทันทีบน Worker Worker-01-DigitalOcean",
+    "hyperlink": "/jobs/113",
+    "created_at": "2026-03-10T21:56:38.488474",
+    "status": "unread"
+  },
+  {
+    "noti_id": 75,
+    "user_email": "somchai@tech.co.th",
+    "type": "info",
+    "message": "⏳ ขณะนี้ Worker ทุกตัวกำลังติดงานสแกนอื่นอยู่ ระบบได้ส่งงานของ OWASP Juice Shop เข้าคิวของ Worker Worker-01-DigitalOcean ซึ่งคาดว่าจะพร้อมทำงานให้คุณได้เร็วที่สุดครับ",
+    "hyperlink": "/jobs/114",
+    "created_at": "2026-03-10T21:57:31.006191",
+    "status": "unread"
   }
 ]

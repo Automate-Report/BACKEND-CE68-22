@@ -1,0 +1,56 @@
+21:20:04 [INFO] ============================================================
+21:20:04 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+21:20:04 [INFO] ============================================================
+21:20:04 [INFO] 🔍 Testing connectivity to http://localhost:4050...
+21:20:04 [INFO] ✅ Target is reachable! (Status: 200)
+21:20:04 [INFO] [+] Starting Public Discovery...
+21:20:04 [INFO] 🚀 Starting Async Crawl: http://localhost:4050
+21:20:09 [INFO]     [..] Executing behavioral exploration...
+21:20:11 [INFO]     [!] Injected & Pressed Enter on input 0
+21:20:12 [INFO]     [!] Injected & Pressed Enter on input 1
+21:20:15 [INFO]     [+] Target Saved: GET http://localhost:4050
+21:20:16 [INFO] ============================================================
+21:20:16 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+21:20:16 [INFO] ============================================================
+21:20:17 [INFO] 🌐 Loading target page: http://localhost:4050
+21:20:18 [INFO] ✅ Page loaded successfully
+21:20:18 [INFO] [Auth] Attempting Primary Login Method...
+21:20:18 [INFO] [Auth] 🔑 Testing Job Credentials...
+21:20:20 [INFO] ✅ Standard Login successful!
+21:20:20 [INFO] 🍪 Captured 2 session cookies
+21:20:20 [INFO] ✅ [Auth Success] Current URL: http://localhost:4050/index.php
+21:20:20 [INFO] [ScanEngine] 🛠 Overriding security level from 'low' to 'low'
+21:20:20 [INFO] ============================================================
+21:20:20 [INFO] [PHASE 3] DEEP CRAWLING WITH SESSION...
+21:20:20 [INFO] Seed URL: http://localhost:4050/index.php
+21:20:20 [INFO] ============================================================
+21:20:20 [INFO] 🚀 Starting Async Crawl: http://localhost:4050/index.php
+21:20:24 [INFO]     [..] Executing behavioral exploration...
+21:20:26 [INFO]     [!] Injected & Pressed Enter on input 0
+21:20:28 [INFO]     [!] Injected & Pressed Enter on input 1
+21:20:31 [INFO]     [+] Target Saved: GET http://localhost:4050/index.php
+21:20:31 [INFO] ============================================================
+21:20:31 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+21:20:31 [INFO] ============================================================
+21:20:31 [INFO] 📊 Deduplication: 5 -> 3 unique targets
+21:20:31 [INFO] [Requester] 🍪 2 cookies injected and session cleared.
+21:20:31 [INFO] [ScanEngine] 🔄 Global Session Sync Completed.
+21:20:31 [INFO] 🔓 Running SQL Injection scans on 3 endpoints...
+21:20:31 [INFO] [1/3] SQLi Scan: GET http://localhost:4050
+21:20:31 [INFO] [SQLi] Scan: GET http://localhost:4050
+21:20:32 [INFO]     -> Testing Parameter: username
+21:20:32 [INFO]     -> Testing Parameter: password
+21:20:33 [INFO]     -> Testing Parameter: login
+21:20:34 [INFO] [2/3] SQLi Scan: GET http://localhost:4050/index.php
+21:20:34 [INFO] [SQLi] Scan: GET http://localhost:4050/index.php
+21:20:34 [INFO]     -> Testing Parameter: username
+21:20:34 [INFO]     -> Testing Parameter: password
+21:20:35 [INFO]     -> Testing Parameter: login
+21:20:36 [INFO] [3/3] SQLi Scan: GET http://localhost:4050/vulnerabilities/sqli/
+21:20:36 [INFO] [SQLi] Scan: GET http://localhost:4050/vulnerabilities/sqli/
+21:20:36 [INFO]     -> Testing Parameter: id
+21:20:36 [INFO]       [..] Capturing evidence with Playwright Context...
+21:20:37 [ERROR]       [-] Evidence capture failed: a bytes-like object is required, not 'coroutine'
+21:20:37 [INFO]     [!!!] Found Error-Based SQLi in id
+21:20:37 [INFO]     -> Testing Parameter: Submit
+21:20:38 [INFO] ✅ Found 1 vulnerabilities!

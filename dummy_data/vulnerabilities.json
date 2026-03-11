@@ -221,9 +221,29 @@
     "db_type": null,
     "status": "open",
     "verify": null,
-    "occurrence_count": 2,
+    "occurrence_count": 3,
     "first_seen_at": "2026-03-10T16:58:45.093879",
-    "last_seen_at": "2026-03-10T17:01:46.354159",
+    "last_seen_at": "2026-03-10T22:00:03.818200",
+    "resolved_at": null
+  },
+  {
+    "id": 12,
+    "asset_id": 8,
+    "job_id": 107,
+    "assigned_to": null,
+    "verified_by": null,
+    "library_id": 1,
+    "vuln_hash": "72d8191f3d0c0b9d97ece0f84a144cdd2e5e62a88d1910f5bcae07af99c9a1ab",
+    "target": "http://localhost:4050/vulnerabilities/sqli/",
+    "parameter": "id",
+    "method": "GET",
+    "severity": "LOW",
+    "db_type": null,
+    "status": "open",
+    "verify": null,
+    "occurrence_count": 3,
+    "first_seen_at": "2026-03-10T21:16:54.838337",
+    "last_seen_at": "2026-03-10T21:57:12.874947",
     "resolved_at": null
   }
 ]
