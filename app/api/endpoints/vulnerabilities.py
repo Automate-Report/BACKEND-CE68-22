@@ -144,7 +144,8 @@ async def change_vulnerability_status(
 
     vuln_service.change_vulnerability_status(
         vuln_id=payload.vuln_id,
-        new_status=payload.new_status
+        new_status=payload.new_status,
+        user_id=user["sub"]
     )
     return {"message": "Vulnerability status updated successfully"}
 
@@ -159,6 +160,7 @@ async def change_vulnerability_verify(
 
     vuln_service.change_vulnerability_verify(
         vuln_id=payload.vuln_id,
-        new_verify=payload.new_verify
+        new_verify=payload.new_verify,
+        user_id=user["sub"]
     )
     return {"message": "Vulnerability verify updated successfully"}
