@@ -103,6 +103,36 @@ async def get_all_vuln_by_project_id(
 
     return result
 
+@router.get("/{project_id}/my-task", response_model=PaginatedResponse[VulnIssue])
+async def get_all_vuln_by_user_id(
+    project_id: int,
+    page: int = Query(1, ge=1, description="Page number"), 
+    size: int = Query(10, ge=1, le=100, description="Items per page"),
+    sort_by: Optional[str] = Query(None, description="Column to sort by"),
+    order: Optional[str] = Query("asc", description="asc or desc"),    
+    search: Optional[str] = Query(None, description="Search box"),
+    filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    if not role:
+        raise HTTPException(status_code=403, detail="User does not have access to this project")
+    
+    asset_ids = asset_service.get_asset_ids_by_project_id(project_id)
+
+    result = vuln_service.get_all_issue_by_user_id(
+        user_id=user["sub"],
+        asset_ids=asset_ids,
+        page=page,
+        size=size,
+        sort_by=sort_by,
+        order=order,
+        search=search,
+        filter=filter,
+    )
+
+    return result
+
 @router.get("/{vuln_id}", response_model=VulnDetails)
 async def get_vulnerability_details(
     vuln_id: int,
