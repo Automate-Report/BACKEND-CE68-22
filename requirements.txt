@@ -37,4 +37,6 @@ cvss
 jwt
 cvss
 
-reportlab
+playwright
+pdfplumber
+pdf2docx
