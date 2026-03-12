@@ -142,7 +142,7 @@ async def get_vulnerability_details(
     if not role:
         raise HTTPException(status_code=403, detail="User does not have access to this vulnerability")
     
-    details = vuln_service.get_vuln_details_by_vuln_id(vuln_id)
+    details = vuln_service.get_vuln_details_by_vuln_id(vuln_id, user["sub"])
     if not details:
         raise HTTPException(status_code=404, detail="Vulnerability not found")
     return details
