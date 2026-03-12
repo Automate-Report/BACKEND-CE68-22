@@ -22,6 +22,7 @@ class ReportContext:
             setattr(self, k, v)
 
 context = ReportContext(
+    report_name      = "report",
     project_name     = "Example Project",
     project_owner    = "Crafto Co. Ltd.",
     asset_name       = "example.com",
