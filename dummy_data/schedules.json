@@ -90,11 +90,11 @@
     "asset_id": 6,
     "cron_expression": "Not Repeat",
     "attack_type": "SQL Injection",
-    "is_active": true,
+    "is_active": false,
     "start_date": "2026-03-11 12:17:31.224000+00:00",
     "end_date": "2026-03-11 12:17:31.224000+00:00",
     "created_at": "2026-03-11T19:16:31.545893",
-    "updated_at": "2026-03-11T19:16:31.545908",
+    "updated_at": "2026-03-12T19:16:38.002679",
     "created_by": "somchai@tech.co.th"
   }
 ]
