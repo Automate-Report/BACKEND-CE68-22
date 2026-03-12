@@ -150,6 +150,7 @@ class GenerateReport:
         cv.convert(docx_path)
         cv.close()
         print(f"✅ DOCX saved → {docx_path}")
+        return pdf_path, docx_path
 
 context = ReportContext(
     report_id        = 0,
@@ -163,7 +164,7 @@ context = ReportContext(
     job_ended_date   = "05/01/2026",
     scanner_name     = "My Security Scanner",
     support_email    = "support@example.com",
-    efficiency       = 72.41,
+    efficiency       = 0,
     total_vulns=0, total_asset=0,
     critical_cnt=0, high_cnt=0, medium_cnt=0, low_cnt=0,
     assets=[
