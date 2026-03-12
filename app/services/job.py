@@ -323,7 +323,7 @@ class JobService:
         minute_lock_key = f"lock:schedule:{schedule_data['schedule_id']}:{now_str}"
 
         is_not_repeat = (schedule_data.get("cron_expression") == "Not Repeat")
-        once_lock_key = f"lock:schedule:once:{schedule_id}:{schedule_data["created_at"]}"
+        once_lock_key = f"lock:schedule:once:{schedule_id}:{schedule_data['created_at']}"
 
         if is_not_repeat:
             # ถ้าเคยรันไปแล้ว (มี Key ใน Redis) ให้หยุดทันที
