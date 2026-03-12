@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Query, Depends
+from fastapi import APIRouter, HTTPException, Query, Depends, BackgroundTasks
 from typing import List, Optional
 
 
@@ -23,6 +23,7 @@ router = APIRouter()
 async def create_report(
     project_id: int,
     report_in: CreateReportPayload,
+    background_tasks: BackgroundTasks,
     # user = Depends(get_current_user),
     # role = Depends(get_current_project_role)
 ):
@@ -80,14 +81,17 @@ async def create_report(
          raise HTTPException(status_code=400, detail="No data found for the selected assets/time range.")
 
     # เรียก Service สร้างรายงาน
-    await pen_test_report_service.create_pentest_report(
-        project=project,
-        vuln_details=vuln_details,
-        assets=assets_for_report,
-        report_name=report_in.report_name,
-        report_type=report_in.type,
-        user_id=user["sub"]
+    background_tasks.add_task(
+        pen_test_report_service.create_pentest_report(
+            project=project,
+            vuln_details=vuln_details,
+            assets=assets_for_report,
+            report_name=report_in.report_name,
+            report_type=report_in.type,
+            user_id=user["sub"]
+        )
     )
+    
     
     return "PDF generated successfully."
 
