@@ -23,9 +23,12 @@ router = APIRouter()
 async def create_report(
     project_id: int,
     report_in: CreateReportPayload,
-    user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    # user = Depends(get_current_user),
+    # role = Depends(get_current_project_role)
 ):
+    user = {
+        "sub": "somchai@tech.co.th"
+    }
     project = project_service.get_project_by_id(project_id)
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
@@ -66,9 +69,8 @@ async def create_report(
         vulns = vuln_service.get_vulns_by_asset_id(asset_id)
         if vulns:
             for v in vulns:
-                detail = vuln_service.get_vuln_details_by_vuln_id(v["id"])
+                detail = vuln_service.get_vuln_details_by_vuln_id(v["id"], user["sub"])
                 if detail:
-                    # ✅ ใช้ตัวแปรที่ประกาศไว้ข้างบน (current_asset_ref)
                     detail["asset_related"] = current_asset_ref
                     vuln_details.append(detail)
         
@@ -78,7 +80,7 @@ async def create_report(
          raise HTTPException(status_code=400, detail="No data found for the selected assets/time range.")
 
     # เรียก Service สร้างรายงาน
-    pen_test_report_service.create_pentest_report(
+    await pen_test_report_service.create_pentest_report(
         project=project,
         vuln_details=vuln_details,
         assets=assets_for_report,

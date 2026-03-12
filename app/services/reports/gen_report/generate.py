@@ -5,7 +5,7 @@ from playwright.async_api import async_playwright
 import pdfplumber
 from pdf2docx import Converter
 
-from pdf_components import (
+from app.services.reports.gen_report.pdf_components import (
     sec_cover, sec_toc,
     sec1_executive_summary, sec2_scope,
     sec3_technical_findings, sec4_lifecycle,
@@ -141,8 +141,8 @@ class GenerateReport:
 
         print(f"✅ PDF saved → {output_path}")
 
-    def gen_report(self):
-        asyncio.run(self._render_pdf())
+    async def gen_report(self):
+        await self._render_pdf()
         base_dir = Path(__file__).resolve().parent.parent.parent.parent.parent
         pdf_path  = base_dir / "fake_file_storage" / "report" / f"{self.context.report_id}" / f"{self.context.report_name}.pdf"
         docx_path = base_dir / "fake_file_storage" / "report" / f"{self.context.report_id}" / f"{self.context.report_name}.docx"
@@ -151,34 +151,3 @@ class GenerateReport:
         cv.close()
         print(f"✅ DOCX saved → {docx_path}")
         return pdf_path, docx_path
-
-context = ReportContext(
-    report_id        = 0,
-    report_name      = "report1",
-    project_name     = "Example Project",
-    project_owner    = "Crafto Co. Ltd.",
-    asset_name       = "example.com",
-    job_id           = "JOB-001",
-    job_name         = "Example Job",
-    job_started_date = "01/01/2026",
-    job_ended_date   = "05/01/2026",
-    scanner_name     = "My Security Scanner",
-    support_email    = "support@example.com",
-    efficiency       = 0,
-    total_vulns=0, total_asset=0,
-    critical_cnt=0, high_cnt=0, medium_cnt=0, low_cnt=0,
-    assets=[
-        {"asset_id": "AS-001", "asset_name": "example.com",     "asset_desc": "Main production website.", "target": "https://example.com",    "hc_cnt": 0, "status": "Open"},
-        {"asset_id": "AS-002", "asset_name": "api.example.com", "asset_desc": "Public API server.",       "target": "https://api.example.com", "hc_cnt": 0, "status": "Open"},
-        {"asset_id": "AS-003", "asset_name": "192.168.1.10",    "asset_desc": "Internal admin panel.",    "target": "http://192.168.1.10",     "hc_cnt": 0, "status": "Mitigated"},
-    ],
-    vulns=[
-        {"vuln_id": "V-001", "vuln_type": "SQL Injection",             "severity": "Critical", "cvss_score": 9.8, "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", "status": "Open",      "dev_name": "John Doe", "tester_name": "Jane Smith", "asset_related": "AS-001", "target": "https://example.com/login",     "parameter": "username", "description_from_library": "SQL Injection vulnerability detected.", "payload": "' OR '1'='1",               "curl_command": "curl -X POST https://example.com/login",     "evidence": "", "reccommendation_from_library": "Use parameterized queries."},
-        {"vuln_id": "V-002", "vuln_type": "Broken Access Control",     "severity": "High",     "cvss_score": 8.2, "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N", "status": "Open",      "dev_name": "Alice",    "tester_name": "Bob",        "asset_related": "AS-002", "target": "https://api.example.com/admin", "parameter": "N/A",      "description_from_library": "Unauthorized access to admin endpoint.", "payload": "Direct URL access",         "curl_command": "curl https://api.example.com/admin",         "evidence": "", "reccommendation_from_library": "Implement role-based access control."},
-        {"vuln_id": "V-003", "vuln_type": "Cross-Site Scripting (XSS)","severity": "Medium",   "cvss_score": 6.5, "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N", "status": "Mitigated", "dev_name": "Charlie",  "tester_name": "Jane Smith", "asset_related": "AS-003", "target": "http://192.168.1.10/profile",  "parameter": "name",     "description_from_library": "Reflected XSS vulnerability.",          "payload": "<script>alert(1)</script>", "curl_command": "curl http://192.168.1.10/profile?name=test", "evidence": "", "reccommendation_from_library": "Sanitize user input."},
-    ]
-)
-
-report = GenerateReport(context)
-report.gen_report()
-        
