@@ -89,10 +89,11 @@ class ProjectService:
 
             if search and search.lower() not in proj["name"].lower():
                 continue
-
-            if filter == "OWNED" and user_role != "owner":
+            if filter == "owner" and user_role != "owner":
                 continue
-            if filter == "SHARED" and user_role == "owner":
+            if filter == "pentester" and user_role != "pentester":
+                continue
+            if filter == "developer" and user_role != "developer":
                 continue
 
             all_matches.append(proj_with_role)
