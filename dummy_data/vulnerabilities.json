@@ -165,25 +165,6 @@
     "updated_at": "2026-02-21T09:00:00Z",
     "occurrence_count": 1,
     "description_override": "Risk accepted: Internal network only."
-  },
-  {
-    "id": 11,
-    "asset_id": 6,
-    "job_id": 90,
-    "assigned_to": null,
-    "verified_by": null,
-    "library_id": 1,
-    "vuln_hash": "78636b81ddd22bcbc8c1fec23bc63b879a92820e68577e4cf8525e5a8e98959b",
-    "target": "http://localhost:4040/#/login",
-    "parameter": "username",
-    "method": "POST",
-    "severity": "CRITICAL",
-    "db_type": null,
-    "status": "open",
-    "verify": null,
-    "occurrence_count": 3,
-    "first_seen_at": "2026-03-10T16:58:45.093879",
-    "last_seen_at": "2026-03-10T22:00:03.818200",
-    "resolved_at": null
   }
+ 
 ]

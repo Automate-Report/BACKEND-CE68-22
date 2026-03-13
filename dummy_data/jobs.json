@@ -1148,5 +1148,35 @@
     "created_at": "2026-03-11T19:16:31.660555",
     "started_at": "2026-03-11T12:16:37.999994",
     "finished_at": "2026-03-11T12:16:37.999994"
+  },
+  {
+    "id": 116,
+    "name": "job_vCi9Lev5w2Y0",
+    "schedule_id": 18,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-13T13:45:34.418125",
+    "started_at": "2026-03-13T06:45:36.513601",
+    "finished_at": "2026-03-13T06:47:00.764083"
+  },
+  {
+    "id": 117,
+    "name": "job_vAZKuPmDJ9Pj",
+    "schedule_id": 19,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-13T13:47:23.947516",
+    "started_at": "2026-03-13T06:47:26.001430",
+    "finished_at": "2026-03-13T06:49:53.581642"
+  },
+  {
+    "id": 118,
+    "name": "job_Njib3doi3WID",
+    "schedule_id": 20,
+    "worker_id": 1,
+    "status": "completed",
+    "created_at": "2026-03-13T14:07:39.001477",
+    "started_at": "2026-03-13T07:07:41.112667",
+    "finished_at": "2026-03-13T07:08:59.766975"
   }
 ]
