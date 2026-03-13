@@ -96,7 +96,6 @@ async def create_report(
         assets=assets_for_report
     )
     
-    
     return {
         "status": "processing",
         "message": "กำลังสร้างรายงานในพื้นหลัง",
