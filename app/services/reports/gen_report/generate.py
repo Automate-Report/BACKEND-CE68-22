@@ -1,9 +1,11 @@
-from pathlib import Path
 import asyncio
-from collections import Counter
-from playwright.async_api import async_playwright
 import pdfplumber
+
+from pathlib import Path
 from pdf2docx import Converter
+from collections import Counter
+from playwright.sync_api import sync_playwright
+from concurrent.futures import ThreadPoolExecutor
 
 from app.services.reports.gen_report.pdf_components import (
     sec_cover, sec_toc,
@@ -21,6 +23,8 @@ ANCHORS = {
     "app1": "§ANCHOR§APP1§",
     "app2": "§ANCHOR§APP2§",
 }
+
+_executor = ThreadPoolExecutor(max_workers=4)
 
 class ReportContext:
     def __init__(self, **kwargs):
@@ -81,16 +85,16 @@ class GenerateReport:
                         page_nums[key] = page_num
         return page_nums
     
-    async def _playwright_render(self, html: str, base_dir: str, output_path: str, browser):
+    def _playwright_render(self, html: str, base_dir: str, output_path: str, browser):
         print(base_dir)
         tmp_html = base_dir / "_tmp_render.html"
         with open(tmp_html, "w", encoding="utf-8") as f:
             f.write(html)
 
-        page = await browser.new_page()
-        await page.goto(f"file:///{tmp_html.as_posix()}")
-        await page.wait_for_load_state("networkidle")
-        await page.pdf(
+        page = browser.new_page()
+        page.goto(f"file:///{tmp_html.as_posix()}")
+        page.wait_for_load_state("networkidle")
+        page.pdf(
             path    = output_path,
             format  = "A4",
             margin  = {"top": "10mm","bottom": "22mm", "left": "20mm", "right": "20mm"},
@@ -109,22 +113,24 @@ class GenerateReport:
                 — <span class="pageNumber"></span> —
                 </div>""",
         )
-        await page.close()
+        page.close()
 
         tmp_html.unlink()
 
-    async def _render_pdf(self):
+    def _render_pdf_sync(self):
         base_dir    = Path(__file__).resolve().parent.parent.parent.parent.parent
         pass1_path  = base_dir / "fake_file_storage" / "report" / f"{self.context.report_id}" / "_pass1.pdf"
         output_path = base_dir / "fake_file_storage" / "report" / f"{self.context.report_id}" / f"{self.context.report_name}.pdf"
 
-        async with async_playwright() as p:
-            browser = await p.chromium.launch()
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
 
             # ── Pass 1: gen PDF พร้อม anchor markers, TOC ยังไม่มีเลขหน้า ──
             print("📄 Pass 1: generating PDF with anchor markers...")
             html, base_dir = self._build_html(page_nums={}, include_anchors=True)
-            await self._playwright_render(html, base_dir, pass1_path, browser)
+            self._playwright_render(html, base_dir, pass1_path, browser)
 
             # ── อ่านเลขหน้าจาก PDF จริง ──
             print("🔍 Reading page numbers from PDF...")
@@ -135,19 +141,28 @@ class GenerateReport:
             # ── Pass 2: gen PDF อีกรอบพร้อมเลขหน้าใน TOC ──
             print("📄 Pass 2: generating final PDF with TOC page numbers...")
             html, base_dir = self._build_html(page_nums=page_nums, include_anchors=False)
-            await self._playwright_render(html, base_dir, output_path, browser)
+            self._playwright_render(html, base_dir, output_path, browser)
 
-            await browser.close()
+            browser.close()
 
         print(f"✅ PDF saved → {output_path}")
 
-    async def gen_report(self):
-        await self._render_pdf()
-        base_dir = Path(__file__).resolve().parent.parent.parent.parent.parent
+    def gen_report_sync(self) -> tuple[Path, Path]:
+        """Full sync report generation — PDF + DOCX."""
+        self._render_pdf_sync()
+
+        base_dir  = Path(__file__).resolve().parent.parent.parent.parent.parent
         pdf_path  = base_dir / "fake_file_storage" / "report" / f"{self.context.report_id}" / f"{self.context.report_name}.pdf"
         docx_path = base_dir / "fake_file_storage" / "report" / f"{self.context.report_id}" / f"{self.context.report_name}.docx"
-        cv = Converter(pdf_path)
-        cv.convert(docx_path)
+
+        cv = Converter(str(pdf_path))
+        cv.convert(str(docx_path))
         cv.close()
         print(f"✅ DOCX saved → {docx_path}")
+
         return pdf_path, docx_path
+
+    async def gen_report(self) -> tuple[Path, Path]:
+        """✅ Async wrapper — called from FastAPI, non-blocking, works on all OS."""
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(_executor, self.gen_report_sync)
