@@ -79,21 +79,29 @@ async def create_report(
     # ตรวจสอบว่ามีข้อมูลส่งไปทำรายงานไหม
     if not vuln_details and not assets_for_report:
          raise HTTPException(status_code=400, detail="No data found for the selected assets/time range.")
+    
+    report_record = await pen_test_report_service.prepare_report_record(
+        project_id=project_id,
+        report_name=report_in.report_name,
+        user_id=user["sub"]
+    )
 
     # เรียก Service สร้างรายงาน
     background_tasks.add_task(
-        pen_test_report_service.create_pentest_report(
-            project=project,
-            vuln_details=vuln_details,
-            assets=assets_for_report,
-            report_name=report_in.report_name,
-            report_type=report_in.type,
-            user_id=user["sub"]
-        )
+        pen_test_report_service.start_generate_process, 
+        report_id=report_record["id"],
+        report_name=report_record["report_name"],
+        project=project,
+        vuln_details=vuln_details,
+        assets=assets_for_report
     )
     
     
-    return "PDF generated successfully."
+    return {
+        "status": "processing",
+        "message": "กำลังสร้างรายงานในพื้นหลัง",
+        "report_id": report_record["id"]
+    }
 
 @router.get("/all/{project_id}", response_model=PaginatedResponse[PentestReportResponse])
 async def get_all_pentest_reports(
