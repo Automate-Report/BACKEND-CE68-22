@@ -22,8 +22,6 @@ async def get_all_schedules(
     user = Depends(get_current_user),
     role = Depends(get_current_project_role)
 ):
-    if not role:
-        raise HTTPException(status_code=403, detail="คุณไม่มีสิทธิ์เข้าถึง")
 
     result = schedule_service.get_all_schedules(
         project_id=project_id,
