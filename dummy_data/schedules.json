@@ -76,11 +76,11 @@
     "asset_id": 6,
     "cron_expression": "Not Repeat",
     "attack_type": "XSS",
-    "is_active": true,
+    "is_active": false,
     "start_date": "2026-03-13 06:46:33.721000+00:00",
     "end_date": "2026-03-13 06:46:33.721000+00:00",
     "created_at": "2026-03-13T13:45:34.362834",
-    "updated_at": "2026-03-13T13:45:34.362852",
+    "updated_at": "2026-03-14T20:11:19.348940",
     "created_by": "somchai@tech.co.th"
   },
   {
@@ -90,11 +90,11 @@
     "asset_id": 6,
     "cron_expression": "Not Repeat",
     "attack_type": "SQL Injection",
-    "is_active": true,
+    "is_active": false,
     "start_date": "2026-03-13 06:48:23.928000+00:00",
     "end_date": "2026-03-13 06:48:23.928000+00:00",
     "created_at": "2026-03-13T13:47:23.936588",
-    "updated_at": "2026-03-13T13:47:23.936601",
+    "updated_at": "2026-03-14T20:11:19.404094",
     "created_by": "somchai@tech.co.th"
   },
   {
@@ -104,11 +104,11 @@
     "asset_id": 6,
     "cron_expression": "Not Repeat",
     "attack_type": "XSS",
-    "is_active": true,
+    "is_active": false,
     "start_date": "2026-03-13 07:08:38.321000+00:00",
     "end_date": "2026-03-13 07:08:38.321000+00:00",
     "created_at": "2026-03-13T14:07:38.954501",
-    "updated_at": "2026-03-13T14:07:38.954521",
+    "updated_at": "2026-03-14T20:11:19.469889",
     "created_by": "somchai@tech.co.th"
   }
 ]
