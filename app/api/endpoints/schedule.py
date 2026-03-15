@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
 
 from app.deps.auth import get_current_user
+from app.deps.role import get_current_project_role
 
 from app.schemas.pagination import PaginatedResponse
 from app.schemas.schedule import ScheduleCreate, ScheduleResponse, ScheduleItem
@@ -17,8 +18,11 @@ async def get_all_schedules(
     page: int = Query(1, ge=1, description="Page number"), 
     size: int = Query(10, ge=1, le=100, description="Items per page"),
     search: Optional[str] = Query(None, description="Search box"),
-    filter: Optional[str] = Query("ALL", description="filter - ALL -    -    ")
+    filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
 ):
+
     result = schedule_service.get_all_schedules(
         project_id=project_id,
         page=page,
