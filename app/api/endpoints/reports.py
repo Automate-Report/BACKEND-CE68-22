@@ -126,19 +126,14 @@ async def get_all_pentest_reports(
 
     return result
 
-@router.get("/{report_id}/draft")
-async def get_draft_report_by_report_id(
-    report_id: int
+@router.get("/download/{report_id}/{report_type}")
+def download_report(
+    report_id: int, 
+    report_type: str
+    # user = Depends(get_current_user)
 ):
-    result = pen_test_report_service.get_report_draft(report_id)
-    return result
-
-@router.put("/{report_id}/save-draft")
-
-
-@router.get("/download/{report_id}")
-def download_report(report_id: int, user = Depends(get_current_user)):
-    result = pen_test_report_service.dowload_by_id(report_id)
+    result = pen_test_report_service.dowload_by_id(report_id, report_type)
+    print(result)
 
     if not result:
         raise HTTPException(status_code=404, detail="Report not found")
