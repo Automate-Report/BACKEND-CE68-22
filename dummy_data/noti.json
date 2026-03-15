@@ -718,5 +718,32 @@
     "hyperlink": "/jobs/118",
     "created_at": "2026-03-13T14:07:39.062888",
     "status": "unread"
+  },
+  {
+    "noti_id": 81,
+    "user_email": "somchai@tech.co.th",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน OWASP Juice Shop ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/21/workers",
+    "created_at": "2026-03-15T15:14:00.371334",
+    "status": "unread"
+  },
+  {
+    "noti_id": 82,
+    "user_email": "somchai@tech.co.th",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน OWASP Juice Shop ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/21/workers",
+    "created_at": "2026-03-15T15:14:00.395170",
+    "status": "unread"
+  },
+  {
+    "noti_id": 83,
+    "user_email": "somchai@tech.co.th",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน OWASP Juice Shop ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/21/workers",
+    "created_at": "2026-03-15T15:14:00.434655",
+    "status": "unread"
   }
 ]
