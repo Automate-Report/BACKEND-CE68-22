@@ -92,7 +92,8 @@ class AssetService:
             if asset["project_id"] == project_id:
                 filtered_assets.append({
                     "name": asset["name"],
-                    "id": asset["id"]
+                    "id": asset["id"],
+                    "target": asset["target"]
                 })
         return filtered_assets
 

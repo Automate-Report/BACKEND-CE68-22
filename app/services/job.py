@@ -370,10 +370,12 @@ class JobService:
         # 4. สร้าง Job ในระบบ
         new_job = self.create_job(schedule_data["schedule_id"], best_worker["id"])
 
-        if schedule_data.get("attack_type") == "SQL Injection":
+        if schedule_data.get("attack_type") == "sqli":
             attack_type = "sql_injection"
-        else:
+        elif schedule_data.get("attack_type") == "xss":
             attack_type = "xss"
+        else:
+            attack_type = "all"
 
         from app.services.asset_credential import asset_credential_service
         credential = asset_credential_service.get_credential_by_asset_id(asset["id"])

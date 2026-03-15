@@ -4,7 +4,7 @@ from typing import List, Optional
 from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role
 
-from app.schemas.asset import AssetCreate, AssetListForDropdown, AssetResponse
+from app.schemas.asset import AssetCreate, AssetListForChoose, AssetResponse
 from app.schemas.pagination import PaginatedResponse
 
 from app.services.asset import asset_service
@@ -37,7 +37,7 @@ async def get_all_assets(
 
     return result
 
-@router.get("/names/{project_id}", response_model=List[AssetListForDropdown])
+@router.get("/names/{project_id}", response_model=List[AssetListForChoose])
 async def get_all_asset_names_for_dropdown(project_id: int):
     assets = asset_service.get_all_asset_names_for_dropdown(project_id)
     return assets
