@@ -118,11 +118,11 @@
     "asset_id": 19,
     "cron_expression": "0 0 * * 3",
     "attack_type": "sqli",
-    "is_active": true,
+    "is_active": false,
     "start_date": "2026-03-15 16:40:00+00:00",
     "end_date": "2026-03-15 00:00:00+00:00",
     "created_at": "2026-03-15T22:44:10.466884",
-    "updated_at": "2026-03-15T22:44:10.466893",
+    "updated_at": "2026-03-15T23:40:00.018489",
     "created_by": "somchai@tech.co.th"
   },
   {
@@ -132,11 +132,11 @@
     "asset_id": 4,
     "cron_expression": "0 0 23 * 4",
     "attack_type": "all",
-    "is_active": true,
+    "is_active": false,
     "start_date": "2026-03-15 16:44:00+00:00",
     "end_date": "2026-03-15 00:00:00+00:00",
     "created_at": "2026-03-15T22:44:47.442378",
-    "updated_at": "2026-03-15T22:44:47.442388",
+    "updated_at": "2026-03-15T23:44:00.310388",
     "created_by": "somchai@tech.co.th"
   },
   {
@@ -146,11 +146,25 @@
     "asset_id": 4,
     "cron_expression": "0 0 * * 4,5",
     "attack_type": "xss",
-    "is_active": true,
+    "is_active": false,
     "start_date": "2026-03-15 16:44:00+00:00",
     "end_date": "2026-03-15 00:00:00+00:00",
     "created_at": "2026-03-15T22:45:09.672315",
-    "updated_at": "2026-03-15T22:45:09.672324",
+    "updated_at": "2026-03-15T23:44:00.330409",
+    "created_by": "somchai@tech.co.th"
+  },
+  {
+    "schedule_id": 24,
+    "schedule_name": "gdggdfg",
+    "project_id": 21,
+    "asset_id": 17,
+    "cron_expression": "Not Repeat",
+    "attack_type": "xss",
+    "is_active": false,
+    "start_date": "2026-03-15 16:19:29.221000+00:00",
+    "end_date": "2026-03-15 16:19:29.221000+00:00",
+    "created_at": "2026-03-15T23:18:29.547242",
+    "updated_at": "2026-03-15T23:18:29.641444",
     "created_by": "somchai@tech.co.th"
   }
 ]

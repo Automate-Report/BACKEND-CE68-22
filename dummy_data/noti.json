@@ -745,5 +745,14 @@
     "hyperlink": "/projects/21/workers",
     "created_at": "2026-03-15T15:14:00.434655",
     "status": "unread"
+  },
+  {
+    "noti_id": 84,
+    "user_email": "somchai@tech.co.th",
+    "type": "error",
+    "message": "❌ ไม่สามารถเริ่มงานสแกน DVWA-SQLi ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้",
+    "hyperlink": "/projects/21/workers",
+    "created_at": "2026-03-15T23:18:29.614891",
+    "status": "unread"
   }
 ]
