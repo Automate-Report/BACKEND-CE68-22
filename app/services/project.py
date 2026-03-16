@@ -128,26 +128,33 @@ class ProjectService:
 
         result = await db.execute(query)
 
-        return result.scalar_one_or_none()
+        project = result.scalar_one_or_none()
+
+        if not project: return None
+
+        return project
     
-    def get_owner_info_by_project_id(self, project_id: int):
+    async def get_owner_info_by_project_id(self, project_id: int, db: AsyncSession):
         """Get Owner Info by Project ID"""
+        query = sa.select(Project).where(
+            Project.id == project_id
+        )
+        result = await db.execute(query)
+        project = result.scalar_one_or_none()
 
-        projects = self._read_json()
-        for proj in projects:
-            if proj["id"] == project_id:
-                user = userauthen_service.get_user_by_id(proj["email"])
+        if not project:
+            return None
 
-                user_info = UserInfo(
-                    email=user["email"],
-                    firstname=user["firstname"],
-                    lastname=user["lastname"],
-                    role="owner",
-                    joinned_at=proj["created_at"]
-                )
-                return user_info
-            
-        return None
+        user = userauthen_service.get_user_by_id(project.user_email)
+
+        user_info = UserInfo(
+            email=user["email"],
+            firstname=user["firstname"],
+            lastname=user["lastname"],
+            role="owner",
+            joinned_at=project.created_at
+        )
+        return user_info
 
     async def create_project(self, name: str, description: str, user_id: str, db: AsyncSession) -> dict:
         """Service: สร้างโปรเจกต์ใหม่"""

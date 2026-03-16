@@ -144,10 +144,11 @@ async def get_users_in_project(
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter"),
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     # 1. ดึงข้อมูล Owner และ Members
-    owner_info = project_service.get_owner_info_by_project_id(project_id)
+    owner_info = await project_service.get_owner_info_by_project_id(project_id, db)
     member_infos = project_member_service.get_user_info_by_project_id(project_id)
 
     # 2. รวมข้อมูล (ถ้า Owner ไม่อยู่ในลิสต์สมาชิก ให้เพิ่มเข้าไปที่ตำแหน่งแรก)
