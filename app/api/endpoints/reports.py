@@ -5,8 +5,7 @@ from typing import List, Optional
 from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role
 
-from app.schemas.report import CreateReportPayload
-from app.schemas.pentest_report import PentestReportResponse
+from app.schemas.pentest_report import PentestReportResponse, CreateReportPayload
 from app.schemas.pagination import PaginatedResponse
 
 
@@ -19,7 +18,7 @@ from app.services.reports.pentest_report import pen_test_report_service
 router = APIRouter()
 
 # Create report
-@router.post("/{project_id}")
+@router.post("/{project_id}/create")
 async def create_report(
     project_id: int,
     report_in: CreateReportPayload,
@@ -80,9 +79,20 @@ async def create_report(
     if not vuln_details and not assets_for_report:
          raise HTTPException(status_code=400, detail="No data found for the selected assets/time range.")
     
+    if not report_in.asset_ids:
+        asset_str = "All Asset"
+    else:
+        asset_name = []
+        for id in report_in.asset_ids:
+            asset = asset_service.get_asset_by_id(id)
+            asset_name.append(asset.get("name", ""))
+        
+        asset_str = ",".join(asset_name)
+
     report_record = await pen_test_report_service.prepare_report_record(
         project_id=project_id,
         report_name=report_in.report_name,
+        asset_name = asset_str,
         user_id=user["sub"]
     )
 
@@ -126,28 +136,28 @@ async def get_all_pentest_reports(
 
     return result
 
-@router.get("/{report_id}/draft")
-async def get_draft_report_by_report_id(
-    report_id: int
+@router.get("/download/{report_id}/{report_type}")
+def download_report(
+    report_id: int, 
+    report_type: str,
+    user = Depends(get_current_user)
 ):
-    result = pen_test_report_service.get_report_draft(report_id)
-    return result
-
-@router.put("/{report_id}/save-draft")
-
-
-@router.get("/download/{report_id}")
-def download_report(report_id: int, user = Depends(get_current_user)):
-    result = pen_test_report_service.dowload_by_id(report_id)
+    result = pen_test_report_service.dowload_by_id(report_id, report_type)
 
     if not result:
         raise HTTPException(status_code=404, detail="Report not found")
     
     return result
 
-
 @router.delete("/{report_id}")
-async def delete_pentest_report_by_id(report_id: int, user = Depends(get_current_user)):
+async def delete_pentest_report_by_id(
+    report_id: int, 
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    if role == "developer":
+        raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
+    
     success = pen_test_report_service.delete_pentest_report_by_id(report_id)
 
     if not success:
