@@ -1,0 +1,52 @@
+16:29:49 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+16:29:49 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:4040/#/
+16:29:51 [INFO]      [+] Discovered: GET http://localhost:4040/assets/i18n/en.json (0 params)
+16:29:51 [INFO]      [+] Discovered: GET http://localhost:4040/rest/admin/application-version (0 params)
+16:29:51 [INFO]      [+] Discovered: GET http://localhost:4040/rest/admin/application-configuration (0 params)
+16:29:51 [INFO]      [+] Discovered: GET http://localhost:4040/api/Challenges/ (0 params)
+16:29:51 [INFO]      [+] Discovered: GET http://localhost:4040/rest/languages (0 params)
+16:29:51 [INFO]      [+] Discovered: GET http://localhost:4040/api/Quantitys/ (0 params)
+16:29:51 [INFO]      [+] Discovered: GET http://localhost:4040/rest/products/search (0 params)
+16:29:53 [INFO]      [+] Discovered: GET http://localhost:4040/ (1 params)
+16:29:56 [INFO]      [+] Discovered: GET http://localhost:4040/photo-wall (1 params)
+16:29:58 [INFO]      [+] Discovered: GET http://localhost:4040/login (1 params)
+16:30:02 [INFO]      [+] Discovered: GET http://localhost:4040/contact (1 params)
+16:30:05 [INFO]      [+] Discovered: GET http://localhost:4040/score-board (1 params)
+16:30:07 [INFO]      [+] Discovered: GET http://localhost:4040/about (1 params)
+16:30:09 [INFO]      [+] Discovered: GET http://localhost:4040/search (1 params)
+16:30:14 [INFO] [ScanEngine] Discovery finished. Unique targets found: 14
+16:30:14 [INFO] --- SQLi Scan on: http://localhost:4040/assets/i18n/en.json (GET) ---
+16:30:14 [INFO] [SQLi] Scan: GET http://localhost:4040/assets/i18n/en.json (json)
+16:30:14 [INFO] --- SQLi Scan on: http://localhost:4040/rest/admin/application-version (GET) ---
+16:30:14 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/admin/application-version (json)
+16:30:14 [INFO] --- SQLi Scan on: http://localhost:4040/rest/admin/application-configuration (GET) ---
+16:30:14 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/admin/application-configuration (json)
+16:30:14 [INFO] --- SQLi Scan on: http://localhost:4040/api/Challenges/ (GET) ---
+16:30:14 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Challenges/ (json)
+16:30:14 [INFO] --- SQLi Scan on: http://localhost:4040/rest/languages (GET) ---
+16:30:14 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/languages (json)
+16:30:14 [INFO] --- SQLi Scan on: http://localhost:4040/api/Quantitys/ (GET) ---
+16:30:14 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Quantitys/ (json)
+16:30:14 [INFO] --- SQLi Scan on: http://localhost:4040/rest/products/search (GET) ---
+16:30:14 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/products/search (json)
+16:30:14 [INFO] --- SQLi Scan on: http://localhost:4040/ (GET) ---
+16:30:14 [INFO] [SQLi] Scan: GET http://localhost:4040/ (form)
+16:30:14 [INFO]     -> Testing: q
+16:30:15 [INFO] --- SQLi Scan on: http://localhost:4040/photo-wall (GET) ---
+16:30:15 [INFO] [SQLi] Scan: GET http://localhost:4040/photo-wall (form)
+16:30:15 [INFO]     -> Testing: q
+16:30:17 [INFO] --- SQLi Scan on: http://localhost:4040/login (GET) ---
+16:30:17 [INFO] [SQLi] Scan: GET http://localhost:4040/login (form)
+16:30:17 [INFO]     -> Testing: q
+16:30:20 [INFO] --- SQLi Scan on: http://localhost:4040/contact (GET) ---
+16:30:20 [INFO] [SQLi] Scan: GET http://localhost:4040/contact (form)
+16:30:20 [INFO]     -> Testing: q
+16:30:22 [INFO] --- SQLi Scan on: http://localhost:4040/score-board (GET) ---
+16:30:22 [INFO] [SQLi] Scan: GET http://localhost:4040/score-board (form)
+16:30:22 [INFO]     -> Testing: q
+16:30:24 [INFO] --- SQLi Scan on: http://localhost:4040/about (GET) ---
+16:30:24 [INFO] [SQLi] Scan: GET http://localhost:4040/about (form)
+16:30:24 [INFO]     -> Testing: q
+16:30:26 [INFO] --- SQLi Scan on: http://localhost:4040/search (GET) ---
+16:30:26 [INFO] [SQLi] Scan: GET http://localhost:4040/search (form)
+16:30:26 [INFO]     -> Testing: q

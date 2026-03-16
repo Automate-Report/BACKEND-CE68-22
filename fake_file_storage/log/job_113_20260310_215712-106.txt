@@ -1,0 +1,51 @@
+21:56:38 [INFO] ============================================================
+21:56:38 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+21:56:38 [INFO] ============================================================
+21:56:38 [INFO] 🔍 Testing connectivity to http://localhost:4050...
+21:56:38 [INFO] ✅ Target is reachable! (Status: 200)
+21:56:38 [INFO] [+] Starting Public Discovery...
+21:56:38 [INFO] 🚀 Starting Async Crawl: http://localhost:4050
+21:56:40 [INFO]   [..] Processing: http://localhost:4050 (Depth: 0)
+21:56:40 [WARNING] ⚠️ [Crawler] Session expired at http://localhost:4050
+21:56:41 [INFO] ============================================================
+21:56:41 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+21:56:41 [INFO] ============================================================
+21:56:43 [INFO] 🌐 Loading target page: http://localhost:4050
+21:56:43 [INFO] ✅ Page loaded successfully
+21:56:43 [INFO] [Auth] Attempting Primary Login Method...
+21:56:43 [INFO] [Auth] 🔑 Testing Job Credentials...
+21:56:45 [INFO] ✅ Standard Login successful!
+21:56:45 [INFO] 🍪 Captured 2 session cookies
+21:56:45 [INFO] ✅ [Auth Success] Current URL: http://localhost:4050/index.php
+21:56:46 [INFO] [Crawler] 🍪 External cookies set. Total: 2
+21:56:46 [INFO] ============================================================
+21:56:46 [INFO] [PHASE 3] DEEP CRAWLING WITH SESSION...
+21:56:46 [INFO] Seed URL: http://localhost:4050/index.php
+21:56:46 [INFO] ============================================================
+21:56:46 [INFO] 🚀 Starting Async Crawl: http://localhost:4050/index.php
+21:56:47 [INFO] [Crawler] 🍪 Context initialized with 2 cookies
+21:56:47 [INFO]   [..] Processing: http://localhost:4050/index.php (Depth: 0)
+21:56:51 [INFO]     [..] Executing behavioral exploration...
+21:57:03 [INFO]     [+] Target Saved: GET http://localhost:4050/index.php
+21:57:05 [INFO] ============================================================
+21:57:05 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+21:57:05 [INFO] ============================================================
+21:57:05 [INFO] 📊 Deduplication: 3 -> 2 unique targets
+21:57:05 [INFO] [Requester] 🍪 2 cookies injected and session cleared.
+21:57:05 [INFO] [ScanEngine] 🔄 Global Session Sync Completed (Cookies & Auth Info)
+21:57:05 [INFO] 🔓 Running SQL Injection scans on 2 endpoints...
+21:57:05 [INFO] [1/2] SQLi Scan: GET http://localhost:4050/index.php
+21:57:05 [INFO] [SQLi] 🍪 Session synced to scanner (Security: low)
+21:57:05 [INFO] [SQLi] Scan: GET http://localhost:4050/index.php
+21:57:05 [INFO]     -> Testing Parameter: id
+21:57:05 [INFO]     -> Testing Parameter: submit
+21:57:06 [INFO]     -> Testing Parameter: field_2
+21:57:07 [INFO]     -> Testing Parameter: field_3
+21:57:08 [INFO] [2/2] SQLi Scan: GET http://localhost:4050/vulnerabilities/sqli/
+21:57:08 [INFO] [SQLi] 🍪 Session synced to scanner (Security: low)
+21:57:08 [INFO] [SQLi] Scan: GET http://localhost:4050/vulnerabilities/sqli/
+21:57:08 [INFO]     -> Testing Parameter: id
+21:57:08 [INFO]       [..] Capturing evidence with Playwright...
+21:57:09 [INFO]     [!!!] Found Error-Based SQLi in id
+21:57:09 [INFO]     -> Testing Parameter: Submit
+21:57:10 [INFO] ✅ Found 1 vulnerabilities!

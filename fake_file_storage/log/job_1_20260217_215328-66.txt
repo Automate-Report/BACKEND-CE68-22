@@ -1,0 +1,21 @@
+21:52:35 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+21:52:35 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:4040/#/
+21:52:37 [INFO]      [+] Discovered New Structure: GET /api/Challenges/ ['name']
+21:52:37 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:52:37 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:52:43 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:52:43 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:52:48 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:52:48 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:52:54 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:52:54 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:53:00 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:53:00 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:53:05 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:53:05 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:53:15 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:53:15 [INFO]     [Intercepted API] GET http://localhost:4040/api/Challenges/?name=Score%2... (1 params)
+21:53:21 [INFO] [ScanEngine] Discovery finished. Unique targets found: 1
+21:53:21 [INFO] --- SQLi Scan on: http://localhost:4040/api/Challenges/ (GET) ---
+21:53:21 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Challenges/ (form)
+21:53:21 [INFO]     -> Testing: name

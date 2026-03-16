@@ -1,0 +1,50 @@
+22:04:09 [INFO] [ScanEngine] Starting Discovery on http://localhost:3000/...
+22:04:09 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:3000/
+22:04:12 [WARNING] [!] Skip http://localhost:3000/_next/static/media/7b60eea355d29e65-s.p.4f37fe08.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:12 [WARNING] [!] Skip http://localhost:3000/_next/static/media/25390075d9922645-s.p.98a165b0.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:14 [WARNING] [!] Skip http://localhost:3000/_next/static/media/86fee4a10e2832ea-s.p.ad7a5276.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:14 [WARNING] [!] Skip http://localhost:3000/_next/static/media/666deae7c569669f-s.p.666a1a68.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:16 [WARNING] [!] Skip http://localhost:3000/_next/static/media/966a1ae9b0187c65-s.p.930a8de6.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:19 [WARNING] [!] Skip http://localhost:3000/_next/static/media/04f2bd2afa807ebe-s.p.f6e85e51.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:19 [WARNING] [!] Skip http://localhost:3000/_next/static/media/411573def610439a-s.p.b7d92953.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:19 [WARNING] [!] Skip http://localhost:3000/_next/static/media/e4b5e1d5de235207-s.p.c98ad417.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:19 [WARNING] [!] Skip http://localhost:3000/_next/static/media/413670c8b897121b-s.p.0824205a.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:19 [WARNING] [!] Skip http://localhost:3000/_next/static/media/ab8c2f9dfe50fb3c-s.p.965f1cd0.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:19 [WARNING] [!] Skip http://localhost:3000/_next/static/media/d9fa5058ff337146-s.p.696b0120.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:21 [WARNING] [!] Skip http://localhost:3000/_next/static/media/47a705c7ed0eab21-s.p.83fe7272.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:22 [WARNING] [!] Skip http://localhost:3000/_next/static/media/c73fb3e54683eaf8-s.p.906d019a.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:22 [WARNING] [!] Skip http://localhost:3000/_next/static/media/9fdf3a539c009271-s.p.08dddbec.woff2 due to error: Page.goto: Download is starting
+Call log:
+  - navi
+22:04:24 [INFO] [ScanEngine] Discovery finished. Unique targets found: 0
+22:04:24 [WARNING] [ScanEngine] No targets found during crawling. Scanning entry point only.
+22:04:24 [INFO] --- XSS Scan on: http://localhost:3000/ (GET) ---
+22:04:24 [INFO] [XSS] Scanning GET on http://localhost:3000/ (Type: form)
+22:04:24 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:3000/
+22:04:34 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...

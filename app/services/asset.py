@@ -41,16 +41,13 @@ class AssetService:
         # 1. กรอง User
         all_matches = []
         for asset in assets:
-            if filter == "ALL":
-                if search:
-                    if asset["project_id"] == project_id and search in asset["name"]:
-                        all_matches.append(asset)
-                else:
-                    if asset["project_id"] == project_id:
-                        all_matches.append(asset)
-            else:
-                # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
-                pass
+            if search and search.lower() not in asset["name"].lower():
+                continue
+            if filter == "ip" and asset.get("type") != "IP":
+                continue
+            if filter == "url" and asset.get("type") != "URL":
+                continue
+            all_matches.append(asset)
 
         if sort_by:
             reverse = (order == "desc")
@@ -86,6 +83,19 @@ class AssetService:
                 return asset
             
         return None
+    
+    def get_all_asset_names_for_dropdown(self, project_id: int) -> List[dict]:
+        """Service: ดึงชื่อ Asset ทั้งหมดในโปรเจกต์ สำหรับ Dropdown"""
+        assets = self._read_json()
+        filtered_assets = []
+        for asset in assets:
+            if asset["project_id"] == project_id:
+                filtered_assets.append({
+                    "name": asset["name"],
+                    "id": asset["id"],
+                    "target": asset["target"]
+                })
+        return filtered_assets
 
     def create_asset(self, asset_in: AssetCreate) -> dict:
         """Service: สร้าง Asset ใหม่"""
@@ -138,6 +148,37 @@ class AssetService:
                 self._save_json(assets)
                 return True
         return False
+    
+    def get_asset_ids_by_project_id(self, project_id: int):
+        assets = self._read_json()
+
+        result = []
+        for asset in assets:
+            if asset["project_id"] == project_id:
+                result.append(asset["id"])
+
+        return result
+    
+    def get_assets_by_project_id(self, project_id: int):
+
+        assets = self._read_json()
+
+        result = []
+        for asset in assets:
+            if asset["project_id"] == project_id:
+                result.append(asset)
+
+        return result
+    
+    def cnt_asset_by_project_id(self, project_id: int):
+        assets = self._read_json()
+
+        cnt = 0
+        for asset in assets:
+            if asset["project_id"] == project_id:
+                cnt += 1
+
+        return cnt
 
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้

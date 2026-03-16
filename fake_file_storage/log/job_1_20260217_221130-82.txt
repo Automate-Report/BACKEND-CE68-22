@@ -1,0 +1,11 @@
+22:11:27 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+22:11:27 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:4040/#/
+22:11:28 [ERROR] ❌ Critical Error: BrowserType.launch: Executable doesn't exist at Z:\Thesis\Code\AGENT-CE68-22\.venv\Lib\site-packages\playwright\driver\package\.local-browsers\chromium-1200\chrome-win64\chrome.exe
+╔════════════════════════════════════════════════════════════╗
+║ Looks like Playwright was just installed or updated.       ║
+║ Please run the following command to download new browsers: ║
+║                                                            ║
+║     playwright install                                     ║
+║                                                            ║
+║ <3 Playwright Team                                         ║
+╚════════════════════════════════════════════════════════════╝

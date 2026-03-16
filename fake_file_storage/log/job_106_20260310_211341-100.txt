@@ -1,0 +1,59 @@
+21:13:05 [INFO] ============================================================
+21:13:05 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+21:13:05 [INFO] ============================================================
+21:13:05 [INFO] 🔍 Testing connectivity to http://localhost:4050...
+21:13:05 [INFO] ✅ Target is reachable! (Status: 200)
+21:13:05 [INFO] [+] Starting Public Discovery...
+21:13:05 [INFO] 🚀 Starting Async Crawl: http://localhost:4050
+21:13:09 [INFO]     [..] Executing behavioral exploration...
+21:13:11 [INFO]     [!] Injected & Pressed Enter on input 0
+21:13:13 [INFO]     [!] Injected & Pressed Enter on input 1
+21:13:16 [INFO]     [+] Target Saved: GET http://localhost:4050
+21:13:16 [INFO] ============================================================
+21:13:16 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+21:13:16 [INFO] ============================================================
+21:13:18 [INFO] 🌐 Loading target page: http://localhost:4050
+21:13:18 [INFO] ✅ Page loaded successfully
+21:13:18 [INFO] [Auth] Attempting Primary Login Method...
+21:13:18 [INFO] [Auth] 🔑 Testing Job Credentials...
+21:13:21 [INFO] ✅ Standard Login successful!
+21:13:21 [INFO] 🍪 Captured 2 session cookies
+21:13:21 [INFO] ✅ [Auth Success] Current URL: http://localhost:4050/index.php
+21:13:21 [INFO] [ScanEngine] 🛠 Overriding security level from 'low' to 'low'
+21:13:21 [INFO] ============================================================
+21:13:21 [INFO] [PHASE 3] DEEP CRAWLING WITH SESSION...
+21:13:21 [INFO] Seed URL: http://localhost:4050/index.php
+21:13:21 [INFO] ============================================================
+21:13:21 [INFO] 🚀 Starting Async Crawl: http://localhost:4050/index.php
+21:13:25 [INFO]     [..] Executing behavioral exploration...
+21:13:27 [INFO]     [!] Injected & Pressed Enter on input 0
+21:13:28 [INFO]     [!] Injected & Pressed Enter on input 1
+21:13:31 [INFO]     [+] Target Saved: GET http://localhost:4050/index.php
+21:13:32 [INFO] ============================================================
+21:13:32 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+21:13:32 [INFO] ============================================================
+21:13:32 [INFO] 📊 Deduplication: 5 -> 3 unique targets
+21:13:32 [INFO] [Requester] 🍪 2 cookies injected and session cleared.
+21:13:32 [INFO] [ScanEngine] 🔄 Global Session Sync Completed.
+21:13:32 [INFO] 💉 Running XSS scans on 3 endpoints...
+21:13:32 [INFO] [1/3] XSS Scan: GET http://localhost:4050
+21:13:32 [INFO] [XSS] Scanning GET on http://localhost:4050 (Type: form)
+21:13:32 [INFO]     -> Analyzing: username
+21:13:32 [INFO]     -> Analyzing: password
+21:13:32 [INFO]     -> Analyzing: login
+21:13:32 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050
+21:13:36 [ERROR]     [-] DOM Scan Critical Error: object NoneType can't be used in 'await' expression
+21:13:36 [INFO] [2/3] XSS Scan: GET http://localhost:4050/index.php
+21:13:36 [INFO] [XSS] Scanning GET on http://localhost:4050/index.php (Type: form)
+21:13:36 [INFO]     -> Analyzing: username
+21:13:36 [INFO]     -> Analyzing: password
+21:13:36 [INFO]     -> Analyzing: login
+21:13:36 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/index.php
+21:13:37 [ERROR]     [-] DOM Scan Critical Error: object NoneType can't be used in 'await' expression
+21:13:37 [INFO] [3/3] XSS Scan: GET http://localhost:4050/vulnerabilities/sqli/
+21:13:37 [INFO] [XSS] Scanning GET on http://localhost:4050/vulnerabilities/sqli/ (Type: form)
+21:13:37 [INFO]     -> Analyzing: id
+21:13:37 [INFO]     -> Analyzing: Submit
+21:13:37 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4050/vulnerabilities/sqli/
+21:13:39 [ERROR]     [-] DOM Scan Critical Error: object NoneType can't be used in 'await' expression
+21:13:39 [INFO] ✅ No vulnerabilities found

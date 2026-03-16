@@ -1,0 +1,18 @@
+20:32:37 [INFO] [ScanEngine][Job 2] Starting Discovery Phase...
+20:32:37 [INFO] [Crawler] Starting Crawl on: http://testphp.vulnweb.com/search.php (Depth: 2)
+20:32:47 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/search.php (2 params)
+20:33:25 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/userinfo.php (5 params)
+20:33:25 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/cart.php (2 params)
+20:33:26 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/categories.php (2 params)
+20:33:26 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/artists.php (2 params)
+20:33:31 [INFO] [Crawler] Found a way in! Session captured.
+20:33:31 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/login.php (5 params)
+20:33:32 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/disclaimer.php (2 params)
+20:33:33 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/index.php (2 params)
+20:33:33 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/guestbook.php (4 params)
+20:33:34 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/ (2 params)
+20:33:35 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/logout.php (2 params)
+20:33:35 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/listproducts.php (2 params)
+20:33:36 [INFO] [ScanEngine][Job 2] Discovery finished. Unique targets: 12
+20:33:36 [INFO] [Orchestrator] 🍪 Passing session cookies to all scanners.
+20:33:36 [ERROR] ❌ Critical Error: 'Requester' object has no attribute 'set_cookies'

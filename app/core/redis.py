@@ -1,10 +1,18 @@
-import redis
+import redis.asyncio as redis
+from app.core.config import settings
 
-redis_client = redis.Redis(
-    host="10.20.20.108",
-    port=5678,
-    db=0,
+pool_blacklist = redis.ConnectionPool.from_url(
+    url=settings.BACKLIST_REDIS_URL,
     decode_responses=True
 )
 
-#docker run -d --name redis -p 5678  redis:6379 redis
+pool_jobs = redis.ConnectionPool.from_url(
+    url=settings.JOBS_REDIS_URL,
+    decode_responses=True
+)
+
+
+redis_client = redis.Redis(connection_pool=pool_blacklist)
+redis_jobs = redis.Redis(connection_pool=pool_jobs)
+
+QUEUE_KEY = "system:queue:work" #เก็บงานที่พร้อมทำ

@@ -1,0 +1,41 @@
+16:48:34 [INFO] [ScanEngine] Starting Discovery on http://localhost:3000/...
+16:48:34 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:3000/
+16:48:42 [INFO]      [+] Discovered: GET http://localhost:3000/login {'email': 'test', 'password': 'test'}
+16:48:44 [INFO]      [+] Discovered: GET http://localhost:3000/register {'Firstname': 'test', 'Lastname': 'test', 'email': 'test', 'password': 'test'}
+16:48:47 [INFO] [ScanEngine] Discovery finished. Unique targets found: 2
+16:48:47 [INFO] --- SQLi Scan on: http://localhost:3000/login (GET) ---
+16:48:47 [INFO] [SQLi] Scan: GET http://localhost:3000/login (form)
+16:48:47 [INFO]     -> Testing: email
+16:48:57 [INFO]        [!!!] Boolean-Based SQLi Found!
+16:48:57 [INFO]              Param: email | Payload: )" AND "1"="1
+16:48:57 [INFO]              Info: Diff: 21 bytes
+16:48:57 [INFO]       [..] Capturing evidence with Playwright...
+16:48:58 [ERROR]       [-] Evidence capture failed: BrowserType.launch: Executable doesn't exist at Z:\Thesis\Code\AGENT-CE68-22\.venv\Lib\site-packages\playwright\driver\package\.local-browsers\chromium_headless_shell-1200\chrome-headless-shell-win64\chrome-headless-shell.exe
+╔════════════════════════════════════════════════════════════╗
+║ Looks like Playwright was just installed or updated.       ║
+║ Please run the following command to download new browsers: ║
+║                                                            ║
+║     playwright install                                     ║
+║                                                            ║
+║ <3 Playwright Team                                         ║
+╚════════════════════════════════════════════════════════════╝
+16:48:58 [INFO]     -> Testing: password
+16:49:14 [INFO] --- SQLi Scan on: http://localhost:3000/register (GET) ---
+16:49:14 [INFO] [SQLi] Scan: GET http://localhost:3000/register (form)
+16:49:14 [INFO]     -> Testing: Firstname
+16:49:29 [INFO]     -> Testing: Lastname
+16:49:45 [INFO]     -> Testing: email
+16:50:04 [INFO]     -> Testing: password
+16:50:14 [INFO]        [!!!] Boolean-Based SQLi Found!
+16:50:14 [INFO]              Param: password | Payload: )" AND "1"="1
+16:50:14 [INFO]              Info: Diff: 32 bytes
+16:50:14 [INFO]       [..] Capturing evidence with Playwright...
+16:50:14 [ERROR]       [-] Evidence capture failed: BrowserType.launch: Executable doesn't exist at Z:\Thesis\Code\AGENT-CE68-22\.venv\Lib\site-packages\playwright\driver\package\.local-browsers\chromium_headless_shell-1200\chrome-headless-shell-win64\chrome-headless-shell.exe
+╔════════════════════════════════════════════════════════════╗
+║ Looks like Playwright was just installed or updated.       ║
+║ Please run the following command to download new browsers: ║
+║                                                            ║
+║     playwright install                                     ║
+║                                                            ║
+║ <3 Playwright Team                                         ║
+╚════════════════════════════════════════════════════════════╝

@@ -1,0 +1,31 @@
+22:31:54 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+22:31:54 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:4040/#/
+22:32:32 [INFO]      [+] Discovered: GET / ['mat-input-1']
+22:32:37 [INFO]      [+] Discovered: GET /about ['mat-input-1']
+22:32:42 [INFO]      [+] Discovered: GET /score-board ['mat-input-1']
+22:32:47 [INFO]      [+] Discovered: GET /photo-wall ['mat-input-1']
+22:32:52 [INFO]      [+] Discovered: GET /login ['mat-input-1']
+22:32:57 [INFO]      [+] Discovered: GET /contact ['mat-input-1']
+22:33:02 [INFO]      [+] Discovered: GET /search ['mat-input-1']
+22:33:03 [INFO] [ScanEngine] Discovery finished. Unique targets found: 7
+22:33:03 [INFO] --- SQLi Scan on: http://localhost:4040/#/ (GET) ---
+22:33:03 [INFO] [SQLi] Scan: GET http://localhost:4040/#/ (form)
+22:33:03 [INFO]     -> Testing: mat-input-1
+22:33:04 [INFO] --- SQLi Scan on: http://localhost:4040/about (GET) ---
+22:33:04 [INFO] [SQLi] Scan: GET http://localhost:4040/about (form)
+22:33:04 [INFO]     -> Testing: mat-input-1
+22:33:06 [INFO] --- SQLi Scan on: http://localhost:4040/score-board (GET) ---
+22:33:06 [INFO] [SQLi] Scan: GET http://localhost:4040/score-board (form)
+22:33:06 [INFO]     -> Testing: mat-input-1
+22:33:09 [INFO] --- SQLi Scan on: http://localhost:4040/photo-wall (GET) ---
+22:33:09 [INFO] [SQLi] Scan: GET http://localhost:4040/photo-wall (form)
+22:33:09 [INFO]     -> Testing: mat-input-1
+22:33:11 [INFO] --- SQLi Scan on: http://localhost:4040/login (GET) ---
+22:33:11 [INFO] [SQLi] Scan: GET http://localhost:4040/login (form)
+22:33:11 [INFO]     -> Testing: mat-input-1
+22:33:14 [INFO] --- SQLi Scan on: http://localhost:4040/contact (GET) ---
+22:33:14 [INFO] [SQLi] Scan: GET http://localhost:4040/contact (form)
+22:33:14 [INFO]     -> Testing: mat-input-1
+22:33:16 [INFO] --- SQLi Scan on: http://localhost:4040/search (GET) ---
+22:33:16 [INFO] [SQLi] Scan: GET http://localhost:4040/search (form)
+22:33:16 [INFO]     -> Testing: mat-input-1

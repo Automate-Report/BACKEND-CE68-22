@@ -1,0 +1,52 @@
+20:50:37 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+20:50:37 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:4040/#/
+20:50:54 [INFO]      [+] Discovered: GET http://localhost:4040/assets/i18n/en.json {}
+20:50:54 [INFO]      [+] Discovered: GET http://localhost:4040/rest/admin/application-version {}
+20:50:54 [INFO]      [+] Discovered: GET http://localhost:4040/rest/admin/application-configuration {}
+20:50:54 [INFO]      [+] Discovered: GET http://localhost:4040/api/Challenges/ {}
+20:50:54 [INFO]      [+] Discovered: GET http://localhost:4040/rest/languages {}
+20:50:54 [INFO]      [+] Discovered: GET http://localhost:4040/api/Quantitys/ {}
+20:50:54 [INFO]      [+] Discovered: GET http://localhost:4040/rest/products/search {}
+20:50:56 [INFO]      [+] Discovered: GET http://localhost:4040/ {'mat-input-1': ''}
+20:50:59 [INFO]      [+] Discovered: GET http://localhost:4040/about {'mat-input-1': ''}
+20:51:02 [INFO]      [+] Discovered: GET http://localhost:4040/score-board {'mat-input-1': ''}
+20:51:06 [INFO]      [+] Discovered: GET http://localhost:4040/login {'mat-input-1': ''}
+20:51:08 [INFO]      [+] Discovered: GET http://localhost:4040/search {'mat-input-1': ''}
+20:51:11 [INFO]      [+] Discovered: GET http://localhost:4040/photo-wall {'mat-input-1': ''}
+20:51:13 [INFO]      [+] Discovered: GET http://localhost:4040/contact {'mat-input-1': ''}
+20:51:15 [INFO] [ScanEngine] Discovery finished. Unique targets found: 14
+20:51:15 [INFO] --- SQLi Scan on: http://localhost:4040/assets/i18n/en.json (GET) ---
+20:51:15 [INFO] [SQLi] Scan: GET http://localhost:4040/assets/i18n/en.json (form)
+20:51:15 [INFO] --- SQLi Scan on: http://localhost:4040/rest/admin/application-version (GET) ---
+20:51:15 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/admin/application-version (form)
+20:51:15 [INFO] --- SQLi Scan on: http://localhost:4040/rest/admin/application-configuration (GET) ---
+20:51:15 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/admin/application-configuration (form)
+20:51:15 [INFO] --- SQLi Scan on: http://localhost:4040/api/Challenges/ (GET) ---
+20:51:15 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Challenges/ (form)
+20:51:15 [INFO] --- SQLi Scan on: http://localhost:4040/rest/languages (GET) ---
+20:51:15 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/languages (form)
+20:51:15 [INFO] --- SQLi Scan on: http://localhost:4040/api/Quantitys/ (GET) ---
+20:51:15 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Quantitys/ (form)
+20:51:15 [INFO] --- SQLi Scan on: http://localhost:4040/rest/products/search (GET) ---
+20:51:15 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/products/search (form)
+20:51:15 [INFO] --- SQLi Scan on: http://localhost:4040/ (GET) ---
+20:51:15 [INFO] [SQLi] Scan: GET http://localhost:4040/ (form)
+20:51:15 [INFO]     -> Testing: mat-input-1
+20:51:16 [INFO] --- SQLi Scan on: http://localhost:4040/about (GET) ---
+20:51:16 [INFO] [SQLi] Scan: GET http://localhost:4040/about (form)
+20:51:16 [INFO]     -> Testing: mat-input-1
+20:51:18 [INFO] --- SQLi Scan on: http://localhost:4040/score-board (GET) ---
+20:51:18 [INFO] [SQLi] Scan: GET http://localhost:4040/score-board (form)
+20:51:18 [INFO]     -> Testing: mat-input-1
+20:51:21 [INFO] --- SQLi Scan on: http://localhost:4040/login (GET) ---
+20:51:21 [INFO] [SQLi] Scan: GET http://localhost:4040/login (form)
+20:51:21 [INFO]     -> Testing: mat-input-1
+20:51:23 [INFO] --- SQLi Scan on: http://localhost:4040/search (GET) ---
+20:51:23 [INFO] [SQLi] Scan: GET http://localhost:4040/search (form)
+20:51:23 [INFO]     -> Testing: mat-input-1
+20:51:26 [INFO] --- SQLi Scan on: http://localhost:4040/photo-wall (GET) ---
+20:51:26 [INFO] [SQLi] Scan: GET http://localhost:4040/photo-wall (form)
+20:51:26 [INFO]     -> Testing: mat-input-1
+20:51:28 [INFO] --- SQLi Scan on: http://localhost:4040/contact (GET) ---
+20:51:28 [INFO] [SQLi] Scan: GET http://localhost:4040/contact (form)
+20:51:28 [INFO]     -> Testing: mat-input-1

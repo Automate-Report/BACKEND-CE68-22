@@ -1,0 +1,326 @@
+19:26:52 [INFO] [ScanEngine][Job 5] Starting Discovery Phase...
+19:26:52 [INFO] [Crawler] Starting Crawl on: http://testphp.vulnweb.com/search.php (Depth: 2)
+19:26:52 [INFO]     [>] Crawling: http://testphp.vulnweb.com/search.php
+19:26:53 [INFO]     [+] Found Params: {'searchFor': 'test_value', 'goButton': 'test_value'}
+19:26:54 [INFO]     [>] Crawling: http://testphp.vulnweb.com/artists.php
+19:26:54 [INFO]     [+] Found Params: {'searchFor': 'test_value', 'goButton': 'test_value'}
+19:26:54 [INFO]     [>] Crawling: http://testphp.vulnweb.com/login.php
+19:26:54 [INFO]     [+] Found Params: {'uname': 'test_value', 'pass': 'test_value', 'anonymous_input_3': 'test_value', 'searchFor': 'test_value', 'goButton': 'test_value'}
+19:26:54 [INFO]     [>] Crawling: http://testphp.vulnweb.com/userinfo.php
+19:26:55 [INFO]     [+] Found Params: {'uname': 'test_value', 'pass': 'test_value', 'anonymous_input_3': 'test_value', 'searchFor': 'test_value', 'goButton': 'test_value'}
+19:26:55 [INFO]     [>] Crawling: http://testphp.vulnweb.com/privacy.php
+19:26:55 [INFO]     [+] Found Params: {}
+19:26:55 [INFO]     [>] Crawling: http://testphp.vulnweb.com/guestbook.php
+19:26:55 [INFO]     [+] Found Params: {'text': 'test_value', 'submit': 'test_value', 'searchFor': 'test_value', 'goButton': 'test_value'}
+19:26:56 [INFO]     [>] Crawling: http://testphp.vulnweb.com/AJAX/index.php
+19:26:56 [INFO]     [+] Found Params: {}
+19:26:56 [INFO]     [>] Crawling: http://testphp.vulnweb.com/cart.php
+19:26:56 [INFO]     [+] Found Params: {'searchFor': 'test_value', 'goButton': 'test_value'}
+19:26:56 [INFO]     [>] Crawling: http://testphp.vulnweb.com/categories.php
+19:26:57 [INFO]     [+] Found Params: {'searchFor': 'test_value', 'goButton': 'test_value'}
+19:26:57 [INFO]     [>] Crawling: http://testphp.vulnweb.com/index.php
+19:26:57 [INFO]     [+] Found Params: {'searchFor': 'test_value', 'goButton': 'test_value'}
+19:26:57 [INFO]     [>] Crawling: http://testphp.vulnweb.com/disclaimer.php
+19:26:57 [INFO]     [+] Found Params: {'searchFor': 'test_value', 'goButton': 'test_value'}
+19:26:57 [INFO]     [>] Crawling: http://testphp.vulnweb.com/signup.php
+19:26:58 [INFO]     [+] Found Params: {'uuname': 'test_value', 'upass': 'test_value', 'upass2': 'test_value', 'urname': 'test_value', 'ucc': 'test_value', 'uemail': 'test_value', 'uphone': 'test_value', 'uaddress': 'test_value', 'signup': 'test_value', 'searchFor': 'test_value', 'goButton': 'test_value'}
+19:26:58 [INFO]     [>] Crawling: http://testphp.vulnweb.com/listproducts.php
+19:26:58 [INFO]     [+] Found Params: {'searchFor': 'test_value', 'goButton': 'test_value'}
+19:26:58 [INFO]     [>] Crawling: http://testphp.vulnweb.com/hpp/
+19:26:58 [INFO]     [+] Found Params: {}
+19:26:58 [INFO]     [>] Crawling: http://testphp.vulnweb.com/Mod_Rewrite_Shop/
+19:26:59 [INFO]     [+] Found Params: {}
+19:26:59 [INFO] [ScanEngine][Job 5] Discovery finished. Unique targets: 15
+19:26:59 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/search.php ---
+19:26:59 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:26:59 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/search.php
+19:26:59 [INFO]     -> Analyzing parameter: searchFor
+19:26:59 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:27:00 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:27:00 [INFO]         [-] No reflection found for searchFor
+19:27:00 [INFO]     -> Analyzing parameter: goButton
+19:27:00 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:27:00 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:27:00 [INFO]         [-] No reflection found for goButton
+19:27:00 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:27:00 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/search.php
+19:27:03 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:27:08 [INFO]     -> Testing Parameter: searchFor
+19:27:08 [INFO]        [+] Found target via selector: [name='searchFor']
+19:27:10 [INFO]        [..] Alert detected! Waiting for evidence capture...
+19:27:12 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+19:27:12 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/artists.php ---
+19:27:12 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:27:12 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/artists.php
+19:27:12 [INFO]     -> Analyzing parameter: searchFor
+19:27:12 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:27:13 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:27:13 [INFO]         [-] No reflection found for searchFor
+19:27:13 [INFO]     -> Analyzing parameter: goButton
+19:27:13 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:27:13 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:27:13 [INFO]         [-] No reflection found for goButton
+19:27:13 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:27:13 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/artists.php
+19:27:16 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:27:23 [INFO]     -> Testing Parameter: searchFor
+19:27:23 [INFO]        [+] Found target via selector: [name='searchFor']
+19:27:25 [INFO]        [..] Alert detected! Waiting for evidence capture...
+19:27:27 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+19:27:27 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/login.php ---
+19:27:27 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:27:27 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/login.php
+19:27:27 [INFO]     -> Analyzing parameter: uname
+19:27:27 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:27:27 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:27:37 [INFO]         [-] No reflection found for uname
+19:27:37 [INFO]     -> Analyzing parameter: pass
+19:27:37 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:27:42 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:27:50 [INFO]         [-] No reflection found for pass
+19:27:50 [INFO]     -> Analyzing parameter: anonymous_input_3
+19:27:50 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:27:50 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:27:50 [INFO]         [-] No reflection found for anonymous_input_3
+19:27:50 [INFO]     -> Analyzing parameter: searchFor
+19:27:50 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:27:50 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:27:51 [INFO]         [-] No reflection found for searchFor
+19:27:51 [INFO]     -> Analyzing parameter: goButton
+19:27:51 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:27:52 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:27:52 [INFO]         [-] No reflection found for goButton
+19:27:52 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:27:52 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/login.php
+19:27:55 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:28:00 [INFO]     -> Testing Parameter: uname
+19:28:00 [INFO]        [+] Found target via selector: [name='uname']
+19:30:34 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/userinfo.php ---
+19:30:34 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:30:34 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/userinfo.php
+19:30:34 [INFO]     -> Analyzing parameter: uname
+19:30:34 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:30:35 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:30:36 [INFO]         [-] No reflection found for uname
+19:30:36 [INFO]     -> Analyzing parameter: pass
+19:30:36 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:30:36 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:30:37 [INFO]         [-] No reflection found for pass
+19:30:37 [INFO]     -> Analyzing parameter: anonymous_input_3
+19:30:37 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:30:37 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:30:38 [INFO]         [-] No reflection found for anonymous_input_3
+19:30:38 [INFO]     -> Analyzing parameter: searchFor
+19:30:38 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:30:38 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:30:38 [INFO]         [-] No reflection found for searchFor
+19:30:38 [INFO]     -> Analyzing parameter: goButton
+19:30:38 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:30:39 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:30:39 [INFO]         [-] No reflection found for goButton
+19:30:39 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:30:39 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/userinfo.php
+19:30:42 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:30:52 [INFO]     -> Testing Parameter: uname
+19:30:52 [INFO]        [+] Found target via selector: [name='uname']
+19:33:25 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/privacy.php ---
+19:33:25 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:33:25 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/privacy.php
+19:33:25 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:33:25 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/privacy.php
+19:33:37 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:33:43 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/guestbook.php ---
+19:33:43 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:33:43 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/guestbook.php
+19:33:43 [INFO]     -> Analyzing parameter: text
+19:33:43 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:33:44 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:33:44 [INFO]         [-] No reflection found for text
+19:33:44 [INFO]     -> Analyzing parameter: submit
+19:33:44 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:33:44 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:33:45 [INFO]         [-] No reflection found for submit
+19:33:45 [INFO]     -> Analyzing parameter: searchFor
+19:33:45 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:33:45 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:33:45 [INFO]         [-] No reflection found for searchFor
+19:33:45 [INFO]     -> Analyzing parameter: goButton
+19:33:45 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:33:45 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:33:46 [INFO]         [-] No reflection found for goButton
+19:33:46 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:33:46 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/guestbook.php
+19:33:53 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:33:59 [INFO]     -> Testing Parameter: text
+19:33:59 [INFO]        [+] Found target via selector: [name='text']
+19:34:01 [INFO]        [..] Alert detected! Waiting for evidence capture...
+19:34:03 [INFO]        [+] Vulnerability Recorded for text using <script>alert(1)</script>
+19:34:04 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/AJAX/index.php ---
+19:34:04 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:34:04 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/AJAX/index.php
+19:34:04 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:34:04 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/AJAX/index.php
+19:34:11 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:34:19 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/cart.php ---
+19:34:19 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:34:19 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/cart.php
+19:34:19 [INFO]     -> Analyzing parameter: searchFor
+19:34:19 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:34:19 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:34:20 [INFO]         [-] No reflection found for searchFor
+19:34:20 [INFO]     -> Analyzing parameter: goButton
+19:34:20 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:34:20 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:34:20 [INFO]         [-] No reflection found for goButton
+19:34:20 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:34:20 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/cart.php
+19:34:31 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:34:39 [INFO]     -> Testing Parameter: searchFor
+19:34:39 [INFO]        [+] Found target via selector: [name='searchFor']
+19:34:41 [INFO]        [..] Alert detected! Waiting for evidence capture...
+19:34:43 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+19:34:45 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/categories.php ---
+19:34:45 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:34:45 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/categories.php
+19:34:45 [INFO]     -> Analyzing parameter: searchFor
+19:34:45 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:34:46 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:34:46 [INFO]         [-] No reflection found for searchFor
+19:34:46 [INFO]     -> Analyzing parameter: goButton
+19:34:46 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:34:46 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:34:47 [INFO]         [-] No reflection found for goButton
+19:34:47 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:34:47 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/categories.php
+19:34:49 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:34:56 [INFO]     -> Testing Parameter: searchFor
+19:34:56 [INFO]        [+] Found target via selector: [name='searchFor']
+19:34:58 [INFO]        [..] Alert detected! Waiting for evidence capture...
+19:35:00 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+19:35:00 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/index.php ---
+19:35:00 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:35:00 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/index.php
+19:35:00 [INFO]     -> Analyzing parameter: searchFor
+19:35:00 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:00 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:00 [INFO]         [-] No reflection found for searchFor
+19:35:00 [INFO]     -> Analyzing parameter: goButton
+19:35:00 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:01 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:01 [INFO]         [-] No reflection found for goButton
+19:35:01 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:35:01 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/index.php
+19:35:16 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:35:25 [INFO]     -> Testing Parameter: searchFor
+19:35:25 [INFO]        [+] Found target via selector: [name='searchFor']
+19:35:27 [INFO]        [..] Alert detected! Waiting for evidence capture...
+19:35:29 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+19:35:29 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/disclaimer.php ---
+19:35:29 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:35:29 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/disclaimer.php
+19:35:29 [INFO]     -> Analyzing parameter: searchFor
+19:35:29 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:29 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:29 [INFO]         [-] No reflection found for searchFor
+19:35:29 [INFO]     -> Analyzing parameter: goButton
+19:35:29 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:29 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:30 [INFO]         [-] No reflection found for goButton
+19:35:30 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:35:30 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/disclaimer.php
+19:35:32 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:35:38 [INFO]     -> Testing Parameter: searchFor
+19:35:38 [INFO]        [+] Found target via selector: [name='searchFor']
+19:35:40 [INFO]        [..] Alert detected! Waiting for evidence capture...
+19:35:42 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+19:35:42 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/signup.php ---
+19:35:42 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:35:42 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/signup.php
+19:35:42 [INFO]     -> Analyzing parameter: uuname
+19:35:42 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:42 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:42 [INFO]         [-] No reflection found for uuname
+19:35:42 [INFO]     -> Analyzing parameter: upass
+19:35:42 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:43 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:43 [INFO]         [-] No reflection found for upass
+19:35:43 [INFO]     -> Analyzing parameter: upass2
+19:35:43 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:43 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:43 [INFO]         [-] No reflection found for upass2
+19:35:43 [INFO]     -> Analyzing parameter: urname
+19:35:43 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:44 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:44 [INFO]         [-] No reflection found for urname
+19:35:44 [INFO]     -> Analyzing parameter: ucc
+19:35:44 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:44 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:44 [INFO]         [-] No reflection found for ucc
+19:35:44 [INFO]     -> Analyzing parameter: uemail
+19:35:44 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:45 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:45 [INFO]         [-] No reflection found for uemail
+19:35:45 [INFO]     -> Analyzing parameter: uphone
+19:35:45 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:45 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:45 [INFO]         [-] No reflection found for uphone
+19:35:45 [INFO]     -> Analyzing parameter: uaddress
+19:35:45 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:46 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:46 [INFO]         [-] No reflection found for uaddress
+19:35:46 [INFO]     -> Analyzing parameter: signup
+19:35:46 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:46 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:47 [INFO]         [-] No reflection found for signup
+19:35:47 [INFO]     -> Analyzing parameter: searchFor
+19:35:47 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:47 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:47 [INFO]         [-] No reflection found for searchFor
+19:35:47 [INFO]     -> Analyzing parameter: goButton
+19:35:47 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:35:47 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:35:48 [INFO]         [-] No reflection found for goButton
+19:35:48 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:35:48 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/signup.php
+19:35:54 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:36:03 [INFO]     -> Testing Parameter: uuname
+19:36:14 [INFO]     -> Testing Parameter: upass
+19:36:14 [INFO]     -> Testing Parameter: upass2
+19:36:14 [INFO]     -> Testing Parameter: urname
+19:36:14 [INFO]     -> Testing Parameter: ucc
+19:36:14 [INFO]     -> Testing Parameter: uemail
+19:36:14 [INFO]     -> Testing Parameter: uphone
+19:36:14 [INFO]     -> Testing Parameter: uaddress
+19:36:14 [INFO]     -> Testing Parameter: signup
+19:36:14 [INFO]     -> Testing Parameter: searchFor
+19:36:14 [INFO]     -> Testing Parameter: goButton
+19:36:14 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/listproducts.php ---
+19:36:14 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:36:14 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/listproducts.php
+19:36:14 [INFO]     -> Analyzing parameter: searchFor
+19:36:14 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:36:14 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:36:14 [INFO]         [-] No reflection found for searchFor
+19:36:14 [INFO]     -> Analyzing parameter: goButton
+19:36:14 [INFO]     [>] Trying Mixed Probe: XSSPROBE"'><
+19:36:24 [INFO]         [-] Mixed Probe failed. Retrying with Clean Probe...
+19:36:25 [INFO]         [-] No reflection found for goButton
+19:36:25 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:36:25 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/listproducts.php
+19:36:27 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:36:33 [INFO]     -> Testing Parameter: searchFor
+19:36:33 [INFO]        [+] Found target via selector: [name='searchFor']
+19:36:35 [INFO]        [..] Alert detected! Waiting for evidence capture...
+19:36:37 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+19:36:38 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/hpp/ ---
+19:36:38 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:36:38 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/hpp/
+19:36:38 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:36:38 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/hpp/
+19:36:44 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+19:36:50 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/Mod_Rewrite_Shop/ ---
+19:36:50 [INFO] [ScanEngine][Job 5] Running Reflected Scan...
+19:36:50 [INFO] [XSS] XSS Scanning: http://testphp.vulnweb.com/Mod_Rewrite_Shop/
+19:36:50 [INFO] [ScanEngine][Job 5] Running DOM Scan...
+19:36:50 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/Mod_Rewrite_Shop/
+19:36:58 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...

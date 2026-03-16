@@ -1,0 +1,55 @@
+19:32:34 [INFO] ============================================================
+19:32:34 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+19:32:34 [INFO] ============================================================
+19:32:34 [INFO] 🔍 Testing connectivity to http://localhost:4050...
+19:32:34 [INFO] ✅ Target is reachable! (Status: 200)
+19:32:34 [INFO] [+] Starting Public Discovery...
+19:32:34 [INFO] 🚀 Starting Async Crawl: http://localhost:4050
+19:32:39 [INFO]     [..] Executing behavioral exploration...
+19:32:41 [INFO]     [!] Injected & Pressed Enter on input 0
+19:32:43 [INFO]     [!] Injected & Pressed Enter on input 1
+19:32:45 [INFO]     [+] Target Saved: GET http://localhost:4050
+19:32:46 [INFO] ============================================================
+19:32:46 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+19:32:46 [INFO] ============================================================
+19:32:47 [INFO] 🌐 Loading target page: http://localhost:4050
+19:32:48 [INFO] ✅ Page loaded successfully
+19:32:48 [INFO] [Auth] 🔑 Testing Job Credentials...
+19:33:18 [ERROR] [-] Standard login error: Locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("button[type=\"submit\"], button#loginButton, button:has-text(\"Login\"), button:has-text(\"Log in\")").first
+
+19:33:18 [INFO] [Auth] 🛡️ Attempting Aggressive Entry at http://localhost:4050/login.php
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.click: Target page, context or browser has been closed
+Call log:
+  - waiting for locator("button[type=\"submit\"], button#loginButton, button:has-text(\"Login\")").first
+
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [ERROR] [-] Error during SQLi Bypass attempt: Locator.is_visible: Target page, context or browser has been closed
+19:33:37 [INFO] [Auth] 🔑 Testing default credentials...
+19:33:38 [ERROR] ❌ Critical error during authentication: Locator.is_visible: Target page, context or browser has been closed
+19:33:38 [INFO] ============================================================
+19:33:38 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+19:33:38 [INFO] ============================================================
+19:33:38 [INFO] 📊 Deduplication: 1 -> 1 unique targets
+19:33:38 [INFO] 💉 Running XSS scans on 1 endpoints...
+19:33:38 [INFO] [1/1] XSS Scan: GET http://localhost:4050
+19:33:38 [INFO] [XSS] Scanning GET on http://localhost:4050 (Type: form)
+19:33:38 [INFO]     -> Analyzing: username
+19:33:38 [INFO]     -> Analyzing: password
+19:33:38 [INFO]     -> Analyzing: login
+19:33:38 [INFO] ✅ No vulnerabilities found

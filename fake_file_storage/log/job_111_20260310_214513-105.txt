@@ -1,0 +1,24 @@
+21:45:03 [INFO] ============================================================
+21:45:03 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+21:45:03 [INFO] ============================================================
+21:45:03 [INFO] 🔍 Testing connectivity to http://localhost:4050...
+21:45:03 [INFO] ✅ Target is reachable! (Status: 200)
+21:45:03 [INFO] [+] Starting Public Discovery...
+21:45:03 [INFO] 🚀 Starting Async Crawl: http://localhost:4050
+21:45:05 [WARNING] ⚠️ [Crawler] Session expired at http://localhost:4050
+21:45:06 [INFO] ============================================================
+21:45:06 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+21:45:06 [INFO] ============================================================
+21:45:07 [INFO] 🌐 Loading target page: http://localhost:4050
+21:45:08 [INFO] ✅ Page loaded successfully
+21:45:08 [INFO] [Auth] Attempting Primary Login Method...
+21:45:08 [INFO] [Auth] 🔑 Testing Job Credentials...
+21:45:10 [INFO] ✅ Standard Login successful!
+21:45:10 [INFO] 🍪 Captured 2 session cookies
+21:45:10 [INFO] ✅ [Auth Success] Current URL: http://localhost:4050/index.php
+21:45:10 [ERROR] ❌ Critical Error: 'Crawler' object has no attribute 'set_context_cookies'
+21:45:10 [ERROR] Traceback (most recent call last):
+  File "z:\Thesis\Code\AGENT-CE68-22\src\scanner\scan_engine.py", line 284, in run_workflow
+    await self.crawler.set_context_cookies(self.crawler.auth_handler.cookies)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Crawler' object has no attribute 'set_context_cookies'. Did you mean: 'set_external_cookies'?

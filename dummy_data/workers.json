@@ -1,24 +1,32 @@
 [
   {
     "id": 1,
-    "email": "user@example.com",
+    "project_id": 21,
+    "access_key_id": 20,
     "thread_number": 3,
-    "name": "XSS Worker",
+    "current_load": 0,
+    "name": "Worker-01-DigitalOcean",
     "hostname": null,
-    "status": "Revoked",
+    "internal_ip": null,
+    "status": "notActivated",
     "isActive": false,
     "created_at": "2026-01-27T18:49:28.965751",
-    "updated_at": "2026-01-27T18:49:28.965758"
+    "updated_at": "2026-02-28T19:52:40.335973",
+    "last_heartbeat": null,
+    "owner": "somchai@tech.co.th"
   },
   {
-    "id": 2,
-    "email": "user@example.com",
-    "thread_number": 1,
-    "name": "asdfg",
+    "id": 4,
+    "project_id": 22,
+    "thread_number": 2,
+    "current_load": 0,
+    "name": "Scanner-Node-1",
     "hostname": null,
-    "status": "Revoked",
+    "status": "notActivated",
     "isActive": false,
-    "created_at": "2026-01-27T20:38:58.268840",
-    "updated_at": "2026-01-27T20:38:58.268850"
+    "created_at": "2026-02-25T15:51:24.250137",
+    "updated_at": "2026-02-25T15:51:24.250148",
+    "last_heartbeat": null,
+    "owner": null
   }
 ]

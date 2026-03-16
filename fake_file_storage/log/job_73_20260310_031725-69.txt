@@ -1,0 +1,39 @@
+03:16:32 [INFO] ============================================================
+03:16:32 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+03:16:32 [INFO] ============================================================
+03:16:32 [INFO] 🔍 Testing connectivity to https://pentest-ground.com:81/...
+03:16:33 [INFO] ✅ Target is reachable! (Status: 200)
+03:16:33 [INFO] [+] Starting Public Discovery...
+03:16:33 [INFO] 🚀 Starting Async Crawl: https://pentest-ground.com:81/
+03:16:42 [INFO]     [..] Executing behavioral exploration...
+03:16:45 [INFO]     [!] Injected & Pressed Enter on input 0
+03:16:47 [INFO]     [!] Injected & Pressed Enter on input 1
+03:16:48 [INFO]     [!] Injected & Pressed Enter on input 2
+03:16:50 [INFO]     [!] Injected & Pressed Enter on input 3
+03:16:51 [INFO]     [!] Injected & Pressed Enter on input 4
+03:17:04 [INFO]     [+] Target Saved: GET https://pentest-ground.com:81/
+03:17:04 [INFO] ============================================================
+03:17:04 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+03:17:04 [INFO] ============================================================
+03:17:06 [INFO] 🌐 Loading target page: https://pentest-ground.com:81/
+03:17:10 [INFO] ✅ Page loaded successfully
+03:17:10 [INFO] 🕵️ No login form on landing page, searching for entry...
+03:17:12 [INFO] 🔨 Attempting aggressive login (SQLi bypass, default creds)...
+03:17:12 [INFO] [Auth] 🛡️ Attempting Aggressive Entry at https://pentest-ground.com:81/login
+03:17:16 [INFO] [Auth] 🔑 Testing default credentials...
+03:17:21 [INFO] 🍪 Captured 1 session cookies
+03:17:21 [INFO] ============================================================
+03:17:21 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+03:17:21 [INFO] ============================================================
+03:17:21 [INFO] 📊 Deduplication: 1 -> 1 unique targets
+03:17:21 [INFO] [ScanEngine] Syncing session state to scanners...
+03:17:21 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+03:17:21 [INFO] 💉 Running XSS scans on 1 endpoints...
+03:17:21 [INFO] [1/1] XSS Scan: GET https://pentest-ground.com:81/
+03:17:21 [INFO] [XSS] Scanning GET on https://pentest-ground.com:81/ (Type: form)
+03:17:21 [INFO]     -> Analyzing: your_name
+03:17:22 [INFO]     -> Analyzing: email
+03:17:22 [INFO]     -> Analyzing: phone_number
+03:17:23 [INFO]     -> Analyzing: message
+03:17:23 [INFO]     -> Analyzing: enter_your_email
+03:17:23 [INFO] ✅ No vulnerabilities found

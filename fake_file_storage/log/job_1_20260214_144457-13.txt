@@ -1,0 +1,18 @@
+14:44:47 [INFO] [ScanEngine][Job 1] Discovery finished. Unique targets: 11
+14:44:47 [ERROR] ❌ Critical Error: 'Target' object is not subscriptable
+14:44:47 [INFO] Closing Logger Handler for Job 1
+14:44:47 [INFO] [ScanEngine][Job 1] Starting Discovery Phase...
+14:44:47 [INFO] [Crawler] Starting Crawl on: http://testphp.vulnweb.com/search.php (Depth: 2)
+14:44:49 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/search.php (2 params)
+14:44:49 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/index.php (2 params)
+14:44:50 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/categories.php (2 params)
+14:44:51 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/artists.php (2 params)
+14:44:52 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/cart.php (2 params)
+14:44:52 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/userinfo.php (5 params)
+14:44:53 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/guestbook.php (4 params)
+14:44:53 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/login.php (5 params)
+14:44:53 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/disclaimer.php (2 params)
+14:44:54 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/listproducts.php (2 params)
+14:44:55 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/signup.php (11 params)
+14:44:55 [INFO] [ScanEngine][Job 1] Discovery finished. Unique targets: 11
+14:44:55 [ERROR] ❌ Critical Error: 'Target' object is not subscriptable

@@ -14,10 +14,12 @@ from app.core.redis import redis_client
 from app.core.jwt import create_access_token
 
 
+
+
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "user.json")
+JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "users.json")
 
 class UserAuthenService:
     
@@ -147,6 +149,46 @@ class UserAuthenService:
             "firstname": createUser.firstName,
             "lastname": createUser.lastName
         }
+            new_user = {
+                "firstname": createUser.firstName,
+                "lastname": createUser.lastName,
+                "email": createUser.email,
+                "password": createUser.password,
+                "created_at": datetime.now().isoformat(),
+                "updated_at": datetime.now().isoformat(),
+                "session_token": None,
+                "google_id": None,
+                "picture": None
+            }
+            
+            users.append(new_user)
+            self._save_json(users)
+            
+            # Only return non-sensitive info
+            return {
+                "email": createUser.email,
+                "firstname": createUser.firstName,
+                "lastname": createUser.lastName
+            }
+    
+    def get_user_by_id(self, user_id: str):
+        "Get User by ID"
+        users = self._read_json()
+
+        for user in users:
+            if user["email"] == user_id:
+                return user
+        return None
+    
+    def get_username_by_id(self, user_id: str):
+        users = self._read_json()
+
+        for user in users:
+            if user["email"] == user_id:
+                return f'{user["firstname"]} {user["lastname"]}'
+        
+        return None
+
 
         
 # สร้าง instance ของ Service เพื่อใช้งาน

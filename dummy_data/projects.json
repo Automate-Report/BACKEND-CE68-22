@@ -1,137 +1,169 @@
 [
   {
     "id": 2,
-    "name": "test create project with tags",
-    "description": "test",
+    "name": "Tag Management System",
+    "description": "Project for testing tag creation and assignment workflows.",
     "email": "user@example.com",
     "created_at": "2026-01-24T03:50:50.083710",
     "updated_at": "2026-01-27T20:20:12.679215"
   },
   {
-    "id": 3,
-    "name": "yrdydr",
-    "description": "hgfghfhfgh",
-    "email": "user@example.com",
-    "created_at": "2026-01-24T03:52:22.101453",
-    "updated_at": "2026-01-24T03:52:22.101466"
-  },
-  {
     "id": 4,
-    "name": "fghfghfh",
-    "description": "hjgjhjh",
+    "name": "ID is 4 Internal Tools Dashboard",
+    "description": "Administrative dashboard for managing internal services.",
     "email": "user@example.com",
     "created_at": "2026-01-24T03:59:21.639207",
     "updated_at": "2026-01-24T03:59:21.639216"
   },
   {
     "id": 5,
-    "name": "fghfghfh",
-    "description": "hjgjhjh",
+    "name": "Security Monitoring Setup",
+    "description": "Configuration for vulnerability and asset monitoring.",
     "email": "user@example.com",
     "created_at": "2026-01-24T03:59:55.364272",
     "updated_at": "2026-01-27T20:39:25.695441"
   },
   {
     "id": 6,
-    "name": "test create project with tags",
-    "description": "dfgfdgdg",
+    "name": "Asset Tagging Module",
+    "description": "Module for managing and organizing assets using tags.",
     "email": "user@example.com",
     "created_at": "2026-01-24T04:02:46.571770",
     "updated_at": "2026-01-26T22:09:39.233628"
   },
   {
     "id": 7,
-    "name": "gdfgdgdgdgf",
-    "description": "fgdgdfg",
+    "name": "Infrastructure Audit",
+    "description": "Audit tracking for infrastructure and configuration reviews.",
     "email": "user@example.com",
     "created_at": "2026-01-24T04:06:04.686778",
     "updated_at": "2026-01-24T04:06:04.686789"
   },
   {
     "id": 8,
-    "name": "jgjgjhgjgj",
-    "description": "drtgdrg",
+    "name": "Risk Assessment Tool",
+    "description": "Tool for evaluating project and infrastructure risks.",
     "email": "user@example.com",
     "created_at": "2026-01-24T04:10:01.517942",
     "updated_at": "2026-01-24T04:10:01.517949"
   },
   {
     "id": 9,
-    "name": "khgjghjghjghj",
-    "description": "gjgjhjgjghj",
+    "name": "Compliance Tracker",
+    "description": "Tracks compliance requirements and validation status.",
     "email": "user@example.com",
     "created_at": "2026-01-24T04:10:30.824416",
     "updated_at": "2026-01-24T04:10:30.824429"
   },
   {
     "id": 11,
-    "name": "sdfsfsf",
-    "description": "sdfdsfs",
+    "name": "Analytics Sandbox",
+    "description": "Environment for experimenting with analytics features.",
     "email": "user@example.com",
     "created_at": "2026-01-24T04:11:39.141777",
     "updated_at": "2026-01-24T04:11:39.141786"
   },
   {
     "id": 13,
-    "name": "test",
-    "description": "gdgdfg",
+    "name": "Proof of Concept",
+    "description": "Initial prototype for feature validation.",
     "email": "user@example.com",
     "created_at": "2026-01-24T06:45:09.454785",
     "updated_at": "2026-01-24T06:45:09.454792"
   },
   {
     "id": 14,
-    "name": "test create projectttt with tagssss",
-    "description": "dgdgdg",
+    "name": "Advanced Tagging System",
+    "description": "Extended tagging functionality with improved UX.",
     "email": "user@example.com",
     "created_at": "2026-01-24T06:46:05.703615",
     "updated_at": "2026-01-24T06:46:05.703624"
   },
   {
     "id": 15,
-    "name": "sdfdsfsfsdf",
-    "description": "",
+    "name": "User Access Control",
+    "description": "Role-based access control implementation.",
     "email": "user@example.com",
     "created_at": "2026-01-24T07:01:04.139073",
     "updated_at": "2026-01-24T07:01:04.139082"
   },
   {
     "id": 16,
-    "name": "กดเดเดเดก",
-    "description": "kjhkjhkjhkjhk",
+    "name": "Localization Testing",
+    "description": "Project for testing multi-language and regional support.",
     "email": "user@example.com",
     "created_at": "2026-01-24T07:01:43.223294",
     "updated_at": "2026-01-27T20:21:28.340997"
   },
   {
     "id": 17,
-    "name": "dfgdgdgfdgdgfdg",
-    "description": "",
+    "name": "Backend Refactor",
+    "description": "Refactoring backend services for performance improvements.",
     "email": "user@example.com",
     "created_at": "2026-01-24T07:04:18.694249",
     "updated_at": "2026-01-24T07:04:18.694260"
   },
   {
     "id": 18,
-    "name": "test after seperate",
-    "description": "gdfgdgdg",
+    "name": "UI Separation Update",
+    "description": "Frontend redesign with improved component separation.",
     "email": "user@example.com",
     "created_at": "2026-01-24T10:19:09.787003",
     "updated_at": "2026-01-24T10:19:09.787011"
   },
   {
     "id": 19,
-    "name": "test new ux ui create project",
-    "description": "dggfdgdgdfgdgdgdg",
+    "name": "UX/UI Enhancement Initiative",
+    "description": "Improving user experience and visual design across the platform.",
     "email": "user@example.com",
     "created_at": "2026-01-26T00:35:13.118250",
     "updated_at": "2026-01-26T00:35:13.118278"
   },
   {
     "id": 20,
-    "name": "Company A grader",
-    "description": "fdfsdfsdfsdfsf",
+    "name": "Company A Performance Grader",
+    "description": "Internal tool for evaluating company performance metrics.",
     "email": "user@example.com",
+    "created_at": "2026-01-27T20:09:37.097169",
+    "updated_at": "2026-01-27T20:09:37.097177"
+  },
+  {
+    "id": 21,
+    "name": "Enterprise API Shield",
+    "description": "Real-time monitoring and threat projection for core banking microserices and external gateway.",
+    "email": "somchai@tech.co.th",
+    "created_at": "2026-01-27T20:09:37.097169",
+    "updated_at": "2026-01-27T20:09:37.097177"
+  },
+  {
+    "id": 22,
+    "name": "Client Portal V2",
+    "description": "Public facing application infrastructure security scanning and automated pentesting pipiline.",
+    "email": "somchai@tech.co.th",
+    "created_at": "2026-01-27T20:09:37.097169",
+    "updated_at": "2026-01-27T20:09:37.097177"
+  },
+  {
+    "id": 23,
+    "name": "PCI-DSS Audit Node",
+    "description": "Automated compliance monitoring system for payment gateway security protocols and data encryption.",
+    "email": "sompong@shopdee.com",
+    "created_at": "2026-01-27T20:09:37.097169",
+    "updated_at": "2026-01-27T20:09:37.097177"
+  },
+  {
+    "id": 24,
+    "name": "Legacy Auth System",
+    "description": "Old authentications service maintained for backwards compatibility with regional office hardware.",
+    "email": "sompong@shopdee.com",
+    "created_at": "2026-01-27T20:09:37.097169",
+    "updated_at": "2026-01-27T20:09:37.097177"
+  },
+  {
+    "id": 25,
+    "name": "Heman Manage Website",
+    "description": "เว็บเก็บผลงานสำหรับการจัดการบุคคลากร",
+    "email": "somying@shopdee.com",
     "created_at": "2026-01-27T20:09:37.097169",
     "updated_at": "2026-01-27T20:09:37.097177"
   }

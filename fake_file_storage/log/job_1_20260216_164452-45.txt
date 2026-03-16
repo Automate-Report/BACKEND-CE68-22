@@ -1,0 +1,6 @@
+16:44:38 [INFO] [ScanEngine] Starting Discovery on http://localhost:3000/...
+16:44:38 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:3000/
+16:44:45 [INFO]      [+] Discovered: GET http://localhost:3000/login (2 params)
+16:44:47 [INFO]      [+] Discovered: GET http://localhost:3000/register (4 params)
+16:44:50 [INFO] [ScanEngine] Discovery finished. Unique targets found: 2
+16:44:50 [WARNING] [ScanEngine] Unknown attack type: sqli

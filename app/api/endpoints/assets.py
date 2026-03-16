@@ -1,8 +1,14 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends, status
 from typing import List, Optional
-from app.schemas.asset import AssetCreate, AssetResponse
+
+from app.deps.auth import get_current_user
+from app.deps.role import get_current_project_role
+
+from app.schemas.asset import AssetCreate, AssetListForChoose, AssetResponse
 from app.schemas.pagination import PaginatedResponse
+
 from app.services.asset import asset_service
+
 
 router = APIRouter()
 
@@ -14,10 +20,10 @@ async def get_all_assets(
     sort_by: Optional[str] = Query(None, description="Column to sort by"),
     order: Optional[str] = Query("asc", description="asc or desc"),
     search: Optional[str] = Query(None, description="Search box"),
-    filter: Optional[str] = Query("ALL", description="filter - ALL -    -    ")
+    filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
 ):
-    # ในอนาคตต้องดึง user_id จาก Token (Auth) 
-    # แต่ตอนนี้ Mock เป็น user_id = 1 ไปก่อน
 
     result = asset_service.get_all_assets(
         project_id=project_id,
@@ -30,6 +36,11 @@ async def get_all_assets(
     )
 
     return result
+
+@router.get("/names/{project_id}", response_model=List[AssetListForChoose])
+async def get_all_asset_names_for_dropdown(project_id: int):
+    assets = asset_service.get_all_asset_names_for_dropdown(project_id)
+    return assets
 
 @router.get("/{asset_id}", response_model=AssetResponse)
 async def get_asset_by_id(asset_id: int):
@@ -67,3 +78,12 @@ async def delete_asset(asset_id: int):
     if not success:
         raise HTTPException(status_code=404, detail="Asset not found")
     return {"detail": "Project deleted successfully"}
+
+
+# GET cnt of asset using project_id
+@router.get("cnt/{project_id}")
+async def get_cnt_assets_by_project_id(self, project_id: int):
+    cnt = asset_service.cnt_asset_by_project_id(project_id)
+    return {
+        "asset_cnt": cnt
+    }

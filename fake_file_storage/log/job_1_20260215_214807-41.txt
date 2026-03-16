@@ -1,0 +1,78 @@
+21:39:54 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+21:39:54 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:4040/#/
+21:39:55 [INFO]      [+] Discovered: GET http://localhost:4040/assets/i18n/en.json (0 params)
+21:39:55 [INFO]      [+] Discovered: GET http://localhost:4040/rest/admin/application-version (0 params)
+21:39:55 [INFO]      [+] Discovered: GET http://localhost:4040/rest/admin/application-configuration (0 params)
+21:39:55 [INFO]      [+] Discovered: GET http://localhost:4040/api/Challenges/ (0 params)
+21:39:55 [INFO]      [+] Discovered: GET http://localhost:4040/rest/languages (0 params)
+21:39:55 [INFO]      [+] Discovered: GET http://localhost:4040/api/Quantitys/ (0 params)
+21:39:55 [INFO]      [+] Discovered: GET http://localhost:4040/rest/products/search (0 params)
+21:39:57 [INFO]      [+] Discovered: GET http://localhost:4040/ (1 params)
+21:39:59 [INFO]      [+] Discovered: GET http://localhost:4040/contact (1 params)
+21:40:01 [INFO]      [+] Discovered: GET http://localhost:4040/search (1 params)
+21:40:03 [INFO]      [+] Discovered: GET http://localhost:4040/photo-wall (1 params)
+21:40:06 [INFO]      [+] Discovered: GET http://localhost:4040/about (1 params)
+21:40:08 [INFO]      [+] Discovered: GET http://localhost:4040/login (1 params)
+21:40:09 [INFO] [ScanEngine] Discovery finished. Unique targets found: 13
+21:40:09 [INFO] --- XSS Scan on: http://localhost:4040/assets/i18n/en.json (GET) ---
+21:40:09 [INFO] [XSS] Scanning GET on http://localhost:4040/assets/i18n/en.json (Type: json)
+21:40:09 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/assets/i18n/en.json
+21:40:15 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:40:44 [INFO] --- XSS Scan on: http://localhost:4040/rest/admin/application-version (GET) ---
+21:40:44 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/admin/application-version (Type: json)
+21:40:44 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/rest/admin/application-version
+21:40:51 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:41:20 [INFO] --- XSS Scan on: http://localhost:4040/rest/admin/application-configuration (GET) ---
+21:41:20 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/admin/application-configuration (Type: json)
+21:41:20 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/rest/admin/application-configuration
+21:41:26 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:41:56 [INFO] --- XSS Scan on: http://localhost:4040/api/Challenges/ (GET) ---
+21:41:56 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Challenges/ (Type: json)
+21:41:56 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/api/Challenges/
+21:42:02 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:42:31 [INFO] --- XSS Scan on: http://localhost:4040/rest/languages (GET) ---
+21:42:31 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/languages (Type: json)
+21:42:31 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/rest/languages
+21:42:37 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:43:07 [INFO] --- XSS Scan on: http://localhost:4040/api/Quantitys/ (GET) ---
+21:43:07 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Quantitys/ (Type: json)
+21:43:07 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/api/Quantitys/
+21:43:13 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:43:42 [INFO] --- XSS Scan on: http://localhost:4040/rest/products/search (GET) ---
+21:43:42 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/products/search (Type: json)
+21:43:42 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/rest/products/search
+21:43:48 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:44:17 [INFO] --- XSS Scan on: http://localhost:4040/ (GET) ---
+21:44:17 [INFO] [XSS] Scanning GET on http://localhost:4040/ (Type: form)
+21:44:17 [INFO]     -> Analyzing: q
+21:44:17 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/
+21:44:50 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:44:53 [INFO] --- XSS Scan on: http://localhost:4040/contact (GET) ---
+21:44:53 [INFO] [XSS] Scanning GET on http://localhost:4040/contact (Type: form)
+21:44:53 [INFO]     -> Analyzing: q
+21:44:53 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/contact
+21:44:56 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:45:25 [INFO]     -> Testing Parameter: q
+21:45:26 [INFO] --- XSS Scan on: http://localhost:4040/search (GET) ---
+21:45:26 [INFO] [XSS] Scanning GET on http://localhost:4040/search (Type: form)
+21:45:26 [INFO]     -> Analyzing: q
+21:45:26 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/search
+21:45:28 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:45:58 [INFO]     -> Testing Parameter: q
+21:45:58 [INFO] --- XSS Scan on: http://localhost:4040/photo-wall (GET) ---
+21:45:58 [INFO] [XSS] Scanning GET on http://localhost:4040/photo-wall (Type: form)
+21:45:58 [INFO]     -> Analyzing: q
+21:45:58 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/photo-wall
+21:46:01 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:46:30 [INFO]     -> Testing Parameter: q
+21:46:30 [INFO] --- XSS Scan on: http://localhost:4040/about (GET) ---
+21:46:30 [INFO] [XSS] Scanning GET on http://localhost:4040/about (Type: form)
+21:46:30 [INFO]     -> Analyzing: q
+21:46:30 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/about
+21:47:03 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:47:32 [INFO] --- XSS Scan on: http://localhost:4040/login (GET) ---
+21:47:32 [INFO] [XSS] Scanning GET on http://localhost:4040/login (Type: form)
+21:47:32 [INFO]     -> Analyzing: q
+21:47:32 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/login
+21:47:35 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+21:48:04 [INFO]     -> Testing Parameter: q

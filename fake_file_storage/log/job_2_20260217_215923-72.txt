@@ -1,0 +1,12 @@
+21:58:10 [INFO] [ScanEngine] Starting Discovery on http://localhost:3000/...
+21:58:10 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:3000/
+21:58:26 [INFO] [ScanEngine] Discovery finished. Unique targets found: 0
+21:58:26 [WARNING] [ScanEngine] No targets found during crawling. Scanning entry point only.
+21:58:26 [INFO] --- XSS Scan on: http://localhost:3000/ (GET) ---
+21:58:26 [INFO] [XSS] Scanning GET on http://localhost:3000/ (Type: form)
+21:58:26 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:3000/
+21:58:43 [ERROR]        [!] Navigation failed: Page.goto: Timeout 15000ms exceeded.
+Call log:
+  - navigating to "http://localhost:3000/", waiting until "networkidle"
+
+21:58:48 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...

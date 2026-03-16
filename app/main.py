@@ -1,14 +1,16 @@
+import asyncio
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
-from app.core.config import settings
-
-import asyncio
 from contextlib import asynccontextmanager
 
 from app.core.db import engine, Base
+from app.core.config import settings
 from app.models import users, access_keys, asset_credentials, assets, jobs, logs, project_tags, projects, reports, schedules, tags, vulnerabilities, workers
+
+from app.services.system_task import system_schedule_task
 
 # 1. Import Router ที่เราสร้างไว้
 from app.api.endpoints import projects
@@ -20,32 +22,34 @@ from app.api.endpoints import access_keys
 from app.api.endpoints import pentest_log
 from app.api.endpoints import tag
 from app.api.endpoints import project_tags
-
-# --- ส่วนของ Async Background Service ---
-async def my_background_service():
-    try:
-        while True:
-            print("Background service is processing...")
-            await asyncio.sleep(60) # ทำงานทุกๆ 60 วินาที
-    except asyncio.CancelledError:
-        print("Background service is stopping...")
+from app.api.endpoints import schedule
+from app.api.endpoints import jobs
+from app.api.endpoints import notification
+from app.api.endpoints import vulnerabilities
+from app.api.endpoints import reports
 
 # --- Lifespan Management ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # [Startup]: ทำงานตอนเปิด Server
-    async with engine.begin() as conn:
-        # สร้าง Table ทั้งหมดถ้ายังไม่มี (เหมือน setup_db ของคุณ)
-        await conn.run_sync(Base.metadata.create_all)
+    # async with engine.begin() as conn:
+    #     # สร้าง Table ทั้งหมดถ้ายังไม่มี (เหมือน setup_db ของคุณ)
+    #     await conn.run_sync(Base.metadata.create_all)
     
     # เริ่มรัน Background Task
-    bg_task = asyncio.create_task(my_background_service())
+    bg_task = asyncio.create_task(system_schedule_task())
     
     yield  # --- ช่วงที่ App รันปกติ ---
 
     # [Shutdown]: ทำงานตอนปิด Server
     bg_task.cancel() # ปิด Background Task
-    await engine.dispose() # ปิดการเชื่อมต่อ DB
+    try:
+        await bg_task # รอให้หยุดรันตามลอจิกใน CancelledError
+    except asyncio.CancelledError:
+        pass
+        
+    await engine.dispose()
+    print("✅ System Exit.")
 
 
 
@@ -69,6 +73,7 @@ app.add_middleware(
     allow_credentials=True,       # อนุญาตให้ส่ง Cookie/Token
     allow_methods=["*"],          # อนุญาตทุกท่า (GET, POST, PUT, DELETE)
     allow_headers=["*"],          # อนุญาตทุก Header
+    expose_headers=["Content-Length", "Content-Disposition"],
 )
 
 # Session (required by Authlib)
@@ -84,15 +89,21 @@ app.include_router(projects.router, prefix="/projects", tags=["Projects"])
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 app.include_router(assets.router, prefix="/assets", tags=["Assets"])
 app.include_router(asset_credentials.router, prefix="/credentials", tags=["Credentials"])
-
+app.include_router(schedule.router, prefix="/schedule", tags=["Schedule"])
 app.include_router(workers.router, prefix="/workers", tags=["Workers"])
 app.include_router(access_keys.router, prefix="/access-keys", tags=["Access Keys"])
 app.include_router(pentest_log.router, prefix="/pentest-logs", tags=["Pentest Logs"])
+app.include_router(notification.router, prefix="/notification", tags=["Notification"])
 
 app.include_router(tag.router, prefix="/tags", tags=["Tags"])
 app.include_router(project_tags.router, prefix="/project-tags", tags=["Project Tags"])
 
+app.include_router(jobs.router, prefix="/jobs", tags=["Jobs"])
+
+app.include_router(vulnerabilities.router, prefix="/vulns", tags=["Vulnerabilities"])
+app.include_router(reports.router,prefix="/reports", tags=["Reports"])
 # 4. Health Check Endpoint (เอาไว้ยิงเช็คว่า Server ตายหรือยัง)
+
 @app.get("/")
 def read_root():
     return {

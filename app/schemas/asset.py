@@ -18,5 +18,10 @@ class AssetResponse(BaseModel):
     type: str
     updated_at: datetime
 
+class AssetListForChoose(BaseModel):
+    name: str
+    id: int
+    target: str
+
     class Config:
         orm_mode = True

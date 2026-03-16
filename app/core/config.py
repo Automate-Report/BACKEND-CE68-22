@@ -4,6 +4,11 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Corporate Agent"
     ACCESS_TOKEN_EXPIRE_MINUTES: int 
     DATABASE_URL: str
+    BACKLIST_REDIS_URL: str
+    JOBS_REDIS_URL: str
+
+    BACKLIST_REDIS_URL: str
+    JOBS_REDIS_URL: str
 
     # Authentication Settings
     SECRET_KEY: str 
@@ -17,6 +22,8 @@ class Settings(BaseSettings):
 
     # Session Secret Key
     SESSION_SECRET_KEY: str
+
+    EMBEDED_KEY: str
 
     class Config:
         env_file = ".env"
