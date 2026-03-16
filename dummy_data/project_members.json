@@ -3,30 +3,40 @@
     "project_id": 21,
     "email": "somying@shopdee.com",
     "role": "pentester",
-    "joinned_at": "2026-01-31T13:38:16.664029"
+    "joinned_at": "2026-01-31T13:38:16.664029",
+    "status": "joined",
+    "invited_at": "2026-01-30T10:00:00.000000"
   },
   {
     "project_id": 23,
     "email": "somchai@tech.co.th",
     "role": "pentester",
-    "joinned_at": "2026-01-31T13:38:16.664029"
+    "joinned_at": "2026-01-31T13:38:16.664029",
+    "status": "joined",
+    "invited_at": "2026-01-30T10:00:00.000000"
   },
   {
     "project_id": 25,
     "email": "sompong@shopdee.com",
     "role": "pentester",
-    "joinned_at": "2026-01-31T13:38:16.664029"
+    "joinned_at": "2026-01-31T13:38:16.664029",
+    "status": "joined",
+    "invited_at": "2026-01-30T10:00:00.000000"
   },
   {
     "project_id": 21,
     "email": "sompong@shopdee.com",
     "role": "developer",
-    "joinned_at": "2026-01-31T13:38:16.664029"
+    "joinned_at": "2026-01-31T13:38:16.664029",
+    "status": "joined",
+    "invited_at": "2026-01-30T10:00:00.000000"
   },
   {
     "project_id": 5,
     "email": "user@example.com",
     "role": "pentester",
-    "joinned_at": "2026-01-31T13:38:16.664029"
+    "joinned_at": "2026-01-31T13:38:16.664029",
+    "status": "joined",
+    "invited_at": "2026-01-30T10:00:00.000000"
   }
 ]

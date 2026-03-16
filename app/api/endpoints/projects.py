@@ -7,9 +7,9 @@ from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role
 
 
-from app.schemas.project import ProjectCreate, ProjectResponse, ProjectSummaryResponese, ProjectOverviewResponse
+from app.schemas.project import ProjectCreate, ProjectResponse, ProjectSummaryResponese, ProjectOverviewResponse, ProjectMemberResponse
 from app.schemas.pagination import PaginatedResponse
-from app.schemas.userauthen import UserInfo, ChangeRole
+from app.schemas.userauthen import UserInfo, EmailRole
 
 from app.services.project import project_service 
 from app.services.project_tag import project_tag_service
@@ -183,10 +183,33 @@ async def get_users_in_project(
         "items": paginated_items
     }
 
+@router.post("/invite/{project_id}", response_model=ProjectMemberResponse)
+async def invite_member(
+    project_id: int, 
+    role_in: EmailRole,
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    if role != "owner":
+        raise HTTPException(status_code=403, detail="No authorized.")
+    
+    new_relation = project_member_service.invite_member(
+        user_id=role_in.email,
+        role=role_in.role,
+        project_id=project_id
+    )
+
+    if new_relation == "already invited":
+        raise HTTPException(status_code=400, detail="User already invited to this project.")
+    elif new_relation == "already a member":
+        raise HTTPException(status_code=400, detail="User is already a member of this project.")
+
+    return new_relation
+
 @router.put("/change_role/{project_id}", response_model=UserInfo)
 async def update_role(
     project_id: int, 
-    role_in: ChangeRole, 
+    role_in: EmailRole, 
     user = Depends(get_current_user),
     role = Depends(get_current_project_role)
 ):
@@ -229,8 +252,3 @@ async def get_project_dashboard(project_id: int):
         raise HTTPException(status_code=404, detail="Project not found")
     return data
 
-
-
-    
-
-    
