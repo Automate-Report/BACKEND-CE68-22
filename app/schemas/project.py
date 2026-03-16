@@ -82,3 +82,13 @@ class ProjectOverviewResponse(BaseModel):
     top_risky_assets: List[ProjectAssetOverview]
     trend: List[ProjectTrendData]
     recent_vulnerabilities: List[RecentVulnerability]
+
+
+#------------------------------- สำหรับ Project Member Management ----------------------------------
+class ProjectMemberResponse(BaseModel):
+    project_id: int
+    email: str
+    role: str
+    status: str
+    joinned_at: Optional[datetime] = None
+    invited_at: datetime

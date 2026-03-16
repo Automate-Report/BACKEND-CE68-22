@@ -27,6 +27,7 @@ from app.api.endpoints import jobs
 from app.api.endpoints import notification
 from app.api.endpoints import vulnerabilities
 from app.api.endpoints import reports
+from app.api.endpoints import invitation
 
 # --- Lifespan Management ---
 @asynccontextmanager
@@ -102,6 +103,7 @@ app.include_router(jobs.router, prefix="/jobs", tags=["Jobs"])
 
 app.include_router(vulnerabilities.router, prefix="/vulns", tags=["Vulnerabilities"])
 app.include_router(reports.router,prefix="/reports", tags=["Reports"])
+app.include_router(invitation.router, prefix="/invitations", tags=["Invitations"])
 # 4. Health Check Endpoint (เอาไว้ยิงเช็คว่า Server ตายหรือยัง)
 
 @app.get("/")
