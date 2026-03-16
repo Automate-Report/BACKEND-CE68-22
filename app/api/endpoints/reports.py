@@ -18,15 +18,17 @@ from app.services.reports.pentest_report import pen_test_report_service
 router = APIRouter()
 
 # Create report
-@router.post("/{project_id}")
+@router.post("/{project_id}/create")
 async def create_report(
     project_id: int,
     report_in: CreateReportPayload,
     background_tasks: BackgroundTasks,
-    user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    # user = Depends(get_current_user),
+    # role = Depends(get_current_project_role)
 ):
-
+    user = {
+        "sub": "somchai@tech.co.th"
+    }
     project = project_service.get_project_by_id(project_id)
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
@@ -77,9 +79,20 @@ async def create_report(
     if not vuln_details and not assets_for_report:
          raise HTTPException(status_code=400, detail="No data found for the selected assets/time range.")
     
+    if not report_in.asset_ids:
+        asset_str = "All Asset"
+    else:
+        asset_name = []
+        for id in report_in.asset_ids:
+            asset = asset_service.get_asset_by_id(id)
+            asset_name.append(asset.get("name", ""))
+        
+        asset_str = ",".join(asset_name)
+
     report_record = await pen_test_report_service.prepare_report_record(
         project_id=project_id,
         report_name=report_in.report_name,
+        asset_name = asset_str,
         user_id=user["sub"]
     )
 
@@ -135,7 +148,6 @@ def download_report(
         raise HTTPException(status_code=404, detail="Report not found")
     
     return result
-
 
 @router.delete("/{report_id}")
 async def delete_pentest_report_by_id(
