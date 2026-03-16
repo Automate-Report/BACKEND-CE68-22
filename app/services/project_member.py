@@ -107,6 +107,17 @@ class ProjectMemberService:
             
         return None
     
+    def decline_invitation(self, user_id: str, project_id: int):
+        relations = self._read_json()
+
+        for i, rel in enumerate(relations):
+            if rel["project_id"] == project_id and rel["email"] == user_id and rel["status"] == "invited":
+                del relations[i]
+                self._save_json(relations)
+                return True
+            
+        return False
+    
     def get_role(self, user_id: str, project_id: int):
 
         relations = self._read_json()

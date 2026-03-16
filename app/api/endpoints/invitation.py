@@ -20,3 +20,28 @@ def get_all_invitations(user = Depends(get_current_user)):
         )
     
     return result
+
+@router.put("/accept/{project_id}")
+def accept_invitation(project_id: int, user = Depends(get_current_user)):
+
+    result = project_member_service.accept_invitation(
+        user_id=user["sub"],
+        project_id=project_id
+        )
+    
+    if not result:
+        raise HTTPException(status_code=404, detail="Invitation not found")
+    
+    return result
+
+@router.delete("/decline/{project_id}")
+def decline_invitation(project_id: int, user = Depends(get_current_user)):
+    result = project_member_service.decline_invitation(
+        user_id=user["sub"],
+        project_id=project_id
+        )
+    
+    if not result:
+        raise HTTPException(status_code=404, detail="Invitation not found")
+    
+    return {"detail": "Invitation declined successfully"}
