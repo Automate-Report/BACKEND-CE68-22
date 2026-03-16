@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import Optional, List
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.db import get_db  #Session ของ DB
+from app.core.db import get_db
 from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role
 
@@ -30,6 +30,7 @@ async def get_all_projects(
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
     user = Depends(get_current_user),
+    db = Depends(get_db),
 ):
 
     result = await project_service.get_all_projects(
@@ -46,16 +47,21 @@ async def get_all_projects(
     return result
 
 @router.get("/{project_id}", response_model=ProjectResponse)
-async def get_project_by_id(project_id: int, user = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+async def get_project_by_id(
+    project_id: int, 
+    user = Depends(get_current_user), 
+    db: AsyncSession = Depends(get_db),
+    role = Depends(get_current_project_role)
+):
 
-    project = project_service.get_project_by_id(project_id)
+    project = await project_service.get_project_by_id(project_id, db)
     user_id = user["sub"]
     user_role = ""
 
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
         
-    if project["email"] == user_id:
+    if project.user_email == user_id:
         user_role = "owner"
     else:
         member_role = project_member_service.get_role(user_id=user_id, project_id=project_id)
@@ -64,12 +70,12 @@ async def get_project_by_id(project_id: int, user = Depends(get_current_user), d
         user_role = member_role
 
     return ProjectResponse(
-        id=project["id"],
-        name= project["name"],
-        description=project["description"],
+        id=project.id,
+        name= project.name,
+        description=project.description,
         role=user_role,
-        created_at=project["created_at"],
-        updated_at=project["updated_at"]
+        created_at=project.created_at,
+        updated_at=project.updated_at
     )
 
 # POST /projects/ : สร้างโปรเจกต์ใหม่
@@ -230,8 +236,13 @@ async def delete_member(
 
 
 @router.get("/{project_id}/overview", response_model=ProjectOverviewResponse)
-async def get_project_dashboard(project_id: int):
-    data = project_overview_service.get_project_overview(project_id)
+async def get_project_dashboard(
+    project_id: int,
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
+):
+    data = await project_overview_service.get_project_overview(project_id, db)
     if not data:
         raise HTTPException(status_code=404, detail="Project not found")
     return data

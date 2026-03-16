@@ -19,42 +19,12 @@ from app.services.userauthen import userauthen_service
 from app.services.asset import asset_service
 from app.services.vulnerability import vuln_service
 
-# 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
-# app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "projects.json")
-
 class ProjectService:
-    
-    def _ensure_dummy_folder_exists(self):
-        """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
-        folder = os.path.dirname(JSON_FILE_PATH)
-        if not os.path.exists(folder):
-            os.makedirs(folder)
-
-    def _read_json(self) -> List[dict]:
-        """อ่านข้อมูลจากไฟล์ JSON"""
-        if not os.path.exists(JSON_FILE_PATH):
-            return []
-        try:
-            with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except json.JSONDecodeError:
-            return [] # ถ้าไฟล์เสียหรือว่างเปล่า ให้คืนค่า list ว่าง
-
-    def _save_json(self, data: List[dict]):
-        """บันทึกข้อมูลลงไฟล์ JSON"""
-        self._ensure_dummy_folder_exists()
-        with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
-            # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
-            json.dump(data, f, indent=2, ensure_ascii=False, default=str)
-
     async def get_all_projects(self, user_id: str, page: int, size: int, db: AsyncSession, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
         query = sa.select(Project).where(Project.user_email == user_id)
         result = await db.execute(query)
         projects = result.scalars().all()
-        projects = self._read_json()
 
         user_member_roles = project_member_service.get_user_roles_map(user_id)
         
@@ -63,19 +33,19 @@ class ProjectService:
         for proj in projects:
             user_role = None
 
-            if proj["email"] == user_id:
+            if proj.user_email == user_id:
                 user_role = "owner"
-            elif proj["id"] in user_member_roles:
-                user_role = user_member_roles[proj["id"]]
+            elif proj.user_email in user_member_roles:
+                user_role = user_member_roles[proj.user_email]
 
             if not user_role:
                 continue
 
-            asset_cnt = asset_service.cnt_asset_by_project_id(proj["id"])
-            asset_ids = asset_service.get_asset_ids_by_project_id(proj["id"])
+            asset_cnt = asset_service.cnt_asset_by_project_id(proj.id)
+            asset_ids = asset_service.get_asset_ids_by_project_id(proj.id)
             vuln_cnt = vuln_service.cnt_vuln_by_asset_id(asset_ids)
 
-            tag_ids = project_tag_service.get_all_tag_ids(proj["id"])
+            tag_ids = await project_tag_service.get_all_tag_ids(proj.id, db)
 
             tag = []
 
@@ -86,13 +56,17 @@ class ProjectService:
                     "text_color": t["text_color"],
                     "bg_color": t["bg_color"]
                 })
-            
+            print(proj)
             proj_with_role = {
-                **proj, 
+                "id": proj.id,
+                "name": proj.name,
+                "description": proj.description,
                 "role": user_role,
                 "assets_cnt": asset_cnt,
                 "vuln_cnt": vuln_cnt,
-                "tags": tag             
+                "tags": tag,
+                "created_at": proj.created_at,
+                "updated_at": proj.updated_at      
             }
 
             if search and search.lower() not in proj["name"].lower():
@@ -106,16 +80,8 @@ class ProjectService:
 
             all_matches.append(proj_with_role)
 
-        all_matches = [
-            {
-                "id": proj.id,
-                "name": proj.name,
-                "description": proj.description,
-                "created_at": proj.created_at,
-                "updated_at": proj.updated_at,
-            } for proj in projects
-        ]
-        
+        print(all_matches)
+
         if sort_by:
             reverse = (order == "desc")
             # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
@@ -157,14 +123,12 @@ class ProjectService:
             
         return None
 
-    def get_project_by_id(self, project_id:int):
-        projects = self._read_json()
+    async def get_project_by_id(self, project_id:int, db: AsyncSession):
+        query = sa.select(Project).where(Project.id == project_id)
 
-        for proj in projects:
-            if proj["id"] == project_id:
-                return proj
+        result = await db.execute(query)
 
-        return None
+        return result.scalar_one_or_none()
     
     def get_owner_info_by_project_id(self, project_id: int):
         """Get Owner Info by Project ID"""
@@ -215,9 +179,12 @@ class ProjectService:
     
     async def update_project(self, project_id: int, project_in: ProjectCreate, user_id: str, db: AsyncSession) -> Optional[dict]:
         """Service: อัปเดตโปรเจกต์"""
-        query = sa.select(Project).where(Project.id == project_id and Project.user_email == user_id)
+        query = sa.select(Project).where(
+            Project.id == project_id,
+            Project.user_email == user_id
+        )
         result = await db.execute(query)
-        project_db = result.scalar_one_or_none
+        project_db = result.scalar_one_or_none()
 
         if not project_db:
             return None

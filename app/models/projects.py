@@ -15,4 +15,4 @@ class Project(Base):
     description:Mapped[Optional[str]] =  mapped_column(sa.Text, default=None)
 
     def __repr__(self) -> str:
-        return f"Project(name={self.project_name!r}, id={self.project_id!r})"
+        return f"Project(name={self.name!r}, id={self.id!r})"

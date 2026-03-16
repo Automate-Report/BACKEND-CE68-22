@@ -4,6 +4,8 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import List
 
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.services.project import project_service
 from app.services.asset import asset_service
 from app.services.vulnerability import vuln_service
@@ -154,9 +156,9 @@ class ProjectOverviewService:
             
         return trend
     
-    def get_project_overview(self, project_id: int):
+    async def get_project_overview(self, project_id: int, db: AsyncSession):
 
-        project = project_service.get_project_by_id(project_id)
+        project = await project_service.get_project_by_id(project_id, db)
         if not project:
             return None
         
@@ -191,8 +193,8 @@ class ProjectOverviewService:
 
         return {
             "project_info": {
-                "id": project["id"],
-                "name": project["name"],
+                "id": project.id,
+                "name": project.name,
                 "risk_grade": self._get_risk_grade(risk_score),
                 "risk_score": round(risk_score, 1)
             },
