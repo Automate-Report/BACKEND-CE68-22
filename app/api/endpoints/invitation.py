@@ -4,7 +4,6 @@ from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import Optional, List
 
 from app.deps.auth import get_current_user
-from app.deps.role import get_current_project_role
 
 from app.schemas.project import ProjectMemberResponse
 

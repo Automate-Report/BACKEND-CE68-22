@@ -27,6 +27,7 @@ from app.api.endpoints import jobs
 from app.api.endpoints import notification
 from app.api.endpoints import vulnerabilities
 from app.api.endpoints import reports
+from app.api.endpoints import invitation
 
 # --- Lifespan Management ---
 @asynccontextmanager
