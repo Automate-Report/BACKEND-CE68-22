@@ -32,9 +32,9 @@ from app.api.endpoints import reports
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # [Startup]: ทำงานตอนเปิด Server
-    # async with engine.begin() as conn:
-    #     # สร้าง Table ทั้งหมดถ้ายังไม่มี (เหมือน setup_db ของคุณ)
-    #     await conn.run_sync(Base.metadata.create_all)
+    async with engine.begin() as conn:
+        # สร้าง Table ทั้งหมดถ้ายังไม่มี (เหมือน setup_db ของคุณ)
+        await conn.run_sync(Base.metadata.create_all)
     
     # เริ่มรัน Background Task
     bg_task = asyncio.create_task(system_schedule_task())

@@ -113,7 +113,8 @@ class ProjectService:
                 "description": proj.description,
                 "created_at": proj.created_at,
                 "updated_at": proj.updated_at,
-            } for proj in projects]
+            } for proj in projects
+        ]
         
         if sort_by:
             reverse = (order == "desc")
@@ -145,7 +146,6 @@ class ProjectService:
         result = await db.execute(query)
         project = result.scalar_one_or_none()
         
-
         if project:
             return {
                 "id": project.id,
@@ -157,7 +157,6 @@ class ProjectService:
             
         return None
 
-    async def create_project(self, name: str, description: str, user_id: str, db: AsyncSession) -> dict:
     def get_project_by_id(self, project_id:int):
         projects = self._read_json()
 
@@ -186,8 +185,7 @@ class ProjectService:
             
         return None
 
-
-    def create_project(self, name: str, description: str, user_id: str) -> dict:
+    async def create_project(self, name: str, description: str, user_id: str, db: AsyncSession) -> dict:
         """Service: สร้างโปรเจกต์ใหม่"""
         new_project_db = Project(
             name = name,

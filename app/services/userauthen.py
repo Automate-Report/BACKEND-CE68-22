@@ -149,27 +149,6 @@ class UserAuthenService:
             "firstname": createUser.firstName,
             "lastname": createUser.lastName
         }
-            new_user = {
-                "firstname": createUser.firstName,
-                "lastname": createUser.lastName,
-                "email": createUser.email,
-                "password": createUser.password,
-                "created_at": datetime.now().isoformat(),
-                "updated_at": datetime.now().isoformat(),
-                "session_token": None,
-                "google_id": None,
-                "picture": None
-            }
-            
-            users.append(new_user)
-            self._save_json(users)
-            
-            # Only return non-sensitive info
-            return {
-                "email": createUser.email,
-                "firstname": createUser.firstName,
-                "lastname": createUser.lastName
-            }
     
     def get_user_by_id(self, user_id: str):
         "Get User by ID"
@@ -189,7 +168,5 @@ class UserAuthenService:
         
         return None
 
-
-        
 # สร้าง instance ของ Service เพื่อใช้งาน
 userauthen_service = UserAuthenService()

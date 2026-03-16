@@ -12,31 +12,42 @@ class VulSeverity(enum.Enum):
     LOW = "low"
 
 class VulStatus(enum.Enum):
-    NOT = "not_resolve"
-    RESOLVING = "resolving"
-    RESOLVED = "resolved"
+    WONT_FIX = "wont_fix"
+    OPEN = "open"
+    IN_PROGRESS = "in_progress"
+    FIXED = "fixed"
+
+class VulnVerify(enum.Enum):
+    TP = "tf" # true positive
+    FP = "fp" # false positive
 
 class Vulnerability(Base):
     __tablename__ = "vulnerabilities"
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
     asset_id:Mapped[int] = mapped_column(sa.ForeignKey("assets.id")) #======================================FK ULID
+    job_id:Mapped[int] = mapped_column(sa.ForeignKey("job_id")) #===========================================FK ULID
+    library:Mapped[int] = mapped_column(sa.ForeignKey("vlun_lib_id"))
+    assigned_to:Mapped[str] = mapped_column(sa.String(255))
+    verified_by:Mapped[str] = mapped_column(sa.String(255))
     vuln_hash:Mapped[str] = mapped_column(sa.Text)
     target:Mapped[str] = mapped_column(sa.String(255))
     parameter:Mapped[str] = mapped_column(sa.String(255))
     method:Mapped[str] = mapped_column(sa.String(255))
-    vuln_type:Mapped[str] = mapped_column(sa.String(255))
     severity:Mapped[VulSeverity] = mapped_column(sa.Enum(VulSeverity))
     db_type:Mapped[str] = mapped_column(sa.String(255))
-    cvss_score:Mapped[float] = mapped_column(sa.Float)
-    cvss_vector:Mapped[str] = mapped_column(sa.String(255))
-    status:Mapped[VulStatus] = mapped_column(sa.Enum(VulStatus), default=VulStatus.NOT)
-    recommendation:Mapped[str] = mapped_column(sa.Text)
-    count:Mapped[int] = mapped_column(sa.Integer, default=1)
+    status:Mapped[VulStatus] = mapped_column(sa.Enum(VulStatus), default=VulStatus.OPEN)
+    verify:Mapped[VulnVerify] = mapped_column(sa.Enum(VulnVerify), default=None)
     first_seen_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
     last_seen_at:Mapped[Optional[datetime.datetime]] = mapped_column(sa.DateTime(timezone=True), default=None)
     resolved_at:Mapped[Optional[datetime.datetime]] = mapped_column(sa.DateTime(timezone=True), default=None)
+    occurrence_count:Mapped[int] = mapped_column(sa.Integer, default=1)
 
-@sa.event.listens_for(Vulnerability.tag, 'set')
-def receive_set(target, value, oldvalue, initiator):
-    if value == VulStatus.RESOLVED and oldvalue == VulStatus.RESOLVING:
+@sa.event.listens_for(Vulnerability.status, 'set')
+def receive_set(target: Vulnerability, value, oldvalue, initiator):
+    unresolved_states = {VulStatus.IN_PROGRESS, VulStatus.OPEN}
+    if value == VulStatus.FIXED and oldvalue == unresolved_states:
         target.resolved_at = sa.sql.func.now()
+
+    elif value == VulStatus.OPEN and oldvalue == VulStatus.FIXED:
+        target.resolved_at = None
+
