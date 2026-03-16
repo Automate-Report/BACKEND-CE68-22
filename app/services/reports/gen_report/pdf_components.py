@@ -9,8 +9,8 @@ def sec_cover(context) -> str:
     <p class="cover-title">รายงานผลการทดสอบเจาะระบบ (Penetration Testing Report)</p>
     <p class="cover-subtitle"><b>โครงการ (Project):</b> {context.project_name}</p>
     <p class="cover-subtitle"><b>เจ้าของโครงการ (Project Owner):</b> {context.project_owner}</p>
-    <p class="cover-subtitle"><b>หมายเลขเอกสาร (Job ID):</b> {context.job_id}</p>
-    <p class="cover-subtitle"><b>วันที่ทดสอบ:</b> {context.job_started_date} – {context.job_ended_date}</p>
+    <p class="cover-subtitle"><b>หมายเลขเอกสาร (Job ID):</b> {context.report_no}</p>
+    <p class="cover-subtitle"><b>วันที่ทดสอบ:</b> {context.started_date} – {context.ended_date}</p>
     <p class="cover-subtitle"><b>จัดเตรียมโดย:</b> {context.scanner_name}</p>
     <p class="cover-subtitle"><b>อีเมลสนับสนุน:</b> {context.support_email}</p>
   </section>

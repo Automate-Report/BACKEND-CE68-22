@@ -95,7 +95,7 @@ async def create_report(
         asset_name = asset_str,
         user_id=user["sub"]
     )
-
+    print(report_record)
     # เรียก Service สร้างรายงาน
     background_tasks.add_task(
         pen_test_report_service.start_generate_process, 
@@ -103,7 +103,9 @@ async def create_report(
         report_name=report_record["report_name"],
         project=project,
         vuln_details=vuln_details,
-        assets=assets_for_report
+        assets=assets_for_report,
+        started_date=report_record["started_date"],
+        ended_date=report_record["ended_date"]
     )
     
     return {

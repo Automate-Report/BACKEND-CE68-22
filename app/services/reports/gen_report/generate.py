@@ -103,8 +103,8 @@ class GenerateReport:
             header_template = (
                 "<div style=\"width:80%; font-family:sans-serif;"
                 "margin: 8px 10mm 8px 10mm; border-bottom: 0.5px solid #EEEEEE\">"
-                f"<div style=\"font-size:12px; font-weight:700; color:#AAAAAA; margin-bottom: 2mm\">รายงานผลการทดสอบเจาะระบบ {self.context.asset_name}</div>"
-                f"<div style=\"font-size:10px; font-weight:300; color:#DDDDDD; margin-bottom: 4mm\">หมายเลขเอกสาร: {self.context.job_name}</div>"
+                f"<div style=\"font-size:12px; font-weight:700; color:#AAAAAA; margin-bottom: 2mm\">รายงานผลการทดสอบเจาะระบบ {self.context.project_name}</div>"
+                f"<div style=\"font-size:10px; font-weight:300; color:#DDDDDD; margin-bottom: 4mm\">หมายเลขเอกสาร: {self.context.report_no}</div>"
                 "</div>"
             ),
             footer_template = """
