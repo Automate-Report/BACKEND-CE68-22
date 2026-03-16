@@ -121,7 +121,7 @@ async def get_all_pentest_reports(
     order: Optional[str] = Query("asc", description="asc or desc"),
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
-    user = Depends(get_current_user)
+    # user = Depends(get_current_user)
 ):
 
     result = pen_test_report_service.get_all_pentest_reports(
