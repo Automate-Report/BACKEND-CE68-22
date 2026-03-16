@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional, Any
 from datetime import datetime
 
@@ -11,19 +11,21 @@ class WorkerResponse(BaseModel):
     id: int
     name: str
     thread_number: int
-    current_load: int
+    current_load: int 
     hostname: Optional[str] = None
     internal_ip: Optional[str] = None
     status: str
-    isActive: bool
+    is_active: bool = Field(alias="isActive")
     access_key_id: Optional[int] = None
     created_at: datetime
     updated_at: datetime
     last_heartbeat: Optional[datetime] = None
     owner: Optional[str] = None
     
-    class Config:
-        orm_mode = True # เพื่อให้ Pydantic อ่านข้อมูลจาก ORM objects ได้ ไว้ใช้กับ SQLAlchemy ตอนทำ database
+    model_config = ConfigDict(
+        from_attributes=True,
+        populate_by_name=True # Allows you to create the model using either name
+    )
 
 class WorkerAccessKey(BaseModel):
     worker_id: int

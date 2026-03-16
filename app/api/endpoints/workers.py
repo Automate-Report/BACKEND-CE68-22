@@ -3,6 +3,9 @@ from fastapi import APIRouter, Depends, Body, Query, HTTPException
 from typing import Optional
 from datetime import datetime
 
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.db import get_db  #Session ของ DB
+
 # Import ของที่เราทำไว้
 from app.schemas.worker import WorkerCreate, WorkerResponse, VerifyRequest, HeartBeatPayload
 from app.schemas.pagination import PaginatedResponse
@@ -36,11 +39,17 @@ def heartbeat(payload: HeartBeatPayload, worker_id: int = Depends(worker_service
     return {"status": "ok", "timestamp": datetime.utcnow()}
 
 @router.post("/{project_id}")
-def create_worker(project_id: int, worker_in: WorkerCreate, user = Depends(get_current_user), role = Depends(get_current_project_role)):
+async def create_worker(
+    project_id: int, 
+    worker_in: WorkerCreate, 
+    user = Depends(get_current_user), 
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
+):
     if role != "owner":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
-    worker = worker_service.create_worker(worker_in, project_id)
+    worker = await worker_service.create_worker(worker_in, project_id, db)
 
     key = access_key_service.create_access_key()
 
@@ -59,27 +68,22 @@ async def get_all_workers_by_project_id(
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     if not role:
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
 
-    result = worker_service.get_all_workers_by_project_id(
+    result = await worker_service.get_all_workers_by_project_id(
         project_id=project_id,
         page=page,
         size=size,
         sort_by=sort_by, 
         order=order,
         search=search,
-        filter=filter
+        filter=filter,
+        db = db
     )
-
-    items = result["items"]
-
-    for worker in items:
-        worker["owner_name"] = userauthen_service.get_username_by_id(worker["owner"])
-
-    result["items"] = items
 
     return result
 
@@ -87,47 +91,44 @@ async def get_all_workers_by_project_id(
 async def get_info_workers_in_project(
     project_id: int,
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     if not role:
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
 
-    result = worker_service.get_summary_info(project_id=project_id)
+    result = await worker_service.get_summary_info(project_id=project_id, db=db)
 
-    worker_ids = worker_service.get_all_worker_ids_by_project_id(project_id)
-
-    for wid in worker_ids:
-        total = job_service.get_total_job_by_worker_id(wid)
-        result["total_jobs"]+=total
     return result
 
 @router.get("/{worker_id}", response_model=WorkerResponse)
 async def get_worker_by_id(
     worker_id: int,
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     if not role:
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
-    
-    worker = worker_service.get_worker_by_id(worker_id)
+    worker = await worker_service.get_worker_by_id(worker_id, db)
+
     if not worker:
         raise HTTPException(status_code=404, detail="Worker not found")
-        
     return worker
  
 
 @router.post("/regen-key/{worker_id}")
-def re_access_key(
+async def re_access_key(
     worker_id: int,
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     
     if role == "developer":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
 
-    worker = worker_service.get_worker_by_id(worker_id)
+    worker = await worker_service.get_worker_by_id(worker_id, db)
 
     if not worker:
         raise HTTPException(status_code=404, detail="Worker not found.")

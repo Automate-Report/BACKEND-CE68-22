@@ -3,48 +3,27 @@ import os
 import io
 import zipfile
 import jwt
+import math
 
-from cvss import CVSS3
 from datetime import datetime, timedelta
 from typing import List, Optional
 from fastapi import HTTPException, Header
 from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
 
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.workers import Worker, WorkerStatus
+from app.models.users import User
+from app.models.jobs import Job, JobStatus
+
 from app.core.config import settings
 from app.schemas.worker import WorkerCreate, VerifyRequest, HeartBeatPayload
 from app.services.access_key import access_key_service
 
-# 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
-# app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "workers.json")
 
 class WorkerService:
     
-    def _ensure_dummy_folder_exists(self):
-        """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
-        folder = os.path.dirname(JSON_FILE_PATH)
-        if not os.path.exists(folder):
-            os.makedirs(folder)
-
-    def _read_json(self) -> List[dict]:
-        """อ่านข้อมูลจากไฟล์ JSON"""
-        if not os.path.exists(JSON_FILE_PATH):
-            return []
-        try:
-            with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except json.JSONDecodeError:
-            return [] # ถ้าไฟล์เสียหรือว่างเปล่า ให้คืนค่า list ว่าง
-
-    def _save_json(self, data: List[dict]):
-        """บันทึกข้อมูลลงไฟล์ JSON"""
-        self._ensure_dummy_folder_exists()
-        with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
-            # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
-            json.dump(data, f, indent=2, ensure_ascii=False, default=str)
-
     def _enrich_worker_status(self, worker):
         """ฟังก์ชันช่วยคำนวณสถานะของ Worker"""
         OFFLINE_THRESHOLD_SECONDS = 600
@@ -71,94 +50,107 @@ class WorkerService:
 
         return worker
 
-    def create_worker(self, worker_in: WorkerCreate, project_id: int) -> dict:
+    async def create_worker(self, worker_in: WorkerCreate, project_id: int, db: AsyncSession) -> dict:
         """Service: สร้าง Worker"""
-        workers = self._read_json()
+        new_worker_db = Worker(
+            project_id = project_id,
+            thread_number = worker_in.thread_number,
+            current_load = 0,
+            name = worker_in.name,
+            hostname = None,
+            is_active = False,
+            last_heartbeat = None,
+            owner = None,
+        )
         
-        # 1. จำลอง Logic Auto Increment ID
-        new_id = 1
-        if workers:
-            # เอา ID ตัวสุดท้ายมา + 1
-            new_id = workers[-1]["id"] + 1
+        try:
+            db.add(new_worker_db)
+            await db.commit()
+
+            await db.refresh(new_worker_db)
+        except Exception as e:
+            await db.rollback()
+            print(f"DEBUG ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Could not create worker")
             
         # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_worker = {
-            "id": new_id,
-            "project_id": project_id,
-            "thread_number": worker_in.thread_number,
-            "current_load": 0,
-            "name": worker_in.name,
-            "hostname": None,
-            "status": "offline",
-            "isActive": False,
-            "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat(),
-            "last_heartbeat": None,
-            "owner": None,
+            "id": new_worker_db.id,
+            "project_id": new_worker_db.project_id,
+            "thread_number": new_worker_db.thread_number,
+            "current_load": new_worker_db.current_load,
+            "name": new_worker_db.name,
+            "hostname": new_worker_db.hostname,
+            "status": new_worker_db.status,
+            "is_active": new_worker_db.is_active,
+            "created_at": new_worker_db.created_at,
+            "updated_at": new_worker_db.updated_at,
+            "last_heartbeat": new_worker_db.last_heartbeat,
+            "owner": new_worker_db.owner,
         }
-        
-        # 3. บันทึก
-        workers.append(new_worker)
-        self._save_json(workers)
 
         return new_worker
     
-    def get_all_workers_by_project_id(self, project_id: int, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
+    async def get_all_workers_by_project_id(self, project_id: int, page: int, size: int, db: AsyncSession, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
         """Service: ดึงข้อมูล Worker ทั้งหมดของ user นั้น"""
-        workers = self._read_json()
-        
-        # 1. กรอง User
-        all_matches = []
-        for worker in workers:
+        query = (
+            sa.select(Worker, User.first_name, User.last_name)
+            .join(User, Worker.owner == User.email, isouter=True)
+            .where(Worker.project_id == project_id)
+        )
 
-            if worker.get("project_id") != project_id:
-                continue
+        if search:
+            query = query.where(Worker.name.ilike(f"%{search}%"))
 
-            worker = self._enrich_worker_status(worker)
-            
-            if search:
-                if search.lower() not in worker.get("name", "").lower():
-                    continue
-
-            if filter and filter != "ALL":
-                if filter == "online" and worker["status"] != "online":
-                    continue
-                elif filter == "offline" and worker["status"] != "offline":
-                    continue
-                elif filter == "notActivated" and worker["status"] != "notActivated":
-                    continue
-                elif filter == "available" and worker["owner"]:
-                    continue
-                elif filter == "inUse" and not worker["owner"]:
-                    continue
-
-            all_matches.append(worker)
+        if filter and filter != "ALL":
+            if filter == "online":
+                query = query.where(Worker.status == WorkerStatus.ONLINE)
+            elif filter == "offline":
+                query = query.where(Worker.status == WorkerStatus.OFFLINE)
+            elif filter == "notActivated":
+                query = query.where(Worker.status == WorkerStatus.NOT_ACTIVATE)
+            elif filter == "available":
+                query = query.where(Worker.owner == None)
+            elif filter == "inUse":
+                query = query.where(Worker.owner != None)
 
         if sort_by:
-            reverse = (order == "desc")
-            # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
-            all_matches.sort(key=lambda x: (x.get(sort_by) or ""), reverse=reverse)
-        
-        # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
-        total_count = len(all_matches)
-            
-        # 3. คำนวณ Pagination Logic
-        import math
-        total_pages = math.ceil(total_count / size)
-        
-        offset = (page - 1) * size
-        
-        # --- จุดที่ต้องแก้: ตัดข้อมูล (Slicing) ---
-        # ใช้ Python Slice [start : end]
-        paginated_items = all_matches[offset : offset + size]
+            column = getattr(Worker, sort_by, Worker.created_at)
+            if order == "desc":
+                query = query.order_by(column.desc())
+            else:
+                query = query.order_by(column.asc())
 
-        self._save_json(workers)
+        count_query = sa.select(sa.sql.func.count()).select_from(query.subquery())
+        total_count_result = await db.execute(count_query)
+        total_count = total_count_result.scalar() or 0
+
+        # 4. Sorting
+        column = getattr(Worker, sort_by if sort_by else "created_at", Worker.created_at)
+        query = query.order_by(column.desc() if order == "desc" else column.asc())
+
+        # 5. SQL-Level Pagination (LIMIT & OFFSET)
+        offset = (page - 1) * size
+        query = query.offset(offset).limit(size)
+
+        # 6. Execute Final Query
+        result = await db.execute(query)
+        rows = result.all() # Returns list of tuples: (Worker, first_name, last_name)
+
+        # 7. Format the output
+        paginated_items = []
+        for worker, fn, ln in rows:
+            worker_dict = worker.__dict__.copy() # Convert to dict
+            worker_dict.pop('_sa_instance_state', None) # Clean up internal SA state
+            worker_dict["owner_name"] = f"{fn} {ln}" if fn else "Unknown"
+            paginated_items.append(worker_dict)
+
         return {
-            "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
+            "total": total_count,
             "page": page,
             "size": size,
-            "total_pages": total_pages,
-            "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
+            "total_pages": math.ceil(total_count / size),
+            "items": paginated_items
         }
     
     def delete_worker(self, worker_id: int) -> bool:
@@ -171,15 +163,16 @@ class WorkerService:
                 return True
         return False
     
-    def get_worker_by_id(self, worker_id: int):
+    async def get_worker_by_id(self, worker_id: int, db: AsyncSession):
         """Service: ดึงข้อมูล 1 Worker"""
-        workers = self._read_json()
+        query = sa.select(Worker).where(Worker.id == worker_id)
+        result = await db.execute(query)
+        worker = result.scalar_one_or_none()
 
-        for worker in workers:
-            if worker_id == worker["id"]:
-               return worker
-            
-        return None
+        if not worker:
+            return None
+        
+        return worker
     
     def update_worker(self, worker_id: int, worker_in: WorkerCreate, user_id: str, role: str) -> Optional[dict]:
         """Service: อัปเดต Worker"""
@@ -194,28 +187,29 @@ class WorkerService:
                 return worker
         return None
     
-    def get_summary_info(self, project_id: int):
+    async def get_summary_info(self, project_id: int, db: AsyncSession):
         """Get Total Workers, Online Status, Busy(current_load != 0), total jobs"""
-        workers = self._read_json()
-        total_worker = 0
-        online = 0
-        busy = 0
-        total_job = 0
+        query = sa.select(
+            sa.sql.func.count(Worker.id).label("total"),
+            sa.sql.func.count(Worker.id).filter(Worker.status == WorkerStatus.ONLINE).label("online"),
+            sa.sql.func.count(Worker.id).filter(Worker.current_load > 0).label("busy"),
+            # For jobs, we join and count distinct Job IDs
+            sa.sql.func.count(Job.id).label("total_jobs")
+        ).select_from(Worker).join(
+            Job, Worker.id == Job.worker_id, isouter=True
+        ).where(
+            Worker.project_id == project_id
+        )
 
-        for worker in workers:
-            if worker["project_id"] == project_id:
-                total_worker+=1
-                if worker["status"] == "online":
-                    online+=1
-                if worker["current_load"] > 0:
-                    busy+=1
+        result = await db.execute(query)
+        stats = result.first() # Get the single row of results
 
         return {
-            "total": total_worker,
-            "online": online,
-            "busy": busy,
-            "total_jobs": total_job
-        }
+        "total": stats.total or 0,
+        "online": stats.online or 0,
+        "busy": stats.busy or 0,
+        "total_jobs": stats.total_jobs or 0
+    }
     
     def get_all_worker_ids_by_project_id(self, project_id: int):
         workers = self._read_json()
@@ -227,19 +221,22 @@ class WorkerService:
         
         return result
     
-    def change_access_key(self, access_key_id: int, worker_id: int):
-        workers = self._read_json()
+    async def change_access_key(self, access_key_id: int, worker_id: int, db: AsyncSession):
+        query = sa.select(Worker).where(Worker.id == worker_id)
+        result = await db.execute(query)
+        worker = result.scalar_one_or_none()
         isChange = False
-        for worker in workers:
-            if worker["id"] == worker_id:
-                worker["access_key_id"] = access_key_id
-                worker["status"] = "notActivated"
-                worker["isActive"] = False
-                worker["last_heartbeat"] = None
-                worker["internal_ip"] = None
-                worker["hostname"] = None
-                isChange = True
-        self._save_json(workers)
+
+        worker.access_key_id = access_key_id
+        worker.status = WorkerStatus.NOT_ACTIVATE
+        worker.is_active = False
+        worker.last_heartbeat = None
+        worker.internal_ip = None
+        worker.hostname = None
+        isChange = True
+        
+        await db.commit()
+        await db.refresh(worker)
 
         if isChange: 
             return True
