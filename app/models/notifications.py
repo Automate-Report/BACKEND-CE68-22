@@ -18,3 +18,4 @@ class Notification(Base):
     message:Mapped[str] = mapped_column(sa.String(255))
     hyperlink:Mapped[str] = mapped_column(sa.String(255))
     created_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
+    status:Mapped[str] = mapped_column(sa.String(255))

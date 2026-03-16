@@ -7,16 +7,22 @@ from app.core.db import Base
 
 class ReportStatus(enum.Enum):
     PENDING = "pending"
-    UPLOADED = "uploaded"
-    PROCESS = "process"
+    SUCCESS = "success"
+    PROCESS = "processing"
+    FAILED = "failed"
 
 class Report(Base):
     __tablename__ = "reports"
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
-    job_id:Mapped[int] = mapped_column(sa.ForeignKey("jobs.id")) #======================================FK ULID
-    file_name:Mapped[str] = mapped_column(sa.String(255))
-    file_path:Mapped[str] = mapped_column(sa.String(255))
-    file_type:Mapped[str] = mapped_column(sa.String(255))
+    project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id")) #======================================FK ULID
+    created_by:Mapped[str] = mapped_column(sa.ForeignKey("users.email")) #======================================FK ULID
+    report_name:Mapped[str] = mapped_column(sa.String(255))
+    asset_name:Mapped[str] = mapped_column(sa.Text)
+    file_path_pdf:Mapped[str] = mapped_column(sa.String(255))
+    file_path_word:Mapped[str] = mapped_column(sa.String(255))
     status:Mapped[ReportStatus] = mapped_column(sa.Enum(ReportStatus), default=ReportStatus.PENDING)
+    error_message:Mapped[str] = mapped_column(sa.Text)
     created_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
-    ip_address:Mapped[str] = mapped_column(INET)
+    updated_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now(), onupdate=sa.sql.func.now())
+    started_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True))
+    ended_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True))

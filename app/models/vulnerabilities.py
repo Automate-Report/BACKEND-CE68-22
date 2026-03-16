@@ -25,7 +25,7 @@ class Vulnerability(Base):
     __tablename__ = "vulnerabilities"
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
     asset_id:Mapped[int] = mapped_column(sa.ForeignKey("assets.id")) #======================================FK ULID
-    job_id:Mapped[int] = mapped_column(sa.ForeignKey("job_id")) #===========================================FK ULID
+    job_id:Mapped[int] = mapped_column(sa.ForeignKey("jobs.id")) #===========================================FK ULID
     library:Mapped[int] = mapped_column(sa.ForeignKey("vlun_lib_id"))
     assigned_to:Mapped[str] = mapped_column(sa.String(255))
     verified_by:Mapped[str] = mapped_column(sa.String(255))

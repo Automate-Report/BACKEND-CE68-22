@@ -22,7 +22,6 @@ class User(Base):
     picture_path:Mapped[Optional[str]] = mapped_column(sa.String(255))
     created_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
     updated_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now(), onupdate=sa.sql.func.now())
-    session:Mapped[Optional[str]] = mapped_column(sa.Text)
  
     def __repr__(self) -> str:
         return f"User(first={self.first_name!r}, last={self.last_name!r}, email={self.email!r})"
