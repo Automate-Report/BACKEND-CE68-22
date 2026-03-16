@@ -1,7 +1,7 @@
 import json
 import os
 from typing import List
-
+from datetime import datetime
 
 from app.schemas.userauthen import UserInfo
 from app.services.userauthen import userauthen_service
@@ -39,14 +39,14 @@ class ProjectMemberService:
     def get_user_roles_map(self, user_id: str):
         """คืนค่า {project_id: role} สำหรับโปรเจกต์ที่ user เป็นสมาชิก"""
         relations = self._read_json() # อ่านไฟล์ relation json
-        return {rel["project_id"]: rel["role"] for rel in relations if rel["email"] == user_id}
+        return {rel["project_id"]: rel["role"] for rel in relations if rel["email"] == user_id and rel["status"] == "joined"}
     
     def get_user_info_by_project_id(self, project_id: int):
         relations = self._read_json()
 
         all_matches = []
         for rel in relations:
-            if rel["project_id"] == project_id:
+            if rel["project_id"] == project_id and rel["status"] == "joined":
                 
                 user = userauthen_service.get_user_by_id(rel["email"])
 
@@ -61,6 +61,62 @@ class ProjectMemberService:
                 all_matches.append(user_info)
 
         return all_matches
+    
+    def get_invitations_by_user_id(self, user_id: str):
+        relations = self._read_json()
+
+        invitations = []
+        for rel in relations:
+            if rel["email"] == user_id and rel["status"] == "invited":
+                invitations.append(rel)
+        
+        return invitations
+    
+    def invite_member(self, user_id: str, role: str, project_id: int):
+        relations = self._read_json()
+
+        # เช็คก่อนว่า user นี้เคยถูก invite หรือเป็นสมาชิกโปรเจกต์นี้แล้วหรือยัง
+        for rel in relations:
+            if rel["project_id"] == project_id and rel["email"] == user_id:
+                if rel["status"] == "invited":
+                    return "already invited" 
+                else:
+                    return "already a member"
+
+        new_relation = {
+            "project_id": project_id,
+            "email": user_id,
+            "role": role,
+            "status": "invited",
+            "invited_at": datetime.now().isoformat(),
+            "joinned_at": None
+        }
+        relations.append(new_relation)
+        self._save_json(relations)
+        return new_relation
+    
+    def accept_invitation(self, user_id: str, project_id: int):
+        relations = self._read_json()
+
+        for rel in relations:
+            if rel["project_id"] == project_id and rel["email"] == user_id and rel["status"] == "invited":
+                rel["status"] = "joined"
+                rel["joinned_at"] = datetime.now().isoformat()
+                self._save_json(relations)
+                return rel
+            
+        return None
+    
+    def decline_invitation(self, user_id: str, project_id: int):
+        relations = self._read_json()
+
+        for i, rel in enumerate(relations):
+            if rel["project_id"] == project_id and rel["email"] == user_id and rel["status"] == "invited":
+                del relations[i]
+                self._save_json(relations)
+                return True
+            
+        return False
     
     def get_role(self, user_id: str, project_id: int):
 
