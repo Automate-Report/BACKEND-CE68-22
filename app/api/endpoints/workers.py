@@ -49,9 +49,9 @@ async def create_worker(
     if role != "owner":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
-    worker = await worker_service.create_worker(worker_in, project_id, db)
-
     key = access_key_service.create_access_key()
+    
+    worker = await worker_service.create_worker(worker_in, project_id, key.id, db)
 
     return { 
         "status": "Successfully!",

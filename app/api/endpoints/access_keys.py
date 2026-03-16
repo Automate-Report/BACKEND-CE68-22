@@ -3,8 +3,10 @@ from fastapi import APIRouter, Depends, Body, Query, HTTPException
 from typing import Optional
 
 # Import ของที่เราทำไว้
-from app.core import security
-from app.api import deps
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.access_keys import AccessKey
+
 from app.schemas.access_key import AccssKeyResponse
 from app.services.access_key import access_key_service
 

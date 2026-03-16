@@ -3,10 +3,12 @@ import os
 import io
 import zipfile
 
-from datetime import datetime, timedelta
-from typing import List
+from datetime import datetime
+from fastapi import HTTPException
 
-
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.access_keys import AccessKey
 
 from app.core import security
 
@@ -17,46 +19,29 @@ JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "access_keys.json")
 
 class AccessKeyService:
 
-    def _ensure_dummy_folder_exists(self):
-        """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
-        folder = os.path.dirname(JSON_FILE_PATH)
-        if not os.path.exists(folder):
-            os.makedirs(folder)
-
-    def _read_json(self) -> List[dict]:
-        """อ่านข้อมูลจากไฟล์ JSON"""
-        if not os.path.exists(JSON_FILE_PATH):
-            return []
-        try:
-            with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except json.JSONDecodeError:
-            return [] # ถ้าไฟล์เสียหรือว่างเปล่า ให้คืนค่า list ว่าง
-
-    def _save_json(self, data: List[dict]):
-        """บันทึกข้อมูลลงไฟล์ JSON"""
-        self._ensure_dummy_folder_exists()
-        with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
-            # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
-            json.dump(data, f, indent=2, ensure_ascii=False, default=str)
-
-    def create_access_key(self):
+    async def create_access_key(self, db: AsyncSession):
         """Service: สร้าง API Key"""
-        access_keys = self._read_json()
+        new_access_key_db = AccessKey(
+            key = security.generate_access_key(),
+        )
 
-        new_id = 1
-        if access_keys:
-            new_id = access_keys[-1]["id"] + 1
+        try:
+            db.add(new_access_key_db)
+            await db.commit()
+
+            await db.refresh(new_access_key_db)
+        except Exception as e:
+            await db.rollback()
+            print(f"DEBUG ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Could not access key")
+
         
         new_access_key = {
-            "id": new_id,
-            "key": security.generate_access_key(),
-            "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat(),
-        }
+            "id": new_access_key_db.id,
+            "key": new_access_key_db.key,
+            "created_at": new_access_key_db.created_at
 
-        access_keys.append(new_access_key)
-        self._save_json(access_keys)
+        }
 
         return new_access_key
     

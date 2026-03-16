@@ -50,10 +50,11 @@ class WorkerService:
 
         return worker
 
-    async def create_worker(self, worker_in: WorkerCreate, project_id: int, db: AsyncSession) -> dict:
+    async def create_worker(self, worker_in: WorkerCreate, project_id: int, access_key_id: int, db: AsyncSession) -> dict:
         """Service: สร้าง Worker"""
         new_worker_db = Worker(
             project_id = project_id,
+            access_key_id = access_key_id,
             thread_number = worker_in.thread_number,
             current_load = 0,
             name = worker_in.name,
@@ -77,6 +78,7 @@ class WorkerService:
         new_worker = {
             "id": new_worker_db.id,
             "project_id": new_worker_db.project_id,
+            "access_key_id": new_worker_db.access_key_id,
             "thread_number": new_worker_db.thread_number,
             "current_load": new_worker_db.current_load,
             "name": new_worker_db.name,
