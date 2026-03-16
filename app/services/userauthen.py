@@ -14,38 +14,8 @@ from app.core.redis import redis_client
 from app.core.jwt import create_access_token
 
 
-
-
-# 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
-# app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "users.json")
-
 class UserAuthenService:
     
-    def _ensure_dummy_folder_exists(self):
-        """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
-        folder = os.path.dirname(JSON_FILE_PATH)
-        if not os.path.exists(folder):
-            os.makedirs(folder)
-
-    def _read_json(self) -> List[dict]:
-        """อ่านข้อมูลจากไฟล์ JSON"""
-        if not os.path.exists(JSON_FILE_PATH):
-            return []
-        try:
-            with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except json.JSONDecodeError:
-            return [] # ถ้าไฟล์เสียหรือว่างเปล่า ให้คืนค่า list ว่าง
-        
-    def _save_json(self, data: List[dict]):
-        """บันทึกข้อมูลลงไฟล์ JSON"""
-        self._ensure_dummy_folder_exists()
-        with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
-            # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
-            json.dump(data, f, indent=2, ensure_ascii=False, default=str)
-
     def blacklist_token(self, token: str):
         try:
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
@@ -75,9 +45,11 @@ class UserAuthenService:
         # Check all but user not found
         raise HTTPException(status_code=401, detail="Invalid email or password")
     
-    def authenticate_user_google(self, userdata: dict):
-        
-        allusers = self._read_json()
+    async def authenticate_user_google(self, userdata: dict, db: AsyncSession):
+        query = sa.select(User)
+        result = await db.execute(query)
+        users = result.scalars().all()
+
         google_id = userdata["sub"]
         email = userdata["email"]
         firstname = userdata["given_name"]
@@ -85,18 +57,25 @@ class UserAuthenService:
         picture = userdata["picture"]
 
         # check if alr had an account with this google_id
-        for user in allusers:
+        for user in users:
 
             # has account
-            if user.get("google_id") == google_id:
+            if user.google_id == google_id:
                 return create_access_token(email, firstname, lastname)
 
             # has account but without google oauth
-            if user.get("email") == email:
-                user["google_id"] = google_id
-                user["picture"] = picture
-                user["updated_at"] = datetime.now().isoformat()
-                self._save_json(allusers)
+            if user.email == email:
+                user.google_id = google_id
+                user.picture_path = picture
+                user.updated_at = datetime.now().isoformat()
+
+                try:
+                    await db.commit()
+                    await db.refresh(user) # Refresh to get any DB-generated fields
+                except Exception as e:
+                    await db.rollback()
+                    raise e
+                
                 return create_access_token(email, firstname, lastname)                
         
         # create new user + login, if google_id not found in DB
@@ -111,8 +90,17 @@ class UserAuthenService:
             "google_id": google_id,
             "picture": picture
         }
-        allusers.append(new_user)
-        self._save_json(allusers)
+
+        try:
+            db.add(new_user)
+            await db.commit()
+            # refresh to get the DB generated content such as created_at
+            await db.refresh(new_user)
+        except Exception as e:
+            await db.rollback()
+            print(f"DEBUG ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Could not create project")
+
         return create_access_token(email, firstname, lastname)
     
     async def create_user(self, createUser: UserCreate, db: AsyncSession):
@@ -131,7 +119,6 @@ class UserAuthenService:
                 password = createUser.password,
                 google_id = None,
                 picture_path = None,
-                session = None
             )
         
         try:
@@ -150,23 +137,26 @@ class UserAuthenService:
             "lastname": createUser.lastName
         }
     
-    def get_user_by_id(self, user_id: str):
+    async def get_user_by_id(self, user_id: str, db: AsyncSession):
         "Get User by ID"
-        users = self._read_json()
+        query = sa.select(User).where(User.email == user_id)
+        result = await db.execute(query)
+        user = result.scalar_one_or_none()
 
-        for user in users:
-            if user["email"] == user_id:
-                return user
-        return None
+        if not user:
+            return None
+
+        return user
     
-    def get_username_by_id(self, user_id: str):
-        users = self._read_json()
+    async def get_username_by_id(self, user_id: str, db: AsyncSession):
+        query = sa.select(User).where(User.email == user_id)
+        result = await db.execute(query)
+        user = result.scalar_one_or_none()
 
-        for user in users:
-            if user["email"] == user_id:
-                return f'{user["firstname"]} {user["lastname"]}'
+        if not user:
+            return None
         
-        return None
+        return f'{user["firstname"]} {user["lastname"]}'
 
 # สร้าง instance ของ Service เพื่อใช้งาน
 userauthen_service = UserAuthenService()

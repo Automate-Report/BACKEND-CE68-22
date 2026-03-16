@@ -7,7 +7,7 @@ from fastapi import HTTPException
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.projects import Project #SQL Alchemy Models
-from app.schemas.project import ProjectCreate, ProjectResponse
+from app.schemas.project import ProjectCreate
 
 from app.schemas.project import ProjectCreate
 from app.schemas.userauthen import UserInfo
