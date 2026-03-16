@@ -5,8 +5,7 @@ from typing import List, Optional
 from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role
 
-from app.schemas.report import CreateReportPayload
-from app.schemas.pentest_report import PentestReportResponse
+from app.schemas.pentest_report import PentestReportResponse, CreateReportPayload
 from app.schemas.pagination import PaginatedResponse
 
 
@@ -24,12 +23,10 @@ async def create_report(
     project_id: int,
     report_in: CreateReportPayload,
     background_tasks: BackgroundTasks,
-    # user = Depends(get_current_user),
-    # role = Depends(get_current_project_role)
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
 ):
-    user = {
-        "sub": "somchai@tech.co.th"
-    }
+
     project = project_service.get_project_by_id(project_id)
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
@@ -111,7 +108,7 @@ async def get_all_pentest_reports(
     order: Optional[str] = Query("asc", description="asc or desc"),
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
-    # user = Depends(get_current_user)
+    user = Depends(get_current_user)
 ):
 
     result = pen_test_report_service.get_all_pentest_reports(
@@ -129,11 +126,10 @@ async def get_all_pentest_reports(
 @router.get("/download/{report_id}/{report_type}")
 def download_report(
     report_id: int, 
-    report_type: str
-    # user = Depends(get_current_user)
+    report_type: str,
+    user = Depends(get_current_user)
 ):
     result = pen_test_report_service.dowload_by_id(report_id, report_type)
-    print(result)
 
     if not result:
         raise HTTPException(status_code=404, detail="Report not found")
@@ -142,7 +138,14 @@ def download_report(
 
 
 @router.delete("/{report_id}")
-async def delete_pentest_report_by_id(report_id: int, user = Depends(get_current_user)):
+async def delete_pentest_report_by_id(
+    report_id: int, 
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    if role == "developer":
+        raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
+    
     success = pen_test_report_service.delete_pentest_report_by_id(report_id)
 
     if not success:
