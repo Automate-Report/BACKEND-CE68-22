@@ -23,7 +23,7 @@ class Worker(Base):
     name:Mapped[str] = mapped_column(sa.VARCHAR(255))
     hostname:Mapped[Optional[str]] = mapped_column(sa.VARCHAR(255), nullable=True, default=None)
     internal_ip:Mapped[Optional[str]] = mapped_column(sa.VARCHAR(255), nullable=True, default=None)
-    status:Mapped[WorkerStatus]= mapped_column(sa.Enum(WorkerStatus), default=WorkerStatus.OFFLINE)
+    status:Mapped[WorkerStatus]= mapped_column(sa.Enum(WorkerStatus), default=WorkerStatus.NOT_ACTIVATE)
     is_active:Mapped[bool] = mapped_column(sa.Boolean, default=False)
     created_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
     updated_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now(), onupdate=sa.sql.func.now())
