@@ -1,8 +1,5 @@
-import json
-import os
 import math
-from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 from fastapi import HTTPException
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -202,11 +199,11 @@ class ProjectService:
         await db.refresh(project_db)
 
         returned_project = {
-            "id": returned_project.id,
-            "name": returned_project.name,
-            "description": returned_project.description,
-            "created_at": returned_project.created_at,
-            "updated_at": returned_project.updated_at
+            "id": project_db.id,
+            "name": project_db.name,
+            "description": project_db.description,
+            "created_at": project_db.created_at,
+            "updated_at": project_db.updated_at
         }
 
         return returned_project
