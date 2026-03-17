@@ -482,80 +482,95 @@ class WorkerService:
             return True
         return False
     
-    def download_worker(self, worker_id: int, user_id: str):
+    async def download_worker(self, worker_id: int, user_id: str, db: AsyncSession):
         """Service: download Worker"""
-        workers = self._read_json()
+        query = sa.select(Worker).where(Worker.id == worker_id)
+        result = await db.execute(query)
+        worker_db = result.scalar_one_or_none()
 
-        self._save_json(workers)
-        worker = self.get_worker_by_id(worker_id=worker_id)
+        if not worker_db:
+            raise HTTPException(status_code=404, detail="Worker not found")
 
-        if worker.get("owner"):
+        if worker_db.owner is not None:
             raise HTTPException(status_code=403, detail="Worker already has an owner, cannot download.")
 
-        hidden_payload = {
-            "WORKER_ID": worker_id,
-            "NUMBER_OF_THREADS": worker.get("thread_number"),
-            "BACKEND_URL": "http://127.0.0.1:8000",
-            "REDIS_URL": settings.JOBS_REDIS_URL
-        }
+        worker_db.owner = user_id
 
+        try:
+            await db.commit()
+            await db.refresh(worker_db)
 
-        EMBEDED_KEY = settings.EMBEDED_KEY.encode()
-        DELIMITER = b"|||HIDDEN_DATA|||"
-
-
-        json_bytes = json.dumps(hidden_payload).encode() # worker_id + backend_url
-        f = Fernet(EMBEDED_KEY) # สร้างตัวเข้ารหัส
-        encrypted_payload = f.encrypt(json_bytes) # เข้ารหัส
-
-        # Path ของ Worker
-        TEMPLATE_DIR = "app/static/bin/SecurityWorker" 
-        # ชื่อไฟล์ exe 
-        TARGET_EXE_NAME = "SecurityWorker.exe"
-
-        # --- ส่วนที่แก้ไข: สร้าง ZIP File ในหน่วยความจำ ---
-        zip_buffer = io.BytesIO()
-
-        dest_folder_name = f"SecurityWorker_{worker.get('name')}"
-
-        with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
-        
-            # วนลูปอ่านทุกไฟล์ใน Folder Template
-            for root, dirs, files in os.walk(TEMPLATE_DIR):
-                for filename in files:
-                    # Path เต็มของไฟล์ในเครื่อง Server
-                    abs_path = os.path.join(root, filename)
-                    
-                    # Path สัมพัทธ์ (Relative) เพื่อใช้จัดโครงสร้างใน Zip
-                    # เช่น ถ้าไฟล์อยู่ template/internal/lib.dll -> rel_path จะเป็น internal/lib.dll
-                    rel_path = os.path.relpath(abs_path, TEMPLATE_DIR)
-                    
-                    # Path ปลายทางใน Zip (เอาชื่อโฟลเดอร์ worker มานำหน้า)
-                    zip_arcname = os.path.join(dest_folder_name, rel_path)
-
-                    # --- จุดสำคัญ: เช็คว่าเป็นไฟล์ exe หลักหรือไม่ ---
-                    if filename == TARGET_EXE_NAME:
-                        # ถ้าใช่: อ่านมา + ฝัง payload + เขียนลง zip (writestr)
-                        with open(abs_path, "rb") as f_exe:
-                            exe_data = f_exe.read()
-                        
-                        final_exe_data = exe_data + DELIMITER + encrypted_payload #ฉีดข้อมูล worker_id + backend_url
-                        zf.writestr(zip_arcname, final_exe_data)
-                    
-                    else:
-                        # ถ้าไม่ใช่ (เป็นพวก dll, _internal): จับยัดลง zip เลย (write)
-                        zf.write(abs_path, arcname=zip_arcname)
-
-        # 4. ส่งไฟล์กลับ
-        zip_buffer.seek(0)
-            
-        return StreamingResponse(
-            zip_buffer,
-            media_type="application/zip",
-            headers={
-                "Content-Disposition": f"attachment; filename={dest_folder_name}.zip"
+            hidden_payload = {
+                "WORKER_ID": worker_id,
+                "NUMBER_OF_THREADS": worker_db.thread_number,
+                "BACKEND_URL": "http://127.0.0.1:8000",
+                "REDIS_URL": settings.JOBS_REDIS_URL
             }
-        )
+
+
+            EMBEDED_KEY = settings.EMBEDED_KEY.encode()
+            DELIMITER = b"|||HIDDEN_DATA|||"
+
+
+            json_bytes = json.dumps(hidden_payload).encode() # worker_id + backend_url
+            f = Fernet(EMBEDED_KEY) # สร้างตัวเข้ารหัส
+            encrypted_payload = f.encrypt(json_bytes) # เข้ารหัส
+
+            # Path ของ Worker
+            TEMPLATE_DIR = "app/static/bin/SecurityWorker" 
+            # ชื่อไฟล์ exe 
+            TARGET_EXE_NAME = "SecurityWorker.exe"
+
+            # --- ส่วนที่แก้ไข: สร้าง ZIP File ในหน่วยความจำ ---
+            zip_buffer = io.BytesIO()
+
+            dest_folder_name = f"SecurityWorker_{worker_db.name}"
+
+            with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+            
+                # วนลูปอ่านทุกไฟล์ใน Folder Template
+                for root, dirs, files in os.walk(TEMPLATE_DIR):
+                    for filename in files:
+                        # Path เต็มของไฟล์ในเครื่อง Server
+                        abs_path = os.path.join(root, filename)
+                        
+                        # Path สัมพัทธ์ (Relative) เพื่อใช้จัดโครงสร้างใน Zip
+                        # เช่น ถ้าไฟล์อยู่ template/internal/lib.dll -> rel_path จะเป็น internal/lib.dll
+                        rel_path = os.path.relpath(abs_path, TEMPLATE_DIR)
+                        
+                        # Path ปลายทางใน Zip (เอาชื่อโฟลเดอร์ worker มานำหน้า)
+                        zip_arcname = os.path.join(dest_folder_name, rel_path)
+
+                        # --- จุดสำคัญ: เช็คว่าเป็นไฟล์ exe หลักหรือไม่ ---
+                        if filename == TARGET_EXE_NAME:
+                            # ถ้าใช่: อ่านมา + ฝัง payload + เขียนลง zip (writestr)
+                            with open(abs_path, "rb") as f_exe:
+                                exe_data = f_exe.read()
+                            
+                            final_exe_data = exe_data + DELIMITER + encrypted_payload #ฉีดข้อมูล worker_id + backend_url
+                            zf.writestr(zip_arcname, final_exe_data)
+                        
+                        else:
+                            # ถ้าไม่ใช่ (เป็นพวก dll, _internal): จับยัดลง zip เลย (write)
+                            zf.write(abs_path, arcname=zip_arcname)
+
+            # 4. ส่งไฟล์กลับ
+            zip_buffer.seek(0)
+                
+            return StreamingResponse(
+                zip_buffer,
+                media_type="application/zip",
+                headers={
+                    "Content-Disposition": f"attachment; filename={dest_folder_name}.zip"
+                }
+            )
+
+        except Exception as e:
+            await db.rollback()
+            print(f"Error claiming worker: {e}")
+            raise HTTPException(status_code=500, detail="Failed to assign worker")
+        
+        
 
     def read_all_worker(self, project_id: int):
         workers = self._read_json()

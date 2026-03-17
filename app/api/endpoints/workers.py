@@ -193,15 +193,16 @@ async def update_worker(
     return updated_worker
 
 @router.get("/download/{worker_id}")
-def download_worker_zip(
+async def download_worker_zip(
     worker_id: int,
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     if role == "developer":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
-    result = worker_service.download_worker(worker_id, user["sub"])
+    result = await worker_service.download_worker(worker_id, user["sub"], db)
 
     return result
 
