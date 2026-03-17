@@ -164,9 +164,18 @@ class WorkerService:
         if not worker:
             return None
         
-        db.delete(worker)
-        await db.commit()
-        return True
+        try:
+            # 2. Delete using the session
+            await db.delete(worker)
+            
+            # 3. Commit the transaction
+            await db.commit()
+            return True
+        except Exception as e:
+            # 4. Rollback if something goes wrong (e.g., Foreign Key constraint)
+            await db.rollback()
+            print(f"Delete Error: {e}")
+            return False
     
     async def get_worker_by_id(self, worker_id: int, db: AsyncSession):
         """Service: ดึงข้อมูล 1 Worker"""

@@ -55,7 +55,7 @@ async def create_worker(
 
     return { 
         "status": "Successfully!",
-        "key": key["key"]
+        "key": key.key
     }
 
 @router.get("/{project_id}/all", response_model=PaginatedResponse[WorkerResponse])
