@@ -13,7 +13,7 @@ class Asset(Base):
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
     project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id")) #======================================FK ULID
     name:Mapped[str] = mapped_column(sa.String(255))
-    description:Mapped[str] = mapped_column(sa.Text)
+    description:Mapped[str] = mapped_column(sa.Text, nullable=True)
     target:Mapped[str] = mapped_column(sa.String(255))
     type:Mapped[AssetType] = mapped_column(sa.Enum(AssetType))
     created_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())

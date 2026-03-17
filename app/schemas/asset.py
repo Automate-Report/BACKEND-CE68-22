@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional
 from datetime import datetime
 
@@ -17,6 +17,11 @@ class AssetResponse(BaseModel):
     target: str
     type: str
     updated_at: datetime
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        populate_by_name=True # Allows you to create the model using either name
+    )
 
 class AssetListForChoose(BaseModel):
     name: str

@@ -1,184 +1,240 @@
-import json
-import os
+import math
+
 from datetime import datetime
 from typing import List
+from fastapi import HTTPException
+
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.assets import Asset, AssetType
+
 from app.schemas.asset import AssetCreate
 
-# 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
-# app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "assets.json")
 
 class AssetService:
-    
-    def _ensure_dummy_folder_exists(self):
-        """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
-        folder = os.path.dirname(JSON_FILE_PATH)
-        if not os.path.exists(folder):
-            os.makedirs(folder)
 
-    def _read_json(self) -> List[dict]:
-        """อ่านข้อมูลจากไฟล์ JSON"""
-        if not os.path.exists(JSON_FILE_PATH):
-            return []
-        try:
-            with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except json.JSONDecodeError:
-            return [] # ถ้าไฟล์เสียหรือว่างเปล่า ให้คืนค่า list ว่าง
-
-    def _save_json(self, data: List[dict]):
-        """บันทึกข้อมูลลงไฟล์ JSON"""
-        self._ensure_dummy_folder_exists()
-        with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
-            # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
-            json.dump(data, f, indent=2, ensure_ascii=False, default=str)
-
-    def get_all_assets(self, project_id: int, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
+    async def get_all_assets(self, project_id: int, page: int, size: int, db: AsyncSession, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
-        assets = self._read_json()
-        
-        # 1. กรอง User
-        all_matches = []
-        for asset in assets:
-            if search and search.lower() not in asset["name"].lower():
-                continue
-            if filter == "ip" and asset.get("type") != "IP":
-                continue
-            if filter == "url" and asset.get("type") != "URL":
-                continue
-            all_matches.append(asset)
+        query = (
+            sa.select(Asset)
+            .where(Asset.project_id == project_id)
+        )
+
+        if search:
+            query = query.where(Asset.name.ilike(f"%{search}%"))
+
+        if filter and filter != "ALL":
+            if filter == "ip":
+                query = query.where(Asset.type == AssetType.IP)
+            elif filter == "url":
+                query = query.where(Asset.type == AssetType.URL)
 
         if sort_by:
-            reverse = (order == "desc")
-            # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
-            all_matches.sort(key=lambda x: (x.get(sort_by) or ""), reverse=reverse)
-        
-        # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
-        total_count = len(all_matches)
-            
-        # 3. คำนวณ Pagination Logic
-        import math
-        total_pages = math.ceil(total_count / size)
-        
+            column = getattr(Asset, sort_by, Asset.created_at)
+            if order == "desc":
+                query = query.order_by(column.desc())
+            else:
+                query = query.order_by(column.asc())
+
+        count_query = sa.select(sa.sql.func.count()).select_from(query.subquery())
+        total_count_result = await db.execute(count_query)
+        total_count = total_count_result.scalar() or 0
+
+        # 4. Sorting
+        column = getattr(Asset, sort_by if sort_by else "created_at", Asset.created_at)
+        query = query.order_by(column.desc() if order == "desc" else column.asc())
+
+        # 5. SQL-Level Pagination (LIMIT & OFFSET)
         offset = (page - 1) * size
-        
-        # --- จุดที่ต้องแก้: ตัดข้อมูล (Slicing) ---
-        # ใช้ Python Slice [start : end]
-        paginated_items = all_matches[offset : offset + size]
+        query = query.offset(offset).limit(size)
+
+        # 6. Execute Final Query
+        result = await db.execute(query)
+        rows = result.scalars().all()
+
+        paginated_items = []
+        for asset in rows:
+            paginated_items.append(
+                {
+                    "id": asset.id,
+                    "name": asset.name,
+                    "project_id": asset.project_id,
+                    "description": asset.description,
+                    "target": asset.target,
+                    "type": asset.type,
+                    "updated_at": asset.updated_at
+                }
+            )
 
         return {
             "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
             "page": page,
             "size": size,
-            "total_pages": total_pages,
+            "total_pages": math.ceil(total_count / size),
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
     
-    def get_asset_by_id(self, asset_id:int):
-        assets = self._read_json()
+    async def get_asset_by_id(self, asset_id:int, db: AsyncSession):
+        query = (
+            sa.select(Asset)
+            .where(Asset.id == asset_id)
+        )
+        result = await db.execute(query)
+        asset = result.scalar_one_or_none()
 
-        for asset in assets:
-            if asset["id"] == asset_id:
-                return asset
-            
-        return None
+        if not asset:
+            return None
+
+        return {
+            "id": asset.id,
+            "name": asset.name,
+            "project_id": asset.project_id,
+            "description": asset.description,
+            "target": asset.target,
+            "type": asset.type,
+            "updated_at": asset.updated_at
+        }
     
-    def get_all_asset_names_for_dropdown(self, project_id: int) -> List[dict]:
+    async def get_all_asset_names_for_dropdown(self, project_id: int, db: AsyncSession) :
         """Service: ดึงชื่อ Asset ทั้งหมดในโปรเจกต์ สำหรับ Dropdown"""
-        assets = self._read_json()
+        query = (
+            sa.select(Asset)
+            .where(Asset.project_id == project_id)
+        )
+        result = await db.execute(query)
+        assets = result.scalars().all()
+
         filtered_assets = []
         for asset in assets:
-            if asset["project_id"] == project_id:
-                filtered_assets.append({
-                    "name": asset["name"],
-                    "id": asset["id"],
-                    "target": asset["target"]
-                })
+            filtered_assets.append({
+                "name": asset.name,
+                "id": asset.id,
+                "target": asset.target
+            })
         return filtered_assets
 
-    def create_asset(self, asset_in: AssetCreate) -> dict:
+    async def create_asset(self, asset_in: AssetCreate, db: AsyncSession) -> dict:
         """Service: สร้าง Asset ใหม่"""
-        assets = self._read_json()
-        
-        # 1. จำลอง Logic Auto Increment ID
-        new_id = 1
-        if assets:
-            # เอา ID ตัวสุดท้ายมา + 1
-            new_id = assets[-1]["id"] + 1
+        new_asset_db = Asset(
+            name = asset_in.name,
+            project_id = asset_in.project_id,
+            description = asset_in.description,
+            target = asset_in.target,
+            type = asset_in.type,
+        )
+
+        try:
+            db.add(new_asset_db)
+            await db.commit()
+
+            await db.refresh(new_asset_db)
+        except Exception as e:
+            await db.rollback()
+            print(f"DEBUG ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Could not create asset")
             
         # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_asset = {
-            "id": new_id,
-            "name": asset_in.name,
-            "project_id": asset_in.project_id,
-            "description": asset_in.description,
-            "target": asset_in.target,
-            "type": asset_in.type,
-            "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat(),
+            "id": new_asset_db.id,
+            "name": new_asset_db.name,
+            "project_id": new_asset_db.project_id,
+            "description": new_asset_db.description,
+            "target": new_asset_db.target,
+            "type": new_asset_db.type,
+            "created_at": new_asset_db.created_at,
+            "updated_at": new_asset_db.updated_at,
         }
-        
-        # 3. บันทึก
-        assets.append(new_asset)
-        self._save_json(assets)
         
         return new_asset
     
-    def update_asset(self, asset_id: int, asset_in: AssetCreate):
+    async def update_asset(self, asset_id: int, asset_in: AssetCreate, db: AsyncSession):
         """Service: อัปเดต Asset"""
-        assets = self._read_json()
-        for asset in assets:
-            if asset["id"] == asset_id:
-                asset["name"] = asset_in.name
-                asset["description"] = asset_in.description
-                asset["target"] = asset_in.target
-                asset["type"] = asset_in.type
-                asset["updated_at"] = datetime.now().isoformat()
-                self._save_json(assets)
-                return asset
-        return None
+        query = sa.select(Asset).where(Asset.id == asset_id)
+        result = await db.execute(query)
+        asset = result.scalar_one_or_none()
+
+        if not asset:
+            return None
     
-    def delete_asset(self, asset_id: int) -> bool:
+        asset.name = asset_in.name
+        asset.description = asset_in.description
+        asset.target = asset_in.target
+        asset.type = asset_in.type
+
+        try:
+            await db.commit()
+            await db.refresh(asset)
+
+            return {
+                "id": asset.id,
+                "name": asset.name,
+                "project_id": asset.project_id,
+                "description": asset.description,
+                "target": asset.target,
+                "type": asset.type,
+                "updated_at": asset.updated_at
+            }
+        except Exception as e:
+            await db.rollback()
+            # Log the error so you can see it in the terminal
+            print(f"Database Error: {e}") 
+            raise HTTPException(status_code=500, detail="Internal Server Error")
+    
+    async def delete_asset(self, asset_id: int, db: AsyncSession):
         """Service: ลบ Asset"""
-        assets = self._read_json()
-        for i, asset in enumerate(assets):
-            if asset["id"] == asset_id:
-                del assets[i]
-                self._save_json(assets)
-                return True
-        return False
+        query = (
+            sa.select(Asset)
+            .where(Asset.id == asset_id)
+        )
+        result = await db.execute(query)
+        asset = result.scalar_one_or_none()
+
+        if not asset:
+            return False
+        
+        try:
+            # 2. Delete using the session
+            await db.delete(asset)
+            
+            # 3. Commit the transaction
+            await db.commit()
+            return True
+        except Exception as e:
+            # 4. Rollback if something goes wrong (e.g., Foreign Key constraint)
+            await db.rollback()
+            print(f"Delete Error: {e}")
+            return False
     
-    def get_asset_ids_by_project_id(self, project_id: int):
-        assets = self._read_json()
+    async def get_asset_ids_by_project_id(self, project_id: int, db: AsyncSession):
+        query = (
+            sa.select(Asset.id)
+            .where(Asset.project_id == project_id)
+        )
+        result = await db.execute(query)
+        assets = result.scalars().all()
 
-        result = []
-        for asset in assets:
-            if asset["project_id"] == project_id:
-                result.append(asset["id"])
-
-        return result
+        return assets
     
-    def get_assets_by_project_id(self, project_id: int):
+    async def get_assets_by_project_id(self, project_id: int, db: AsyncSession):
+        query = (
+            sa.select(Asset)
+            .where(Asset.project_id == project_id)
+        )
+        result = await db.execute(query)
+        assets = result.scalars().all()
 
-        assets = self._read_json()
-
-        result = []
-        for asset in assets:
-            if asset["project_id"] == project_id:
-                result.append(asset)
-
-        return result
+        return assets
     
-    def cnt_asset_by_project_id(self, project_id: int):
-        assets = self._read_json()
+    async def cnt_asset_by_project_id(self, project_id: int, db: AsyncSession):
+        query = (
+            sa.select(Asset)
+            .where(Asset.project_id == project_id)
+        )
+        count_query = sa.select(sa.sql.func.count()).select_from(query.subquery())
+        total_count_result = await db.execute(count_query)
+        total_count = total_count_result.scalar() or 0
 
-        cnt = 0
-        for asset in assets:
-            if asset["project_id"] == project_id:
-                cnt += 1
-
-        return cnt
+        return total_count
 
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
