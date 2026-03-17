@@ -144,7 +144,7 @@ class WorkerService:
         for worker, fn, ln in rows:
             worker_dict = worker.__dict__.copy() # Convert to dict
             worker_dict.pop('_sa_instance_state', None) # Clean up internal SA state
-            worker_dict["owner_name"] = f"{fn} {ln}" if fn else "Unknown"
+            worker_dict["owner_name"] = f"{fn} {ln}"
             paginated_items.append(worker_dict)
 
         return {
@@ -155,18 +155,8 @@ class WorkerService:
             "items": paginated_items
         }
     
-    def delete_worker(self, worker_id: int) -> bool:
+    async def delete_worker(self, worker_id: int, db: AsyncSession) -> bool:
         """Service: ลบ Worker"""
-        workers = self._read_json()
-        for i, worker in enumerate(workers):
-            if worker["id"] == worker_id:
-                del workers[i]
-                self._save_json(workers)
-                return True
-        return False
-    
-    async def get_worker_by_id(self, worker_id: int, db: AsyncSession):
-        """Service: ดึงข้อมูล 1 Worker"""
         query = sa.select(Worker).where(Worker.id == worker_id)
         result = await db.execute(query)
         worker = result.scalar_one_or_none()
@@ -174,20 +164,58 @@ class WorkerService:
         if not worker:
             return None
         
-        return worker
+        db.delete(worker)
+        await db.commit()
+        return True
     
-    def update_worker(self, worker_id: int, worker_in: WorkerCreate, user_id: str, role: str) -> Optional[dict]:
+    async def get_worker_by_id(self, worker_id: int, db: AsyncSession):
+        """Service: ดึงข้อมูล 1 Worker"""
+        query = sa.select(Worker, User.first_name, User.last_name).join(User, Worker.owner == User.email, isouter=True).where(Worker.id == worker_id)
+        result = await db.execute(query)
+        row = result.first()
+
+        if not row:
+            return None
+
+        worker_dict = row[0].__dict__.copy()
+        worker_dict.pop('_sa_instance_state', None) # Clean up internal SA state
+        worker_dict["owner_name"] = f"{row[1]} {row[2]}"
+
+        
+        return worker_dict
+    
+    async def update_worker(self, worker_id: int, worker_in: WorkerCreate, user_id: str, role: str, db: AsyncSession):
         """Service: อัปเดต Worker"""
-        workers = self._read_json()
-        for worker in workers:
-            if worker["id"] == worker_id:
-                if worker.get("owner") != user_id and role == "pentester":
-                    raise HTTPException(status_code=403, detail="Worker does not belong to the user")
-                worker["name"] = worker_in.name
-                worker["updated_at"] = datetime.now().isoformat()
-                self._save_json(workers)
-                return worker
-        return None
+        query = sa.select(Worker, User.first_name, User.last_name).join(User, Worker.owner == User.email, isouter=True).where(Worker.id == worker_id)
+        result = await db.execute(query)
+        row = result.first()
+
+        if not row:
+            return None
+        
+        worker_db = row[0]
+        first_name = row[1]
+        last_name = row[2]
+        
+        if worker_db.owner != user_id and role == "pentester":
+            raise HTTPException(status_code=403, detail="Worker does not belong to the user")
+        
+        worker_db.name = worker_in.name
+        worker_db.thread_number = worker_in.thread_number
+
+        try:
+            await db.commit()
+            await db.refresh(worker_db) # This ensures all DB-generated fields are loaded
+
+            worker_dict = row[0].__dict__.copy()
+            worker_dict.pop('_sa_instance_state', None) # Clean up internal SA state
+            worker_dict["owner_name"] = f"{first_name} {last_name}"
+            return worker_dict
+        except Exception as e:
+            await db.rollback()
+            # Log the error so you can see it in the terminal
+            print(f"Database Error: {e}") 
+            raise HTTPException(status_code=500, detail="Internal Server Error")
     
     async def get_summary_info(self, project_id: int, db: AsyncSession):
         """Get Total Workers, Online Status, Busy(current_load != 0), total jobs"""

@@ -49,8 +49,8 @@ async def create_worker(
     if role != "owner":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
-    key = access_key_service.create_access_key()
-    
+    key = await access_key_service.create_access_key(db)
+    await db.flush()
     worker = await worker_service.create_worker(worker_in, project_id, key.id, db)
 
     return { 
@@ -71,8 +71,6 @@ async def get_all_workers_by_project_id(
     role = Depends(get_current_project_role),
     db: AsyncSession = Depends(get_db)
 ):
-    if not role:
-        raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
 
     result = await worker_service.get_all_workers_by_project_id(
         project_id=project_id,
@@ -114,6 +112,7 @@ async def get_worker_by_id(
 
     if not worker:
         raise HTTPException(status_code=404, detail="Worker not found")
+
     return worker
  
 
@@ -136,13 +135,14 @@ async def re_access_key(
     if role == "pentester" and worker.get("owner") != user["sub"]:
         raise HTTPException(status_code=403, detail="Worker does not belong to the user.")
     
-    result = access_key_service.delete_access_key_by_id(worker.get("access_key_id"))
+    result = await access_key_service.delete_access_key_by_id(worker.access_key_id, db)
 
-    key = access_key_service.create_access_key()
+    key = await access_key_service.create_access_key(db)
     
-    result = worker_service.change_access_key(
-        access_key_id=key.get("id"),
-        worker_id=worker_id
+    result = await worker_service.change_access_key(
+        access_key_id=key.id,
+        worker_id=worker_id,
+        db=db
     )
 
     return result
@@ -151,13 +151,15 @@ async def re_access_key(
 async def delete_worker(
     worker_id: int, 
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     if role != "owner":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
 
-    success = worker_service.delete_worker(
-        worker_id=worker_id
+    success = await worker_service.delete_worker(
+        worker_id=worker_id,
+        db=db
     )
     if not success:
         raise HTTPException(status_code=404, detail="Worker not found")
@@ -169,17 +171,23 @@ async def update_worker(
     worker_id: int, 
     worker_in: WorkerCreate, 
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     if role == "developer":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
 
-    updated_worker = worker_service.update_worker(
+    updated_worker = await worker_service.update_worker(
         worker_id=worker_id,
         worker_in=worker_in,
         user_id=user["sub"],
-        role=role
+        role=role,
+        db=db
     )
+
+    print(f"DEBUG: Type of updated_worker: {type(updated_worker)}")
+    print(f"DEBUG: Content: {updated_worker}")
+
     if not updated_worker:
         raise HTTPException(status_code=404, detail="Worker not found")
     return updated_worker
