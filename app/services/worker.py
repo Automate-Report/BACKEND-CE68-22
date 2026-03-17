@@ -345,24 +345,37 @@ class WorkerService:
             print(f"Error resetting worker: {e}")
             raise HTTPException(status_code=500, detail="Failed to reset worker")
 
+    async def disconnect_workers_in_project(self, project_id: int, db: AsyncSession):
+        query = sa.select(Worker).where(Worker.project_id == project_id)
+        result = await db.execute(query)
+        rows = result.scalars().all()
 
-    def disconnect_workers_in_project(self, project_id: int):
-        workers = self._read_json()
-        for worker in workers:
-            access_key_id = worker.get("access_key_id")
-            if access_key_id:
-                access_key_service.delete_access_key_by_id(access_key_id)
-            key = access_key_service.create_access_key()
-            if worker["project_id"] == project_id:
-                worker["isActive"] = False
-                worker["hostname"] = None
-                worker["internal_ip"] = None
-                worker["last_heartbeat"] = None
-                worker["owner"] = None
-                worker["status"] = "notActivated"
-                worker["access_key_id"] = key.get("id")
+        if not rows:
+            raise HTTPException(status_code=404, detail="Worker not found")
 
-        self._save_json(workers)
+        try:
+            for worker in rows:
+                if worker.access_key_id:
+                    await access_key_service.delete_access_key_by_id(worker.access_key_id, db)
+                
+                new_key = await access_key_service.create_access_key(db)
+                        
+                worker.is_active = False
+                worker.hostname = None
+                worker.internal_ip = None
+                worker.last_heartbeat = None
+                worker.owner = None
+                worker.status= WorkerStatus.NOT_ACTIVATE
+                worker.access_key_id = new_key.id
+
+            await db.commit()
+
+            return {"message": f"Successfully disconnected {len(rows)} workers"}
+            
+        except Exception as e:
+            await db.rollback()
+            print(f"Error resetting worker: {e}")
+            raise HTTPException(status_code=500, detail="Failed to reset worker")
 
     def download_success(self, worker_id: int, user_id: str):
         workers = self._read_json()

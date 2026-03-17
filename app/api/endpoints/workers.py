@@ -225,13 +225,18 @@ async def disconnect_worker_from_host(
     )
 
 @router.get("/unlink/all/{project_id}")
-async def disconnect_all_worker_from_host_by_project(project_id: int, role = Depends(get_current_project_role), user = Depends(get_current_user)):
+async def disconnect_all_worker_from_host_by_project(
+    project_id: int, 
+    role = Depends(get_current_project_role), 
+    user = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
     if role != "owner":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
-    worker_service.disconnect_workers_in_project(
+    await worker_service.disconnect_workers_in_project(
         project_id=project_id,
-        user_id=user["sub"]
+        db=db
     )
 
 @router.post("/{worker_id}/mark-downloaded")
