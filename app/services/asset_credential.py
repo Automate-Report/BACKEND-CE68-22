@@ -1,104 +1,106 @@
-import json
-import os
 from datetime import datetime
-from typing import List
+from fastapi import HTTPException
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.asset_credential import AssetCredentialCreate
 
-# 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
-# app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "credentials.json")
+from app.models.asset_credentials import AssetCredential
+
 
 class AssetCredentialService:
-    
-    def _ensure_dummy_folder_exists(self):
-        """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
-        folder = os.path.dirname(JSON_FILE_PATH)
-        if not os.path.exists(folder):
-            os.makedirs(folder)
 
-    def _read_json(self) -> List[dict]:
-        """อ่านข้อมูลจากไฟล์ JSON"""
-        if not os.path.exists(JSON_FILE_PATH):
-            return []
-        try:
-            with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except json.JSONDecodeError:
-            return [] # ถ้าไฟล์เสียหรือว่างเปล่า ให้คืนค่า list ว่าง
+    async def get_credential_by_id(self, credential_id:int, db: AsyncSession):
+        query = sa.select(AssetCredential).where(AssetCredential.id == credential_id)
+        result = await db.execute(query)
+        cred = result.scalar_one_or_none()
 
-    def _save_json(self, data: List[dict]):
-        """บันทึกข้อมูลลงไฟล์ JSON"""
-        self._ensure_dummy_folder_exists()
-        with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
-            # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
-            json.dump(data, f, indent=2, ensure_ascii=False, default=str)
-    
-    def get_credential_by_id(self, credential_id:int):
-        credentials = self._read_json()
-
-        for cred in credentials:
-            if cred["id"] == credential_id:
-                return cred
+        if not cred:
+            return None
             
-        return None
+        return cred
     
-    def get_credential_by_asset_id(self, asset_id: int):
-        credentials = self._read_json()
+    async def get_credential_by_asset_id(self, asset_id: int, db: AsyncSession):
+        query = sa.select(AssetCredential).where(AssetCredential.asset_id == asset_id)
+        result = await db.execute(query)
+        cred = result.scalar_one_or_none()
 
-        for cred in credentials:
-            if cred["asset_id"] == asset_id:
-                return cred
-        
-        return None
+        if not cred:
+            return None
+            
+        return cred
 
-    def create_credential(self, credential_in: AssetCredentialCreate) -> dict:
+    async def create_credential(self, credential_in: AssetCredentialCreate, db: AsyncSession) -> dict:
         """Service: สร้าง Credential ใหม่"""
-        credentials = self._read_json()
+        new_asset_credential_db = AssetCredential(
+            asset_id = credential_in.asset_id,
+            username = credential_in.username,
+            password = credential_in.password,
+        )
+
+        try:
+            db.add(new_asset_credential_db)
+            await db.commit()
+            await db.refresh(new_asset_credential_db)
+        except:
+            await db.rollback()
+            print(f"DEBUG ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Could not create credential")
         
-        # 1. จำลอง Logic Auto Increment ID
-        new_id = 1
-        if credentials:
-            # เอา ID ตัวสุดท้ายมา + 1
-            new_id = credentials[-1]["id"] + 1
-            
-        # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_credential = {
-            "id": new_id,
-            "asset_id": credential_in.asset_id,
-            "username": credential_in.username,
-            "password": credential_in.password,
-            "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat(),
+            "id": new_asset_credential_db.id,
+            "asset_id": new_asset_credential_db.asset_id,
+            "username": new_asset_credential_db.username,
+            "password": new_asset_credential_db.password,
+            "created_at": new_asset_credential_db.created_at,
+            "updated_at": new_asset_credential_db.updated_at,
         }
-        
-        # 3. บันทึก
-        credentials.append(new_credential)
-        self._save_json(credentials)
         
         return new_credential
     
-    def update_credential(self, credential_id: int, credential_in: AssetCredentialCreate):
+    async def update_credential(self, credential_id: int, credential_in: AssetCredentialCreate, db: AsyncSession):
         """Service: อัปเดต Credential"""
-        credentials = self._read_json()
-        for cred in credentials:
-            if cred["id"] == credential_id:
-                cred["username"] = credential_in.username
-                cred["password"] = credential_in.password
-                cred["updated_at"] = datetime.now().isoformat()
-                self._save_json(credentials)
-                return cred
-        return None
+        query = sa.select(AssetCredential).where(AssetCredential.id == credential_id)
+        reuslt = await db.execute(query)
+        cred = reuslt.scalar_one_or_none()
+
+        if not cred:
+            return None
+        
+        cred.username = credential_in.username
+        cred.password = credential_in.password
+
+        try:
+            await db.commit()
+            await db.refresh(cred) # This ensures all DB-generated fields are loaded
+
+            return True
+        except Exception as e:
+            await db.rollback()
+            # Log the error so you can see it in the terminal
+            print(f"Database Error: {e}") 
+            raise HTTPException(status_code=500, detail="Internal Server Error")
     
-    def delete_credential(self, credential_id: int) -> bool:
+    async def delete_credential(self, credential_id: int, db: AsyncSession) -> bool:
         """Service: ลบ Credential"""
-        credentials = self._read_json()
-        for i, cred in enumerate(credentials):
-            if cred["id"] == credential_id:
-                del credentials[i]
-                self._save_json(credentials)
-                return True
-        return False
+        query = sa.select(AssetCredential).where(AssetCredential.id == credential_id)
+        reuslt = await db.execute(query)
+        cred = reuslt.scalar_one_or_none()
+
+        if not cred:
+            return None
+        
+        try:
+            # 2. Delete using the session
+            await db.delete(cred)
+            
+            # 3. Commit the transaction
+            await db.commit()
+            return True
+        except Exception as e:
+            # 4. Rollback if something goes wrong (e.g., Foreign Key constraint)
+            await db.rollback()
+            print(f"Delete Error: {e}")
+            return False
 
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้

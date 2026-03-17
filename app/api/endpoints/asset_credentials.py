@@ -1,5 +1,10 @@
-from fastapi import APIRouter, HTTPException, Query
-from typing import List, Optional
+from fastapi import APIRouter, HTTPException, Depends
+
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.schemas.asset_credential import AssetCredentialCreate
+from app.core.db import get_db
+
 from app.schemas.asset_credential import AssetCredentialCreate, AssetCredentialResponse
 from app.services.asset_credential import asset_credential_service
 
@@ -7,8 +12,11 @@ router = APIRouter()
 
 # GET credentials/credential_id
 @router.get("/{credential_id}", response_model=AssetCredentialResponse)
-async def get_credential_by_id(credential_id: int):
-    credential = asset_credential_service.get_credential_by_id(credential_id)
+async def get_credential_by_id(
+    credential_id: int,
+    db: AsyncSession = Depends(get_db)
+):
+    credential = await asset_credential_service.get_credential_by_id(credential_id, db)
 
     if not credential:
         HTTPException(status_code=404, detail="Credential not found")
@@ -17,8 +25,11 @@ async def get_credential_by_id(credential_id: int):
 
 # GET 
 @router.get("/byAsset/{asset_id}", response_model=AssetCredentialResponse)
-async def get_credential_by_asset(asset_id: int):
-    credential = asset_credential_service.get_credential_by_asset_id(asset_id)
+async def get_credential_by_asset(
+    asset_id: int,
+    db: AsyncSession = Depends(get_db)
+):
+    credential = await asset_credential_service.get_credential_by_asset_id(asset_id, db)
 
     if not credential:
         raise HTTPException(status_code=210, detail="Asset not have credential.")
@@ -27,17 +38,25 @@ async def get_credential_by_asset(asset_id: int):
 
 # POST (Create) credentials/
 @router.post("/", response_model=AssetCredentialResponse)
-async def create_credential(credential_in: AssetCredentialCreate):
-    new_credential = asset_credential_service.create_credential(credential_in)
+async def create_credential(
+    credential_in: AssetCredentialCreate,
+    db: AsyncSession = Depends(get_db)
+):
+    new_credential = await asset_credential_service.create_credential(credential_in, db)
 
     return new_credential
 
 # PUT (Update) credentials/credential_id
 @router.put("/{credential_id}", response_model=AssetCredentialResponse)
-async def update_credential(credential_id: int, credential_in: AssetCredentialCreate):
-    credential = asset_credential_service.update_credential(
+async def update_credential(
+    credential_id: int, 
+    credential_in: AssetCredentialCreate,
+    db: AsyncSession = Depends(get_db)
+):
+    credential = await asset_credential_service.update_credential(
         credential_id=credential_id,
-        credential_in=credential_in
+        credential_in=credential_in,
+        db=db
     )
 
     if not credential:
