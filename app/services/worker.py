@@ -377,14 +377,23 @@ class WorkerService:
             print(f"Error resetting worker: {e}")
             raise HTTPException(status_code=500, detail="Failed to reset worker")
 
-    def download_success(self, worker_id: int, user_id: str):
-        workers = self._read_json()
+    async def download_success(self, worker_id: int, user_id: str, db: AsyncSession):
+        query = sa.select(Worker).where(Worker.id == worker_id)
+        result = await db.execute(query)
+        worker = result.scalar_one_or_none()
 
-        for w in workers:
-            if w["id"] == worker_id:
-                w["owner"] = user_id
+        worker.owner = user_id
 
-        self._save_json(workers)
+        try:
+            await db.commit()
+            await db.refresh(worker) # This ensures all DB-generated fields are loaded
+
+            return worker
+        except Exception as e:
+            await db.rollback()
+            # Log the error so you can see it in the terminal
+            print(f"Database Error: {e}") 
+            raise HTTPException(status_code=500, detail="Internal Server Error")
 
     def verify_worker(self, req: VerifyRequest):
         workers = self._read_json()

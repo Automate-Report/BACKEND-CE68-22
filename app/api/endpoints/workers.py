@@ -240,8 +240,12 @@ async def disconnect_all_worker_from_host_by_project(
     )
 
 @router.post("/{worker_id}/mark-downloaded")
-def mark_worker_as_downloaded(worker_id: int, user = Depends(get_current_user)):
-    worker_service.download_success(worker_id, user["sub"])
+async def mark_worker_as_downloaded(
+    worker_id: int, 
+    user = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    await worker_service.download_success(worker_id, user["sub"], db)
     return {"detail": "Worker marked as downloaded"}
     
 #Dummy task
