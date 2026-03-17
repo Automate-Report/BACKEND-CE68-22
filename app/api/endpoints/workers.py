@@ -207,15 +207,21 @@ async def download_worker_zip(
     return result
 
 
-@router.get("/unlink/{worker_id}")
-async def disconnect_worker_from_host(worker_id: int, role = Depends(get_current_project_role), user = Depends(get_current_user)):
+@router.patch("/unlink/{worker_id}")
+async def disconnect_worker_from_host(
+    worker_id: int, 
+    role = Depends(get_current_project_role), 
+    user = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
     if role == "developer":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
-    worker_service.disconnect_worker(
+    await worker_service.disconnect_worker(
         worker_id=worker_id,
         user_id=user["sub"],
-        role=role
+        role=role,
+        db=db
     )
 
 @router.get("/unlink/all/{project_id}")

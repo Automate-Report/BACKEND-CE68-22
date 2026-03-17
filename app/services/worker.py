@@ -304,30 +304,47 @@ class WorkerService:
             return True
         return False
     
-    def disconnect_worker(self, worker_id: int, user_id: str, role: str):
-        workers = self._read_json()
-        is_system_owner = (role == "owner")
-        for worker in workers:
-            if worker["id"] == worker_id:
-                is_worker_owner = (worker.get("owner") == user_id)
-                if not (is_system_owner or is_worker_owner):
-                    raise HTTPException(
-                        status_code=403, 
-                        detail="Access denied: You do not have permission to manage this worker"
-                    )
-                access_key_id = worker.get("access_key_id")
-                if access_key_id:
-                    access_key_service.delete_access_key_by_id(access_key_id)
-                key = access_key_service.create_access_key()
-                worker["isActive"] = False
-                worker["hostname"] = None
-                worker["internal_ip"] = None
-                worker["last_heartbeat"] = None
-                worker["owner"] = None
-                worker["status"] = "notActivated"
-                worker["access_key_id"] = key.get("id")
+    async def disconnect_worker(self, worker_id: int, user_id: str, role: str, db: AsyncSession):
+        query = sa.select(Worker).where(Worker.id == worker_id)
+        result = await db.execute(query)
+        worker_db = result.scalar_one_or_none()
 
-        self._save_json(workers)
+        if not worker_db:
+            raise HTTPException(status_code=404, detail="Worker not found")
+
+        is_system_owner = (role == "owner")
+        is_worker_owner = (worker_db.owner == user_id)
+
+        if not (is_system_owner or is_worker_owner):
+            raise HTTPException(
+                status_code=403, 
+                detail="Access denied: You do not have permission to manage this worker"
+            )
+        
+        try:
+            if worker_db.access_key_id:
+                await access_key_service.delete_access_key_by_id(worker_db.access_key_id, db)
+            
+            new_key = await access_key_service.create_access_key(db)
+                     
+            worker_db.is_active = False
+            worker_db.hostname = None
+            worker_db.internal_ip = None
+            worker_db.last_heartbeat = None
+            worker_db.owner = None
+            worker_db.status= WorkerStatus.NOT_ACTIVATE
+            worker_db.access_key_id = new_key.id
+
+            await db.commit()
+            await db.refresh(worker_db)
+            
+            return worker_db
+        
+        except Exception as e:
+            await db.rollback()
+            print(f"Error resetting worker: {e}")
+            raise HTTPException(status_code=500, detail="Failed to reset worker")
+
 
     def disconnect_workers_in_project(self, project_id: int):
         workers = self._read_json()
