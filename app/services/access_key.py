@@ -12,10 +12,6 @@ from app.models.access_keys import AccessKey
 
 from app.core import security
 
-# 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
-# app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "access_keys.json")
 
 class AccessKeyService:
 
