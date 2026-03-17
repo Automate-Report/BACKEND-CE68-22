@@ -39,8 +39,7 @@ class ProjectService:
                 continue
 
             asset_cnt = await asset_service.cnt_asset_by_project_id(proj.id, db)
-            asset_ids = await asset_service.get_asset_ids_by_project_id(proj.id, db)
-            vuln_cnt = vuln_service.cnt_vuln_by_asset_id(asset_ids)
+            vuln_cnt = await vuln_service.get_cnt_vulns_in_project_id(proj.id, db)
 
             tag_ids = await project_tag_service.get_all_tag_ids(proj.id, db)
 

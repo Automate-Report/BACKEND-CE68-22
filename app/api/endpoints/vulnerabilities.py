@@ -9,6 +9,10 @@ from app.services.asset import asset_service
 
 from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role
+from app.core.db import get_db
+
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()
 
@@ -18,19 +22,11 @@ router = APIRouter()
 async def get_cnt_vulns_by_project_id(
     project_id: int,
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
-    if not role:
-        raise HTTPException(status_code=403, detail="User does not have access to this project")
-    
-    asset_ids = asset_service.get_asset_ids_by_project_id(project_id)
-
-    if not asset_ids:
-        return {
-            "vuln_cnt": 0
-        }
-    
-    cnt = vuln_service.cnt_vuln_by_asset_id(asset_ids)
+   
+    cnt = await vuln_service.get_cnt_vulns_in_project_id(project_id, db)
     return {
         "vuln_cnt": cnt
     }
@@ -39,38 +35,11 @@ async def get_cnt_vulns_by_project_id(
 async def get_summary_vuln_by_project_id(
     project_id: int,
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
-    if not role:
-        raise HTTPException(status_code=403, detail="User does not have access to this project")
 
-    asset_ids = asset_service.get_asset_ids_by_project_id(project_id)
-
-    if not asset_ids:
-        return SummaryCntVlun(
-            total=0,
-            open_cnt=0,
-            tp_cnt=0,
-            in_progress_cnt=0,
-            fixed_cnt=0
-        )
-    
-    result = SummaryCntVlun(
-        total=0,
-        open_cnt=0,
-        tp_cnt=0,
-        in_progress_cnt=0,
-        fixed_cnt=0
-    )
-    
-    for id in asset_ids:
-        value = vuln_service.cnt_status_vuln_by_asset_id(id)
-
-        result.total+=value.total
-        result.open_cnt+=value.open_cnt
-        result.tp_cnt+=value.tp_cnt
-        result.in_progress_cnt+=value.in_progress_cnt
-        result.fixed_cnt+=value.fixed_cnt
+    result = await vuln_service.get_status_cnt_by_project_id(project_id, db)
 
     return result
 
@@ -84,21 +53,19 @@ async def get_all_vuln_by_project_id(
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
-    if not role:
-        raise HTTPException(status_code=403, detail="User does not have access to this project")
-    
-    asset_ids = asset_service.get_asset_ids_by_project_id(project_id)
-
-    result = vuln_service.get_all_issue_by_project_id(
-        asset_ids=asset_ids,
+   
+    result = await vuln_service.get_all_issue_by_project_id(
+        project_id=project_id,
         page=page,
         size=size,
         sort_by=sort_by,
         order=order,
         search=search,
         filter=filter,
+        db=db
     )
 
     return result
@@ -113,22 +80,20 @@ async def get_all_vuln_by_user_id(
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
-    if not role:
-        raise HTTPException(status_code=403, detail="User does not have access to this project")
     
-    asset_ids = asset_service.get_asset_ids_by_project_id(project_id)
-
-    result = vuln_service.get_all_issue_by_user_id(
+    result = await vuln_service.get_all_issue_by_user_id(
         user_id=user["sub"],
-        asset_ids=asset_ids,
+        project_id = project_id,
         page=page,
         size=size,
         sort_by=sort_by,
         order=order,
         search=search,
         filter=filter,
+        db=db
     )
 
     return result

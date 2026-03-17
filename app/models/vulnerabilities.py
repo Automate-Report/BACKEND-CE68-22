@@ -11,7 +11,7 @@ class VulSeverity(enum.Enum):
     MEDIUM = "medium"
     LOW = "low"
 
-class VulStatus(enum.Enum):
+class VulnStatus(enum.Enum):
     WONT_FIX = "wont_fix"
     OPEN = "open"
     IN_PROGRESS = "in_progress"
@@ -35,7 +35,7 @@ class Vulnerability(Base):
     method:Mapped[str] = mapped_column(sa.String(255))
     severity:Mapped[VulSeverity] = mapped_column(sa.Enum(VulSeverity))
     db_type:Mapped[str] = mapped_column(sa.String(255))
-    status:Mapped[VulStatus] = mapped_column(sa.Enum(VulStatus), default=VulStatus.OPEN)
+    status:Mapped[VulnStatus] = mapped_column(sa.Enum(VulnStatus), default=VulnStatus.OPEN)
     verify:Mapped[VulnVerify] = mapped_column(sa.Enum(VulnVerify), default=None)
     first_seen_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
     last_seen_at:Mapped[Optional[datetime.datetime]] = mapped_column(sa.DateTime(timezone=True), default=None)
@@ -44,10 +44,10 @@ class Vulnerability(Base):
 
 @sa.event.listens_for(Vulnerability.status, 'set')
 def receive_set(target: Vulnerability, value, oldvalue, initiator):
-    unresolved_states = {VulStatus.IN_PROGRESS, VulStatus.OPEN}
-    if value == VulStatus.FIXED and oldvalue == unresolved_states:
+    unresolved_states = {VulnStatus.IN_PROGRESS, VulnStatus.OPEN}
+    if value == VulnStatus.FIXED and oldvalue == unresolved_states:
         target.resolved_at = sa.sql.func.now()
 
-    elif value == VulStatus.OPEN and oldvalue == VulStatus.FIXED:
+    elif value == VulnStatus.OPEN and oldvalue == VulnStatus.FIXED:
         target.resolved_at = None
 
