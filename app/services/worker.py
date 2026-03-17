@@ -30,17 +30,17 @@ class WorkerService:
         OFFLINE_THRESHOLD_SECONDS = 600
 
         # 1. เช็คเรื่องเวลา (Online/Offline)
-        last_seen_str = worker_data.get("last_heartbeat")
+        last_seen = worker_data.get("last_heartbeat")
         
-        if not last_seen_str or not worker_data.get("owner"):
+        if not last_seen or not worker_data.get("owner"):
             worker_data["status"] = WorkerStatus.NOT_ACTIVATE
             return worker_data
         
-        now = sa.sql.func.now()
+        now = datetime.now(timezone.utc)
         # แปลง String กลับเป็น datetime
         try:
-            last_seen = datetime.fromisoformat(last_seen_str)
-            time_diff = datetime.utcnow() - last_seen
+            # last_seen = last_seen_str
+            time_diff = now - last_seen
 
             if time_diff.total_seconds() < OFFLINE_THRESHOLD_SECONDS:
                 worker_data["status"] = WorkerStatus.ONLINE
@@ -403,7 +403,7 @@ class WorkerService:
         if not row:
             raise HTTPException(status_code=404, detail="Worker ID not found")
 
-        target_worker = Worker(row[0])
+        target_worker = row[0]
         access_key = row[1]
 
         
