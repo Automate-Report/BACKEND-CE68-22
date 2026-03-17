@@ -16,26 +16,27 @@ from app.services.userauthen import userauthen_service
 
 from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role
+from app.deps.worker import get_current_worker
 
 
 router = APIRouter()
 
 # Verify Access Key for Get Token
 @router.post("/verify/")
-def verify_access_key(req: VerifyRequest):
-    result = worker_service.verify_worker(req)
+async def verify_access_key(req: VerifyRequest):
+    result = await worker_service.verify_worker(req)
     return result
 
 #HeartBeat
 @router.post("/heartbeat/")
 async def heartbeat(
     payload: HeartBeatPayload, 
-    worker_id: int = Depends(worker_service.verify_token),
+    worker_id: int = Depends(get_current_worker),
     db: AsyncSession = Depends(get_db)
 ): 
     # worker_id นี้ได้มาจากการแกะ Token ที่ถูกต้องแล้ว
     
-    result = await worker_service.update_heartbeat(worker_id, payload)
+    result = await worker_service.update_heartbeat(worker_id, payload, db)
     if not result:
         # กรณีนี้ยากที่จะเกิด ถ้า Token ผ่านแล้ว แต่เผื่อไว้
         raise HTTPException(status_code=404, detail="Worker not found")
@@ -252,10 +253,5 @@ async def mark_worker_as_downloaded(
     await worker_service.download_success(worker_id, user["sub"], db)
     return {"detail": "Worker marked as downloaded"}
     
-#Dummy task
-@router.post("/submit-task")
-def submit_task(data: dict = Body(...), current_worker_id: int = Depends(worker_service.verify_token)):
-    print(f"Logged in worker is: {current_worker_id}")
-    return data
 
 

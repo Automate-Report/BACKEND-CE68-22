@@ -15,6 +15,7 @@ import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.workers import Worker, WorkerStatus
 from app.models.users import User
+from app.models.access_keys import AccessKey
 from app.models.jobs import Job, JobStatus
 
 from app.core.config import settings
@@ -395,56 +396,61 @@ class WorkerService:
             print(f"Database Error: {e}") 
             raise HTTPException(status_code=500, detail="Internal Server Error")
 
-    def verify_worker(self, req: VerifyRequest):
-        workers = self._read_json()
-        target_worker = None
-        
-        for worker in workers:
-            if worker["id"] == req.worker_id:
-                target_worker = worker
+    async def verify_worker(self, req: VerifyRequest, db: AsyncSession):
+        query = (
+            sa.select(Worker, AccessKey.key)
+            .join(AccessKey, Worker.access_key_id == AccessKey.id, isouter=True)
+            .where(Worker.id == req.worker_id)
+        )
 
-        if not target_worker.get("owner"):
+        result = await db.execute(query)
+        row = result.first()
+
+        if not row:
+            raise HTTPException(status_code=404, detail="Worker ID not found")
+
+        target_worker = Worker(row[0])
+        access_key = row[1]
+
+        
+        if not target_worker.owner:
             raise HTTPException(status_code=420, detail="Worker has no owner, cannot verify. Please download worker again to bind with your account.")
 
-        if not target_worker:
-            # Use 404 for "Not Found"
-            raise HTTPException(status_code=404, detail="Worker ID not found")
-        
-        access_key_id = target_worker["access_key_id"]
-        access_key = access_key_service.get_access_key_by_id(access_key_id)
-
-        
         if not access_key:
             raise HTTPException(status_code=400, detail="Worker missing access key")
         
-        current_access_key = access_key.get("key")
-        print(current_access_key)
-
-        if req.key != current_access_key:
+        if req.key != access_key:
             raise HTTPException(status_code=403, detail="Invalid Access Key (Key mismatch)")
         
-        target_worker["hostname"] = req.hostname
-        target_worker["isActive"] = True
-        target_worker["status"] = "online"
-        target_worker["internal_ip"] = req.internal_ip
+        target_worker.hostname = req.hostname
+        target_worker.is_active = True
+        target_worker.status = WorkerStatus.ONLINE
+        target_worker.internal_ip= req.internal_ip
+        target_worker.last_heartbeat = sa.sql.func.now()
 
-        self._save_json(workers)
+        try:
+            await db.commit()
+ 
+            token = jwt.encode(
+                {
+                    "sub": str(req.worker_id),
+                    "exp": datetime.utcnow() + timedelta(minutes=30)
+                },
+                access_key,
+                algorithm="HS256"
+            )
 
-        token = jwt.encode(
-            {
-                "sub": str(req.worker_id),
-                "exp": datetime.utcnow() + timedelta(minutes=30)
-            },
-            access_key.get("key"),
-            algorithm="HS256"
-        )
-
-        return {
+            return {
                 "status": "success",
                 "token": token
             }
-    
-    def verify_token(self, authorization: str = Header(None)):
+        except Exception as e:
+            await db.rollback()
+            # Log the error so you can see it in the terminal
+            print(f"Database Error: {e}") 
+            raise HTTPException(status_code=500, detail="Internal Server Error")
+
+    async def verify_token(self,  db: AsyncSession, authorization: str = Header(None)):
         # ... extraction logic ...
         
         token = authorization.split(" ")[1]
@@ -463,20 +469,19 @@ class WorkerService:
             # ---------------------------------------------------
             # สมมติว่ามี function ดึง key จาก worker_id
             # (คุณอาจต้องเรียก service หรือ query db ตรงนี้)
-            fake_user_id = 1
-            worker = self.get_worker_by_id(worker_id=worker_id) 
+            worker = await self.get_worker_by_id(worker_id=worker_id, db=db) 
             if not worker:
                 raise HTTPException(status_code=401, detail="Worker not found (ID invalid)")
             
             access_key_id = worker["access_key_id"]
             
-            access_key = access_key_service.get_access_key_by_id(access_key_id)
+            access_key = await access_key_service.get_access_key_by_id(access_key_id, db)
 
             if not access_key:
                 # ถ้าไม่มี ID แสดงว่าโดนถอดสิทธิ์แล้ว
                 raise HTTPException(status_code=401, detail="Access Key Revoked")
             
-            real_secret = access_key.get("key")
+            real_secret = access_key.key
     
             if not real_secret:
                 raise HTTPException(status_code=401, detail="Secret missing")
@@ -527,7 +532,6 @@ class WorkerService:
             # Log the error so you can see it in the terminal
             print(f"Database Error: {e}") 
             raise HTTPException(status_code=500, detail="Internal Server Error")
-            return False
     
     async def download_worker(self, worker_id: int, user_id: str, db: AsyncSession):
         """Service: download Worker"""
