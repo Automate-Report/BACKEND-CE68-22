@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role
+from app.core.db import get_db
 
 from app.schemas.pentest_report import PentestReportResponse, CreateReportPayload
 from app.schemas.pagination import PaginatedResponse
@@ -14,6 +15,13 @@ from app.services.vulnerability import vuln_service
 from app.services.project import project_service
 from app.services.reports.pentest_report import pen_test_report_service
 
+import sqlalchemy as sa
+from sqlalchemy.orm import aliased
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.assets import Asset
+from app.models.vulnerabilities import Vulnerability
+from app.models.vuln_libs import VulnLib
+from app.models.scan_findings import ScanFinding
 
 router = APIRouter()
 
@@ -23,77 +31,135 @@ async def create_report(
     project_id: int,
     report_in: CreateReportPayload,
     background_tasks: BackgroundTasks,
-    # user = Depends(get_current_user),
-    # role = Depends(get_current_project_role)
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
-    user = {
-        "sub": "somchai@tech.co.th"
-    }
-    project = project_service.get_project_by_id(project_id)
+
+    project = await project_service.get_project_by_id(project_id, db)
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     
     # ดึง asset_ids มาก่อน
-    asset_ids_to_process = report_in.asset_ids
-    if not asset_ids_to_process:
-        asset_ids_to_process = asset_service.get_asset_ids_by_project_id(project_id)
+    asset_ids = report_in.asset_ids
+    if not asset_ids:
+        query_ids = sa.select(Asset.id).where(Asset.project_id == project_id)
+        asset_ids = (await db.execute(query_ids)).scalars().all()
     
-    if not asset_ids_to_process:
-        raise HTTPException(
-            status_code=400, 
-            detail="ไม่สามารถสร้างรายงานได้ เนื่องจากไม่พบ Asset ในโปรเจกต์นี้"
-        )
-
-    vuln_details = []   
+    if not asset_ids:
+        raise HTTPException(status_code=400, detail="No Assets found in project")
+    
+    asset_query = sa.select(Asset).where(Asset.id.in_(asset_ids))
+    asset_rows = (await db.execute(asset_query)).scalars().all()
+    
+    # Create a mapping for report reference (AS-001) and generate asset_str
     assets_for_report = []
+    asset_ref_map = {} # To link vulnerabilities back to the reference
+    asset_names = []
 
-    # ป้องกันกรณี asset_ids_to_process ยังเป็น None หรือไม่ใช่ list
-    if not isinstance(asset_ids_to_process, list):
-        asset_ids_to_process = list(asset_ids_to_process)
-
-    # --- เริ่ม Loop ---
-    for i, asset_id in enumerate(asset_ids_to_process):
-        asset = asset_service.get_asset_by_id(asset_id)
-        if not asset:
-            print(f"⚠️ Asset ID {asset_id} not found, skipping...")
-            continue
-
-        # ✅ ประกาศตัวแปรอ้างอิงให้ชัดเจนภายใน Loop
-        current_asset_ref = f"AS-{i+1:03}"
+    for i, a in enumerate(asset_rows):
+        ref = f"AS-{i+1:03}"
+        asset_ref_map[a.id] = ref
+        asset_names.append(a.name)
         
-        # ใส่ ID อ้างอิงลงในตัวแปร asset เพื่อไปโชว์ในเล่มรายงาน
-        asset["asset_ref_id"] = current_asset_ref 
-        assets_for_report.append(asset)
+        # Add the ref to the object for the template engine
+        a_dict = {column.name: getattr(a, column.name) for column in a.__table__.columns}
+        a_dict["asset_ref_id"] = ref
+        assets_for_report.append(a_dict)
 
-        # ดึงช่องโหว่ของ Asset ตัวนี้
-        vulns = vuln_service.get_vulns_by_asset_id(asset_id)
-        if vulns:
-            for v in vulns:
-                detail = vuln_service.get_vuln_details_by_vuln_id(v["id"], user["sub"])
-                if detail:
-                    detail["asset_related"] = current_asset_ref
-                    vuln_details.append(detail)
-        
-    # --- จบ Loop ---
-    # ตรวจสอบว่ามีข้อมูลส่งไปทำรายงานไหม
-    if not vuln_details and not assets_for_report:
-         raise HTTPException(status_code=400, detail="No data found for the selected assets/time range.")
+    latest_finding_sub = (
+        sa.select(
+            ScanFinding,
+            sa.func.row_number().over(
+                partition_by=ScanFinding.vuln_id,
+                order_by=ScanFinding.timestamp.desc()
+            ).label("rn")
+        )
+        .subquery()
+    )
+    latest_finding = aliased(ScanFinding, latest_finding_sub)
+
+    # 2. Main Bulk Query (Joins everything needed for the details)
+    vuln_query = (
+        sa.select(Vulnerability, VulnLib, Asset.name.label("asset_name"), latest_finding)
+        .join(VulnLib, Vulnerability.library_id == VulnLib.id)
+        .join(Asset, Vulnerability.asset_id == Asset.id)
+        .join(latest_finding, sa.and_(
+            Vulnerability.id == latest_finding.vuln_id,
+            latest_finding_sub.c.rn == 1 # Only get the newest one
+        ), isouter=True)
+        .where(Vulnerability.asset_id.in_(asset_ids))
+        .where(sa.or_(
+            Vulnerability.assigned_to == user["sub"],
+            Vulnerability.verified_by == user["sub"]
+        ))
+    )
+
+    vuln_results = (await db.execute(vuln_query)).all()
+
+    dates_query = (
+        sa.select(ScanFinding.vuln_id, ScanFinding.timestamp)
+        .where(ScanFinding.vuln_id.in_([v.id for v, _, _, _ in vuln_results]))
+        .order_by(ScanFinding.timestamp.desc())
+    )
+    dates_result = await db.execute(dates_query)
+    dates_rows = dates_result.all()
+
+    # Group dates by vuln_id in Python (super fast)
+    from collections import defaultdict
+    vuln_dates_map = defaultdict(list)
+    for vuln_id, ts in dates_rows:
+        vuln_dates_map[vuln_id].append(ts)
     
-    if not report_in.asset_ids:
-        asset_str = "All Asset"
-    else:
-        asset_name = []
-        for id in report_in.asset_ids:
-            asset = asset_service.get_asset_by_id(id)
-            asset_name.append(asset.get("name", ""))
-        
-        asset_str = ",".join(asset_name)
+    vuln_details = []
+    for v, lib, asset_name, f in vuln_results:
+        details = {
+            "id": v.id,
+            "title": f"{lib.vuln_type} on {asset_name}",
+            "vuln_type": lib.vuln_type,
+            "description": lib.description,
+            "asset_id": v.asset_id,
+            "asset_name": asset_name,
+            "assigned_to": v.assigned_to,
+            "verified_by": v.verified_by,
+            "evidence": {
+                "screenshot": f.screenshot_path,
+                "response_detials": f.response_detail
+            },
+            "severity": v.severity.upper(),
+            "status": v.status,
+            "verify": v.verify,
+            "parameters": v.parameter,
+            "occurrence_count": v.occurrence_cnt,
+            "occurrence_date": vuln_dates_map[v.id],
+            "cvss_details": {
+                "score": lib.cvss_score,
+                "vector": lib.cvss_vector,
+                "version": "3.1"
+            },
+            "reproduce_info": {
+                "target": v.target,
+                "method": v.method,
+                "payload": f.payload,
+                "curl_command": f.curl_command
+            },
+            "dates": {
+                "first_seen": v.first_seen_at,
+                "last_seen": v.last_seen_at
+            },
+            "recommendation": lib.recommendation if lib else "No recommendation available."
+        }
+        vuln_details.append(details)
+
+    # 5. Finalize and Start Background Task
+    asset_str = ",".join(asset_names) if report_in.asset_ids else "All Assets"
 
     report_record = await pen_test_report_service.prepare_report_record(
         project_id=project_id,
         report_name=report_in.report_name,
         asset_name = asset_str,
-        user_id=user["sub"]
+        user_id=user["sub"],
+        db=db
     )
     print(report_record)
     # เรียก Service สร้างรายงาน
@@ -105,7 +171,8 @@ async def create_report(
         vuln_details=vuln_details,
         assets=assets_for_report,
         started_date=report_record["started_date"],
-        ended_date=report_record["ended_date"]
+        ended_date=report_record["ended_date"],
+        db=db
     )
     
     return {
@@ -123,28 +190,37 @@ async def get_all_pentest_reports(
     order: Optional[str] = Query("asc", description="asc or desc"),
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
-    # user = Depends(get_current_user)
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
 
-    result = pen_test_report_service.get_all_pentest_reports(
+    result = await pen_test_report_service.get_all_pentest_reports(
         project_id=project_id,
         page=page,
         size=size,
         sort_by=sort_by,
         order=order,
         search=search,
-        filter=filter
+        filter=filter,
+        db=db
     )
 
     return result
 
 @router.get("/download/{report_id}/{report_type}")
-def download_report(
+async def download_report(
     report_id: int, 
     report_type: str,
-    user = Depends(get_current_user)
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
-    result = pen_test_report_service.dowload_by_id(report_id, report_type)
+    result = await pen_test_report_service.dowload_by_id(
+        report_id, 
+        report_type,
+        db
+    )
 
     if not result:
         raise HTTPException(status_code=404, detail="Report not found")
@@ -155,12 +231,13 @@ def download_report(
 async def delete_pentest_report_by_id(
     report_id: int, 
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     if role == "developer":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
-    success = pen_test_report_service.delete_pentest_report_by_id(report_id)
+    success = await pen_test_report_service.delete_pentest_report_by_id(report_id, db)
 
     if not success:
         raise HTTPException(status_code=404, detail="Report not found")

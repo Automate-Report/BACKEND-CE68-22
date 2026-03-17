@@ -118,12 +118,6 @@ class WorkerService:
             elif filter == "inUse":
                 query = query.where(Worker.owner != None)
 
-        if sort_by:
-            column = getattr(Worker, sort_by, Worker.created_at)
-            if order == "desc":
-                query = query.order_by(column.desc())
-            else:
-                query = query.order_by(column.asc())
 
         count_query = sa.select(sa.sql.func.count()).select_from(query.subquery())
         total_count_result = await db.execute(count_query)

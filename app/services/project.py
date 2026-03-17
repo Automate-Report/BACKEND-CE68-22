@@ -103,22 +103,6 @@ class ProjectService:
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
     
-    async def get_project_by_id(self, project_id:int, user_id: str, db: AsyncSession):
-        query = sa.select(Project).where(Project.id == project_id and Project.user_email == user_id)
-        result = await db.execute(query)
-        project = result.scalar_one_or_none()
-        
-        if project:
-            return {
-                "id": project.id,
-                "name": project.name,
-                "description": project.description,
-                "created_at": project.created_at,
-                "updated_at": project.updated_at,
-            }
-            
-        return None
-
     async def get_project_by_id(self, project_id:int, db: AsyncSession):
         query = sa.select(Project).where(Project.id == project_id)
 
