@@ -102,12 +102,15 @@ async def get_all_vuln_by_user_id(
 async def get_vulnerability_details(
     vuln_id: int,
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
-    if not role:
-        raise HTTPException(status_code=403, detail="User does not have access to this vulnerability")
     
-    details = vuln_service.get_vuln_details_by_vuln_id(vuln_id, user["sub"])
+    details = await vuln_service.get_vuln_details_by_vuln_id(
+        vuln_id, 
+        user["sub"],
+        db
+    )
     if not details:
         raise HTTPException(status_code=404, detail="Vulnerability not found")
     return details
@@ -116,15 +119,17 @@ async def get_vulnerability_details(
 async def assign_vulnerability_to_user(
     payload: AssignedJobPayload,
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     if role != "owner":
         raise HTTPException(status_code=403, detail="User does not have access to this project")
 
-    vuln_service.assign_vulnerability_to_user(
+    await vuln_service.assign_vulnerability_to_user(
         vuln_id=payload.vuln_id,
         position=payload.position,
-        user_id=payload.user_id
+        user_id=payload.user_id,
+        db=db
     )
     return {"message": "Vulnerability assigned successfully"}
 
@@ -132,15 +137,17 @@ async def assign_vulnerability_to_user(
 async def change_vulnerability_status(
     payload: ChangeStatusPayload,
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     if role == "pentester":
         raise HTTPException(status_code=403, detail="User does not have access to this project")
 
-    vuln_service.change_vulnerability_status(
+    await vuln_service.change_vulnerability_status(
         vuln_id=payload.vuln_id,
         new_status=payload.new_status,
-        user_id=user["sub"]
+        user_id=user["sub"],
+        db=db
     )
     return {"message": "Vulnerability status updated successfully"}
 
@@ -148,14 +155,16 @@ async def change_vulnerability_status(
 async def change_vulnerability_verify(
     payload: ChangeVerifyPayload,
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     if role == "developer":
         raise HTTPException(status_code=403, detail="User does not have access to this project")
 
-    vuln_service.change_vulnerability_verify(
+    await vuln_service.change_vulnerability_verify(
         vuln_id=payload.vuln_id,
         new_verify=payload.new_verify,
-        user_id=user["sub"]
+        user_id=user["sub"],
+        db=db
     )
     return {"message": "Vulnerability verify updated successfully"}
