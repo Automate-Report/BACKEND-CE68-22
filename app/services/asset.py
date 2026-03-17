@@ -1,7 +1,5 @@
 import math
 
-from datetime import datetime
-from typing import List
 from fastapi import HTTPException
 
 import sqlalchemy as sa
@@ -74,7 +72,7 @@ class AssetService:
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
     
-    async def get_asset_by_id(self, asset_id:int, db: AsyncSession):
+    async def get_asset_by_id(self, asset_id:int, db: AsyncSession) -> Asset:
         query = (
             sa.select(Asset)
             .where(Asset.id == asset_id)
@@ -85,15 +83,7 @@ class AssetService:
         if not asset:
             return None
 
-        return {
-            "id": asset.id,
-            "name": asset.name,
-            "project_id": asset.project_id,
-            "description": asset.description,
-            "target": asset.target,
-            "type": asset.type,
-            "updated_at": asset.updated_at
-        }
+        return asset
     
     async def get_all_asset_names_for_dropdown(self, project_id: int, db: AsyncSession) :
         """Service: ดึงชื่อ Asset ทั้งหมดในโปรเจกต์ สำหรับ Dropdown"""

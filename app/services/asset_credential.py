@@ -1,11 +1,9 @@
-from datetime import datetime
 from fastapi import HTTPException
+
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas.asset_credential import AssetCredentialCreate
-
 from app.models.asset_credentials import AssetCredential
-
+from app.schemas.asset_credential import AssetCredentialCreate
 
 class AssetCredentialService:
 
@@ -41,7 +39,7 @@ class AssetCredentialService:
             db.add(new_asset_credential_db)
             await db.commit()
             await db.refresh(new_asset_credential_db)
-        except:
+        except Exception as e:
             await db.rollback()
             print(f"DEBUG ERROR: {e}")
             raise HTTPException(status_code=500, detail="Could not create credential")

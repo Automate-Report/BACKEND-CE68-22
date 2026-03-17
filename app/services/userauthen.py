@@ -1,18 +1,16 @@
-import json
-import os
-from datetime import datetime, timedelta, timezone
-from typing import List
+from fastapi import HTTPException
+from datetime import datetime, timezone
 from jose import jwt, JWTError
+
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models.users import User #SQL Alchemy Models
+from app.models.users import User 
+
 from app.schemas.userauthen import LoginRequest, UserCreate
-from app.core.config import settings
-from fastapi import HTTPException
-from fastapi.responses import JSONResponse
+
 from app.core.redis import redis_client
 from app.core.jwt import create_access_token
-
+from app.core.config import settings
 
 class UserAuthenService:
     

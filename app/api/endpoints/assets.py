@@ -1,7 +1,7 @@
-from fastapi import APIRouter, HTTPException, Query, Depends, status
+from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
 
-import sqlalchemy as sa
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.deps.auth import get_current_user
@@ -56,12 +56,23 @@ async def get_asset_by_id(
     asset_id: int,
     db: AsyncSession = Depends(get_db)
 ):
-    asset = await asset_service.get_asset_by_id(asset_id, db)
+    asset = await asset_service.get_asset_by_id(
+        asset_id=asset_id, 
+        db=db
+    )
 
     if not asset:
         HTTPException(status_code=404, detail="Asset not found")
     
-    return asset
+    return {
+        "id": asset.id,
+        "name": asset.name,
+        "project_id": asset.project_id,
+        "description": asset.description,
+        "target": asset.target,
+        "type": asset.type,
+        "updated_at": asset.updated_at
+    }
 
 @router.post("/", response_model=AssetResponse)
 async def create_asset(

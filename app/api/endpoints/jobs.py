@@ -25,7 +25,12 @@ async def update_status_job(
     current_worker: int = Depends(get_current_worker),
     db: AsyncSession = Depends(get_db)
 ):
-    success = await job_service.update_job_status(payload.job_id, payload.status, db)
+    success = await job_service.update_job_status(
+        job_id=payload.job_id, 
+        status=payload.status, 
+        db=db
+    )
+
     return success
 
 @router.get("/schedule/{schedule_id}", response_model=PaginatedResponse[JobStatusResponse])
@@ -62,8 +67,8 @@ async def get_number_job_status_by_schedule_id(
 ):
 
     result = await job_service.get_number_job_status_by_schedule_id(
-        schedule_id,
-        db
+        schedule_id=schedule_id,
+        db=db
     )
 
     return result
