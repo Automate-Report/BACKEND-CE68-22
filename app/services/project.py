@@ -215,7 +215,7 @@ class ProjectService:
         """Service: ลบโปรเจกต์"""
         query = sa.select(Project).where(Project.id == project_id)
         result = await db.execute(query)
-        project = result.scalar_one_or_none
+        project = result.scalar_one_or_none()
 
         if not project:
             return False
