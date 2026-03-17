@@ -66,8 +66,11 @@ async def update_credential(
 
 # DELETE credentials/credential_id
 @router.delete("/{credential_id}")
-async def delete_credential(credential_id: int):
-    success = asset_credential_service.delete_credential(credential_id)
+async def delete_credential(
+    credential_id: int,
+    db: AsyncSession = Depends(get_db)
+):
+    success = await asset_credential_service.delete_credential(credential_id, db)
 
     if not success:
         raise HTTPException(status_code=404, detail="Credential not found")
