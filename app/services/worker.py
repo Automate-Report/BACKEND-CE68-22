@@ -5,7 +5,7 @@ import zipfile
 import jwt
 import math
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 from fastapi import HTTPException, Header
 from fastapi.responses import StreamingResponse
@@ -24,31 +24,32 @@ from app.services.access_key import access_key_service
 
 class WorkerService:
     
-    def _enrich_worker_status(self, worker):
+    def _enrich_worker_status(self, worker_data: dict):
         """ฟังก์ชันช่วยคำนวณสถานะของ Worker"""
         OFFLINE_THRESHOLD_SECONDS = 600
 
         # 1. เช็คเรื่องเวลา (Online/Offline)
-        last_seen_str = worker.get("last_heartbeat")
+        last_seen_str = worker_data.get("last_heartbeat")
         
-        if not last_seen_str or not worker.get("owner"):
-            worker["status"] = "notActivated" 
-            return worker
-
+        if not last_seen_str or not worker_data.get("owner"):
+            worker_data["status"] = WorkerStatus.NOT_ACTIVATE
+            return worker_data
+        
+        now = sa.sql.func.now()
         # แปลง String กลับเป็น datetime
         try:
             last_seen = datetime.fromisoformat(last_seen_str)
             time_diff = datetime.utcnow() - last_seen
 
             if time_diff.total_seconds() < OFFLINE_THRESHOLD_SECONDS:
-                worker["status"] = "online"
+                worker_data["status"] = WorkerStatus.ONLINE
             else:
-                worker["status"] = "offline"
+                worker_data["status"] = WorkerStatus.OFFLINE
                 
         except ValueError:
-            worker["status"] = "Unknown"
+            worker_data["status"] = WorkerStatus.UNKNOWN
 
-        return worker
+        return worker_data
 
     async def create_worker(self, worker_in: WorkerCreate, project_id: int, access_key_id: int, db: AsyncSession) -> dict:
         """Service: สร้าง Worker"""
@@ -145,6 +146,7 @@ class WorkerService:
             worker_dict = worker.__dict__.copy() # Convert to dict
             worker_dict.pop('_sa_instance_state', None) # Clean up internal SA state
             worker_dict["owner_name"] = f"{fn} {ln}"
+            worker_dict = self._enrich_worker_status(worker_dict)
             paginated_items.append(worker_dict)
 
         return {
@@ -189,7 +191,7 @@ class WorkerService:
         worker_dict = row[0].__dict__.copy()
         worker_dict.pop('_sa_instance_state', None) # Clean up internal SA state
         worker_dict["owner_name"] = f"{row[1]} {row[2]}"
-
+        worker_dict = self._enrich_worker_status(worker_dict)
         
         return worker_dict
     
@@ -228,11 +230,32 @@ class WorkerService:
     
     async def get_summary_info(self, project_id: int, db: AsyncSession):
         """Get Total Workers, Online Status, Busy(current_load != 0), total jobs"""
+        # Define the same threshold as your enrichment function (600s = 10 minutes)
+        OFFLINE_THRESHOLD = timedelta(seconds=600)
+
+        # Logic for dynamic status:
+        # 1. If no owner or no heartbeat -> notActivated
+        # 2. If heartbeat is fresh -> online
+        # 3. Otherwise -> offline
+        
+        is_activated = sa.and_(Worker.owner != None, Worker.last_heartbeat != None)
+        is_fresh = (sa.sql.func.now() - Worker.last_heartbeat) < OFFLINE_THRESHOLD
+
         query = sa.select(
+            # Total
             sa.sql.func.count(Worker.id).label("total"),
-            sa.sql.func.count(Worker.id).filter(Worker.status == WorkerStatus.ONLINE).label("online"),
-            sa.sql.func.count(Worker.id).filter(Worker.current_load > 0).label("busy"),
-            # For jobs, we join and count distinct Job IDs
+            
+            # Dynamic Online Count (Must be activated AND heartbeat must be fresh)
+            sa.sql.func.count(Worker.id).filter(
+                sa.and_(is_activated, is_fresh)
+            ).label("online"),
+            
+            # Busy Count (Usually only online workers can be busy)
+            sa.sql.func.count(Worker.id).filter(
+                sa.and_(is_activated, is_fresh, Worker.current_load > 0)
+            ).label("busy"),
+            
+            # Total Jobs
             sa.sql.func.count(Job.id).label("total_jobs")
         ).select_from(Worker).join(
             Job, Worker.id == Job.worker_id, isouter=True
@@ -241,14 +264,14 @@ class WorkerService:
         )
 
         result = await db.execute(query)
-        stats = result.first() # Get the single row of results
+        stats = result.first()
 
         return {
-        "total": stats.total or 0,
-        "online": stats.online or 0,
-        "busy": stats.busy or 0,
-        "total_jobs": stats.total_jobs or 0
-    }
+            "total": stats.total or 0,
+            "online": stats.online or 0,
+            "busy": stats.busy or 0,
+            "total_jobs": stats.total_jobs or 0
+        }
     
     def get_all_worker_ids_by_project_id(self, project_id: int):
         workers = self._read_json()

@@ -11,6 +11,7 @@ class WorkerStatus(enum.Enum):
     NOT_ACTIVATE = "NOT_ACTIVATE"
     AVAILABLE = "AVAILABLE"
     IN_USE = "IN_USE"
+    UNKNOWN = "UNKNOWN"
 
 class Worker(Base):
     __tablename__ = "workers"
