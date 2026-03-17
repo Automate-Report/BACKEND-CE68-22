@@ -1,15 +1,10 @@
-
-
-import json
-import os
+import math
 import secrets
 import string
 
 from datetime import datetime, timedelta
 from typing import List
-
-from fastapi import Depends
-from app.deps.auth import get_current_user
+from fastapi import HTTPException
 
 from app.core.redis import QUEUE_KEY, redis_jobs
 from app.services.asset import asset_service
@@ -19,78 +14,66 @@ from app.services.vulnerability import vuln_service
 
 from app.schemas.job import JobWorkerPayload, SummaryInfoByWorker
 
-# 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
-# app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "jobs.json")
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.models.jobs import Job, JobStatus
+from app.models.workers import Worker, WorkerStatus
+from app.models.vulnerabilities import Vulnerability
+
 
 class JobService:
-    
-    def _ensure_dummy_folder_exists(self):
-        """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
-        folder = os.path.dirname(JSON_FILE_PATH)
-        if not os.path.exists(folder):
-            os.makedirs(folder)
-
-    def _read_json(self) -> List[dict]:
-        """อ่านข้อมูลจากไฟล์ JSON"""
-        if not os.path.exists(JSON_FILE_PATH):
-            return []
-        try:
-            with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except json.JSONDecodeError:
-            return [] # ถ้าไฟล์เสียหรือว่างเปล่า ให้คืนค่า list ว่าง
-
-    def _save_json(self, data: List[dict]):
-        """บันทึกข้อมูลลงไฟล์ JSON"""
-        self._ensure_dummy_folder_exists()
-        with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
-            # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
-            json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
     def _generate_job_name(self, length=12):
         alphabet = string.ascii_letters + string.digits
         return ''.join(secrets.choice(alphabet) for _ in range(length))
     
-    def create_job(self, schedule_id: int, worker_id: int) -> dict:
+    async def create_job(self, schedule_id: int, worker_id: int, db: AsyncSession) -> dict:
         """Service: สร้าง Job ใหม่"""
-        jobs = self._read_json()
-        
-        # 1. จำลอง Logic Auto Increment ID
-        new_id = 1
-        if jobs:
-            # เอา ID ตัวสุดท้ายมา + 1
-            new_id = jobs[-1]["id"] + 1
-        
         job_name = f"job_{self._generate_job_name()}"
+        
+        new_job_db = Job(
+            name = job_name,
+            schedule_id = schedule_id,
+            worker_id = worker_id,
+            status = JobStatus.PENDING,
+            started_at = None,
+            finished_at = None
+        )
+        
+        try:
+            db.add(new_job_db)
+            await db.commit()
+
+            await db.refresh(new_job_db)
+        except Exception as e:
+            await db.rollback()
+            print(f"DEBUG ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Could not create job")
+        
             
         # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_job= {
-            "id": new_id,
-            "name": job_name,
-            "schedule_id": schedule_id,
-            "worker_id": worker_id,
-            "status": "pending",
-            "created_at": datetime.now().isoformat(),
-            "started_at": None,
-            "finished_at": None
+            "id": new_job_db.id,
+            "name": new_job_db.name,
+            "schedule_id": new_job_db.schedule_id,
+            "worker_id": new_job_db.worker_id,
+            "status": new_job_db.status,
+            "created_at": new_job_db.created_at,
+            "started_at": new_job_db.started_at,
+            "finished_at": new_job_db.finished_at
         }
-        
-        # 3. บันทึก
-        jobs.append(new_job)
-        self._save_json(jobs)
         
         return new_job
     
-    def get_job_by_id(self, job_id: int):
-        jobs = self._read_json()
+    async def get_job_by_id(self, job_id: int, db: AsyncSession):
+        query = sa.select(Job).where(Job.id == job_id)
+        result = await db.execute(query)
+        job = result.scalar_one_or_none()
 
-        for job in jobs:
-            if job["id"] == job_id:
-                return job
+        if not job: return None
             
-        return None
+        return job
     
     def get_job_ids_by_schedule_id(self, schedule_id: int):
         jobs = self._read_json()
@@ -103,168 +86,183 @@ class JobService:
 
         return job_ids
     
-    def get_job_by_worker_id(self, worker_id: int,
-                            page: int, size: int, sort_by: str = None, order: str = "asc"):
+    async def get_job_by_worker_id(self, worker_id: int,
+                            page: int, size: int, db: AsyncSession, sort_by: str = None, order: str = "asc"):
         """Service: ดึง Job ตาม Schedule"""
-        jobs = self._read_json()
+        query = (
+            sa.select(Job)
+            .where(Job.worker_id == worker_id)
+        )
 
-        result = []
-        n = 0
-        for job in jobs:
-            if job["worker_id"] == worker_id:
-                n += 1
-                temp = {
-                    "id": job["id"],
-                    "name": job["name"],
-                    "schedule_id": job["schedule_id"],
-                    "status": job["status"],
-                    "started_at": job["started_at"],
-                    "finished_at": job["finished_at"]
-                }
-                result.append(temp)
+        # Sorting
+        column = getattr(Job, sort_by if sort_by else "created_at", Job.created_at)
+        query = query.order_by(column.desc() if order == "desc" else column.asc())
+        
+        count_query = sa.select(sa.sql.func.count()).select_from(query.subquery())
+        total_count_result = await db.execute(count_query)
+        total_count = total_count_result.scalar() or 0
 
-        if sort_by:
-            reverse = (order == "desc")
-            # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
-            result.sort(key=lambda x: (x.get(sort_by) or ""), reverse=reverse)
-        
-        # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
-        total_count = len(result)
-            
-        # 3. คำนวณ Pagination Logic
-        import math
-        total_pages = math.ceil(total_count / size)
-        
+        #  Pagination (LIMIT & OFFSET)
         offset = (page - 1) * size
-        
-        # --- จุดที่ต้องแก้: ตัดข้อมูล (Slicing) ---
-        # ใช้ Python Slice [start : end]
-        paginated_items = result[offset : offset + size]
+        query = query.offset(offset).limit(size)
+
+        # Execute Final Query
+        result = await db.execute(query)
+        rows = result.all() # Returns list of tuples: (Worker, first_name, last_name)
+
+        # Format the output
+        paginated_items = []
+        # Using offset + index to keep the "Job #X" numbering correct across pages
+
+        for i, row in enumerate(rows):
+            job = row[0]          # The Job object
+            paginated_items.append({
+                "id": job.id,
+                "name": job.name,
+                "schedule_id": job.schedule_id,
+                "status": job.status,
+                "started_at": job.started_at,
+                "finished_at": job.finished_at
+            })
 
         return {
             "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
             "page": page,
             "size": size,
-            "total_pages": total_pages,
+            "total_pages": math.ceil(total_count / size) if size > 0 else 0,
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
 
-    def get_job_by_schedule_id(self, schedule_id: int, user_email: str, 
-                            page: int, size: int, sort_by: str = None, order: str = "asc"):
+
+    async def get_job_by_schedule_id(self, schedule_id: int, user_email: str, 
+                            page: int, size: int, db: AsyncSession, sort_by: str = None, order: str = "asc"):
         """Service: ดึง Job ตาม Schedule"""
-        jobs = self._read_json()
+        query = (
+            sa.select(Job, Worker.name.label("worker_name"))
+            .join(Worker, Job.worker_id == Worker.id, isouter=True)
+            .where(Job.schedule_id == schedule_id)
+        )
 
-        result = []
-        n = 0
-        for job in jobs:
-            if job["schedule_id"] == schedule_id:
-                n += 1
-                worker = worker_service.get_worker_by_id(job["worker_id"])
-                temp = {
-                    "id": job["id"],
-                    "name": f'Job #{n} {job["name"]}',
-                    "status": job["status"],
-                    "worker_id": job["worker_id"],
-                    "worker_name": worker["name"],
-                    "created_at": job["created_at"]
-                }
-                result.append(temp)
+        # Sorting
+        column = getattr(Job, sort_by if sort_by else "created_at", Job.created_at)
+        query = query.order_by(column.desc() if order == "desc" else column.asc())
+        
+        count_query = sa.select(sa.sql.func.count()).select_from(query.subquery())
+        total_count_result = await db.execute(count_query)
+        total_count = total_count_result.scalar() or 0
 
-        if sort_by:
-            reverse = (order == "desc")
-            # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
-            result.sort(key=lambda x: (x.get(sort_by) or ""), reverse=reverse)
-        
-        # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
-        total_count = len(result)
-            
-        # 3. คำนวณ Pagination Logic
-        import math
-        total_pages = math.ceil(total_count / size)
-        
+        #  Pagination (LIMIT & OFFSET)
         offset = (page - 1) * size
-        
-        # --- จุดที่ต้องแก้: ตัดข้อมูล (Slicing) ---
-        # ใช้ Python Slice [start : end]
-        paginated_items = result[offset : offset + size]
+        query = query.offset(offset).limit(size)
+
+        # Execute Final Query
+        result = await db.execute(query)
+        rows = result.all() # Returns list of tuples: (Worker, first_name, last_name)
+
+        # Format the output
+        paginated_items = []
+        # Using offset + index to keep the "Job #X" numbering correct across pages
+        start_index = offset + 1
+        for i, row in enumerate(rows):
+            job = row[0]          # The Job object
+            worker_name = row[1]  # The joined name from Worker table
+            
+            paginated_items.append({
+                "id": job.id,
+                "name": f"Job #{start_index + i} {job.name}",
+                "status": job.status,
+                "worker_id": job.worker_id,
+                "worker_name": worker_name or "Unknown",
+                "created_at": job.created_at
+            })
 
         return {
             "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
             "page": page,
             "size": size,
-            "total_pages": total_pages,
+            "total_pages": math.ceil(total_count / size) if size > 0 else 0,
             "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
         }
     
-    def get_number_job_status_by_schedule_id(self, schedule_id: int):
-        jobs = self._read_json()
+    async def get_number_job_status_by_schedule_id(self, schedule_id: int, db: AsyncSession):
+        query = (
+            sa.select(
+                sa.sql.func.count(Job.id).filter(Job.status == JobStatus.PENDING).label("pending"),
+                sa.sql.func.count(Job.id).filter(Job.status == JobStatus.RUNNING).label("running"),
+                sa.sql.func.count(Job.id).filter(Job.status == JobStatus.COMPLETED).label("completed"),
+                sa.sql.func.count(Job.id).filter(Job.status == JobStatus.FAILED).label("failed")
+            )
+            .where(Job.schedule_id == schedule_id)
+        )
+        result = await db.execute(query)
+        stat = result.first()
 
-        pending = 0
-        running = 0
-        completed = 0
-        failed = 0
+        if not stat:
+            return {"pending": 0, "running": 0, "completed": 0, "failed": 0}
 
-        for job in jobs:
-            if job["schedule_id"] == schedule_id:
-                if job["status"] == "pending":
-                    pending += 1
-                elif job["status"] == "running":
-                    running += 1
-                elif job["status"] == "completed":
-                    completed += 1
-                elif job["status"] == "failed":
-                    failed += 1
 
         return {
-            "pending": pending,
-            "running": running,
-            "completed": completed,
-            "failed": failed
+            "pending": stat.pending,
+            "running": stat.running,
+            "completed": stat.completed,
+            "failed": stat.failed
         }
     
-    def update_job_status(self, job_id: int, status: str):
-        jobs = self._read_json()
-        print(status)
-        for job in jobs:
-            if job["id"] == job_id:
-                if status == "found" or status == "not found":
-                    job["status"] = "completed"
-                    job["finished_at"] = datetime.utcnow().isoformat()
-                elif status == "running":
-                    job["status"] = status
-                    job["started_at"] = datetime.utcnow().isoformat()
-                elif status == "failed":
-                    job["status"] = status
-                    job["started_at"] = job["finished_at"] = datetime.utcnow().isoformat()
-                self._save_json(jobs)
-                return True
-        return False
-    
-    def get_summary_info_by_worker_id(self, worker_id: int):
-        jobs = self._read_json()
+    async def update_job_status(self, job_id: int, status: str, db: AsyncSession):
+        query = sa.select(Job).where(Job.id == job_id)
+        result = await db.execute(query)
+        job = result.scalar_one_or_none()
 
-        total_findings = 0
+        if not job:
+            return None
+        
+        if status == "found" or status == "not found":
+            job.status = JobStatus.COMPLETED
+        elif status == "running":
+            job["status"] = JobStatus.RUNNING
+        elif status == "failed":
+            job["status"] = JobStatus.FAILED
 
-        total_jobs = 0
-        completed = 0
-        failed = 0
+        try:
+            await db.commit()
+            await db.refresh(job) # This ensures all DB-generated fields are loaded
 
-        for job in jobs:
-            if job["worker_id"] == worker_id:
-                total_jobs+=1
-                if job["status"] == "completed":
-                    completed+=1
-                elif job["status"] == "failed":
-                    failed+=1
+            return True
+        except Exception as e:
+            await db.rollback()
+            # Log the error so you can see it in the terminal
+            print(f"Database Error: {e}") 
+            raise HTTPException(status_code=500, detail="Internal Server Error")
 
-                cnt_findings = vuln_service.cnt_vuln_by_job_id(job["id"]) 
-                total_findings+=cnt_findings
+    async def get_summary_info_by_worker_id(self, worker_id: int, db: AsyncSession):
+        query = (
+            sa.select(
+                sa.func.count(Job.id).label("total"),
+                sa.sql.func.count(Job.id).filter(Job.status == JobStatus.COMPLETED).label("completed"),
+                sa.sql.func.count(Job.id).filter(Job.status == JobStatus.FAILED).label("failed"),
+                sa.sql.func.count(Vulnerability.id).label("total_findings")
+            )
+            .select_from(Job)
+            .join(Vulnerability, Job.id == Vulnerability.job_id, isouter=True)
+            .where(Job.worker_id == worker_id)
+        )
+
+        result = await db.execute(query)
+        stat = result.first()
+
+        if not stat or stat.total == 0:
+            return SummaryInfoByWorker(
+            total_jobs=0,
+            total_completed=0,
+            total_failed=0,
+            total_findings=0
+        )
 
         return SummaryInfoByWorker(
-            total_jobs=total_jobs,
-            total_completed=completed,
-            total_failed=failed,
-            total_findings=total_findings
+            total_jobs=stat.total,
+            total_completed=stat.completed,
+            total_failed=stat.failed,
+            total_findings=stat.total_findings
         )
     
     def get_total_job_by_worker_id(self, worker_id: int):
