@@ -7,12 +7,13 @@ from app.services.job import job_service
 from app.services.schedule import schedule_service
 from app.services.vulnerability import vuln_service
 from app.deps.auth import get_current_user
+from app.deps.worker import get_current_worker
 
 router = APIRouter()
 
 # update job status
 @router.post("/update_status/", status_code=210)
-async def update_status_job(payload:  JobStatusPayload, current_worker: int = Depends(worker_service.verify_token)):
+async def update_status_job(payload:  JobStatusPayload, current_worker: int = Depends(get_current_worker)):
     success = job_service.update_job_status(payload.job_id, payload.status)
     return success
 
