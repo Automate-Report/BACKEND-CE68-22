@@ -497,29 +497,37 @@ class WorkerService:
             # กันกรณี sub ไม่ใช่ตัวเลข
             raise HTTPException(status_code=401, detail="Invalid Worker ID format")
     
-    def update_heartbeat(self, worker_id: int, payload: HeartBeatPayload):
-        workers = self._read_json()
+    async def update_heartbeat(self, worker_id: int, payload: HeartBeatPayload, db: AsyncSession):
+        query = sa.select(Worker).where(Worker.id == worker_id)
+        result = await db.execute(query)
+        worker = result.scalar_one_or_none()
 
-        found = False
+        if not worker:
+            return False
+        
+        if not worker.owner:
+            print("Worker has no owner, cannot verify")
+            return False
+        
+        worker.current_load = payload.current_load
+        worker.last_heartbeat = sa.sql.func.now()
+        worker.status = payload.status
+        worker.is_active = True
+        worker.internal_ip = payload.internal_ip
+        worker.hostname = payload.hostname
 
-        for worker in workers:
-            if worker["id"] == int(worker_id):
-                if not worker.get("owner"):
-                    print("Worker has no owner, cannot verify")
-                    return False
-                worker["current_load"] = payload.current_load
-                worker["last_heartbeat"] = datetime.utcnow().isoformat()
-                worker["status"] = payload.status
-                worker["isActive"] = True
-                worker["internal_ip"] = payload.internal_ip
-                worker["hostname"] = payload.hostname
-                found = True
-                break
+        
+        try:
+            await db.commit()
+            await db.refresh(worker) # This ensures all DB-generated fields are loaded
 
-        if found:
-            self._save_json(workers)
             return True
-        return False
+        except Exception as e:
+            await db.rollback()
+            # Log the error so you can see it in the terminal
+            print(f"Database Error: {e}") 
+            raise HTTPException(status_code=500, detail="Internal Server Error")
+            return False
     
     async def download_worker(self, worker_id: int, user_id: str, db: AsyncSession):
         """Service: download Worker"""
@@ -609,8 +617,6 @@ class WorkerService:
             print(f"Error claiming worker: {e}")
             raise HTTPException(status_code=500, detail="Failed to assign worker")
         
-        
-
     def read_all_worker(self, project_id: int):
         workers = self._read_json()
         result = []

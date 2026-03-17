@@ -28,10 +28,14 @@ def verify_access_key(req: VerifyRequest):
 
 #HeartBeat
 @router.post("/heartbeat/")
-def heartbeat(payload: HeartBeatPayload, worker_id: int = Depends(worker_service.verify_token)): 
+async def heartbeat(
+    payload: HeartBeatPayload, 
+    worker_id: int = Depends(worker_service.verify_token),
+    db: AsyncSession = Depends(get_db)
+): 
     # worker_id นี้ได้มาจากการแกะ Token ที่ถูกต้องแล้ว
     
-    result = worker_service.update_heartbeat(worker_id, payload)
+    result = await worker_service.update_heartbeat(worker_id, payload)
     if not result:
         # กรณีนี้ยากที่จะเกิด ถ้า Token ผ่านแล้ว แต่เผื่อไว้
         raise HTTPException(status_code=404, detail="Worker not found")
