@@ -35,41 +35,29 @@ class AccessKeyService:
             print(f"DEBUG ERROR: {e}")
             raise HTTPException(status_code=500, detail="Could not access key")
 
+        return new_access_key_db
+    
+    async def get_access_key_by_id(self, id: int, db: AsyncSession):
+        query = sa.select(AccessKey).where(AccessKey.id == id)
+        result = await db.execute(query)
+        access_key = result.scalar_one_or_none()
+
+        if not access_key:
+            return None
+            
+        return access_key
+    
+    async def delete_access_key_by_id(self, id: int, db: AsyncSession):
+        query = sa.select(AccessKey).where(AccessKey.id == id)
+        result = await db.execute(query)
+        access_key = result.scalar_one_or_none()
+
+        if not access_key:
+            return False
         
-        new_access_key = {
-            "id": new_access_key_db.id,
-            "key": new_access_key_db.key,
-            "created_at": new_access_key_db.created_at
-
-        }
-
-        return new_access_key
-    
-    def get_access_key_by_id(self, id: int):
-        access_keys = self._read_json()
-        for key in access_keys:
-            if key["id"] == id:
-                return key
-            
-        return None
-    
-    def get_access_key_by_worker_id(self, worker_id: int):
-        access_keys = self._read_json()
-        for key in access_keys:
-            if key["worker_id"] == worker_id:
-                return key
-            
-        return None
-    
-    def delete_access_key_by_id(self, id: int):
-        access_keys =self._read_json()
-        for i, key in enumerate(access_keys):
-            if key["id"] == id:
-                del access_keys[i]
-                self._save_json(access_keys)
-                return True
-            
-        return False
+        db.delete(access_key)
+        await db.commit()
+        return True
    
 
 access_key_service = AccessKeyService()
