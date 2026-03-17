@@ -151,7 +151,7 @@ class ScheduleService:
         if is_immediate:
             import asyncio
             from app.services.job import job_service
-            asyncio.create_task(job_service.dispatch_job(new_schedule))
+            asyncio.create_task(job_service.dispatch_job(schedule_data=new_schedule, db=db))
 
         # Only return non-sensitive info
         return {
@@ -275,30 +275,62 @@ class ScheduleService:
                 
         return False
     
-    async def get_due_schedules(self):
-        schedules = self._read_json()
+    async def get_due_schedules(self, db: AsyncSession) -> List[Schedule]:
+        now = datetime.now(timezone.utc)
+        now_truncated = now.replace(second=0, microsecond=0)
+
+        query = (
+            sa.select(Schedule)
+            .where(
+                Schedule.is_active == True,
+                sa.or_(
+                    Schedule.start_date == None, 
+                    Schedule.start_date <= now
+                ),
+                sa.or_(
+                    Schedule.end_date == None,
+                    Schedule.end_date >= now
+                )
+            )
+        )
+
+        result = await db.execute(query)
+        schedules = result.scalars().all()
 
         due_schedules = []
+        for sch in schedules:
+            if sch.cron_expression == "Not Repeat":
+                # For one-time jobs, we usually check if they've been run already
+                # or if 'now' is within a small window of their start_date
+                due_schedules.append(sch)
+                continue
 
-        for schedule in schedules:
-            if await self._is_due_now(schedule):
-                due_schedules.append(schedule)
+            # 3. Handle Cron Expressions
+            # Split by your delimiter (e.g., 'Z') if you store multiple crons
+            expressions = [e.strip() for e in sch.cron_expression.split("Z") if e.strip()]
+            
+            for expr in expressions:
+                try:
+                    # Use croniter to see if the 'prev' run was exactly 'now'
+                    it = croniter(expr, now_truncated + timedelta(seconds=1))
+                    prev_run = it.get_prev(datetime)
+                    
+                    if prev_run == now_truncated:
+                        due_schedules.append(sch)
+                        break 
+                except Exception:
+                    continue
 
         return due_schedules
     
-    async def deactivate_schedule(self, schedule_id: int):
-        schedules = self._read_json() # อ่านไฟล์ทั้งหมดออกมา
-        updated = False
-        
-        for s in schedules:
-            if s["schedule_id"] == schedule_id:
-                s["is_active"] = False
-                s["updated_at"] = datetime.now().isoformat()
-                updated = True
-                break
-                
-        if updated:
-            self._save_json(schedules) # ฟังก์ชันสำหรับเขียนทับไฟล์ JSON เดิม
+    async def deactivate_schedule(self, schedule_id: int, db: AsyncSession):
+        query = (
+            sa.update(Schedule)
+            .where(Schedule.id == schedule_id)
+            .values(is_active=False, updated_at=sa.func.now())
+        )
+        await db.execute(query)
+        await db.commit()
 
         
 # สร้าง instance ของ Service เพื่อใช้งาน

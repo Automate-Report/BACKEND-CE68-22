@@ -510,7 +510,8 @@ class WorkerService:
         
         worker.current_load = payload.current_load
         worker.last_heartbeat = sa.sql.func.now()
-        worker.status = payload.status
+        if payload.status == "online":
+            worker.status = WorkerStatus.ONLINE
         worker.is_active = True
         worker.internal_ip = payload.internal_ip
         worker.hostname = payload.hostname
