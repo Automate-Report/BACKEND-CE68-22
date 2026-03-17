@@ -1,5 +1,4 @@
-import json
-import os
+import math
 from datetime import datetime, timedelta, timezone
 from typing import List
 from app.schemas.schedule import ScheduleCreate
@@ -9,147 +8,151 @@ from croniter import croniter
 from app.services.job import job_service
 from app.services.asset import asset_service
 
-# 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
-# app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "test_schedule.json")
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "schedules.json")
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.schedules import Schedule
+from app.models.assets import Asset
+from app.models.jobs import Job, JobStatus
 
 class ScheduleService:
-    
-    def _ensure_dummy_folder_exists(self):
-        """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
-        folder = os.path.dirname(JSON_FILE_PATH)
-        if not os.path.exists(folder):
-            os.makedirs(folder)
 
-    def _read_json(self) -> List[dict]:
-        """อ่านข้อมูลจากไฟล์ JSON"""
-        if not os.path.exists(JSON_FILE_PATH):
-            return []
-        try:
-            with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except json.JSONDecodeError:
-            return [] # ถ้าไฟล์เสียหรือว่างเปล่า ให้คืนค่า list ว่าง
-        
-    def _save_json(self, data: List[dict]):
-        """บันทึกข้อมูลลงไฟล์ JSON"""
-        self._ensure_dummy_folder_exists()
-        with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
-            # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
-            json.dump(data, f, indent=2, ensure_ascii=False, default=str)
-
-
-    def get_all_schedules(self, project_id: int, page: int, size: int, search: str = None, filter: str = "ALL"):
+    async def get_all_schedules(self, project_id: int, page: int, size: int, db: AsyncSession, search: str = None, filter: str = "ALL"):
         """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
-        schedules = self._read_json()
-        # 1. กรอง Project
-        all_matches = []
-        for sch in schedules:
-            if filter == "ALL":
-                if search:
-                    if sch["project_id"] == project_id and search in sch["schedule_name"]:
-                        jobstatus = job_service.get_number_job_status_by_schedule_id(sch["schedule_id"])
-                        displaytable_sch = {
-                            "id": sch["schedule_id"],
-                            "project_id": sch["project_id"],
-                            "name": sch["schedule_name"],
-                            "asset_name": asset_service.get_asset_by_id(sch["asset_id"])["name"],
-                            "atk_type": sch["attack_type"],
-                            "start_date": sch["start_date"],
-                            "end_date": sch["end_date"],
-                            "job_status": {
-                                "failed": jobstatus["failed"],
-                                "finished": jobstatus["completed"],
-                                "ongoing": jobstatus["running"],    
-                                "scheduled": jobstatus["pending"],
-                            }
-                        }
-                        all_matches.append(displaytable_sch)
-                else:
-                    if sch["project_id"] == project_id:
-                        jobstatus = job_service.get_number_job_status_by_schedule_id(sch["schedule_id"])
-                        displaytable_sch = {
-                            "id": sch["schedule_id"],
-                            "project_id": sch["project_id"],
-                            "name": sch["schedule_name"],
-                            "asset_name": asset_service.get_asset_by_id(sch["asset_id"])["name"],
-                            "atk_type": sch["attack_type"],
-                            "start_date": sch["start_date"],
-                            "end_date": sch["end_date"],
-                            "job_status": {
-                                "failed": jobstatus["failed"],
-                                "finished": jobstatus["completed"],
-                                "ongoing": jobstatus["running"],    
-                                "scheduled": jobstatus["pending"],
-                            }
-                        }
-                        all_matches.append(displaytable_sch)
-            else:
-                # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
-                pass
-        
-        # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
-        total_count = len(all_matches)
-            
-        # 3. คำนวณ Pagination Logic
-        import math
-        total_pages = math.ceil(total_count / size)
-        
+        query = (
+            sa.select(
+                Schedule, 
+                Asset.name.label("asset_name"),
+                sa.sql.func.count(Job.id).filter(Job.status == JobStatus.FAILED).label("failed"),
+                sa.sql.func.count(Job.id).filter(Job.status == JobStatus.COMPLETED).label("completed"),
+                sa.sql.func.count(Job.id).filter(Job.status == JobStatus.RUNNING).label("running"),
+                sa.sql.func.count(Job.id).filter(Job.status == JobStatus.PENDING).label("pending")
+            )
+            .join(Asset, Schedule.asset_id == Asset.id)
+            .join(Job, Schedule.id == Job.schedule_id, isouter=True)
+            .where(Schedule.project_id == project_id)
+            .group_by(Schedule.id, Asset.name)
+        )
+
+        if search:
+            query = query.where(Schedule.name.ilike(f"%{search}%"))
+
+        if filter and filter != "ALL":
+            if filter == "not_repeat":
+                query = query.where(Schedule.cron_expression == "Not Repeat")
+            elif filter == "active":
+                query = query.where(Schedule.is_active == True)
+            elif filter == "expired":
+                query = query.where(Schedule.is_active == False)
+
+        count_query = sa.select(sa.sql.func.count()).select_from(query.subquery())
+        total_result = await db.execute(count_query)
+        total_count = total_result.scalar() or 0
+
         offset = (page - 1) * size
+        query = query.offset(offset).limit(size)
+
+        # 5. Execute and Format
+        result = await db.execute(query)
+        rows = result.all()
+
+        paginated_items = []
         
-        # --- จุดที่ต้องแก้: ตัดข้อมูล (Slicing) ---
-        # ใช้ Python Slice [start : end]
-        paginated_items = all_matches[offset : offset + size]
+        for row in rows:
+            sch = row[0]       # The Schedule object
+            asset_name = row[1] # The joined Asset name
+            
+            paginated_items.append({
+                "id": sch.id,
+                "project_id": sch.project_id,
+                "name": sch.name,
+                "asset_name": asset_name,
+                "atk_type": sch.attack_type,
+                "start_date": sch.start_date,
+                "end_date": sch.end_date,
+                "job_status": {
+                    "failed": row.failed,
+                    "finished": row.completed,
+                    "ongoing": row.running,
+                    "scheduled": row.pending,
+                }
+            })
 
         return {
-            "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
+            "total": total_count,
             "page": page,
             "size": size,
-            "total_pages": total_pages,
-            "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
+            "total_pages": math.ceil(total_count / size) if size > 0 else 0,
+            "items": paginated_items
         }
     
-    def get_by_id(self, schedule_id: int):
-        schedules = self._read_json()
-        
-        for schedule in schedules:
-            if schedule["schedule_id"] == schedule_id:
-                return schedule
-        
-        return "Schedule Not Found"
-    
-    
-    async def create_schedule(self, schedule_input: ScheduleCreate, user_id: str):
-        schedules = self._read_json()
-        latest_id = max([s["schedule_id"] for s in schedules], default=0)
+    async def get_by_id(self, schedule_id: int, db: AsyncSession):
+        query = sa.select(Schedule).where(Schedule.id == schedule_id)
+        result = await db.execute(query)
+        schedule = result.scalar_one_or_none()
 
+        if not schedule:
+            return None
+        
+        return {
+            "schedule_id": schedule.id,
+            "schedule_name": schedule.name,
+            "project_id": schedule.project_id,
+            "asset_id": schedule.asset_id,
+            "cron_expression": schedule.cron_expression,
+            "attack_type": schedule.cron_expression.lower(),
+            "is_active": schedule.is_active,
+            "start_date": schedule.start_date,
+            "end_date": schedule.end_date,
+            "created_at": schedule.created_at,
+            "updated_at": schedule.updated_at
+        }
+    
+    
+    async def create_schedule(self, schedule_input: ScheduleCreate, user_id: str, db: AsyncSession):
         is_immediate = schedule_input.cron_expression in ["Not Repeat", "now", ""]
         
-        new_schedule = {
-            "schedule_id": latest_id + 1,
-            "schedule_name": schedule_input.name,
-            "project_id": schedule_input.project_id,
-            "asset_id": schedule_input.asset,
-            "cron_expression": schedule_input.cron_expression,
-            "attack_type": schedule_input.atk_type,
-            "is_active": True,
-            "start_date": schedule_input.start_date,
-            "end_date": schedule_input.end_date,
-            "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat(),
-            "created_by": user_id,
-        }
+        new_schedule_db = Schedule(
+            name = schedule_input.name,
+            project_id = schedule_input.project_id,
+            asset_id = schedule_input.asset,
+            cron_expression = schedule_input.cron_expression,
+            attack_type = schedule_input.atk_type.upper(),
+            is_active = True,
+            start_date = schedule_input.start_date,
+            end_date = schedule_input.end_date,
+            created_by = user_id,
+        )
+
+        try:
+            db.add(new_schedule_db)
+            await db.commit()
+
+            await db.refresh(new_schedule_db)
+        except Exception as e:
+            await db.rollback()
+            print(f"DEBUG ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Could not create schedule")
         
-        schedules.append(new_schedule)
-        self._save_json(schedules)
+        new_schedule = {
+            "schedule_id": new_schedule_db.id,
+            "schedule_name": new_schedule_db.name,
+            "project_id": new_schedule_db.project_id,
+            "asset_id": new_schedule_db.asset_id,
+            "cron_expression": new_schedule_db.cron_expression,
+            "attack_type": new_schedule_db.attack_type,
+            "is_active": new_schedule_db.is_active,
+            "start_date": new_schedule_db.start_date,
+            "end_date": new_schedule_db.end_date,
+            "created_at": new_schedule_db.created_at,
+            "updated_at": new_schedule_db.updated_at,
+            "created_by": new_schedule_db.created_by,
+        }
 
         if is_immediate:
             import asyncio
             from app.services.job import job_service
             asyncio.create_task(job_service.dispatch_job(new_schedule))
-        
+
         # Only return non-sensitive info
         return {
             "schedule_id": new_schedule["schedule_id"],
@@ -157,39 +160,59 @@ class ScheduleService:
             "schedule_atk_type": new_schedule["attack_type"],
         }
 
-    def edit_schedule(self, schedule_id: int, schedule_input: ScheduleCreate):
-        schedules = self._read_json()
+    async def edit_schedule(self, schedule_id: int, schedule_input: ScheduleCreate, db: AsyncSession):
+        query = sa.select(Schedule).where(Schedule.id == schedule_id)
+        result = await db.execute(query)
+        schedule = result.scalar_one_or_none()
+
+        if not schedule:
+            return None
         
-        for schedule in schedules:
-            if schedule["schedule_id"] == schedule_id:
-                schedule["schedule_name"] = schedule_input.name
-                schedule["project_id"] = schedule_input.project_id
-                schedule["asset_id"] = schedule_input.asset
-                schedule["cron_expression"] = schedule_input.cron_expression
-                schedule["attack_type"] = schedule_input.atk_type
-                schedule["start_date"] = schedule_input.start_date
-                schedule["end_date"] = schedule_input.end_date
-                schedule["updated_at"] = datetime.now().isoformat()
+
+        schedule.name = schedule_input.name
+        schedule.project_id = schedule_input.project_id
+        schedule.asset_id = schedule_input.asset
+        schedule.cron_expression = schedule_input.cron_expression
+        schedule.attack_type = schedule_input.atk_type.upper()
+        schedule.start_date = schedule_input.start_date
+        schedule.end_date = schedule_input.end_date
+
+        try:
+            await db.commit()
+            await db.refresh(schedule) # This ensures all DB-generated fields are loaded
+
+            return {
+                "schedule_id": schedule.id,
+                "schedule_name": schedule.name,
+                "schedule_atk_type": schedule.attack_type,
+            }
+
+        except Exception as e:
+            await db.rollback()
+            # Log the error so you can see it in the terminal
+            print(f"Database Error: {e}") 
+            raise HTTPException(status_code=500, detail="Internal Server Error")
                 
-                self._save_json(schedules)
-                
-                # Only return non-sensitive info
-                return {
-                    "schedule_id": schedule["schedule_id"],
-                    "schedule_name": schedule["schedule_name"],
-                    "schedule_atk_type": schedule["attack_type"],
-                }
+    async def delete_schedule(self, schedule_id: int, db: AsyncSession) -> bool:
+        query = sa.select(Schedule).where(Schedule.id == schedule_id)
+        result = await db.execute(query)
+        schedule = result.scalar_one_or_none()
+
+        if not schedule:
+            return None
         
-        raise HTTPException(status_code=404, detail="Schedule not found")
-    
-    def delete_schedule(self, schedule_id: int) -> bool:
-        schedules = self._read_json()
-        for i, schedule in enumerate(schedules):
-            if schedule["schedule_id"] == schedule_id:
-                del schedules[i]
-                self._save_json(schedules)
-                return True
-        return False
+        try:
+            # 2. Delete using the session
+            await db.delete(schedule)
+            
+            # 3. Commit the transaction
+            await db.commit()
+            return True
+        except Exception as e:
+            # 4. Rollback if something goes wrong (e.g., Foreign Key constraint)
+            await db.rollback()
+            print(f"Delete Error: {e}")
+            return False
     
     def get_schedule_ids_by_project_id(self, project_id: int):
         schedules = self._read_json()

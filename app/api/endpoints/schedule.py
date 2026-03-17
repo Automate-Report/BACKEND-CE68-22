@@ -1,8 +1,13 @@
 from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
 
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.schedules import Schedule
+
 from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role
+from app.core.db import get_db
 
 from app.schemas.pagination import PaginatedResponse
 from app.schemas.schedule import ScheduleCreate, ScheduleResponse, ScheduleItem
@@ -20,46 +25,66 @@ async def get_all_schedules(
     search: Optional[str] = Query(None, description="Search box"),
     filter: Optional[str] = Query("ALL", description="filter - ALL -    -    "),
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db = Depends(get_db)
 ):
 
-    result = schedule_service.get_all_schedules(
+    result = await schedule_service.get_all_schedules(
         project_id=project_id,
         page=page,
         size=size,
         search=search,
-        filter=filter
+        filter=filter,
+        db=db
     )
 
     return result
 
 # GET by schedule ID
 @router.get("/{schedule_id}", response_model=ScheduleItem)
-async def get_schedule(schedule_id: int):
+async def get_schedule(
+    schedule_id: int,
+    db: AsyncSession = Depends(get_db)
+):
 
-    schedule = schedule_service.get_by_id(schedule_id)
+    schedule = await schedule_service.get_by_id(schedule_id, db)
     
-    if schedule == "Schedule Not Found":
+    if not schedule:
         raise HTTPException(status_code=404, detail="Schedule not found")
     
     return schedule
 
 # POST new schedule
 @router.post("/create")
-async def create_schedule(schedule_input: ScheduleCreate, user = Depends(get_current_user)):
-    status_message = await schedule_service.create_schedule(schedule_input, user["sub"])
+async def create_schedule(
+    schedule_input: ScheduleCreate, 
+    user = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    status_message = await schedule_service.create_schedule(
+        schedule_input, 
+        user["sub"],
+        db
+    )
     return {"message": status_message}
 
 # PUT update via edit schedule
 @router.put("/{schedule_id}/update")
-async def update_schedule(schedule_id: int, schedule_input: ScheduleCreate):
-    status_message = schedule_service.edit_schedule(schedule_id, schedule_input)
+async def update_schedule(
+    schedule_id: int, 
+    schedule_input: ScheduleCreate,
+    db: AsyncSession = Depends(get_db)
+):
+    status_message = await schedule_service.edit_schedule(schedule_id, schedule_input, db)
     return {"message": status_message}
 
 # DELETE
 @router.delete("/{schedule_id}/delete")
-async def delete_schedule(schedule_id: int):
-    success = schedule_service.delete_schedule(schedule_id)
+async def delete_schedule(
+    schedule_id: int,
+    db: AsyncSession = Depends(get_db)
+):
+    success = await schedule_service.delete_schedule(schedule_id, db)
     if not success:
         raise HTTPException(status_code=404, detail="Schedule not found")
     return {"message": "Schedule deleted successfully"}
