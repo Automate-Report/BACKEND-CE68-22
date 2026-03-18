@@ -50,7 +50,7 @@ def accept_invitation(project_id: int, user = Depends(get_current_user)):
     if not result:
         raise HTTPException(status_code=404, detail="Invitation not found")
     
-    return result
+    return {"detail": "Invitation accepted successfully"}
 
 @router.delete("/decline/{project_id}")
 def decline_invitation(project_id: int, user = Depends(get_current_user)):
