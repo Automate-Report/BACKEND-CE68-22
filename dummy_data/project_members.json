@@ -30,13 +30,5 @@
     "joinned_at": "2026-01-31T13:38:16.664029",
     "status": "joined",
     "invited_at": "2026-01-30T10:00:00.000000"
-  },
-  {
-    "project_id": 5,
-    "email": "user@example.com",
-    "role": "pentester",
-    "joinned_at": "2026-01-31T13:38:16.664029",
-    "status": "joined",
-    "invited_at": "2026-01-30T10:00:00.000000"
   }
 ]
