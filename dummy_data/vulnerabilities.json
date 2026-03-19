@@ -44,7 +44,7 @@
     "asset_id": 6,
     "job_id": 1,
     "assigned_to": "somchai@tech.co.th",
-    "verified_by": "somying@shopdee.com",
+    "verified_by": "somchai@tech.co.th",
     "library_id": 2,
     "vuln_hash": "fe8ec6fe2bfb4dc14d204bb7a29dfa28ae686044e145f8eb4ed9b7bac7e4e860",
     "target": "http://localhost:4040/",
@@ -52,8 +52,8 @@
     "method": "GET",
     "severity": "MEDIUM",
     "db_type": null,
-    "status": "open",
-    "verify": "tp",
+    "status": "in_progress",
+    "verify": "fp",
     "occurrence_count": 5,
     "first_seen_at": "2026-02-21T20:18:49.281141",
     "last_seen_at": "2026-03-09T18:52:59.234692",
@@ -166,5 +166,4 @@
     "occurrence_count": 1,
     "description_override": "Risk accepted: Internal network only."
   }
- 
 ]
