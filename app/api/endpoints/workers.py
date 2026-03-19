@@ -215,7 +215,6 @@ async def disconnect_all_worker_from_host_by_project(project_id: int, role = Dep
     
     worker_service.disconnect_workers_in_project(
         project_id=project_id,
-        user_id=user["sub"]
     )
 
 @router.post("/{worker_id}/mark-downloaded")
