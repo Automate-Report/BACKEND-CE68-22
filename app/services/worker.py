@@ -453,12 +453,12 @@ class WorkerService:
         # Path ของ Worker
         TEMPLATE_DIR = "app/static/bin/SecurityWorker" 
         # ชื่อไฟล์ exe 
-        TARGET_EXE_NAME = "SecurityWorker.exe"
+        TARGET_EXE_NAME = "Pest10.exe"
 
         # --- ส่วนที่แก้ไข: สร้าง ZIP File ในหน่วยความจำ ---
         zip_buffer = io.BytesIO()
 
-        dest_folder_name = f"SecurityWorker_{worker.get('name')}"
+        dest_folder_name = f"Pest10_{worker.get('name')}"
 
         with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
         
