@@ -40,10 +40,15 @@ def create_worker(project_id: int, worker_in: WorkerCreate, user = Depends(get_c
     if role != "owner":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
-    worker = worker_service.create_worker(worker_in, project_id)
-
+    
     key = access_key_service.create_access_key()
+    worker = worker_service.create_worker(
+        worker_in=worker_in, 
+        project_id=project_id,
+        access_key_id=key["id"]
+    )
 
+    
     return { 
         "status": "Successfully!",
         "key": key["key"]
