@@ -53,7 +53,7 @@ class WorkerService:
         last_seen_str = worker.get("last_heartbeat")
         
         if not last_seen_str or not worker.get("owner"):
-            worker["status"] = "notActivated" 
+            worker["status"] = "NOT_ACTIVATE" 
             return worker
 
         # แปลง String กลับเป็น datetime
@@ -125,7 +125,7 @@ class WorkerService:
                     continue
                 elif filter == "offline" and worker["status"] != "offline":
                     continue
-                elif filter == "notActivated" and worker["status"] != "notActivated":
+                elif filter == "notActivated" and worker["status"] != "NOT_ACTIVATE":
                     continue
                 elif filter == "available" and worker["owner"]:
                     continue
@@ -233,7 +233,7 @@ class WorkerService:
         for worker in workers:
             if worker["id"] == worker_id:
                 worker["access_key_id"] = access_key_id
-                worker["status"] = "notActivated"
+                worker["status"] = "NOT_ACTIVATE"
                 worker["isActive"] = False
                 worker["last_heartbeat"] = None
                 worker["internal_ip"] = None
@@ -265,7 +265,7 @@ class WorkerService:
                 worker["internal_ip"] = None
                 worker["last_heartbeat"] = None
                 worker["owner"] = None
-                worker["status"] = "notActivated"
+                worker["status"] = "NOT_ACTIVATE"
                 worker["access_key_id"] = key.get("id")
 
         self._save_json(workers)
@@ -283,7 +283,7 @@ class WorkerService:
                 worker["internal_ip"] = None
                 worker["last_heartbeat"] = None
                 worker["owner"] = None
-                worker["status"] = "notActivated"
+                worker["status"] = "NOT_ACTIVATE"
                 worker["access_key_id"] = key.get("id")
 
         self._save_json(workers)

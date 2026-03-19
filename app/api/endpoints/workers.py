@@ -198,7 +198,11 @@ def download_worker_zip(
 
 
 @router.get("/unlink/{worker_id}")
-async def disconnect_worker_from_host(worker_id: int, role = Depends(get_current_project_role), user = Depends(get_current_user)):
+async def disconnect_worker_from_host(
+    worker_id: int, 
+    role = Depends(get_current_project_role), 
+    user = Depends(get_current_user),
+):
     if role == "developer":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
