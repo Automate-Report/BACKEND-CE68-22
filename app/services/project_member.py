@@ -64,7 +64,7 @@ class ProjectMemberService:
     
     def get_invitations_by_user_id(self, user_id: str):
         relations = self._read_json()
-
+    
         invitations = []
         for rel in relations:
             if rel["email"] == user_id and rel["status"] == "invited":
