@@ -1197,5 +1197,16 @@
     "created_at": "2026-03-13T14:08:59.798691",
     "file_type": "txt",
     "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_118_20260313_140859-111.txt"
+  },
+  {
+    "id": 112,
+    "job_id": 119,
+    "pentest_status": "failed",
+    "error_msg": "Target Unreachable: Connection failed - cannot reach target",
+    "file_name": "job_job_ok0hg4V9E9V7_20260320_145941.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_job_ok0hg4V9E9V7_20260320_145941.txt",
+    "created_at": "2026-03-20T14:59:41.916920",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_job_ok0hg4V9E9V7_20260320_145941.txt"
   }
 ]

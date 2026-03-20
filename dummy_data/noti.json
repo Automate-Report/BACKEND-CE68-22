@@ -781,5 +781,14 @@
     "hyperlink": "/projects/21/workers",
     "created_at": "2026-03-20T14:43:37.096063",
     "status": "unread"
+  },
+  {
+    "noti_id": 88,
+    "user_email": "somchai@tech.co.th",
+    "type": "success",
+    "message": "🚀 เริ่มงานสแกนสำหรับ OWASP Juice Shop ทันทีบน Worker CE68-22-Nodes",
+    "hyperlink": "/jobs/119",
+    "created_at": "2026-03-20T14:59:35.464984",
+    "status": "unread"
   }
 ]
