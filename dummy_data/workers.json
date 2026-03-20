@@ -30,20 +30,6 @@
     "owner": null
   },
   {
-    "id": 5,
-    "project_id": 21,
-    "thread_number": 1,
-    "current_load": 0,
-    "name": "dsfsf",
-    "hostname": null,
-    "status": "NOT_ACTIVATE",
-    "isActive": false,
-    "created_at": "2026-03-18T20:43:18.626698",
-    "updated_at": "2026-03-18T20:43:18.626720",
-    "last_heartbeat": null,
-    "owner": null
-  },
-  {
     "id": 6,
     "project_id": 25,
     "thread_number": 1,
@@ -60,16 +46,31 @@
   {
     "id": 7,
     "project_id": 21,
-    "access_key_id": 24,
+    "access_key_id": 25,
+    "thread_number": 2,
+    "current_load": 0,
+    "name": "CE68-22-Node",
+    "hostname": null,
+    "status": "NOT_ACTIVATE",
+    "isActive": false,
+    "created_at": "2026-03-20T01:13:00.796266",
+    "updated_at": "2026-03-20T01:13:00.796276",
+    "last_heartbeat": null,
+    "owner": "somchai@tech.co.th"
+  },
+  {
+    "id": 8,
+    "project_id": 21,
+    "access_key_id": 26,
     "thread_number": 3,
     "current_load": 0,
     "name": "CE68-22-Nodes",
     "hostname": "Nattharika-J",
     "status": "online",
     "isActive": true,
-    "created_at": "2026-03-20T00:43:18.630551",
-    "updated_at": "2026-03-20T00:43:18.630564",
-    "last_heartbeat": "2026-03-19T17:52:51.121440",
+    "created_at": "2026-03-20T13:54:26.347964",
+    "updated_at": "2026-03-20T13:54:26.347975",
+    "last_heartbeat": "2026-03-20T07:58:23.734893",
     "owner": "somchai@tech.co.th",
     "internal_ip": "10.66.13.20"
   }

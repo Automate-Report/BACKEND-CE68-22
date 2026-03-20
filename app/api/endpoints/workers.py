@@ -154,6 +154,7 @@ def re_access_key(
 @router.delete("/{worker_id}")
 async def delete_worker(
     worker_id: int, 
+    project_id: int,
     user = Depends(get_current_user),
     role = Depends(get_current_project_role)
 ):

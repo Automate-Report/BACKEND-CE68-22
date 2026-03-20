@@ -208,5 +208,19 @@
     "created_at": "2026-03-19T15:16:14.583341",
     "updated_at": "2026-03-19T15:16:14.635508",
     "created_by": "sompong@shopdee.com"
+  },
+  {
+    "schedule_id": 28,
+    "schedule_name": "Test Job is created",
+    "project_id": 21,
+    "asset_id": 6,
+    "cron_expression": "Not Repeat",
+    "attack_type": "xss",
+    "is_active": false,
+    "start_date": "2026-03-20 07:44:36.688000+00:00",
+    "end_date": "2026-03-20 07:44:36.688000+00:00",
+    "created_at": "2026-03-20T14:43:37.024488",
+    "updated_at": "2026-03-20T14:43:37.121993",
+    "created_by": "somchai@tech.co.th"
   }
 ]
