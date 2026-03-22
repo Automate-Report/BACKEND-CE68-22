@@ -160,7 +160,11 @@ async def delete_pentest_report_by_id(
     if role == "developer":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
-    success = pen_test_report_service.delete_pentest_report_by_id(report_id)
+    success = pen_test_report_service.delete_pentest_report_by_id(
+        report_id=report_id, 
+        role=role,
+        user_id=user["sub"]
+    )
 
     if not success:
         raise HTTPException(status_code=404, detail="Report not found")
