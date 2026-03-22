@@ -1,6 +1,6 @@
 [
   {
-    "id": 2,
+    "id": 1,
     "name": "Test Create Asset with Credential",
     "project_id": 4,
     "description": "",
@@ -10,9 +10,9 @@
     "updated_at": "2026-01-06T20:57:23.908683"
   },
   {
-    "id": 3,
+    "id": 2,
     "name": "Test Edit Asset to have Credential",
-    "project_id": 23,
+    "project_id": 3,
     "description": null,
     "target": "1.2.3.4",
     "type": "IP",
@@ -20,9 +20,9 @@
     "updated_at": "2026-03-23T00:53:23.463028"
   },
   {
-    "id": 4,
+    "id": 3,
     "name": "Test Edit Asset to Delete Credential",
-    "project_id": 21,
+    "project_id": 1,
     "description": null,
     "target": "www.test.xyz",
     "type": "URL",
@@ -30,9 +30,9 @@
     "updated_at": "2026-03-23T00:00:43.618096"
   },
   {
-    "id": 6,
+    "id": 4,
     "name": "OWASP Juice Shop",
-    "project_id": 21,
+    "project_id": 1,
     "description": null,
     "target": "http://localhost:4040/",
     "type": "URL",
@@ -40,9 +40,9 @@
     "updated_at": "2026-02-21T16:59:15.145703"
   },
   {
-    "id": 7,
+    "id": 5,
     "name": "API Gateway",
-    "project_id": 22,
+    "project_id": 2,
     "description": "",
     "target": "https://api.shop.com",
     "type": "URL",
@@ -50,9 +50,9 @@
     "updated_at": "2026-01-06T21:12:51.429206"
   },
   {
-    "id": 8,
+    "id": 6,
     "name": "DVWA",
-    "project_id": 21,
+    "project_id": 1,
     "description": null,
     "target": "http://localhost:4050",
     "type": "URL",
@@ -60,9 +60,9 @@
     "updated_at": "2026-03-10T19:29:13.110554"
   },
   {
-    "id": 9,
+    "id": 7,
     "name": "OWASP Juice Shop",
-    "project_id": 23,
+    "project_id": 3,
     "description": "",
     "target": "http://localhost:4040/#/",
     "type": "URL",
@@ -70,9 +70,9 @@
     "updated_at": "2026-02-25T15:50:17.205625"
   },
   {
-    "id": 10,
+    "id": 8,
     "name": "Production API Gateway",
-    "project_id": 21,
+    "project_id": 1,
     "description": "Main entry point for customer traffic",
     "target": "https://api.enterprise.com",
     "type": "URL",
@@ -80,9 +80,9 @@
     "updated_at": "2026-02-27T10:21:49.295379"
   },
   {
-    "id": 11,
+    "id": 9,
     "name": "Customer Database Server",
-    "project_id": 21,
+    "project_id": 1,
     "description": "Internal DB storing user credentials",
     "target": "10.0.1.55",
     "type": "IP",
@@ -90,9 +90,9 @@
     "updated_at": "2026-02-27T10:21:49.295379"
   },
   {
-    "id": 12,
+    "id": 10,
     "name": "Staging Web Portal",
-    "project_id": 21,
+    "project_id": 1,
     "description": "Test environment for new features",
     "target": "https://staging.enterprise.com",
     "type": "URL",
@@ -122,7 +122,7 @@
   {
     "id": 15,
     "name": "GuardianLeaks",
-    "project_id": 21,
+    "project_id": 1,
     "description": "",
     "target": "https://pentest-ground.com:81/",
     "type": "URL",
@@ -132,7 +132,7 @@
   {
     "id": 16,
     "name": "CE Website",
-    "project_id": 21,
+    "project_id": 1,
     "description": "",
     "target": "http://161.246.6.1:8015/",
     "type": "URL",
@@ -142,7 +142,7 @@
   {
     "id": 17,
     "name": "DVWA-SQLi",
-    "project_id": 21,
+    "project_id": 1,
     "description": "",
     "target": "http://localhost:4050/vulnerabilities/sqli/",
     "type": "URL",
@@ -152,7 +152,7 @@
   {
     "id": 18,
     "name": "MyProject",
-    "project_id": 21,
+    "project_id": 1,
     "description": "",
     "target": "http://localhost:3000/",
     "type": "URL",
@@ -162,7 +162,7 @@
   {
     "id": 19,
     "name": "Accunetix VulnWeb ASP.NET",
-    "project_id": 21,
+    "project_id": 1,
     "description": "",
     "target": "http://testaspnet.vulnweb.com/",
     "type": "URL",
@@ -172,7 +172,7 @@
   {
     "id": 20,
     "name": "fgfdgdgfg",
-    "project_id": 21,
+    "project_id": 1,
     "description": "",
     "target": "fgdgdfg",
     "type": "URL",
@@ -182,7 +182,7 @@
   {
     "id": 21,
     "name": "gfgdgdgdfgddg",
-    "project_id": 21,
+    "project_id": 1,
     "description": "",
     "target": "dgdgdgdgdgdgdfg",
     "type": "IP",
@@ -192,7 +192,7 @@
   {
     "id": 22,
     "name": "gdgddf",
-    "project_id": 21,
+    "project_id": 1,
     "description": "",
     "target": "dgdgf",
     "type": "IP",
@@ -202,7 +202,7 @@
   {
     "id": 23,
     "name": "dgdgf",
-    "project_id": 21,
+    "project_id": 1,
     "description": "",
     "target": "gdgfdgd",
     "type": "IP",
@@ -212,7 +212,7 @@
   {
     "id": 24,
     "name": "dgdgdfgdf",
-    "project_id": 21,
+    "project_id": 1,
     "description": "",
     "target": "gdgfdgdfgfdg",
     "type": "IP",
@@ -222,7 +222,7 @@
   {
     "id": 25,
     "name": "dfgdfgdg",
-    "project_id": 21,
+    "project_id": 1,
     "description": "",
     "target": "dgdgdfg",
     "type": "IP",
@@ -232,7 +232,7 @@
   {
     "id": 26,
     "name": "sdfsfsf",
-    "project_id": 23,
+    "project_id": 3,
     "description": null,
     "target": "sfdsfsdfsd",
     "type": "IP",
