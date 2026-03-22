@@ -364,9 +364,10 @@ class WorkerService:
 
         self._save_json(workers)
 
-    def verify_worker(self, req: VerifyRequest):
-        workers = self._read_json()
-        target_worker = None
+    async def verify_worker(self, req: VerifyRequest, db: AsyncSession):
+        query = sa.select(Worker).where(Worker.id == req.worker_id)
+        result = await db.execute(query)
+        worker_db = result.scalar_one_or_none()
         
         try:
             if worker_db.access_key_id:
