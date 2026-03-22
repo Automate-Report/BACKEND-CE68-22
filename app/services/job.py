@@ -8,9 +8,6 @@ import string
 from datetime import datetime, timedelta
 from typing import List
 
-from fastapi import Depends
-from app.deps.auth import get_current_user
-
 from app.core.redis import QUEUE_KEY, redis_jobs
 from app.services.asset import asset_service
 from app.services.worker import worker_service
