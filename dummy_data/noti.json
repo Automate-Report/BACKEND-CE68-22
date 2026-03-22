@@ -799,5 +799,14 @@
     "hyperlink": "/projects/21/workers",
     "created_at": "2026-03-22T23:48:41.199942",
     "status": "unread"
+  },
+  {
+    "noti_id": 90,
+    "user_email": "sompong@shopdee.com",
+    "type": "Task",
+    "message": "ถูก assigne งานให้แก้บัค โปรเจกต์นี้ ชื่อนี้",
+    "hyperlink": "/projects/21/triage/3",
+    "created_at": "2026-03-23T03:05:56.442135",
+    "status": "unread"
   }
 ]
