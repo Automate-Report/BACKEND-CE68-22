@@ -30,16 +30,6 @@
     "updated_at": "2026-01-06T21:07:53.141777"
   },
   {
-    "id": 5,
-    "name": "test1",
-    "project_id": 23,
-    "description": null,
-    "target": "2.2.2.2",
-    "type": "IP",
-    "created_at": "2026-01-06T21:12:35.426419",
-    "updated_at": "2026-03-19T14:35:43.170416"
-  },
-  {
     "id": 6,
     "name": "OWASP Juice Shop",
     "project_id": 21,
@@ -241,22 +231,22 @@
   },
   {
     "id": 26,
-    "name": "sfsfsdf",
+    "name": "sdfsfsf",
     "project_id": 23,
     "description": "",
-    "target": "sfsdfsf",
+    "target": "sfdsfsdfsd",
     "type": "IP",
-    "created_at": "2026-03-20T21:37:56.841982",
-    "updated_at": "2026-03-20T21:37:56.841992"
+    "created_at": "2026-03-20T23:05:57.163280",
+    "updated_at": "2026-03-20T23:05:57.163294"
   },
   {
     "id": 27,
-    "name": "fhfhfgh",
+    "name": "dgdgdfg",
     "project_id": 23,
     "description": "",
-    "target": "fhfhgfhfhgfhfgh",
+    "target": "dgdfgdg",
     "type": "IP",
-    "created_at": "2026-03-20T21:40:47.624895",
-    "updated_at": "2026-03-20T21:40:47.624904"
+    "created_at": "2026-03-21T00:09:45.024837",
+    "updated_at": "2026-03-21T00:09:45.024851"
   }
 ]
