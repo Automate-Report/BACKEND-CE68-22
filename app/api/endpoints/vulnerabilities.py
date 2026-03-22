@@ -122,6 +122,7 @@ async def get_all_vuln_by_user_id(
 
     result = vuln_service.get_all_issue_by_user_id(
         user_id=user["sub"],
+        role=role,
         asset_ids=asset_ids,
         page=page,
         size=size,
@@ -142,7 +143,11 @@ async def get_vulnerability_details(
     if not role:
         raise HTTPException(status_code=403, detail="User does not have access to this vulnerability")
     
-    details = vuln_service.get_vuln_details_by_vuln_id(vuln_id, user["sub"])
+    details = vuln_service.get_vuln_details_by_vuln_id(
+        vuln_id=vuln_id, 
+        user_id=user["sub"],
+        role=role
+    )
     if not details:
         raise HTTPException(status_code=404, detail="Vulnerability not found")
     return details
