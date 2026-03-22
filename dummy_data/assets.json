@@ -17,7 +17,7 @@
     "target": "1.2.3.4",
     "type": "IP",
     "created_at": "2026-01-06T21:06:24.253809",
-    "updated_at": "2026-03-18T18:13:07.741235"
+    "updated_at": "2026-03-23T00:53:23.463028"
   },
   {
     "id": 4,
@@ -233,20 +233,10 @@
     "id": 26,
     "name": "sdfsfsf",
     "project_id": 23,
-    "description": "",
+    "description": null,
     "target": "sfdsfsdfsd",
     "type": "IP",
     "created_at": "2026-03-20T23:05:57.163280",
-    "updated_at": "2026-03-20T23:05:57.163294"
-  },
-  {
-    "id": 27,
-    "name": "dgdgdfg",
-    "project_id": 23,
-    "description": "",
-    "target": "dgdfgdg",
-    "type": "IP",
-    "created_at": "2026-03-21T00:09:45.024837",
-    "updated_at": "2026-03-21T00:09:45.024851"
+    "updated_at": "2026-03-23T00:54:58.621027"
   }
 ]
