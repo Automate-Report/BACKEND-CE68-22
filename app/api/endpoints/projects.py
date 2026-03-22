@@ -252,3 +252,10 @@ async def get_project_dashboard(project_id: int):
         raise HTTPException(status_code=404, detail="Project not found")
     return data
 
+@router.get("/{project_id}/role", )
+async def get_project_dashboard(
+    project_id: int,
+    user = Depends(get_current_user),
+    role = Depends(get_current_project_role)
+):
+    return role
