@@ -41,13 +41,14 @@ class AssetService:
         # 1. กรอง User
         all_matches = []
         for asset in assets:
-            if search and search.lower() not in asset["name"].lower():
-                continue
-            if filter == "ip" and asset.get("type") != "IP":
-                continue
-            if filter == "url" and asset.get("type") != "URL":
-                continue
-            all_matches.append(asset)
+            if asset["project_id"] == project_id:
+                if search and search.lower() not in asset["name"].lower():
+                    continue
+                if filter == "ip" and asset.get("type") != "IP":
+                    continue
+                if filter == "url" and asset.get("type") != "URL":
+                    continue
+                all_matches.append(asset)
 
         if sort_by:
             reverse = (order == "desc")

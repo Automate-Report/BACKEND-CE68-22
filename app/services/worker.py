@@ -49,11 +49,11 @@ class WorkerService:
         """ฟังก์ชันช่วยคำนวณสถานะของ Worker"""
         OFFLINE_THRESHOLD_SECONDS = 600
 
-        # 1. เช็คเรื่องเวลา (Online/Offline)
+        # 1. เช็คเรื่องเวลา (ONLINE/Offline)
         last_seen_str = worker.get("last_heartbeat")
         
         if not last_seen_str or not worker.get("owner"):
-            worker["status"] = "notActivated" 
+            worker["status"] = "NOT_ACTIVATE" 
             return worker
 
         # แปลง String กลับเป็น datetime
@@ -62,16 +62,16 @@ class WorkerService:
             time_diff = datetime.utcnow() - last_seen
 
             if time_diff.total_seconds() < OFFLINE_THRESHOLD_SECONDS:
-                worker["status"] = "online"
+                worker["status"] = "ONLINE"
             else:
-                worker["status"] = "offline"
+                worker["status"] = "OFFLINE"
                 
         except ValueError:
             worker["status"] = "Unknown"
 
         return worker
 
-    def create_worker(self, worker_in: WorkerCreate, project_id: int) -> dict:
+    def create_worker(self, worker_in: WorkerCreate, project_id: int, access_key_id: int) -> dict:
         """Service: สร้าง Worker"""
         workers = self._read_json()
         
@@ -85,11 +85,12 @@ class WorkerService:
         new_worker = {
             "id": new_id,
             "project_id": project_id,
+            "access_key_id": access_key_id,
             "thread_number": worker_in.thread_number,
             "current_load": 0,
             "name": worker_in.name,
             "hostname": None,
-            "status": "offline",
+            "status": "OFFLINE",
             "isActive": False,
             "created_at": datetime.now().isoformat(),
             "updated_at": datetime.now().isoformat(),
@@ -121,11 +122,11 @@ class WorkerService:
                     continue
 
             if filter and filter != "ALL":
-                if filter == "online" and worker["status"] != "online":
+                if filter == "online" and worker["status"] != "ONLINE":
                     continue
-                elif filter == "offline" and worker["status"] != "offline":
+                elif filter == "offline" and worker["status"] != "OFFLINE":
                     continue
-                elif filter == "notActivated" and worker["status"] != "notActivated":
+                elif filter == "notActivated" and worker["status"] != "NOT_ACTIVATE":
                     continue
                 elif filter == "available" and worker["owner"]:
                     continue
@@ -205,7 +206,7 @@ class WorkerService:
         for worker in workers:
             if worker["project_id"] == project_id:
                 total_worker+=1
-                if worker["status"] == "online":
+                if worker["status"] == "ONLINE":
                     online+=1
                 if worker["current_load"] > 0:
                     busy+=1
@@ -233,7 +234,7 @@ class WorkerService:
         for worker in workers:
             if worker["id"] == worker_id:
                 worker["access_key_id"] = access_key_id
-                worker["status"] = "notActivated"
+                worker["status"] = "NOT_ACTIVATE"
                 worker["isActive"] = False
                 worker["last_heartbeat"] = None
                 worker["internal_ip"] = None
@@ -265,7 +266,7 @@ class WorkerService:
                 worker["internal_ip"] = None
                 worker["last_heartbeat"] = None
                 worker["owner"] = None
-                worker["status"] = "notActivated"
+                worker["status"] = "NOT_ACTIVATE"
                 worker["access_key_id"] = key.get("id")
 
         self._save_json(workers)
@@ -283,7 +284,7 @@ class WorkerService:
                 worker["internal_ip"] = None
                 worker["last_heartbeat"] = None
                 worker["owner"] = None
-                worker["status"] = "notActivated"
+                worker["status"] = "NOT_ACTIVATE"
                 worker["access_key_id"] = key.get("id")
 
         self._save_json(workers)
@@ -327,7 +328,7 @@ class WorkerService:
         
         target_worker["hostname"] = req.hostname
         target_worker["isActive"] = True
-        target_worker["status"] = "online"
+        target_worker["status"] = "ONLINE"
         target_worker["internal_ip"] = req.internal_ip
 
         self._save_json(workers)
@@ -452,12 +453,12 @@ class WorkerService:
         # Path ของ Worker
         TEMPLATE_DIR = "app/static/bin/SecurityWorker" 
         # ชื่อไฟล์ exe 
-        TARGET_EXE_NAME = "SecurityWorker.exe"
+        TARGET_EXE_NAME = "Pest10.exe"
 
         # --- ส่วนที่แก้ไข: สร้าง ZIP File ในหน่วยความจำ ---
         zip_buffer = io.BytesIO()
 
-        dest_folder_name = f"SecurityWorker_{worker.get('name')}"
+        dest_folder_name = f"Pest10_{worker.get('name')}"
 
         with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
         

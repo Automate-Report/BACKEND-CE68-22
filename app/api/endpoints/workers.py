@@ -40,10 +40,15 @@ def create_worker(project_id: int, worker_in: WorkerCreate, user = Depends(get_c
     if role != "owner":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
-    worker = worker_service.create_worker(worker_in, project_id)
-
+    
     key = access_key_service.create_access_key()
+    worker = worker_service.create_worker(
+        worker_in=worker_in, 
+        project_id=project_id,
+        access_key_id=key["id"]
+    )
 
+    
     return { 
         "status": "Successfully!",
         "key": key["key"]
@@ -149,6 +154,7 @@ def re_access_key(
 @router.delete("/{worker_id}")
 async def delete_worker(
     worker_id: int, 
+    project_id: int,
     user = Depends(get_current_user),
     role = Depends(get_current_project_role)
 ):
@@ -198,7 +204,11 @@ def download_worker_zip(
 
 
 @router.get("/unlink/{worker_id}")
-async def disconnect_worker_from_host(worker_id: int, role = Depends(get_current_project_role), user = Depends(get_current_user)):
+async def disconnect_worker_from_host(
+    worker_id: int, 
+    role = Depends(get_current_project_role), 
+    user = Depends(get_current_user),
+):
     if role == "developer":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
     
