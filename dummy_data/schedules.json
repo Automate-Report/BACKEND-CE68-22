@@ -230,11 +230,11 @@
     "asset_id": 6,
     "cron_expression": "Not Repeat",
     "attack_type": "xss",
-    "is_active": true,
+    "is_active": false,
     "start_date": "2026-03-20 08:00:34.999000+00:00",
     "end_date": "2026-03-20 08:00:34.999000+00:00",
     "created_at": "2026-03-20T14:59:35.324849",
-    "updated_at": "2026-03-20T14:59:35.324860",
+    "updated_at": "2026-03-22T23:48:41.203023",
     "created_by": "somchai@tech.co.th"
   }
 ]
