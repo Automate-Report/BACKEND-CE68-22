@@ -87,6 +87,7 @@ async def get_all_vuln_by_user_id(
     result = await vuln_service.get_all_issue_by_user_id(
         user_id=user["sub"],
         project_id = project_id,
+        role=role,
         page=page,
         size=size,
         sort_by=sort_by,
@@ -107,9 +108,10 @@ async def get_vulnerability_details(
 ):
     
     details = await vuln_service.get_vuln_details_by_vuln_id(
-        vuln_id, 
-        user["sub"],
-        db
+        vuln_id=vuln_id, 
+        user_id=user["sub"],
+        role=role,
+        db=db
     )
     if not details:
         raise HTTPException(status_code=404, detail="Vulnerability not found")
@@ -118,6 +120,7 @@ async def get_vulnerability_details(
 @router.post("/assign/")
 async def assign_vulnerability_to_user(
     payload: AssignedJobPayload,
+    project_id: int,
     user = Depends(get_current_user),
     role = Depends(get_current_project_role),
     db: AsyncSession = Depends(get_db)
@@ -127,6 +130,7 @@ async def assign_vulnerability_to_user(
 
     await vuln_service.assign_vulnerability_to_user(
         vuln_id=payload.vuln_id,
+        project_id=project_id,
         position=payload.position,
         user_id=payload.user_id,
         db=db

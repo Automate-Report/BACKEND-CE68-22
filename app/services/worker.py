@@ -315,6 +315,58 @@ class WorkerService:
                 status_code=403, 
                 detail="Access denied: You do not have permission to manage this worker"
             )
+        for worker in workers:
+            if worker["id"] == worker_id:
+                is_worker_owner = (worker.get("owner") == user_id)
+                if not (is_system_owner or is_worker_owner):
+                    raise HTTPException(
+                        status_code=403, 
+                        detail="Access denied: You do not have permission to manage this worker"
+                    )
+                access_key_id = worker.get("access_key_id")
+                if access_key_id:
+                    access_key_service.delete_access_key_by_id(access_key_id)
+                key = access_key_service.create_access_key()
+                worker["isActive"] = False
+                worker["hostname"] = None
+                worker["internal_ip"] = None
+                worker["last_heartbeat"] = None
+                worker["owner"] = None
+                worker["status"] = "NOT_ACTIVATE"
+                worker["access_key_id"] = key.get("id")
+
+        self._save_json(workers)
+
+    def disconnect_workers_in_project(self, project_id: int):
+        workers = self._read_json()
+        for worker in workers:
+            access_key_id = worker.get("access_key_id")
+            if access_key_id:
+                access_key_service.delete_access_key_by_id(access_key_id)
+            key = access_key_service.create_access_key()
+            if worker["project_id"] == project_id:
+                worker["isActive"] = False
+                worker["hostname"] = None
+                worker["internal_ip"] = None
+                worker["last_heartbeat"] = None
+                worker["owner"] = None
+                worker["status"] = "NOT_ACTIVATE"
+                worker["access_key_id"] = key.get("id")
+
+        self._save_json(workers)
+
+    def download_success(self, worker_id: int, user_id: str):
+        workers = self._read_json()
+
+        for w in workers:
+            if w["id"] == worker_id:
+                w["owner"] = user_id
+
+        self._save_json(workers)
+
+    def verify_worker(self, req: VerifyRequest):
+        workers = self._read_json()
+        target_worker = None
         
         try:
             if worker_db.access_key_id:
@@ -551,6 +603,60 @@ class WorkerService:
                 "NUMBER_OF_THREADS": worker_db.thread_number,
                 "BACKEND_URL": "http://127.0.0.1:8000",
                 "REDIS_URL": settings.JOBS_REDIS_URL
+        EMBEDED_KEY = settings.EMBEDED_KEY.encode()
+        DELIMITER = b"|||HIDDEN_DATA|||"
+
+
+        json_bytes = json.dumps(hidden_payload).encode() # worker_id + backend_url
+        f = Fernet(EMBEDED_KEY) # สร้างตัวเข้ารหัส
+        encrypted_payload = f.encrypt(json_bytes) # เข้ารหัส
+
+        # Path ของ Worker
+        TEMPLATE_DIR = "app/static/bin/SecurityWorker" 
+        # ชื่อไฟล์ exe 
+        TARGET_EXE_NAME = "Pest10.exe"
+
+        # --- ส่วนที่แก้ไข: สร้าง ZIP File ในหน่วยความจำ ---
+        zip_buffer = io.BytesIO()
+
+        dest_folder_name = f"Pest10_{worker.get('name')}"
+
+        with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+        
+            # วนลูปอ่านทุกไฟล์ใน Folder Template
+            for root, dirs, files in os.walk(TEMPLATE_DIR):
+                for filename in files:
+                    # Path เต็มของไฟล์ในเครื่อง Server
+                    abs_path = os.path.join(root, filename)
+                    
+                    # Path สัมพัทธ์ (Relative) เพื่อใช้จัดโครงสร้างใน Zip
+                    # เช่น ถ้าไฟล์อยู่ template/internal/lib.dll -> rel_path จะเป็น internal/lib.dll
+                    rel_path = os.path.relpath(abs_path, TEMPLATE_DIR)
+                    
+                    # Path ปลายทางใน Zip (เอาชื่อโฟลเดอร์ worker มานำหน้า)
+                    zip_arcname = os.path.join(dest_folder_name, rel_path)
+
+                    # --- จุดสำคัญ: เช็คว่าเป็นไฟล์ exe หลักหรือไม่ ---
+                    if filename == TARGET_EXE_NAME:
+                        # ถ้าใช่: อ่านมา + ฝัง payload + เขียนลง zip (writestr)
+                        with open(abs_path, "rb") as f_exe:
+                            exe_data = f_exe.read()
+                        
+                        final_exe_data = exe_data + DELIMITER + encrypted_payload #ฉีดข้อมูล worker_id + backend_url
+                        zf.writestr(zip_arcname, final_exe_data)
+                    
+                    else:
+                        # ถ้าไม่ใช่ (เป็นพวก dll, _internal): จับยัดลง zip เลย (write)
+                        zf.write(abs_path, arcname=zip_arcname)
+
+        # 4. ส่งไฟล์กลับ
+        zip_buffer.seek(0)
+            
+        return StreamingResponse(
+            zip_buffer,
+            media_type="application/zip",
+            headers={
+                "Content-Disposition": f"attachment; filename={dest_folder_name}.zip"
             }
 
 

@@ -53,10 +53,14 @@ async def create_worker(
 ):
     if role != "owner":
         raise HTTPException(status_code=403, detail="ไม่มีสิทธิ์เข้าถึง")
-    
+
     key = await access_key_service.create_access_key(db)
     await db.flush()
-    worker = await worker_service.create_worker(worker_in, project_id, key.id, db)
+    worker = await worker_service.create_worker(
+        worker_in=worker_in, 
+        project_id=project_id, 
+        access_key_id=key.id,
+        db=db)
 
     return { 
         "status": "Successfully!",
@@ -155,6 +159,7 @@ async def re_access_key(
 @router.delete("/{worker_id}")
 async def delete_worker(
     worker_id: int, 
+    project_id: int,
     user = Depends(get_current_user),
     role = Depends(get_current_project_role),
     db: AsyncSession = Depends(get_db)
@@ -212,7 +217,7 @@ async def download_worker_zip(
     return result
 
 
-@router.patch("/unlink/{worker_id}")
+@router.get("/unlink/{worker_id}")
 async def disconnect_worker_from_host(
     worker_id: int, 
     role = Depends(get_current_project_role), 

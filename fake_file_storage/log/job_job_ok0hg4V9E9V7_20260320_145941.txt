@@ -1,0 +1,5 @@
+14:59:35 [INFO] ============================================================
+14:59:35 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+14:59:35 [INFO] ============================================================
+14:59:35 [INFO] 🔍 Testing connectivity to http://localhost:4040/...
+14:59:39 [ERROR] ❌ Connection failed - cannot reach target

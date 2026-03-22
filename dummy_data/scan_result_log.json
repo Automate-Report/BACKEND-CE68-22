@@ -429,17 +429,6 @@
     "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_40_20260306_214603-39.txt"
   },
   {
-    "id": 40,
-    "job_id": 42,
-    "pentest_status": "failed",
-    "error_msg": "Target Unreachable: Connection failed: HTTPConnectionPool(host='161.246.6.1', port=8015): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPConnection(host='161.246.6.1', port=8015) at 0x1440eb4bbd0>, 'Connection to 161.246.6.1 timed out. (connect timeout=10)'))",
-    "file_name": "",
-    "file_path": "",
-    "created_at": "2026-03-09T18:47:22.373487",
-    "file_type": "txt",
-    "location": ""
-  },
-  {
     "id": 41,
     "job_id": 43,
     "pentest_status": "found",
@@ -493,17 +482,6 @@
     "created_at": "2026-03-09T19:25:58.427942",
     "file_type": "txt",
     "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_47_20260309_192558-45.txt"
-  },
-  {
-    "id": 46,
-    "job_id": 48,
-    "pentest_status": "failed",
-    "error_msg": "object NoneType can't be used in 'await' expression",
-    "file_name": "job_48_20260309_193533-46.txt",
-    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_48_20260309_193533-46.txt",
-    "created_at": "2026-03-09T19:35:33.905819",
-    "file_type": "txt",
-    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_48_20260309_193533-46.txt"
   },
   {
     "id": 47,
@@ -1219,5 +1197,16 @@
     "created_at": "2026-03-13T14:08:59.798691",
     "file_type": "txt",
     "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_118_20260313_140859-111.txt"
+  },
+  {
+    "id": 112,
+    "job_id": 119,
+    "pentest_status": "failed",
+    "error_msg": "Target Unreachable: Connection failed - cannot reach target",
+    "file_name": "job_job_ok0hg4V9E9V7_20260320_145941.txt",
+    "file_path": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_job_ok0hg4V9E9V7_20260320_145941.txt",
+    "created_at": "2026-03-20T14:59:41.916920",
+    "file_type": "txt",
+    "location": "Z:\\Thesis\\Code\\BACKEND-CE68-22\\fake_file_storage\\log\\job_job_ok0hg4V9E9V7_20260320_145941.txt"
   }
 ]
