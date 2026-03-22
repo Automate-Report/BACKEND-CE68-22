@@ -155,6 +155,7 @@ async def get_vulnerability_details(
 @router.post("/assign/")
 async def assign_vulnerability_to_user(
     payload: AssignedJobPayload,
+    project_id: int,
     user = Depends(get_current_user),
     role = Depends(get_current_project_role)
 ):
@@ -163,6 +164,7 @@ async def assign_vulnerability_to_user(
 
     vuln_service.assign_vulnerability_to_user(
         vuln_id=payload.vuln_id,
+        project_id=project_id,
         position=payload.position,
         user_id=payload.user_id
     )
