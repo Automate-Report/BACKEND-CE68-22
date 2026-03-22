@@ -498,8 +498,7 @@ class WorkerService:
             raise HTTPException(status_code=500, detail="Internal Server Error")
 
     async def verify_token(self,  db: AsyncSession, authorization: str = Header(None)):
-        # ... extraction logic ...
-        
+       
         token = authorization.split(" ")[1]
 
         try:

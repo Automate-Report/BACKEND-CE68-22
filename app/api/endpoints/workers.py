@@ -23,7 +23,10 @@ router = APIRouter()
 
 # Verify Access Key for Get Token
 @router.post("/verify/")
-async def verify_access_key(req: VerifyRequest, db: AsyncSession = Depends(get_db)):
+async def verify_access_key(
+    req: VerifyRequest, 
+    db: AsyncSession = Depends(get_db)
+):
     result = await worker_service.verify_worker(req, db)
     return result
 
