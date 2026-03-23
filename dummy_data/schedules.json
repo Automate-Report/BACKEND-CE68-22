@@ -20,11 +20,11 @@
     "asset_id": 14,
     "cron_expression": "0 0 * * 1",
     "attack_type": "SQL Injection",
-    "is_active": true,
+    "is_active": false,
     "start_date": "2026-02-26 17:00:00+00:00",
     "end_date": "2026-03-23 00:00:00+00:00",
     "created_at": "2026-02-27T10:28:32.178522",
-    "updated_at": "2026-02-27T10:28:32.178522",
+    "updated_at": "2026-03-23T18:00:45.841778",
     "created_by": "user@example.com"
   },
   {
