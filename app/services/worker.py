@@ -46,7 +46,6 @@ class WorkerService:
                 worker_data["status"] = WorkerStatus.ONLINE
             else:
                 worker_data["status"] = WorkerStatus.OFFLINE
-                
         except ValueError:
             worker_data["status"] = WorkerStatus.UNKNOWN
 
@@ -184,7 +183,7 @@ class WorkerService:
             return None
 
         worker_dict = row[0].__dict__.copy()
-        worker_dict.pop('_sa_instance_state', None) # Clean up internal SA state
+        worker_dict.pop('_sa_instance_state', None)
         worker_dict["owner_name"] = f"{row[1]} {row[2]}"
         worker_dict = self._enrich_worker_status(worker_dict)
         
