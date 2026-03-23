@@ -27,8 +27,8 @@ class Vulnerability(Base):
     asset_id:Mapped[int] = mapped_column(sa.ForeignKey("assets.id")) #======================================FK ULID
     job_id:Mapped[int] = mapped_column(sa.ForeignKey("jobs.id")) #===========================================FK ULID
     library_id:Mapped[int] = mapped_column(sa.ForeignKey("vuln_libs.id"))
-    assigned_to:Mapped[str] = mapped_column(sa.String(255))
-    verified_by:Mapped[str] = mapped_column(sa.String(255))
+    assigned_to:Mapped[str] = mapped_column(sa.ForeignKey("users.id"))
+    verified_by:Mapped[str] = mapped_column(sa.ForeignKey("users.id"))
     vuln_hash:Mapped[str] = mapped_column(sa.Text)
     target:Mapped[str] = mapped_column(sa.String(255))
     parameter:Mapped[str] = mapped_column(sa.String(255))
