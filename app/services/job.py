@@ -375,7 +375,11 @@ class JobService:
                     )
 
                 # 4. สร้าง Job ในระบบ
-                new_job = self.create_job(schedule_data.id, best_worker.id)
+                new_job = await self.create_job(
+                    schedule_id=schedule_data.id, 
+                    worker_id=best_worker.id,
+                    db=db
+                )
 
                 if schedule_data.attack_type == ScheduleAttackType.SQLI:
                     attack_type = "sql_injection"
@@ -399,7 +403,7 @@ class JobService:
                     }
                 )
                 
-                queue_name = f"{QUEUE_KEY}:{best_worker['id']}"
+                queue_name = f"{QUEUE_KEY}:{best_worker.id}"
                 await redis_jobs.rpush(queue_name, payload.model_dump_json())
 
                 # 6. บันทึกการแจ้งเตือน (Notification)
@@ -471,30 +475,30 @@ class JobService:
         # เงื่อนไข: 
         #   - งานที่เลย end_date ไปแล้ว
         #   - หรือ งาน Not Repeat ที่มี last_run_date แล้วแต่ is_active ยังเป็น true (ตกค้างจาก error)
-        schedule_cleanup_query = (
-            sa.update(Schedule)
-            .where(
-                Schedule.is_active == True,
-                sa.or_(
-                    # กรณี A: เลยเวลา end_date (ถ้ามี)
-                    sa.and_(Schedule.end_date != None, Schedule.end_date < now),
-                    # กรณี B: เป็น Not Repeat ที่รันไปแล้วแต่สถานะไม่ยอมปิด (เกิด Error ระหว่าง Dispatch)
-                    sa.and_(
-                        Schedule.cron_expression == "Not Repeat",
-                        Schedule.last_run_date != None
-                    )
-                )
-            )
-            .values(is_active=False, updated_at=sa.func.now())
-        )
+        # schedule_cleanup_query = (
+        #     sa.update(Schedule)
+        #     .where(
+        #         Schedule.is_active == True,
+        #         sa.or_(
+        #             # กรณี A: เลยเวลา end_date (ถ้ามี)
+        #             sa.and_(Schedule.end_date != None, Schedule.end_date < now),
+        #             # กรณี B: เป็น Not Repeat ที่รันไปแล้วแต่สถานะไม่ยอมปิด (เกิด Error ระหว่าง Dispatch)
+        #             sa.and_(
+        #                 Schedule.cron_expression == "Not Repeat",
+        #                 Schedule.last_run_date != None
+        #             )
+        #         )
+        #     )
+        #     .values(is_active=False, updated_at=sa.func.now())
+        # )
 
-        cleanup_result = await db.execute(schedule_cleanup_query)
+        # cleanup_result = await db.execute(schedule_cleanup_query)
         
         # 3. Commit ทั้งหมด
         await db.commit()
         
-        if cleanup_result.rowcount > 0:
-            print(f"🕵️ [Watchdog] Deactivated {cleanup_result.rowcount} expired/stuck schedules.")
+        # if cleanup_result.rowcount > 0:
+        #     print(f"🕵️ [Watchdog] Deactivated {cleanup_result.rowcount} expired/stuck schedules.")
 
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
