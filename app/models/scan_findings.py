@@ -12,5 +12,5 @@ class ScanFinding(Base):
     screenshot_path:Mapped[str] = mapped_column(sa.String(255))
     curl_command:Mapped[str] = mapped_column(sa.String(255))
     response_detail:Mapped[str] = mapped_column(sa.Text)
-    timestamp:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True))
+    timestamp:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
 
