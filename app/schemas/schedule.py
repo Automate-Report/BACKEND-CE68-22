@@ -14,20 +14,23 @@ class ScheduleItem(BaseModel):
     end_date: datetime
     created_at: datetime
     updated_at: datetime
+
 class JobStatus(BaseModel):
     failed: int
     finished: int
     ongoing: int
     scheduled: int
+
 class ScheduleResponse(BaseModel):
     id: int
     project_id: int
     name: str
     asset_name: str
     atk_type: str
-    start_date: datetime
-    end_date: datetime
+    start_date: Optional[datetime] = None 
+    end_date: Optional[datetime] = None
     job_status: JobStatus
+    
 class ScheduleCreate(BaseModel):
     project_id: int
     name: str

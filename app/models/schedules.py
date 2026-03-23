@@ -20,6 +20,7 @@ class Schedule(Base):
     attack_type:Mapped[ScheduleAttackType] = mapped_column(sa.Enum(ScheduleAttackType))
     is_active:Mapped[bool] = mapped_column(sa.Boolean, default=False)
     start_date:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True))
-    end_date:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True))
+    end_date:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), nullable=True, default=None)
+    last_run_date:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), nullable=True)
     created_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
     updated_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now(), onupdate=sa.sql.func.now())

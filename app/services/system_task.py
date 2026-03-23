@@ -18,7 +18,7 @@ async def system_schedule_task():
                 due_schedules = await schedule_service.get_due_schedules(db)
 
                 # --- เพิ่มส่วน Debug ตรงนี้ ---
-                print(f"DEBUG: due_schedules type: {type(due_schedules)}")
+                print(f"DEBUG: due_schedules  {due_schedules}")
                 if due_schedules:
                     print(f"DEBUG: first item type: {type(due_schedules[0])}")
                 # --------------------------
@@ -27,7 +27,7 @@ async def system_schedule_task():
                     # สร้าง Job + ส่ง Redis
                     success = await job_service.dispatch_job(
                         schedule_data=schedule, 
-                        db=db
+                        session=async_session
                     )
                     if not success:
                         continue

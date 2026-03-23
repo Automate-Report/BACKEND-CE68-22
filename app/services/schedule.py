@@ -110,6 +110,12 @@ class ScheduleService:
     
     async def create_schedule(self, schedule_input: ScheduleCreate, user_id: str, db: AsyncSession):
         is_immediate = schedule_input.cron_expression in ["Not Repeat", "now", ""]
+        now = datetime.now(timezone.utc)
+
+        if schedule_input.cron_expression == "Not Repeat":
+            end_date = None
+        else:
+            end_date = schedule_input.end_date
         
         new_schedule_db = Schedule(
             name = schedule_input.name,
@@ -118,16 +124,17 @@ class ScheduleService:
             cron_expression = schedule_input.cron_expression,
             attack_type = schedule_input.atk_type.upper(),
             is_active = True,
-            start_date = schedule_input.start_date,
-            end_date = schedule_input.end_date,
+            start_date = schedule_input.start_date or now,
+            end_date = end_date,
             created_by = user_id,
+            last_run_date = now if is_immediate else None
         )
 
         try:
             db.add(new_schedule_db)
             await db.commit()
-
             await db.refresh(new_schedule_db)
+            
         except Exception as e:
             await db.rollback()
             print(f"DEBUG ERROR: {e}")
@@ -150,8 +157,9 @@ class ScheduleService:
 
         if is_immediate:
             import asyncio
+            from app.core.db import async_session
             from app.services.job import job_service
-            asyncio.create_task(job_service.dispatch_job(schedule_data=new_schedule, db=db))
+            asyncio.create_task(job_service.dispatch_job(schedule_data=new_schedule_db, session=async_session))
 
         # Only return non-sensitive info
         return {
@@ -222,76 +230,16 @@ class ScheduleService:
                 schedule_ids.append(schedule["schedule_id"])
 
         return schedule_ids
-    
-    async def _is_due_now(self, schedule: dict):
-        now = datetime.now(timezone.utc)
-        
-        # 1. เช็คว่า Active หรือไม่
-        if not schedule.get("is_active", False):
-            return False
-        
-        # 2. เช็ค start_date (ห้ามรันก่อนเวลา)
-        start_date_str = schedule.get("start_date")
-        if start_date_str:
-            try:
-                # แปลง format "2026-03-07 09:24:00+00:00"
-                start_date = datetime.fromisoformat(start_date_str.replace(" ", "T"))
-                if now < start_date:
-                    return False # ยังไม่ถึงเวลาเริ่ม
-            except Exception as e:
-                print(f"⚠️ Error parsing start_date: {e}")
-
-        # 3. เช็ค end_date (ถ้ามี)
-        end_date_str = schedule.get("end_date")
-        cron_string = schedule.get("cron_expression", "") # ดึงค่า cron มาไว้เช็คตรงนี้
-
-        if end_date_str and cron_string != "Not Repeat": # 💡 เพิ่มเงื่อนไข: ถ้าไม่ใช่ Not Repeat ถึงจะเช็ค Expired
-            try:
-                end_date = datetime.fromisoformat(end_date_str.replace("Z", "+00:00"))
-                
-                if now > end_date:
-                    schedule_id = schedule.get("schedule_id")
-                    await self.deactivate_schedule(schedule_id)
-                    print(f"🚫 [Schedule] {schedule_id} expired (Passed end_date)")
-                    return False
-            except Exception as e:
-                print(f"⚠️ Error parsing end_date: {e}")
-
-        # 4. จัดการ Not Repeat (จะรันได้ปกติแล้ว)
-        if cron_string == "Not Repeat":
-            return True
-
-        # 5. จัดการ Cron ปกติ
-        expressions = [e.strip() for e in cron_string.split("Z") if e.strip()]
-        now_truncated = now.replace(second=0, microsecond=0)
-
-        for expr in expressions:
-            try:
-                prev_run = croniter(expr, now_truncated + timedelta(seconds=1)).get_prev(datetime)
-                if prev_run == now_truncated:
-                    return True
-            except Exception:
-                continue
-                
-        return False
-    
+     
     async def get_due_schedules(self, db: AsyncSession) -> List[Schedule]:
         now = datetime.now(timezone.utc)
         now_truncated = now.replace(second=0, microsecond=0)
 
-        query = (
-            sa.select(Schedule)
-            .where(
-                Schedule.is_active == True,
-                sa.or_(
-                    Schedule.start_date == None, 
-                    Schedule.start_date <= now
-                ),
-                sa.or_(
-                    Schedule.end_date == None,
-                    Schedule.end_date >= now
-                )
-            )
+        # 1. ดึงเฉพาะงานที่ "มีโอกาส" จะรันได้ออกมาจาก DB ก่อน (SQL Optimization)
+        query = sa.select(Schedule).where(
+            Schedule.is_active == True,
+            sa.or_(Schedule.start_date == None, Schedule.start_date <= now),
+            sa.or_(Schedule.end_date == None, Schedule.end_date >= now)
         )
 
         result = await db.execute(query)
@@ -299,19 +247,22 @@ class ScheduleService:
 
         due_schedules = []
         for sch in schedules:
-            if sch.cron_expression == "Not Repeat":
-                # For one-time jobs, we usually check if they've been run already
-                # or if 'now' is within a small window of their start_date
-                due_schedules.append(sch)
+            # ป้องกันการรันซ้ำในนาทีเดียวกัน (ถ้าเพิ่งรันไปตอนต้นนาที ไม่ต้องรันอีก)
+            if sch.last_run_date and sch.last_run_date.replace(second=0, microsecond=0) == now_truncated:
                 continue
 
-            # 3. Handle Cron Expressions
-            # Split by your delimiter (e.g., 'Z') if you store multiple crons
+            # --- กรณีที่ 1: รันครั้งเดียว (Not Repeat) ---
+            if sch.cron_expression == "Not Repeat":
+                # ถ้านาทีนี้ >= start_date และยังไม่เคยรันเลย ให้รันได้
+                if not sch.last_run_date:
+                    due_schedules.append(sch)
+                continue
+
+            # --- กรณีที่ 2: รันตาม Cron ---
             expressions = [e.strip() for e in sch.cron_expression.split("Z") if e.strip()]
-            
             for expr in expressions:
                 try:
-                    # Use croniter to see if the 'prev' run was exactly 'now'
+                    # เช็กว่ารอบที่ควรจะรันล่าสุด (prev) คือนาทีปัจจุบันหรือไม่
                     it = croniter(expr, now_truncated + timedelta(seconds=1))
                     prev_run = it.get_prev(datetime)
                     
@@ -324,13 +275,15 @@ class ScheduleService:
         return due_schedules
     
     async def deactivate_schedule(self, schedule_id: int, db: AsyncSession):
-        query = (
-            sa.update(Schedule)
-            .where(Schedule.id == schedule_id)
-            .values(is_active=False, updated_at=sa.func.now())
-        )
-        await db.execute(query)
-        await db.commit()
+        schedule = await db.get(Schedule, schedule_id)
+
+        if schedule:
+            schedule.is_active = False # 2. เปลี่ยนค่าที่ตัวแปร
+            await db.commit()          # 3. บันทึก (SQLAlchemy จะสร้าง UPDATE ให้เอง)
+            await db.refresh(schedule) # 4. ดึงค่าล่าสุดจาก DB กลับมา
+            return True
+        return False
+
 
         
 # สร้าง instance ของ Service เพื่อใช้งาน

@@ -18,7 +18,7 @@ import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.jobs import Job, JobStatus
-from app.models.workers import Worker
+from app.models.workers import Worker, WorkerStatus
 from app.models.vulnerabilities import Vulnerability
 from app.models.schedules import Schedule, ScheduleAttackType
 
@@ -282,7 +282,7 @@ class JobService:
             sa.select(Worker)
             .where(
                 Worker.project_id == project_id,
-                Worker.status == "online", # Or use your WorkerStatus.ONLINE enum
+                Worker.status == WorkerStatus.ONLINE, # Or use your WorkerStatus.ONLINE enum
                 Worker.is_active == True
             )
         )
@@ -315,98 +315,109 @@ class JobService:
 
         return best_w, best_score
 
-    async def dispatch_job(self, db: AsyncSession, schedule_data: Schedule):
+    async def dispatch_job(self, session, schedule_data: Schedule):
         print(schedule_data)
-        print(f"DEBUG: Starting dispatch for {schedule_data.id}")
-        schedule_id = schedule_data.id
+        async with session() as db:
+            try:
+                print(f"DEBUG: Starting dispatch for {schedule_data.id}")
+                schedule_id = schedule_data.id
 
-        # 1. ตรวจสอบ Lock ป้องกันการส่งซ้ำ
-        now_str = datetime.utcnow().strftime('%Y%m%d%H%M')
-        minute_lock_key = f"lock:schedule:{schedule_data.id}:{now_str}"
+                # 1. ตรวจสอบ Lock ป้องกันการส่งซ้ำ
+                now_str = datetime.utcnow().strftime('%Y%m%d%H%M')
+                minute_lock_key = f"lock:schedule:{schedule_data.id}:{now_str}"
 
-        is_not_repeat = (schedule_data.cron_expression == "Not Repeat")
-        once_lock_key = f"lock:schedule:once:{schedule_id}:{schedule_data.created_at}"
+                is_not_repeat = (schedule_data.cron_expression == "Not Repeat")
+                once_lock_key = f"lock:schedule:once:{schedule_id}:{schedule_data.created_at}"
 
-        if is_not_repeat:
-            # ถ้าเคยรันไปแล้ว (มี Key ใน Redis) ให้หยุดทันที
-            if await redis_jobs.exists(once_lock_key):
-                print(f"🚫 [Dispatch] Schedule {schedule_id} (Not Repeat) already dispatched. Skipping.")
-                return None
-        else:
-            # ถ้าเป็นงาน Cron ปกติ เช็ค Lock รายนาที
-            if await redis_jobs.exists(minute_lock_key):
-                return None
+                if is_not_repeat:
+                    # ถ้าเคยรันไปแล้ว (มี Key ใน Redis) ให้หยุดทันที
+                    if await redis_jobs.exists(once_lock_key):
+                        print(f"🚫 [Dispatch] Schedule {schedule_id} (Not Repeat) already dispatched. Skipping.")
+                        return None
+                else:
+                    # ถ้าเป็นงาน Cron ปกติ เช็ค Lock รายนาที
+                    if await redis_jobs.exists(minute_lock_key):
+                        return None
 
-        # 2. ดึงข้อมูล Asset และค้นหา Best Worker
-        asset = await asset_service.get_asset_by_id(schedule_data.asset_id, db)
-        best_worker, score = await self.get_best_worker(schedule_data.project_id)
-        user_id = schedule_data.created_by
+                # 2. ดึงข้อมูล Asset และค้นหา Best Worker
+                asset = await asset_service.get_asset_by_id(schedule_data.asset_id, db)
+                best_worker, score = await self.get_best_worker(
+                    db=db,
+                    project_id=schedule_data.project_id
+                )
+                user_id = schedule_data.created_by
 
-        # กรณีไม่มี Worker ออนไลน์เลย
-        if best_worker in ["No Worker", None]:
-            error_msg = f"❌ ไม่สามารถเริ่มงานสแกน {asset.name} ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้"
-            notification_service.create_notification(user_id, "error", error_msg, f'/projects/{schedule_data.project_id}/workers')
-            from app.services.schedule import schedule_service
-            await schedule_service.deactivate_schedule(schedule_id, db)
-            print(f"🔒 [Dispatch] No worker online, deactivating schedule: {schedule_id}")
-            return None
+                # กรณีไม่มี Worker ออนไลน์เลย
+                if best_worker in ["No Worker", None]:
+                    error_msg = f"❌ ไม่สามารถเริ่มงานสแกน {asset.name} ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้"
+                    notification_service.create_notification(user_id, "error", error_msg, f'/projects/{schedule_data.project_id}/workers')
+                    from app.services.schedule import schedule_service
+                    await schedule_service.deactivate_schedule(schedule_id, db)
+                    print(f"🔒 [Dispatch] No worker online, deactivating schedule: {schedule_id}")
+                    return None
+                
+                if is_not_repeat:
+                    # ล็อกไว้ 24 ชม. หรือจนกว่าจะมีการลบออก เพื่อให้มั่นใจว่ารอบถัดไปจะไม่รันอีก
+                    await redis_jobs.setex(once_lock_key, 86400, "dispatched")
+                else:
+                    await redis_jobs.setex(minute_lock_key, 60, "locked")
+
+                # 3. สร้างเงื่อนไข Message ตามความยุ่งของ Worker
+                if score == 0:
+                    # กรณี Worker ว่างกริบ ไม่มีงานรัน ไม่มีคิว
+                    display_message = f"🚀 เริ่มงานสแกนสำหรับ {asset.name} ทันทีบน Worker {best_worker.name}"
+                else:
+                    # กรณีต้องไปต่อคิว (หาตัวที่คิวน้อยที่สุดมาให้แล้ว)
+                    display_message = (
+                        f"⏳ ขณะนี้ Worker ทุกตัวกำลังติดงานสแกนอื่นอยู่ "
+                        f"ระบบได้ส่งงานของ {asset['name']} เข้าคิวของ Worker {best_worker.name} "
+                        f"ซึ่งคาดว่าจะพร้อมทำงานให้คุณได้เร็วที่สุดครับ"
+                    )
+
+                # 4. สร้าง Job ในระบบ
+                new_job = self.create_job(schedule_data.id, best_worker.id)
+
+                if schedule_data.attack_type == ScheduleAttackType.SQLI:
+                    attack_type = "sql_injection"
+                elif schedule_data.attack_type == ScheduleAttackType.XSS:
+                    attack_type = "xss"
+                else:
+                    attack_type = "all"
+
+                from app.services.asset_credential import asset_credential_service
+                credential = await asset_credential_service.get_credential_by_asset_id(asset.id, db)
+            
+
+                # 5. ส่งงานเข้า Redis Queue เฉพาะตัว
+                payload = JobWorkerPayload(
+                    job_id=new_job.id,
+                    target_url=asset.target,
+                    attack_type=attack_type,
+                    credential={
+                        "username": credential.username if credential else None,
+                        "password": credential.password if credential else None
+                    }
+                )
+                
+                queue_name = f"{QUEUE_KEY}:{best_worker['id']}"
+                await redis_jobs.rpush(queue_name, payload.model_dump_json())
+
+                # 6. บันทึกการแจ้งเตือน (Notification)
+                new_noti = notification_service.create_notification(
+                    user_email=user_id,
+                    type="info" if score > 0 else "success",
+                    message=display_message,
+                    link=f"/jobs/{new_job.id}"
+                )
+
+                print(f"📢 Notification: {display_message}")
+                await db.commit()
+
+                return new_job
+            except Exception as e:
+                await db.rollback()
+                print(f"Background Job Error: {e}")
         
-        if is_not_repeat:
-            # ล็อกไว้ 24 ชม. หรือจนกว่าจะมีการลบออก เพื่อให้มั่นใจว่ารอบถัดไปจะไม่รันอีก
-            await redis_jobs.setex(once_lock_key, 86400, "dispatched")
-        else:
-            await redis_jobs.setex(minute_lock_key, 60, "locked")
-
-        # 3. สร้างเงื่อนไข Message ตามความยุ่งของ Worker
-        if score == 0:
-            # กรณี Worker ว่างกริบ ไม่มีงานรัน ไม่มีคิว
-            display_message = f"🚀 เริ่มงานสแกนสำหรับ {asset['name']} ทันทีบน Worker {best_worker.name}"
-        else:
-            # กรณีต้องไปต่อคิว (หาตัวที่คิวน้อยที่สุดมาให้แล้ว)
-            display_message = (
-                f"⏳ ขณะนี้ Worker ทุกตัวกำลังติดงานสแกนอื่นอยู่ "
-                f"ระบบได้ส่งงานของ {asset['name']} เข้าคิวของ Worker {best_worker.name} "
-                f"ซึ่งคาดว่าจะพร้อมทำงานให้คุณได้เร็วที่สุดครับ"
-            )
-
-        # 4. สร้าง Job ในระบบ
-        new_job = self.create_job(schedule_data.id, best_worker.id)
-
-        if schedule_data.attack_type == ScheduleAttackType.SQLI:
-            attack_type = "sql_injection"
-        elif schedule_data.attack_type == ScheduleAttackType.XSS:
-            attack_type = "xss"
-        else:
-            attack_type = "all"
-
-        from app.services.asset_credential import asset_credential_service
-        credential = await asset_credential_service.get_credential_by_asset_id(asset.id, db)
-       
-
-        # 5. ส่งงานเข้า Redis Queue เฉพาะตัว
-        payload = JobWorkerPayload(
-            job_id=new_job.id,
-            target_url=asset.target,
-            attack_type=attack_type,
-            credential={
-                "username": credential.username if credential else None,
-                "password": credential.password if credential else None
-            }
-        )
-        
-        queue_name = f"{QUEUE_KEY}:{best_worker['id']}"
-        await redis_jobs.rpush(queue_name, payload.model_dump_json())
-
-        # 6. บันทึกการแจ้งเตือน (Notification)
-        new_noti = notification_service.create_notification(
-            user_email=user_id,
-            type="info" if score > 0 else "success",
-            message=display_message,
-            link=f"/jobs/{new_job.id}"
-        )
-
-        print(f"📢 Notification: {display_message}")
-        return new_job
 
     async def run_watchdog(self, db: AsyncSession):
         """🛡️ SQL Watchdog: ปรับสถานะงานที่ค้างและคืน Load ให้ Worker อัตโนมัติ"""
@@ -429,39 +440,61 @@ class JobService:
         result = await db.execute(stuck_query)
         stuck_jobs = result.all()
 
-        if not stuck_jobs:
-            return
+        if stuck_jobs:
+            worker_ids_to_reduce = [j.worker_id for j in stuck_jobs if j.worker_id]
+            job_ids_to_fail = [j.id for j in stuck_jobs]
 
-        # เก็บรายการ Worker IDs ที่ต้องโดนหัก Load คืน
-        worker_ids_to_reduce = [j.worker_id for j in stuck_jobs if j.worker_id]
-        job_ids_to_fail = [j.id for j in stuck_jobs]
-
-        # 3. BULK UPDATE: เปลี่ยนสถานะ Job ทั้งหมดเป็น failed ในทีเดียว
-        await db.execute(
-            sa.update(Job)
-            .where(Job.id.in_(job_ids_to_fail))
-            .values(
-                status="failed", 
-                error_message="Watchdog: Job timeout (Stuck in pending/running)",
-                updated_at=sa.func.now()
+            # BULK UPDATE Jobs
+            await db.execute(
+                sa.update(Job)
+                .where(Job.id.in_(job_ids_to_fail))
+                .values(
+                    status="failed", 
+                    error_message="Watchdog: Job timeout (Stuck in pending/running)",
+                    updated_at=sa.func.now()
+                )
             )
+
+            # Update Workers Load
+            if worker_ids_to_reduce:
+                for w_id in set(worker_ids_to_reduce):
+                    count = worker_ids_to_reduce.count(w_id)
+                    await db.execute(
+                        sa.update(Worker)
+                        .where(Worker.id == w_id)
+                        .values(current_load=sa.func.greatest(0, Worker.current_load - count))
+                    )
+            print(f"🕵️ [Watchdog] Fixed {len(job_ids_to_fail)} stuck jobs.")
+        # ---------------------------------------------------------
+        # 2. จัดการ SCHEDULE (ใหม่: ปิดพวกที่ค้างหรือหมดอายุ)
+        # ---------------------------------------------------------
+        # เงื่อนไข: 
+        #   - งานที่เลย end_date ไปแล้ว
+        #   - หรือ งาน Not Repeat ที่มี last_run_date แล้วแต่ is_active ยังเป็น true (ตกค้างจาก error)
+        schedule_cleanup_query = (
+            sa.update(Schedule)
+            .where(
+                Schedule.is_active == True,
+                sa.or_(
+                    # กรณี A: เลยเวลา end_date (ถ้ามี)
+                    sa.and_(Schedule.end_date != None, Schedule.end_date < now),
+                    # กรณี B: เป็น Not Repeat ที่รันไปแล้วแต่สถานะไม่ยอมปิด (เกิด Error ระหว่าง Dispatch)
+                    sa.and_(
+                        Schedule.cron_expression == "Not Repeat",
+                        Schedule.last_run_date != None
+                    )
+                )
+            )
+            .values(is_active=False, updated_at=sa.func.now())
         )
 
-        # 4. BULK UPDATE: คืน Load ให้ Worker (ลด current_load ลง 1)
-        if worker_ids_to_reduce:
-            # ใช้คำสั่ง SQL: SET current_load = current_load - 1
-            # โดยที่ค่าต้องไม่ติดลบ (GREATEST ใน Postgres)
-            for w_id in set(worker_ids_to_reduce):
-                count = worker_ids_to_reduce.count(w_id)
-                await db.execute(
-                    sa.update(Worker)
-                    .where(Worker.id == w_id)
-                    .values(current_load=sa.func.greatest(0, Worker.current_load - count))
-                )
-
-        # 5. Commit เปลี่ยนแปลงทั้งหมด
+        cleanup_result = await db.execute(schedule_cleanup_query)
+        
+        # 3. Commit ทั้งหมด
         await db.commit()
-        print(f"🕵️ [Watchdog] Fixed {len(job_ids_to_fail)} stuck jobs and updated workers.")
+        
+        if cleanup_result.rowcount > 0:
+            print(f"🕵️ [Watchdog] Deactivated {cleanup_result.rowcount} expired/stuck schedules.")
 
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
