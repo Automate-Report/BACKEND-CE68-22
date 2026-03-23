@@ -5,9 +5,9 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.core.db import Base
 
 class ScheduleAttackType(enum.Enum):
-    SQLI = "SQLI"
-    XSS = "XSS"
-    ALL = "ALL"
+    SQLI = "sqli"
+    XSS = "xss"
+    ALL = "all"
 
 class Schedule(Base):
     __tablename__ = "schedules"
