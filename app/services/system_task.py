@@ -33,11 +33,11 @@ async def system_schedule_task():
                         continue
                     
                     # ตรวจสอบเงื่อนไข Deactivate
-                    cron_exp = schedule.get("cron_expression")
+                    cron_exp = schedule.cron_expression
                     is_not_repeat = (cron_exp == "Not Repeat")
                     
                     is_expired = False
-                    end_date_str = schedule.get("end_date")
+                    end_date_str = schedule.end_date
                     if end_date_str:
                         try:
                             # ทำให้เป็น Aware Datetime ทั้งคู่
@@ -48,7 +48,7 @@ async def system_schedule_task():
                             print(f"⚠️ Date parsing error: {e}")
 
                     if is_not_repeat or is_expired:
-                        schedule_id = schedule.get("schedule_id")
+                        schedule_id = schedule.id
                         await schedule_service.deactivate_schedule(
                             schedule_id=schedule_id,
                             db=db
