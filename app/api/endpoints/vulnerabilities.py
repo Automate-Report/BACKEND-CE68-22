@@ -151,7 +151,8 @@ async def change_vulnerability_status(
         vuln_id=payload.vuln_id,
         new_status=payload.new_status,
         user_id=user["sub"],
-        db=db
+        db=db,
+        role=role
     )
     return {"message": "Vulnerability status updated successfully"}
 
