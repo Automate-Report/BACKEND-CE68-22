@@ -6,12 +6,12 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.core.db import Base
 
 class WorkerStatus(enum.Enum):
-    ONLINE = "ONLINE"
-    OFFLINE = "OFFLINE"
-    NOT_ACTIVATE = "NOT_ACTIVATE"
-    AVAILABLE = "AVAILABLE"
-    IN_USE = "IN_USE"
-    UNKNOWN = "UNKNOWN"
+    ONLINE = "online"
+    OFFLINE = "offline"
+    NOT_ACTIVATE = "not_activate"
+    AVAILABLE = "available"
+    IN_USE = "in_use"
+    UNKNOWN = "unknown"
 
 class Worker(Base):
     __tablename__ = "workers"
