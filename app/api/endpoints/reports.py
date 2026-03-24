@@ -89,10 +89,10 @@ async def create_report(
             latest_finding_sub.c.rn == 1 # Only get the newest one
         ), isouter=True)
         .where(Vulnerability.asset_id.in_(asset_ids))
-        .where(sa.or_(
-            Vulnerability.assigned_to == user["sub"],
-            Vulnerability.verified_by == user["sub"]
-        ))
+        # .where(sa.or_(
+        #     Vulnerability.assigned_to == user["sub"],
+        #     Vulnerability.verified_by == user["sub"]
+        # ))
     )
 
     vuln_results = (await db.execute(vuln_query)).all()
@@ -120,17 +120,18 @@ async def create_report(
             "description": lib.description,
             "asset_id": v.asset_id,
             "asset_name": asset_name,
+            "asset_related": asset_name,
             "assigned_to": v.assigned_to,
             "verified_by": v.verified_by,
             "evidence": {
                 "screenshot": f.screenshot_path,
                 "response_detials": f.response_detail
             },
-            "severity": v.severity.upper(),
-            "status": v.status,
+            "severity": v.severity.value.upper() if hasattr(v.severity, 'value') else str(v.severity).upper(),
+            "status": v.status.value if hasattr(v.status, 'value') else str(v.status),
             "verify": v.verify,
             "parameters": v.parameter,
-            "occurrence_count": v.occurrence_cnt,
+            "occurrence_count": v.occurrence_count,
             "occurrence_date": vuln_dates_map[v.id],
             "cvss_details": {
                 "score": lib.cvss_score,
