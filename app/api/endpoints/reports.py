@@ -81,7 +81,7 @@ async def create_report(
 
     # 2. Main Bulk Query (Joins everything needed for the details)
     vuln_query = (
-        sa.select(Vulnerability, VulnLib, Asset.name.label("asset_name"), latest_finding)
+        sa.select(Vulnerability, VulnLib, Asset, latest_finding)
         .join(VulnLib, Vulnerability.library_id == VulnLib.id)
         .join(Asset, Vulnerability.asset_id == Asset.id)
         .join(latest_finding, sa.and_(
@@ -112,15 +112,16 @@ async def create_report(
         vuln_dates_map[vuln_id].append(ts)
     
     vuln_details = []
-    for v, lib, asset_name, f in vuln_results:
+    for v, lib, asset, f in vuln_results:
+
         details = {
             "id": v.id,
-            "title": f"{lib.vuln_type} on {asset_name}",
+            "title": f"{lib.vuln_type} on {asset.name}",
             "vuln_type": lib.vuln_type,
             "description": lib.description,
             "asset_id": v.asset_id,
-            "asset_name": asset_name,
-            "asset_related": asset_name,
+            "asset_name": asset.name,
+            "asset_related": asset.name,
             "assigned_to": v.assigned_to,
             "verified_by": v.verified_by,
             "evidence": {
