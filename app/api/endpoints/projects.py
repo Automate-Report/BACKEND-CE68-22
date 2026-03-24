@@ -272,7 +272,7 @@ async def get_project_dashboard(
     return data
 
 @router.get("/{project_id}/role", )
-async def get_project_dashboard(
+async def get_project_role(
     project_id: int,
     user = Depends(get_current_user),
     role = Depends(get_current_project_role)

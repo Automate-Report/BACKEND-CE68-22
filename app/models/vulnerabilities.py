@@ -5,7 +5,7 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Mapped, mapped_column
 from app.core.db import Base
 
-class VulSeverity(enum.Enum):
+class VulnSeverity(enum.Enum):
     CRITICAL = "critical"
     HIGH = "high"
     MEDIUM = "medium"
@@ -34,7 +34,7 @@ class Vulnerability(Base):
     target:Mapped[str] = mapped_column(sa.String(255))
     parameter:Mapped[str] = mapped_column(sa.String(255))
     method:Mapped[str] = mapped_column(sa.String(255))
-    severity:Mapped[VulSeverity] = mapped_column(sa.Enum(VulSeverity))
+    severity:Mapped[VulnSeverity] = mapped_column(sa.Enum(VulnSeverity))
     db_type:Mapped[str] = mapped_column(sa.String(255), nullable=True)
     status:Mapped[VulnStatus] = mapped_column(sa.Enum(VulnStatus), default=VulnStatus.OPEN)
     verify:Mapped[VulnVerify] = mapped_column(sa.Enum(VulnVerify), nullable=True, default=None)
