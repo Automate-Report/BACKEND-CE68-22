@@ -42,7 +42,6 @@ class ProjectSummaryResponese(BaseModel):
 class RecentVulnerability(BaseModel):
     id: int
     title: str
-    cve: str
     severity: str
     cvss_score: float
     affected_asset: str

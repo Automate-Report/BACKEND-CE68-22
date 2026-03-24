@@ -117,8 +117,7 @@ class ProjectOverviewService:
 
             results.append({
                 "id": v.id,
-                "title": lib.vuln_type[0] if lib and lib.vuln_type else "Unknown Vulnerability",
-                "cve": lib.cve_id if lib and lib.cve_id else "N/A", # 👈 ต้องมีให้ Frontend
+                "title": lib.vuln_type if lib and lib.vuln_type else "Unknown Vulnerability",
                 "cvss_score": lib.cvss_score if lib and lib.cvss_score else 0.0, # 👈 ต้องมี
                 "severity": sev_name,
                 "affected_asset": asset_name,
