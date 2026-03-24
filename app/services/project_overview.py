@@ -22,20 +22,16 @@ JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "projects.json")
 class ProjectOverviewService:
     
     async def get_project_overview(self, project_id: int, db: AsyncSession):
-        # 1. ตรวจสอบว่าโปรเจกต์มีอยู่จริง
-        project_query = sa.select(Project).where(Project.id == project_id)
-        project = (await db.execute(project_query)).scalar_one_or_none()
-        if not project:
-            return None
+        # 1. ดึงข้อมูลพื้นฐานโปรเจกต์
+        project = (await db.execute(sa.select(Project).where(Project.id == project_id))).scalar_one_or_none()
+        if not project: return None
 
-        # 2. คำนวณสถิติภาพรวม (Severity Counts & Total Vulns) ใน Query เดียว
-        # เราจะกรองเฉพาะช่องโหว่ที่อยู่ใน Asset ของโปรเจกต์นี้
+        # 2. Aggregation Stats (Severity Counts)
         stats_query = (
             sa.select(
                 sa.sql.func.count(Vulnerability.id).label("total_all"),
                 sa.sql.func.count(Vulnerability.id).filter(Vulnerability.status == VulnStatus.OPEN).label("total_open"),
                 sa.sql.func.count(Vulnerability.id).filter(Vulnerability.status == VulnStatus.FIXED).label("total_fixed"),
-                # นับแยกตาม Severity
                 sa.sql.func.count(Vulnerability.id).filter(sa.and_(Vulnerability.status == VulnStatus.OPEN, Vulnerability.severity == VulnSeverity.CRITICAL)).label("crit"),
                 sa.sql.func.count(Vulnerability.id).filter(sa.and_(Vulnerability.status == VulnStatus.OPEN, Vulnerability.severity == VulnSeverity.HIGH)).label("high"),
                 sa.sql.func.count(Vulnerability.id).filter(sa.and_(Vulnerability.status == VulnStatus.OPEN, Vulnerability.severity == VulnSeverity.MEDIUM)).label("med"),
@@ -44,29 +40,15 @@ class ProjectOverviewService:
             .join(Asset, Vulnerability.asset_id == Asset.id)
             .where(Asset.project_id == project_id)
         )
-        
         stats_res = (await db.execute(stats_query)).first()
-        
-        # คำนวณ Risk Score
+
+        # 3. คำนวณ Risk Score & Grade (สำหรับหน้า Header)
         risk_score = (stats_res.crit * 10) + (stats_res.high * 7) + (stats_res.med * 4) + (stats_res.low * 1)
-        remediation_rate = round((stats_res.total_fixed / stats_res.total_all * 100), 1) if stats_res.total_all > 0 else 0
-
-        # 3. ดึง Trend 7 วันล่าสุด (Detected vs Fixed)
-        trend_data = await self._get_sql_trend_data(project_id, db)
-
-        # 4. Top Risky Assets (Asset ที่มีช่องโหว่ OPEN เยอะที่สุด)
-        top_assets_query = (
-            sa.select(Asset.id, Asset.name, sa.sql.func.count(Vulnerability.id).label("v_count"))
-            .join(Vulnerability, Asset.id == Vulnerability.asset_id)
-            .where(sa.and_(Asset.project_id == project_id, Vulnerability.status == VulnStatus.OPEN))
-            .group_by(Asset.id, Asset.name)
-            .order_by(sa.sql.desc("v_count"))
-            .limit(5)
-        )
-        top_assets_res = (await db.execute(top_assets_query)).all()
-
-        # 5. Recent Vulnerabilities (5 รายการล่าสุด)
-        recent_vulns = await self._get_sql_recent_findings(project_id, db)
+        
+        # 4. ดึงข้อมูลย่อย (Trend, Recent, Top Assets)
+        trend = await self._get_sql_trend_data(project_id, db)
+        recent = await self._get_sql_recent_findings(project_id, db)
+        top_assets = await self._get_sql_top_risky_assets(project_id, db)
 
         return {
             "project_info": {
@@ -78,20 +60,15 @@ class ProjectOverviewService:
             "stats": {
                 "total_assets": await self._count_assets(project_id, db),
                 "vulns_total": stats_res.total_open,
-                "remediation_rate": f"{remediation_rate}%",
+                "remediation_rate": f"{round(stats_res.total_fixed/stats_res.total_all*100, 1) if stats_res.total_all > 0 else 0}%",
                 "severity_counts": {
-                    "critical": stats_res.crit,
-                    "high": stats_res.high,
-                    "medium": stats_res.med,
-                    "low": stats_res.low
+                    "critical": stats_res.crit, "high": stats_res.high,
+                    "medium": stats_res.med, "low": stats_res.low
                 }
             },
-            "top_risky_assets": [
-                {"id": r.id, "name": r.name, "vuln_count": r.v_count, "max_severity": "HIGH"} # เพิ่ม Logic เช็ค Max Severity ได้ถ้าต้องการ
-                for r in top_assets_res
-            ],
-            "trend": trend_data,
-            "recent_vulnerabilities": recent_vulns
+            "top_risky_assets": top_assets,
+            "trend": trend,
+            "recent_vulnerabilities": recent
         }
     
     async def _get_sql_trend_data(self, project_id: int, db: AsyncSession):
@@ -122,7 +99,7 @@ class ProjectOverviewService:
         query = (
             sa.select(Vulnerability, VulnLib, Asset.name.label("asset_name"))
             .join(Asset, Vulnerability.asset_id == Asset.id)
-            .join(VulnLib, Vulnerability.library_id == VulnLib.id, isouter=True)
+            .join(VulnLib, Vulnerability.library_id == VulnLib.id, isouter=True) # Join เพื่อเอา CVE
             .where(sa.and_(Asset.project_id == project_id, Vulnerability.status == VulnStatus.OPEN))
             .order_by(sa.sql.desc(Vulnerability.first_seen_at))
             .limit(5)
@@ -132,27 +109,41 @@ class ProjectOverviewService:
         results = []
         now = datetime.now(timezone.utc)
         for v, lib, asset_name in rows:
-            # 1. คำนวณ SLA (ดักกรณี v.severity เป็น None)
+            # คำนวณ SLA ตาม Severity
+            sla_map = {"CRITICAL": 24, "HIGH": 72, "MEDIUM": 168, "LOW": 720}
             sev_name = v.severity.name.upper() if v.severity else "LOW"
-            sla_hours = {"CRITICAL": 24, "HIGH": 72, "MEDIUM": 168, "LOW": 720}
-            
-            # 2. ตรวจสอบเวลา first_seen_at (ถ้าใน DB เป็น Null ให้ใช้เวลาปัจจุบันแทน)
-            base_time = v.first_seen_at if v.first_seen_at else now
-            deadline = base_time + timedelta(hours=sla_hours.get(sev_name, 168))
+            deadline = v.first_seen_at + timedelta(hours=sla_map.get(sev_name, 168))
             remaining = deadline - now
 
             results.append({
                 "id": v.id,
-                "title": (lib.vuln_type[0] if lib and lib.vuln_type else "Unknown Vulnerability"),
-                "cve": (lib.cve_id if lib and lib.cve_id else "N/A"), # ✅ ป้องกัน Error 'cve' missing
-                "cvss_score": (lib.cvss_score if lib and lib.cvss_score else 0.0), # ✅ ป้องกัน missing
+                "title": lib.vuln_type[0] if lib and lib.vuln_type else "Unknown Vulnerability",
+                "cve": lib.cve_id if lib and lib.cve_id else "N/A", # 👈 ต้องมีให้ Frontend
+                "cvss_score": lib.cvss_score if lib and lib.cvss_score else 0.0, # 👈 ต้องมี
                 "severity": sev_name,
-                "affected_asset": asset_name or "Unknown Asset",
-                "detected_at": self._time_ago(base_time, now),
-                "sla_status": self._format_sla(remaining), # ✅ ฟังก์ชันที่เราเพิ่งเพิ่มไป
+                "affected_asset": asset_name,
+                "detected_at": self._time_ago(v.first_seen_at, now),
+                "sla_status": self._format_sla(remaining), # 👈 ต้องมี
                 "is_sla_breached": remaining.total_seconds() < 0
             })
         return results
+    
+    async def _get_sql_top_risky_assets(self, project_id, db):
+        # ดึง Asset ที่มีช่องโหว่เยอะที่สุด 5 อันดับแรก
+        query = (
+            sa.select(
+                Asset.id, Asset.name, 
+                sa.sql.func.count(Vulnerability.id).label("v_count"),
+                sa.sql.func.max(Vulnerability.severity).label("max_sev")
+            )
+            .join(Vulnerability, Asset.id == Vulnerability.asset_id)
+            .where(sa.and_(Asset.project_id == project_id, Vulnerability.status == VulnStatus.OPEN))
+            .group_by(Asset.id, Asset.name)
+            .order_by(sa.sql.desc("v_count"))
+            .limit(5)
+        )
+        res = (await db.execute(query)).all()
+        return [{"id": r.id, "name": r.name, "vuln_count": r.v_count, "max_severity": r.max_sev.name.upper()} for r in res]
 
     async def _count_assets(self, project_id, db):
         res = await db.execute(sa.select(sa.sql.func.count(Asset.id)).where(Asset.project_id == project_id))
@@ -196,6 +187,8 @@ class ProjectOverviewService:
         if hours < 48:
             return f"{hours}h left"
         return f"{diff.days}d left"
+    
+
   
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
