@@ -5,6 +5,10 @@ from turtle import title
 from typing import List
 from datetime import datetime
 
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.notifications import Notification, NotiStatus, NotiType
+
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -63,24 +67,39 @@ class NotificationService:
         # Send back
         return paginated
 
-    def create_notification(self, user_email:str, type:str, message:str, link:str = None):
-        allnoti = self._read_json()
-        latest_id = max([noti["noti_id"] for noti in allnoti], default=0)
+    async def create_notification(self, db: AsyncSession, user_email:str, type:NotiType, message:str, link:str = None):
+        noti_db = Notification(
+            user_email = user_email,
+            type = type,
+            message = message,
+            hyperlink = link,
+            status = NotiStatus.UNREAD
+        )
 
-        new_noti = {
-            "noti_id": latest_id + 1,
-            "user_email": user_email,
-            "type": type,
-            "message": message,
-            "hyperlink": link,
-            "created_at": datetime.now().isoformat(),
-            "status": "unread"
-        }
-
-        allnoti.append(new_noti)
-        self._save_json(allnoti)
-
-        return new_noti
+        try:
+            # 2. เพิ่มลงใน Database
+            db.add(noti_db)
+            
+            # 💡 หมายเหตุ: ปกติเราจะ commit ที่ตัวเรียก (เช่น ใน assign_vulnerability_to_user)
+            # แต่ถ้าฟังก์ชันนี้ทำงานแยกเดี่ยวๆ ให้ใส่ flush หรือ commit ตรงนี้ได้ครับ
+            await db.flush() 
+            
+            # 3. คืนค่าเป็น Object ที่มี ID แล้ว
+            new_noti = {
+                "noti_id": noti_db.id,
+                "user_email": noti_db.user_email,
+                "type": noti_db.type,
+                "message": noti_db.message,
+                "hyperlink": noti_db.hyperlink,
+                "created_at": noti_db.created_at,
+                "status": noti_db.status
+            }
+            return new_noti
+            
+        except Exception as e:
+            print(f"❌ Error creating notification: {e}")
+            # ไม่ต้อง rollback ตรงนี้ถ้าฟังก์ชันนี้ถูกเรียกซ้อนใน transaction อื่น
+            raise e
 
     def change_status_to_read(self, noti_id:int):
         allnoti = self._read_json()

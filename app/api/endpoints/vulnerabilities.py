@@ -113,6 +113,7 @@ async def get_vulnerability_details(
         role=role,
         db=db
     )
+    
     if not details:
         raise HTTPException(status_code=404, detail="Vulnerability not found")
     return details

@@ -20,6 +20,7 @@ class VulnStatus(enum.Enum):
 class VulnVerify(enum.Enum):
     TP = "tp" # true positive
     FP = "fp" # false positive
+    NONE = "none"
 
 class Vulnerability(Base):
     __tablename__ = "vulnerabilities"

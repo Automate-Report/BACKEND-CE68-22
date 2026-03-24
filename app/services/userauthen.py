@@ -154,7 +154,7 @@ class UserAuthenService:
         if not user:
             return None
         
-        return f'{user["firstname"]} {user["lastname"]}'
+        return f'{user.first_name} {user.last_name}'
 
 # สร้าง instance ของ Service เพื่อใช้งาน
 userauthen_service = UserAuthenService()

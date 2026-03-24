@@ -125,12 +125,15 @@ class ProjectService:
         if not project:
             return None
 
-        user = userauthen_service.get_user_by_id(project.user_email)
+        user = await userauthen_service.get_user_by_id(
+            user_id=project.user_email,
+            db=db
+        )
 
         user_info = UserInfo(
-            email=user["email"],
-            firstname=user["firstname"],
-            lastname=user["lastname"],
+            email=user.email,
+            firstname=user.first_name,
+            lastname=user.last_name,
             role="owner",
             joinned_at=project.created_at
         )
