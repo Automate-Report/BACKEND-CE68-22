@@ -18,7 +18,7 @@ class VulnStatus(enum.Enum):
     FIXED = "fixed"
 
 class VulnVerify(enum.Enum):
-    TP = "tf" # true positive
+    TP = "tp" # true positive
     FP = "fp" # false positive
 
 class Vulnerability(Base):
