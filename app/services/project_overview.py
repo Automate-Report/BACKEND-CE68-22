@@ -1,9 +1,5 @@
-import json
-import os
-import math
 
 from datetime import datetime, timedelta, timezone
-from typing import List
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,10 +10,7 @@ from app.models.projects import Project
 from app.models.assets import Asset
 from app.models.vuln_libs import VulnLib
 
-# 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
-# app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "projects.json")
+
 
 class ProjectOverviewService:
     

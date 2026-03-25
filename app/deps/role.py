@@ -19,7 +19,12 @@ async def get_current_project_role(
     if project.user_email == user_id:
         return "owner"
     
-    role = project_member_service.get_role(user_id=user_id, project_id=project_id)
+    role = await project_member_service.get_role(
+        user_id=user_id, 
+        project_id=project_id, 
+        db=db
+    )
+    
     if not role:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, 

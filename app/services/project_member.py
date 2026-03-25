@@ -247,15 +247,21 @@ class ProjectMemberService:
                 detail="Could not process rejection"
             )
     
-    def get_role(self, user_id: str, project_id: int):
+    async def get_role(self, user_id: str, project_id: int, db: AsyncSession):
+        query = sa.select(ProjectMember).where(
+            sa.and_(
+                ProjectMember.project_id == project_id,
+                ProjectMember.user_email == user_id
+            )
+        )
+        result = await db.execute(query)
+        member = result.scalar_one_or_none()
+        
+        if not member:
+            return None
+        
+        return member.role
 
-        relations = self._read_json()
-
-        for rel in relations:
-            if rel["project_id"] == project_id and rel["email"] == user_id:
-                return rel["role"]
-            
-        return None
     
     async def change_role(self, user_id: str, role: str, project_id: int, db: AsyncSession):
         """อัปเดต Role ของสมาชิก และคืนค่า UserInfo ชุดใหม่"""

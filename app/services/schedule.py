@@ -3,10 +3,7 @@ from datetime import datetime, timedelta, timezone
 from typing import List
 from app.schemas.schedule import ScheduleCreate
 from fastapi import HTTPException
-from fastapi.responses import JSONResponse
 from croniter import croniter
-from app.services.job import job_service
-from app.services.asset import asset_service
 
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -221,15 +218,6 @@ class ScheduleService:
             await db.rollback()
             print(f"Delete Error: {e}")
             return False
-    
-    def get_schedule_ids_by_project_id(self, project_id: int):
-        schedules = self._read_json()
-        schedule_ids = []
-        for schedule in schedules:
-            if schedule["project_id"] == project_id:
-                schedule_ids.append(schedule["schedule_id"])
-
-        return schedule_ids
      
     async def get_due_schedules(self, db: AsyncSession) -> List[Schedule]:
         now = datetime.now(timezone.utc)

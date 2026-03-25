@@ -64,7 +64,11 @@ async def get_project_by_id(
     if project.user_email == user_id:
         user_role = "owner"
     else:
-        member_role = project_member_service.get_role(user_id=user_id, project_id=project_id)
+        member_role = await project_member_service.get_role(
+            user_id=user_id, 
+            project_id=project_id,
+            db=db
+        )
         if not member_role:
             raise HTTPException(status_code=403, detail="คุณไม่มีสิทธิ์เข้าถึงโปรเจกต์นี้")
         user_role = member_role
