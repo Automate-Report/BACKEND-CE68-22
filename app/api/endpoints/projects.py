@@ -149,7 +149,10 @@ async def get_users_in_project(
 ):
     # 1. ดึงข้อมูล Owner และ Members
     owner_info = await project_service.get_owner_info_by_project_id(project_id, db)
-    member_infos = project_member_service.get_user_info_by_project_id(project_id)
+    member_infos = await project_member_service.get_user_info_by_project_id(
+        project_id=project_id, 
+        db=db
+    )
 
     # 2. รวมข้อมูล (ถ้า Owner ไม่อยู่ในลิสต์สมาชิก ให้เพิ่มเข้าไปที่ตำแหน่งแรก)
     all_users = member_infos
@@ -202,15 +205,17 @@ async def invite_member(
     project_id: int, 
     role_in: EmailRole,
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     if role != "owner":
         raise HTTPException(status_code=403, detail="No authorized.")
     
-    new_relation = project_member_service.invite_member(
+    new_relation = await project_member_service.invite_member(
         user_id=role_in.email,
         role=role_in.role,
-        project_id=project_id
+        project_id=project_id,
+        db=db
     )
 
     if new_relation == "already invited":
@@ -225,15 +230,17 @@ async def update_role(
     project_id: int, 
     role_in: EmailRole, 
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     if role != "owner":
         raise HTTPException(status_code=403, detail="No authorized.")
     
-    new_user_info = project_member_service.change_role(
+    new_user_info = await project_member_service.change_role(
         user_id=role_in.email,
         role=role_in.role,
-        project_id=project_id
+        project_id=project_id,
+        db=db
     )
 
     return new_user_info
@@ -244,14 +251,16 @@ async def delete_member(
     project_id: int, 
     user_id: str,
     user = Depends(get_current_user),
-    role = Depends(get_current_project_role)
+    role = Depends(get_current_project_role),
+    db: AsyncSession = Depends(get_db)
 ):
     if role != "owner":
         raise HTTPException(status_code=403, detail="No authorized.")
     
-    success = project_member_service.delete_member(
+    success = await project_member_service.delete_member(
         user_id=user_id,
-        project_id=project_id
+        project_id=project_id,
+        db=db
     )
 
     if not success:

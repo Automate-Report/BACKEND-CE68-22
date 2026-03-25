@@ -1,7 +1,8 @@
 import json
 import os
 from typing import List
-from datetime import datetime
+from datetime import datetime, timezone
+from fastapi import HTTPException, status
 
 from app.schemas.userauthen import UserInfo
 from app.schemas.invite import InvitationResponse
@@ -9,7 +10,7 @@ from app.services.userauthen import userauthen_service
 
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models.project_members import ProjectMember, InviteStatus
+from app.models.project_members import ProjectMember, InviteStatus, ProjectRole
 from app.models.projects import Project
 from app.models.users import User
 
@@ -21,53 +22,52 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "project_members.json")
 
 class ProjectMemberService:
-    
-    def _ensure_dummy_folder_exists(self):
-        """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
-        folder = os.path.dirname(JSON_FILE_PATH)
-        if not os.path.exists(folder):
-            os.makedirs(folder)
 
-    def _read_json(self) -> List[dict]:
-        """อ่านข้อมูลจากไฟล์ JSON"""
-        if not os.path.exists(JSON_FILE_PATH):
-            return []
-        try:
-            with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except json.JSONDecodeError:
-            return [] # ถ้าไฟล์เสียหรือว่างเปล่า ให้คืนค่า list ว่าง
-
-    def _save_json(self, data: List[dict]):
-        """บันทึกข้อมูลลงไฟล์ JSON"""
-        self._ensure_dummy_folder_exists()
-        with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
-            # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
-            json.dump(data, f, indent=2, ensure_ascii=False, default=str)
-
-    def get_user_roles_map(self, user_id: str):
+    async def get_user_roles_map(self, user_id: str, db: AsyncSession):
         """คืนค่า {project_id: role} สำหรับโปรเจกต์ที่ user เป็นสมาชิก"""
-        relations = self._read_json() # อ่านไฟล์ relation json
-        return {rel["project_id"]: rel["role"] for rel in relations if rel["email"] == user_id and rel["status"] == "joined"}
+        query = sa.select(
+            ProjectMember.project_id, 
+            ProjectMember.role
+        ).where(
+            ProjectMember.user_email == user_id,
+            ProjectMember.status == InviteStatus.JOINED
+        )
+        
+        result = await db.execute(query)
+        # สร้าง Dict Comprehension จากผลลัพธ์ (คอลัมน์ 0 คือ id, 1 คือ role)
+        # .value เพื่อดึง String ออกมาจาก Enum
+        return {row[0]: row[1].value for row in result.all()}
     
-    def get_user_info_by_project_id(self, project_id: int):
-        relations = self._read_json()
+    async def get_user_info_by_project_id(self, project_id: int, db: AsyncSession):
+        """ดึงข้อมูลสมาชิกทุกคนในโปรเจกต์ (Join ข้อมูล User มาให้ครบ)"""
+        query = (
+            sa.select(
+                User.email,
+                User.first_name,
+                User.last_name,
+                ProjectMember.role,
+                ProjectMember.joined_at
+            )
+            .join(ProjectMember, User.email == ProjectMember.user_email)
+            .where(
+                ProjectMember.project_id == project_id,
+                ProjectMember.status == InviteStatus.JOINED
+            )
+        )
+
+        result = await db.execute(query)
+        rows = result.all()
 
         all_matches = []
-        for rel in relations:
-            if rel["project_id"] == project_id and rel["status"] == "joined":
-                
-                user = userauthen_service.get_user_by_id(rel["email"])
-
-                user_info = UserInfo(
-                    email=user["email"],
-                    firstname=user["firstname"],
-                    lastname=user["lastname"],
-                    role=rel["role"],
-                    joinned_at=rel["joinned_at"]
-                )
-
-                all_matches.append(user_info)
+        for email, f_name, l_name, role, joined_at in rows:
+            user_info = UserInfo(
+                email=email,
+                firstname=f_name,
+                lastname=l_name,
+                role=role.value,  # ดึงค่าจาก Enum
+                joinned_at=joined_at # ระวังชื่อตัวแปรใน Schema (joinned_at)
+            )
+            all_matches.append(user_info)
 
         return all_matches
     
@@ -99,7 +99,7 @@ class ProjectMemberService:
         for member, p_name, f_name, l_name in rows:
             invite_response = InvitationResponse(
                 project_id   = member.project_id,
-                email        = member.email,
+                email        = member.user_email,
                 project_name = p_name,
                 project_owner= f"{f_name} {l_name}",
                 role         = member.role,
@@ -110,51 +110,152 @@ class ProjectMemberService:
 
         return return_result
     
-    def invite_member(self, user_id: str, role: str, project_id: int):
-        relations = self._read_json()
+    async def invite_member(self, db: AsyncSession, user_id: str, role: str, project_id: int):
+        # 1. ตรวจสอบก่อนว่าเคยถูกเชิญหรือเป็นสมาชิกแล้วหรือยัง (Query ครั้งเดียว)
+        query = sa.select(ProjectMember).where(
+            ProjectMember.project_id == project_id,
+            ProjectMember.user_email == user_id
+        )
+        result = await db.execute(query)
+        existing_member = result.scalar_one_or_none()
 
-        # เช็คก่อนว่า user นี้เคยถูก invite หรือเป็นสมาชิกโปรเจกต์นี้แล้วหรือยัง
-        for rel in relations:
-            if rel["project_id"] == project_id and rel["email"] == user_id:
-                if rel["status"] == "invited":
-                    return "already invited" 
-                else:
-                    return "already a member"
+        if existing_member:
+            if existing_member.status == InviteStatus.INVITED:
+                # ✅ ใช้ HTTPException แทนการ return string
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT, 
+                    detail="User is already invited to this project"
+                )
+            elif existing_member.status == InviteStatus.JOINED:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST, 
+                    detail="User is already a member of this project"
+                )
 
-        new_relation = {
-            "project_id": project_id,
-            "email": user_id,
-            "role": role,
-            "status": "invited",
-            "invited_at": datetime.now().isoformat(),
-            "joinned_at": None
-        }
-        relations.append(new_relation)
-        self._save_json(relations)
-        return new_relation
-    
-    def accept_invitation(self, user_id: str, project_id: int):
-        relations = self._read_json()
+        # 2. เตรียมข้อมูลสำหรับการ Insert
+        # แปลง String Role ที่รับมาให้เป็น Enum (Pentester / Developer)
+        try:
+            role_enum = ProjectRole(role.lower())
+        except ValueError:
+            # ถ้าส่ง Role มาไม่ตรงกับ Enum ที่ตั้งไว้
+            role_enum = ProjectRole.DEVELOPER
 
-        for rel in relations:
-            if rel["project_id"] == project_id and rel["email"] == user_id and rel["status"] == "invited":
-                rel["status"] = "joined"
-                rel["joinned_at"] = datetime.now().isoformat()
-                self._save_json(relations)
-                return rel
+        new_member = ProjectMember(
+            project_id=project_id,
+            user_email=user_id,
+            role=role_enum,
+            status=InviteStatus.INVITED,
+            invited_at=datetime.now(timezone.utc)
+        )
+
+        try:
+            # 3. บันทึกลง Database
+            db.add(new_member)
+            await db.commit()
+            await db.refresh(new_member)
+
+            new_relation = {
+                "project_id": new_member.project_id,
+                "email": new_member.user_email,
+                "role": new_member.role.value,
+                "status": new_member.status.value,
+                "invited_at": new_member.invited_at,
+                "joinned_at": None
+            }
             
-        return None
-    
-    def decline_invitation(self, user_id: str, project_id: int):
-        relations = self._read_json()
+            return new_relation
+        except Exception as e:
+            await db.rollback()
+            print(f"❌ Error inviting member: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Database error: {str(e)}"
+            )
 
-        for i, rel in enumerate(relations):
-            if rel["project_id"] == project_id and rel["email"] == user_id and rel["status"] == "invited":
-                del relations[i]
-                self._save_json(relations)
-                return True
+    async def accept_invitation(self, user_id: str, project_id: int, db: AsyncSession):
+        """
+        ตอบรับคำเชิญเข้าโปรเจกต์ (SQL Version)
+        """
+        # 1. ค้นหาคำเชิญที่ตรงกับ user และ project โดยต้องมีสถานะเป็น 'invited' เท่านั้น
+        query = sa.select(ProjectMember).where(
+            ProjectMember.project_id == project_id,
+            ProjectMember.user_email == user_id,
+            ProjectMember.status == InviteStatus.INVITED
+        )
+        result = await db.execute(query)
+        member = result.scalar_one_or_none()
+
+        if not member:
+            # หากไม่พบคำเชิญ หรืออาจจะตอบรับไปแล้ว
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Invitation not found or already processed"
+            )
+
+        # 2. อัปเดตสถานะเป็น JOINED
+        # การแก้ค่าผ่าน Object แบบนี้จะไปกระตุ้น @sa.event.listens_for ที่คุณเขียนไว้
+        # ทำให้ joined_at ถูกเซตเป็น sa.sql.func.now() อัตโนมัติ
+        member.status = InviteStatus.JOINED
+
+        try:
+            # 3. บันทึกการเปลี่ยนแปลง
+            await db.commit()
+            await db.refresh(member)
+
+            # 4. ส่งกลับข้อมูลในรูปแบบ Dictionary (เลียนแบบ JSON เดิมแต่เป็น SQL Data)
+            return {
+                "project_id": member.project_id,
+                "user_email": member.user_email,
+                "role": member.role.value,
+                "status": member.status.value,
+                "invited_at": member.invited_at,
+                "joinned_at": member.joined_at # ใน Model ชื่อ joined_at (n ตัวเดียว)
+            }
             
-        return False
+        except Exception as e:
+            await db.rollback()
+            print(f"❌ Error accepting invitation: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Could not accept invitation"
+            )
+    
+    async def decline_invitation(self, user_id: str, project_id: int, db: AsyncSession):
+        # 1. สร้างคำสั่งค้นหาเพื่อตรวจสอบก่อนลบ (หรือจะลบตรงๆ เลยก็ได้)
+        # เงื่อนไข: ต้องเป็น user คนนี้, project นี้ และสถานะยังเป็น 'invited' เท่านั้น
+        query = sa.delete(ProjectMember).where(
+            ProjectMember.project_id == project_id,
+            ProjectMember.user_email == user_id,
+            ProjectMember.status == InviteStatus.INVITED
+        )
+
+        try:
+            # 2. Execute คำสั่ง Delete
+            result = await db.execute(query)
+            
+            # 3. ตรวจสอบว่ามีแถวที่ถูกลบไปจริงไหม (rowcount)
+            if result.rowcount == 0:
+                # ถ้า rowcount เป็น 0 แสดงว่าไม่พบคำเชิญ หรือสถานะเปลี่ยนเป็น joined ไปก่อนแล้ว
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Invitation not found or already accepted"
+                )
+
+            # 4. Commit การลบข้อมูล
+            await db.commit()
+            return True
+
+        except HTTPException:
+            # ปล่อย HTTPException ออกไปหา FastAPI
+            raise
+        except Exception as e:
+            # หากเกิด Database Error อื่นๆ ให้ Rollback
+            await db.rollback()
+            print(f"❌ Error rejecting invitation: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Could not process rejection"
+            )
     
     def get_role(self, user_id: str, project_id: int):
 
@@ -166,42 +267,86 @@ class ProjectMemberService:
             
         return None
     
-    def change_role(self, user_id: str, role: str, project_id: int):
-        relations = self._read_json()
-        new_user_info = None
-        for rel in relations:
-            if rel["project_id"] == project_id and rel["email"] == user_id:
-                rel["role"] = role
-                
-                user = userauthen_service.get_user_by_id(rel["email"])
-
-                user_info = UserInfo(
-                    email=user["email"],
-                    firstname=user["firstname"],
-                    lastname=user["lastname"],
-                    role=role,
-                    joinned_at=rel["joinned_at"]
-                )
-
-                new_user_info = user_info
-
-        if new_user_info:
-            self._save_json(relations)
-            return new_user_info
-            
-        return None
+    async def change_role(self, user_id: str, role: str, project_id: int, db: AsyncSession):
+        """อัปเดต Role ของสมาชิก และคืนค่า UserInfo ชุดใหม่"""
     
-    def delete_member(self, user_id: str, project_id: int):
+        # 1. ตรวจสอบ Role ใหม่ว่าถูกต้องตาม Enum หรือไม่
+        try:
+            new_role_enum = ProjectRole(role.lower())
+        except ValueError:
+            raise HTTPException(status_code=400, detail=f"Invalid role: {role}")
 
-        relations = self._read_json()
+        # 2. ค้นหาสมาชิกที่ต้องการอัปเดต (Join กับ User ไปเลยเพื่อเอาข้อมูลกลับมาทีเดียว)
+        query = (
+            sa.select(ProjectMember, User)
+            .join(User, ProjectMember.user_email == User.email)
+            .where(
+                ProjectMember.project_id == project_id,
+                ProjectMember.user_email == user_id
+            )
+        )
+        
+        result = await db.execute(query)
+        row = result.fetchone()
 
-        for i, rel in enumerate(relations):
-            if rel["project_id"] == project_id and rel["email"] == user_id:
-                del relations[i]
-                self._save_json(relations)
-                return True
+        if not row:
+            return None
+
+        member, user = row
+
+        # 3. อัปเดต Role
+        member.role = new_role_enum
+
+        try:
+            # 4. Commit การเปลี่ยนแปลง
+            await db.commit()
+            await db.refresh(member)
+
+            # 5. ประกอบข้อมูลส่งกลับเป็น UserInfo
+            return UserInfo(
+                email=user.email,
+                firstname=user.first_name, # ตรวจสอบชื่อฟิลด์ใน Model User
+                lastname=user.last_name,
+                role=member.role.value,
+                joinned_at=member.joined_at # ระวังชื่อสะกด joinned_at ตาม Schema เดิมคุณ
+            )
             
-        return False
+        except Exception as e:
+            await db.rollback()
+            print(f"❌ Error updating member role: {e}")
+            raise HTTPException(status_code=500, detail="Could not update member role")
+    
+    async def delete_member(self, user_id: str, project_id: int, db: AsyncSession):
+        """ลบสมาชิกออกจากโปรเจกต์ (SQL Version)"""
+        
+        # 1. สร้างคำสั่ง Delete โดยระบุเงื่อนไขให้ชัดเจน
+        # ลบแถวที่มี project_id และ user_email ตรงตามที่ระบุ
+        query = sa.delete(ProjectMember).where(
+            ProjectMember.project_id == project_id,
+            ProjectMember.user_email == user_id
+        )
+
+        try:
+            # 2. Execute คำสั่งลบ
+            result = await db.execute(query)
+            
+            # 3. ตรวจสอบว่ามีการลบข้อมูลจริงไหม (rowcount)
+            if result.rowcount == 0:
+                # ถ้า rowcount เป็น 0 แสดงว่าไม่พบสมาชิกคนนี้ในโปรเจกต์ดังกล่าว
+                return False
+
+            # 4. Commit การลบข้อมูลลง Database
+            await db.commit()
+            return True
+
+        except Exception as e:
+            # หากเกิด Database Error ให้ Rollback ป้องกันข้อมูลค้างคิว
+            await db.rollback()
+            print(f"❌ Error removing member: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Could not remove member from project"
+            )
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 project_member_service = ProjectMemberService()

@@ -23,7 +23,10 @@ class ProjectService:
         result = await db.execute(query)
         projects = result.scalars().all()
 
-        user_member_roles = project_member_service.get_user_roles_map(user_id)
+        user_member_roles = await project_member_service.get_user_roles_map(
+            user_id=user_id,
+            db=db
+        )
         
         # 1. กรอง User
         all_matches = []
