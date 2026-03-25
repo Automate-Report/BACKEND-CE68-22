@@ -82,10 +82,10 @@ async def get_all_vuln_by_user_id(
     role = Depends(get_current_project_role),
     db: AsyncSession = Depends(get_db)
 ):
-    
+
     result = await vuln_service.get_all_issue_by_user_id(
         user_id=user["sub"],
-        project_id = project_id,
+        project_id =project_id,
         role=role,
         page=page,
         size=size,
