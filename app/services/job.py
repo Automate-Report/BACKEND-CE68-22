@@ -21,6 +21,7 @@ from app.models.jobs import Job, JobStatus
 from app.models.workers import Worker, WorkerStatus
 from app.models.vulnerabilities import Vulnerability
 from app.models.schedules import Schedule, ScheduleAttackType
+from app.models.notifications import NotiType
 
 
 class JobService:
@@ -332,7 +333,13 @@ class JobService:
                 # กรณีไม่มี Worker ออนไลน์เลย
                 if best_worker in ["No Worker", None]:
                     error_msg = f"❌ ไม่สามารถเริ่มงานสแกน {asset.name} ได้ เนื่องจากไม่มี Worker ออนไลน์ในขณะนี้"
-                    notification_service.create_notification(user_id, "error", error_msg, f'/projects/{schedule_data.project_id}/workers')
+                    await notification_service.create_notification(
+                        db=db,
+                        user_email=user_id, 
+                        type=NotiType.ERROR, 
+                        message=error_msg, 
+                        link=f'/projects/{schedule_data.project_id}/workers'
+                    )
                     from app.services.schedule import schedule_service
                     await schedule_service.deactivate_schedule(schedule_id, db)
                     print(f"🔒 [Dispatch] No worker online, deactivating schedule: {schedule_id}")
@@ -391,7 +398,6 @@ class JobService:
                 await redis_jobs.rpush(queue_name, payload.model_dump_json())
 
                 # 6. บันทึกการแจ้งเตือน (Notification)
-                from app.models.notifications import NotiType
                 new_noti = await notification_service.create_notification(
                     db=db,
                     user_email=user_id,
@@ -407,83 +413,6 @@ class JobService:
             except Exception as e:
                 await db.rollback()
                 print(f"Background Job Error: {e}")
-        
-
-    async def run_watchdog(self, db: AsyncSession):
-        """🛡️ SQL Watchdog: ปรับสถานะงานที่ค้างและคืน Load ให้ Worker อัตโนมัติ"""
-        print("🛡️ [Watchdog] SQL checking started...")
-        
-        # 1. ตั้งค่า Timeout (ใช้ UTC Aware ตามมาตรฐานใหม่)
-        now = datetime.now(timezone.utc)
-        pending_timeout = now - timedelta(minutes=5)
-        running_timeout = now - timedelta(minutes=30)
-
-        # 2. ค้นหา Job ที่ "ติดค้าง" (Stuck) 
-        # เราจะดึงเฉพาะ IDs ของ Job และ Worker มาเพื่อไปลด Load ต่อ
-        stuck_query = sa.select(Job.id, Job.worker_id).where(
-            sa.or_(
-                sa.and_(Job.status == JobStatus.PENDING, Job.created_at < pending_timeout),
-                sa.and_(Job.status == JobStatus.RUNNING, Job.started_at < running_timeout)
-            )
-        )
-        
-        result = await db.execute(stuck_query)
-        stuck_jobs = result.all()
-
-        if stuck_jobs:
-            worker_ids_to_reduce = [j.worker_id for j in stuck_jobs if j.worker_id]
-            job_ids_to_fail = [j.id for j in stuck_jobs]
-
-            # BULK UPDATE Jobs
-            await db.execute(
-                sa.update(Job)
-                .where(Job.id.in_(job_ids_to_fail))
-                .values(
-                    status=JobStatus.FAILED
-                )
-            )
-
-            # Update Workers Load
-            if worker_ids_to_reduce:
-                for w_id in set(worker_ids_to_reduce):
-                    count = worker_ids_to_reduce.count(w_id)
-                    await db.execute(
-                        sa.update(Worker)
-                        .where(Worker.id == w_id)
-                        .values(current_load=sa.func.greatest(0, Worker.current_load - count))
-                    )
-            print(f"🕵️ [Watchdog] Fixed {len(job_ids_to_fail)} stuck jobs.")
-        # ---------------------------------------------------------
-        # 2. จัดการ SCHEDULE (ใหม่: ปิดพวกที่ค้างหรือหมดอายุ)
-        # ---------------------------------------------------------
-        # เงื่อนไข: 
-        #   - งานที่เลย end_date ไปแล้ว
-        #   - หรือ งาน Not Repeat ที่มี last_run_date แล้วแต่ is_active ยังเป็น true (ตกค้างจาก error)
-        schedule_cleanup_query = (
-            sa.update(Schedule)
-            .where(
-                Schedule.is_active == True,
-                sa.or_(
-                    # กรณี A: เลยเวลา end_date (ถ้ามี)
-                    sa.and_(Schedule.end_date != None, Schedule.end_date < now),
-                    # กรณี B: เป็น Not Repeat ที่รันไปแล้วแต่สถานะไม่ยอมปิด (เกิด Error ระหว่าง Dispatch)
-                    sa.and_(
-                        Schedule.cron_expression == "Not Repeat",
-                        Schedule.last_run_date != None
-                    )
-                )
-            )
-            .values(is_active=False, updated_at=sa.func.now())
-        )
-
-        cleanup_result = await db.execute(schedule_cleanup_query)
-        
-        # 3. Commit ทั้งหมด
-        await db.commit()
-        
-        if cleanup_result.rowcount > 0:
-            print(f"🕵️ [Watchdog] Deactivated {cleanup_result.rowcount} expired/stuck schedules.")
-
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 job_service = JobService()

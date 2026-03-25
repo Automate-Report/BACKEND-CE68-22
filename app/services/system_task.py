@@ -8,6 +8,8 @@ from app.services.job import job_service
 
 from app.core.db import async_session
 
+from app.services.watchdog import run_watchdog
+
 async def system_schedule_task():
     print(f"✅ [System Task] Background Scheduler Started at {datetime.now()}")
     last_watchdog_run = 0
@@ -58,7 +60,7 @@ async def system_schedule_task():
                 # Watchdog...
                 current_time = time.time()
                 if current_time - last_watchdog_run > 30:
-                    await job_service.run_watchdog(db)
+                    await run_watchdog(db)
                     last_watchdog_run = current_time
 
             except asyncio.CancelledError:
