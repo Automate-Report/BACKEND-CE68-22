@@ -4,12 +4,12 @@ from fastapi import HTTPException
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.projects import Project #SQL Alchemy Models
+from app.models.project_members import ProjectMember, InviteStatus
 from app.schemas.project import ProjectCreate
 
 from app.schemas.project import ProjectCreate
 from app.schemas.userauthen import UserInfo
 
-from app.services.project_member import project_member_service
 from app.services.project_tag import project_tag_service
 from app.services.tag import tag_service
 from app.services.userauthen import userauthen_service
@@ -18,92 +18,88 @@ from app.services.vulnerability import vuln_service
 
 class ProjectService:
     async def get_all_projects(self, user_id: str, page: int, size: int, db: AsyncSession, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
-        """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
-        query = sa.select(Project).where(Project.user_email == user_id)
-        result = await db.execute(query)
-        projects = result.scalars().all()
-
-        user_member_roles = await project_member_service.get_user_roles_map(
-            user_id=user_id,
-            db=db
+        """Service: ดึงโปรเจกต์ที่ User เป็นเจ้าของ 'หรือ' เป็นสมาชิกที่ Join แล้ว"""
+    
+        # 1. สร้าง Base Query เพื่อหาโปรเจกต์ที่เกี่ยวข้อง
+        # ใช้ Left Join กับ ProjectMember เพื่อดูว่า User คนนี้มี Role อะไรในโปรเจกต์นั้น
+        query = (
+            sa.select(
+                Project,
+                sa.case(
+                    (Project.user_email == user_id, "owner"),
+                    else_=ProjectMember.role.cast(sa.String)
+                ).label("user_role")
+            )
+            .join(
+                ProjectMember, 
+                sa.and_(
+                    ProjectMember.project_id == Project.id,
+                    ProjectMember.user_email == user_id,
+                    ProjectMember.status == InviteStatus.JOINED
+                ),
+                isouter=True # Left Join เพื่อให้โปรเจกต์ที่เราเป็น Owner ยังอยู่แม้ไม่มีใน ProjectMember
+            )
+            .where(
+                sa.or_(
+                    Project.user_email == user_id, # เคสเราเป็นเจ้าของ
+                    ProjectMember.user_email == user_id # เคสเราเป็นสมาชิกที่ Join แล้ว
+                )
+            )
         )
+
+        # 2. การกรอง (Search & Filter) ในระดับ SQL
+        if search:
+            query = query.where(Project.name.ilike(f"%{search}%"))
         
-        # 1. กรอง User
+        if filter != "ALL":
+            if filter == "owner":
+                query = query.where(Project.user_email == user_id)
+            else:
+                # กรองตาม Role (pentester/developer) จากตาราง ProjectMember
+                query = query.where(ProjectMember.role == filter)
+
+        # 3. จัดการเรื่อง Sorting
+        column_to_sort = getattr(Project, sort_by if sort_by else "created_at", Project.created_at)
+        query = query.order_by(column_to_sort.desc() if order == "desc" else column_to_sort.asc())
+
+        # 4. ดึงข้อมูลทั้งหมดมาจัดการต่อ (สำหรับนับ Count และนับ Asset/Vuln)
+        result = await db.execute(query)
+        rows = result.all() # [(Project, "owner"), (Project, "pentester"), ...]
+
         all_matches = []
-        for proj in projects:
-            user_role = None
+        for proj, role_val in rows:
+            # ดึงค่า String จาก Enum ถ้าจำเป็น
+            user_role = role_val.value.lower() if hasattr(role_val, "value") else role_val.lower()
 
-            if proj.user_email == user_id:
-                user_role = "owner"
-            elif proj.user_email in user_member_roles:
-                user_role = user_member_roles[proj.user_email]
-
-            if not user_role:
-                continue
-
+            # ✅ ดึง Count ต่างๆ (แนะนำให้ทำ Subquery ในอนาคตเพื่อความเร็ว)
             asset_cnt = await asset_service.cnt_asset_by_project_id(proj.id, db)
             vuln_cnt = await vuln_service.get_cnt_vulns_in_project_id(proj.id, db)
+            tags = await project_tag_service.get_tags_by_project_id(proj.id, db) # ปรับให้ดึงข้อมูล tag มาเลย
 
-            tag_ids = await project_tag_service.get_all_tag_ids(proj.id, db)
-
-            tag = []
-
-            for id in tag_ids:
-                t = tag_service.get_tag_by_id(id)
-                tag.append({
-                    "name": t["name"],
-                    "text_color": t["text_color"],
-                    "bg_color": t["bg_color"]
-                })
-            print(proj)
-            proj_with_role = {
+            all_matches.append({
                 "id": proj.id,
                 "name": proj.name,
                 "description": proj.description,
                 "role": user_role,
                 "assets_cnt": asset_cnt,
                 "vuln_cnt": vuln_cnt,
-                "tags": tag,
+                "tags": tags,
                 "created_at": proj.created_at,
                 "updated_at": proj.updated_at      
-            }
+            })
 
-            if search and search.lower() not in proj["name"].lower():
-                continue
-            if filter == "owner" and user_role != "owner":
-                continue
-            if filter == "pentester" and user_role != "pentester":
-                continue
-            if filter == "developer" and user_role != "developer":
-                continue
-
-            all_matches.append(proj_with_role)
-
-        print(all_matches)
-
-        if sort_by:
-            reverse = (order == "desc")
-            # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
-            all_matches.sort(key=lambda x: (x.get(sort_by) or ""), reverse=reverse)
-        
-        # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
+        # 5. Pagination Logic (เหมือนเดิม)
         total_count = len(all_matches)
-            
-        # 3. คำนวณ Pagination Logic
         total_pages = math.ceil(total_count / size)
-        
         offset = (page - 1) * size
-        
-        # --- จุดที่ต้องแก้: ตัดข้อมูล (Slicing) ---
-        # ใช้ Python Slice [start : end]
         paginated_items = all_matches[offset : offset + size]
 
         return {
-            "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
+            "total": total_count,
             "page": page,
             "size": size,
             "total_pages": total_pages,
-            "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
+            "items": paginated_items
         }
     
     async def get_project_by_id(self, project_id:int, db: AsyncSession):

@@ -2,6 +2,7 @@ from fastapi import HTTPException
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.project_tags import ProjectTag #SQL Alchemy Models
+from app.models.tags import Tag
 
 
 class ProjectTagService:
@@ -75,6 +76,36 @@ class ProjectTagService:
         db.delete(project_tag)
         await db.commit()
         return True
+    
+    async def get_tags_by_project_id(self, project_id: int, db: AsyncSession):
+        """
+        ดึงข้อมูล Tags ทั้งหมด (ชื่อ, สี) ที่ผูกกับ Project ID นี้
+        """
+        # 1. สร้าง Query ที่ Join ระหว่าง ProjectTag (ตารางกลาง) และ Tag (ตารางข้อมูล)
+        query = (
+            sa.select(
+                Tag.name,
+                Tag.text_color,
+                Tag.bg_color
+            )
+            .join(ProjectTag, Tag.id == ProjectTag.tag_id)
+            .where(ProjectTag.project_id == project_id)
+        )
+
+        # 2. Execute Query
+        result = await db.execute(query)
+        rows = result.all()
+
+        # 3. แปลงผลลัพธ์เป็น List ของ Dictionary เพื่อส่งกลับไปที่ Frontend
+        tags = []
+        for name, t_color, b_color in rows:
+            tags.append({
+                "name": name,
+                "text_color": t_color,
+                "bg_color": b_color
+            })
+
+        return tags
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 project_tag_service = ProjectTagService()
