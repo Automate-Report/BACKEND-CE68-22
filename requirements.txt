@@ -36,7 +36,7 @@ httpx
 cvss
 jwt
 cvss
-
+minio>=7.2.20
 playwright
 pdfplumber
 pdf2docx

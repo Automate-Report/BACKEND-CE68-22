@@ -7,9 +7,6 @@ class Settings(BaseSettings):
     BACKLIST_REDIS_URL: str
     JOBS_REDIS_URL: str
 
-    BACKLIST_REDIS_URL: str
-    JOBS_REDIS_URL: str
-
     # Authentication Settings
     SECRET_KEY: str 
     ALGORITHM: str 
@@ -24,6 +21,12 @@ class Settings(BaseSettings):
     SESSION_SECRET_KEY: str
 
     EMBEDED_KEY: str
+
+    # MinIO Settings
+    MINIO_ENDPOINT: str
+    MINIO_ACCESS_KEY: str
+    MINIO_SECRET_KEY: str
+    MINIO_SECURE: bool = False
 
     class Config:
         env_file = ".env"
