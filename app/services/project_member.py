@@ -1,25 +1,15 @@
-import json
-import os
-from typing import List
 from datetime import datetime, timezone
 from fastapi import HTTPException, status
 
 from app.schemas.userauthen import UserInfo
 from app.schemas.invite import InvitationResponse
-from app.services.userauthen import userauthen_service
+
 
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.project_members import ProjectMember, InviteStatus, ProjectRole
 from app.models.projects import Project
 from app.models.users import User
-
-
-
-# 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
-# app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "project_members.json")
 
 class ProjectMemberService:
 
