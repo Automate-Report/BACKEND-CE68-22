@@ -6,7 +6,6 @@ import jwt
 import math
 
 from datetime import datetime, timedelta, timezone
-from typing import List, Optional
 from fastapi import HTTPException, Header
 from fastapi.responses import StreamingResponse
 from cryptography.fernet import Fernet
@@ -16,7 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.workers import Worker, WorkerStatus
 from app.models.users import User
 from app.models.access_keys import AccessKey
-from app.models.jobs import Job, JobStatus
+from app.models.jobs import Job
 
 from app.core.config import settings
 from app.schemas.worker import WorkerCreate, VerifyRequest, HeartBeatPayload
@@ -266,17 +265,7 @@ class WorkerService:
             "busy": stats.busy or 0,
             "total_jobs": stats.total_jobs or 0
         }
-    
-    def get_all_worker_ids_by_project_id(self, project_id: int):
-        workers = self._read_json()
-
-        result = []
-        for worker in workers:
-            if worker["project_id"] == project_id:
-                result.append(worker["id"])
-        
-        return result
-    
+     
     async def change_access_key(self, access_key_id: int, worker_id: int, db: AsyncSession):
         query = sa.select(Worker).where(Worker.id == worker_id)
         result = await db.execute(query)
@@ -336,32 +325,6 @@ class WorkerService:
 
         self._save_json(workers)
 
-    def disconnect_workers_in_project(self, project_id: int):
-        workers = self._read_json()
-        for worker in workers:
-            access_key_id = worker.get("access_key_id")
-            if access_key_id:
-                access_key_service.delete_access_key_by_id(access_key_id)
-            key = access_key_service.create_access_key()
-            if worker["project_id"] == project_id:
-                worker["isActive"] = False
-                worker["hostname"] = None
-                worker["internal_ip"] = None
-                worker["last_heartbeat"] = None
-                worker["owner"] = None
-                worker["status"] = "NOT_ACTIVATE"
-                worker["access_key_id"] = key.get("id")
-
-        self._save_json(workers)
-
-    def download_success(self, worker_id: int, user_id: str):
-        workers = self._read_json()
-
-        for w in workers:
-            if w["id"] == worker_id:
-                w["owner"] = user_id
-
-        self._save_json(workers)
 
     async def verify_worker(self, req: VerifyRequest, db: AsyncSession):
         query = sa.select(Worker).where(Worker.id == req.worker_id)
@@ -666,14 +629,6 @@ class WorkerService:
             print(f"Error claiming worker: {e}")
             raise HTTPException(status_code=500, detail="Failed to assign worker")
         
-    def read_all_worker(self, project_id: int):
-        workers = self._read_json()
-        result = []
-        for w in workers:
-            if w["project_id"] == project_id:
-                result.append(w)
-
-        return result
 
 
 worker_service = WorkerService()
