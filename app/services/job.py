@@ -391,9 +391,11 @@ class JobService:
                 await redis_jobs.rpush(queue_name, payload.model_dump_json())
 
                 # 6. บันทึกการแจ้งเตือน (Notification)
-                new_noti = notification_service.create_notification(
+                from app.models.notifications import NotiType
+                new_noti = await notification_service.create_notification(
+                    db=db,
                     user_email=user_id,
-                    type="info" if score > 0 else "success",
+                    type=NotiType.INFO if score > 0 else NotiType.SUCCESS,
                     message=display_message,
                     link=f"/jobs/{new_job["id"]}"
                 )

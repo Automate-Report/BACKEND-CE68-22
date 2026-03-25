@@ -39,33 +39,28 @@ class NotificationService:
             # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
-    def get_notification_from_user_email(self, user_email:str, skip:int, limit:int, isUnread:bool):
-        allnoti = self._read_json()
-        
-        # Match noti:user
-        filtered = []
-        for noti in allnoti:
-            if noti["user_email"] == user_email:
+    async def get_notification_from_user_email(self, db: AsyncSession, user_email:str, skip:int, limit:int, isUnread:bool):
+        # 1. สร้าง Base Query
+        query = sa.select(Notification).where(Notification.user_email == user_email)
 
-                # Unread case
-                if isUnread and (noti["status"] == "unread"):
-                    filtered.append(noti)
-                
-                # Allnoti case
-                if (not isUnread):
-                    filtered.append(noti)
-        
-        # Sort by timestamp
-        filtered.sort(
-            key=lambda x: x["created_at"],
-            reverse=True
-        )
-        
-        # Paginated
-        paginated = filtered[skip: skip + limit]
+        # 2. Filter: ถ้าต้องการเฉพาะ Unread
+        if isUnread:
+            # สมมติว่าใน Model คุณเก็บสถานะเป็น Enum หรือ String
+            query = query.where(Notification.status == NotiStatus.UNREAD)
 
-        # Send back
-        return paginated
+        # 3. Sorting: เรียงจากใหม่ไปเก่า (Created At Descending)
+        query = query.order_by(Notification.created_at.desc())
+
+        # 4. Pagination: ใช้ Offset (skip) และ Limit
+        query = query.offset(skip).limit(limit)
+
+        # 5. Execute Query
+        result = await db.execute(query)
+        
+        # 6. คืนค่าเป็น List ของ Model Objects (หรือจะทำ .dict() ก็ได้)
+        notifications = result.scalars().all()
+        
+        return notifications
 
     async def create_notification(self, db: AsyncSession, user_email:str, type:NotiType, message:str, link:str = None):
         noti_db = Notification(
@@ -101,12 +96,29 @@ class NotificationService:
             # ไม่ต้อง rollback ตรงนี้ถ้าฟังก์ชันนี้ถูกเรียกซ้อนใน transaction อื่น
             raise e
 
-    def change_status_to_read(self, noti_id:int):
-        allnoti = self._read_json()
-        for noti in allnoti:
-            if noti["id"] == noti_id:
-                noti["status"] = "read"
-                break
-        self._save_json(allnoti)
+    async def change_status_to_read(self, db: AsyncSession, noti_id:int):
+        # 1. ค้นหา Notification ที่ต้องการ
+        query = sa.select(Notification).where(Notification.id == noti_id)
+        result = await db.execute(query)
+        noti = result.scalar_one_or_none()
+
+        # 2. ถ้าไม่พบข้อมูลให้คืนค่า False หรือ Raise Error
+        if not noti:
+            return False
+
+        # 3. อัปเดตสถานะ (ใช้ Enum หรือ String ตามที่ Model กำหนด)
+        noti.status = NotiStatus.READ 
+
+        try:
+            # 4. Commit การเปลี่ยนแปลงลง Database
+            await db.commit()
+            # (Optional) refresh ข้อมูลใน object ถ้าต้องการใช้งานต่อ
+            await db.refresh(noti)
+            return True
+        except Exception as e:
+            # หากเกิด Error ให้ Rollback ป้องกันข้อมูลค้าง
+            await db.rollback()
+            print(f"❌ Error updating notification status: {e}")
+            return False
 
 notification_service = NotificationService()
