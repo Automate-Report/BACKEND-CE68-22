@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 
 from app.core.db import engine, Base
 from app.core.config import settings
-from app.models import scan_result_logs, users, access_keys, asset_credentials, assets, jobs, project_tags, projects, reports, schedules, tags, vuln_libs, vulnerabilities, workers, members
+from app.models import scan_result_logs, users, access_keys, asset_credentials, assets, jobs, project_tags, projects, reports, schedules, tags, vuln_libs, vulnerabilities, workers, project_members
 
 from app.services.system_task import system_schedule_task
 

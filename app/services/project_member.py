@@ -4,7 +4,16 @@ from typing import List
 from datetime import datetime
 
 from app.schemas.userauthen import UserInfo
+from app.schemas.invite import InvitationResponse
 from app.services.userauthen import userauthen_service
+
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.project_members import ProjectMember, InviteStatus
+from app.models.projects import Project
+from app.models.users import User
+
+
 
 # 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
 # app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
@@ -62,15 +71,44 @@ class ProjectMemberService:
 
         return all_matches
     
-    def get_invitations_by_user_id(self, user_id: str):
-        relations = self._read_json()
-    
-        invitations = []
-        for rel in relations:
-            if rel["email"] == user_id and rel["status"] == "invited":
-                invitations.append(rel)
-        
-        return invitations
+    async def get_invitations_by_user_id(self, user_id: str, db: AsyncSession):
+        """
+        ดึงรายการคำเชิญทั้งหมดของผู้ใช้ พร้อมข้อมูลชื่อโปรเจกต์และชื่อเจ้าของ
+        """
+        # 1. สร้าง Query ที่ Join 3 ตารางเข้าด้วยกัน
+        query = (
+            sa.select(
+                ProjectMember,             # ข้อมูล Invitation
+                Project.name,               # ชื่อโปรเจกต์
+                User.first_name,            # ชื่อเจ้าของ (Firstname)
+                User.last_name              # นามสกุลเจ้าของ (Lastname)
+            )
+            .join(Project, ProjectMember.project_id == Project.id)
+            .join(User, Project.user_email == User.email) # Join หาเจ้าของโปรเจกต์
+            .where(ProjectMember.user_email == user_id)        # กรองเฉพาะของ User คนนี้
+            .where(ProjectMember.status == InviteStatus.INVITED) # กรองเฉพาะที่ยังไม่ตอบรับ (Optional)
+            .order_by(ProjectMember.invited_at.desc())
+        )
+
+        # 2. Execute
+        result = await db.execute(query)
+        rows = result.all()
+
+        # 3. แปลงผลลัพธ์เป็น InvitationResponse
+        return_result = []
+        for member, p_name, f_name, l_name in rows:
+            invite_response = InvitationResponse(
+                project_id   = member.project_id,
+                email        = member.email,
+                project_name = p_name,
+                project_owner= f"{f_name} {l_name}",
+                role         = member.role,
+                status       = member.status,
+                invited_at   = member.invited_at
+            )
+            return_result.append(invite_response)
+
+        return return_result
     
     def invite_member(self, user_id: str, role: str, project_id: int):
         relations = self._read_json()
