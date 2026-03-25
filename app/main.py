@@ -28,6 +28,7 @@ from app.api.endpoints import notification
 from app.api.endpoints import vulnerabilities
 from app.api.endpoints import reports
 from app.api.endpoints import invitation
+from app.api.endpoints import user
 
 # --- Lifespan Management ---
 @asynccontextmanager
@@ -66,6 +67,7 @@ app = FastAPI(
 origins = [
     "http://localhost:3000",      # Next.js รันที่ port 3000
     "http://127.0.0.1:3000",
+    "http://10.60.1.214:3000",
 ]
 
 app.add_middleware(
@@ -95,6 +97,7 @@ app.include_router(workers.router, prefix="/workers", tags=["Workers"])
 app.include_router(access_keys.router, prefix="/access-keys", tags=["Access Keys"])
 app.include_router(pentest_log.router, prefix="/pentest-logs", tags=["Pentest Logs"])
 app.include_router(notification.router, prefix="/notification", tags=["Notification"])
+app.include_router(user.router, prefix="/user", tags=["User"])
 
 app.include_router(tag.router, prefix="/tags", tags=["Tags"])
 app.include_router(project_tags.router, prefix="/project-tags", tags=["Project Tags"])
