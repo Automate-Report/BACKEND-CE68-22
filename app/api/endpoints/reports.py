@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query, Depends, BackgroundTasks
-from typing import List, Optional
+from typing import Optional
 
 
 from app.deps.auth import get_current_user
@@ -9,9 +9,6 @@ from app.core.db import get_db
 from app.schemas.pentest_report import PentestReportResponse, CreateReportPayload
 from app.schemas.pagination import PaginatedResponse
 
-
-from app.services.asset import asset_service
-from app.services.vulnerability import vuln_service
 from app.services.project import project_service
 from app.services.reports.pentest_report import pen_test_report_service
 
@@ -89,10 +86,6 @@ async def create_report(
             latest_finding_sub.c.rn == 1 # Only get the newest one
         ), isouter=True)
         .where(Vulnerability.asset_id.in_(asset_ids))
-        # .where(sa.or_(
-        #     Vulnerability.assigned_to == user["sub"],
-        #     Vulnerability.verified_by == user["sub"]
-        # ))
     )
 
     vuln_results = (await db.execute(vuln_query)).all()

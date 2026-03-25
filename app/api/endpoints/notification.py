@@ -1,7 +1,7 @@
 from typing import Optional
 from app.deps.auth import get_current_user
 from fastapi import APIRouter, Query, Depends
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse
 
 from app.core.db import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,12 +15,11 @@ async def get_notifications(
     skip: int = Query(0, ge=0),
     limit: int = Query(5, ge=1, le=50),
     isUnread: bool = False,
-    # current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    current_user = "somchai@tech.co.th"
     notificationList = await notification_service.get_notification_from_user_email(
-        user_email=current_user,
+        user_email=current_user["sub"],
         skip=skip,
         limit=limit,
         isUnread=isUnread,

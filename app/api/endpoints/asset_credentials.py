@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
 
-import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.asset_credential import AssetCredentialCreate
 from app.core.db import get_db

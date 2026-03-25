@@ -1,11 +1,10 @@
 from fastapi import APIRouter, HTTPException, Query, Depends
-from typing import List, Optional
+from typing import Optional
 
 from app.schemas.vulnerability import SummaryCntVlun, VulnIssue, VulnDetails, AssignedJobPayload, ChangeStatusPayload, ChangeVerifyPayload
 from app.schemas.pagination import PaginatedResponse
 
 from app.services.vulnerability import vuln_service
-from app.services.asset import asset_service
 
 from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role

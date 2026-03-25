@@ -1,9 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query, Depends
-from typing import List, Optional
+from typing import Optional
 
-import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models.schedules import Schedule
 
 from app.deps.auth import get_current_user
 from app.deps.role import get_current_project_role

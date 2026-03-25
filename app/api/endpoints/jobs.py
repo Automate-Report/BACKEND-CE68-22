@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, Query
-from typing import List, Optional
+from typing import Optional
 from app.schemas.job import JobStatusPayload, JobStatusResponse, CountStatusResponse, SummaryInfoByWorker, GetJobByWorker
 from app.schemas.pagination import PaginatedResponse
-from app.services.worker import worker_service
+
 from app.services.job import job_service
 from app.services.schedule import schedule_service
 from app.services.vulnerability import vuln_service
@@ -12,9 +12,7 @@ from app.deps.worker import get_current_worker
 from app.deps.role import get_current_project_role
 from app.core.db import get_db
 
-import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
-
 
 router = APIRouter()
 

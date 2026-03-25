@@ -1,12 +1,8 @@
+from fastapi import APIRouter, Depends, HTTPException
 
-from fastapi import APIRouter, Depends, Body, Query, HTTPException
-from typing import Optional
-
-# Import ของที่เราทำไว้
-import sqlalchemy as sa
 from app.core.db import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models.access_keys import AccessKey
+
 
 from app.schemas.access_key import AccssKeyResponse
 from app.services.access_key import access_key_service
@@ -37,7 +33,10 @@ async def get_access_key_by_id(
     return access_key
 
 @router.delete("/{access_key_id}")
-async def delete_access_key(access_key_id: int, db: AsyncSession = Depends(get_db)):
+async def delete_access_key(
+    access_key_id: int, 
+    db: AsyncSession = Depends(get_db)
+):
     success = await access_key_service.delete_access_key_by_id(access_key_id, db)
 
     if not success:

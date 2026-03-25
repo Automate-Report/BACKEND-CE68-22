@@ -103,7 +103,10 @@ async def update_asset(
 
 # DELETE 
 @router.delete("/{asset_id}")
-async def delete_asset(asset_id: int, db: AsyncSession = Depends(get_db)):
+async def delete_asset(
+    asset_id: int, 
+    db: AsyncSession = Depends(get_db)
+):
     success = await asset_service.delete_asset(asset_id, db)
 
     if not success:

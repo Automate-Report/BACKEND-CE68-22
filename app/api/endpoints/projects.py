@@ -1,7 +1,7 @@
 import math
 
 from fastapi import APIRouter, HTTPException, Query, Depends
-from typing import Optional, List
+from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.db import get_db
@@ -84,7 +84,11 @@ async def get_project_by_id(
 
 # POST /projects/ : สร้างโปรเจกต์ใหม่
 @router.post("/", response_model=ProjectResponse)
-async def create_project(project_in: ProjectCreate, user = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+async def create_project(
+    project_in: ProjectCreate, 
+    user = Depends(get_current_user), 
+    db: AsyncSession = Depends(get_db)
+):
     tag_ids = project_in.tag_ids
     new_project = await project_service.create_project(
         name=project_in.name,
@@ -98,7 +102,12 @@ async def create_project(project_in: ProjectCreate, user = Depends(get_current_u
 
 # PUT /projects/{project_id} : อัพเดตโปรเจกต์
 @router.put("/{project_id}", response_model=ProjectResponse)
-async def update_project(project_id: int, project_in: ProjectCreate, user = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+async def update_project(
+    project_id: int, 
+    project_in: ProjectCreate, 
+    user = Depends(get_current_user), 
+    db: AsyncSession = Depends(get_db)
+):
     new_tag_ids = set(project_in.tag_ids)
     updated_project = await project_service.update_project(
         project_id=project_id,
@@ -123,7 +132,10 @@ async def update_project(project_id: int, project_in: ProjectCreate, user = Depe
 
 # DELETE /projects/{project_id} : ลบโปรเจกต์
 @router.delete("/{project_id}")
-async def delete_project(project_id: int, db: AsyncSession = Depends(get_db)):
+async def delete_project(
+    project_id: int, 
+    db: AsyncSession = Depends(get_db)
+):
     delete_relation = await project_tag_service.delete_by_project_id(
         project_id=project_id,
         db=db
