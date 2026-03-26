@@ -257,7 +257,7 @@ class JobService:
             total_findings=stat.total_findings
         )
 
-    async def get_best_worker(self, db: AsyncSession, project_id: int):
+    async def get_best_worker(self, db: AsyncSession, project_id: int, user_id: str):
         query = (
             sa.select(Worker)
             .where(
@@ -293,6 +293,16 @@ class JobService:
         # เลือก Worker ที่ Score น้อยที่สุด (ว่างสุด หรือคิวสั้นสุดเมื่อเทียบกับกำลังเครื่อง)
         best_w, best_score = min(worker_scores, key=lambda x: x[1])
 
+        if best_score >= 70:
+            await notification_service.create_notification(
+                db=db,
+                user_email=user_id,
+                type=NotiType.WARNING,
+                message=f"Worker {best_w.name} is running at {best_score}% capacity. System might be slow.",
+                link=f'/projects/{project_id}/workers/{best_w.id}'
+            )
+            print(f"⚠️ Warning: Best worker {best_w.name} has high load ({best_score}%)")
+
         return best_w, best_score
 
     async def dispatch_job(self, session, schedule_data: Schedule):
@@ -319,13 +329,15 @@ class JobService:
                         return None
 
                 # 2. ดึงข้อมูล Asset และค้นหา Best Worker
+                user_id = schedule_data.created_by
                 asset = await asset_service.get_asset_by_id(schedule_data.asset_id, db)
                 best_worker, score = await self.get_best_worker(
                     db=db,
-                    project_id=schedule_data.project_id
+                    project_id=schedule_data.project_id,
+                    user_id=user_id
                 )
 
-                user_id = schedule_data.created_by
+                
 
                 # กรณีไม่มี Worker ออนไลน์เลย
                 if best_worker in ["No Worker", None]:
