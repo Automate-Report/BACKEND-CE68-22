@@ -1,0 +1,123 @@
+21:43:12 [INFO] ============================================================
+21:43:12 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+21:43:12 [INFO] ============================================================
+21:43:12 [INFO] 🔍 Testing connectivity to http://localhost:4040/...
+21:43:12 [INFO] ✅ Target is reachable! (Status: 200)
+21:43:12 [INFO] [+] Starting Public Discovery...
+21:43:12 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+21:43:15 [INFO]   [..] Processing: http://localhost:4040 (Depth: 0)
+21:43:15 [INFO]     [+] Target Saved: GET http://localhost:4040/assets/i18n/en.json
+21:43:15 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-version
+21:43:15 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-configuration
+21:43:15 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+21:43:15 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/languages
+21:43:15 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Quantitys/
+21:43:15 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/search?q=
+21:43:18 [INFO]     [..] Executing behavioral exploration...
+21:43:30 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/user/whoami
+21:43:30 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/24/reviews
+21:43:34 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/42/reviews
+21:43:38 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/3/reviews
+21:43:41 [INFO] ============================================================
+21:43:41 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+21:43:41 [INFO] ============================================================
+21:43:43 [INFO] 🌐 Loading target page: http://localhost:4040/
+21:43:45 [INFO] ✅ Page loaded successfully
+21:43:45 [INFO] 🕵️ No login form on landing page, searching for entry...
+21:43:49 [INFO] ✅ Found login form at http://localhost:4040/#/login
+21:43:49 [INFO] [Auth] Attempting Primary Login Method...
+21:43:49 [INFO] [Auth] 🛡️ Attempting Aggressive Entry at http://localhost:4040/#/login
+21:43:51 [INFO] ✅ SQLi Bypass Success with payload: admin@juice-sh.op'--
+21:43:51 [INFO] 🍪 Captured 4 session cookies
+21:43:51 [INFO] ✅ [Auth Success] Current URL: http://localhost:4040/#/search
+21:43:52 [INFO] [Crawler] 🍪 External cookies set. Total: 5
+21:43:52 [INFO] ============================================================
+21:43:52 [INFO] [PHASE 3] DEEP CRAWLING WITH SESSION...
+21:43:52 [INFO] Seed URL: http://localhost:4040/#/search
+21:43:52 [INFO] ============================================================
+21:43:52 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/#/search
+21:43:53 [INFO] [Crawler] 🍪 Context initialized with 5 cookies
+21:43:53 [INFO]   [..] Processing: http://localhost:4040 (Depth: 0)
+21:43:57 [INFO]     [..] Executing behavioral exploration...
+21:44:12 [INFO]     [+] Target Saved: GET http://localhost:4040
+21:44:13 [INFO] ============================================================
+21:44:13 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+21:44:13 [INFO] ============================================================
+21:44:13 [INFO] 📊 Deduplication: 24 -> 12 unique targets
+21:44:13 [INFO] [Requester] 🍪 5 cookies injected and session cleared.
+21:44:13 [INFO] [ScanEngine] 🔄 Global Session Sync Completed (Cookies & Auth Info)
+21:44:13 [INFO] 💉 Running XSS scans on 12 endpoints...
+21:44:13 [INFO] [1/12] XSS Scan: GET http://localhost:4040/assets/i18n/en.json
+21:44:13 [INFO] [XSS] Scanning GET on http://localhost:4040/assets/i18n/en.json (Type: json)
+21:44:13 [INFO] [2/12] XSS Scan: GET http://localhost:4040/rest/admin/application-version
+21:44:13 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/admin/application-version (Type: json)
+21:44:13 [INFO] [3/12] XSS Scan: GET http://localhost:4040/rest/admin/application-configuration
+21:44:13 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/admin/application-configuration (Type: json)
+21:44:13 [INFO] [4/12] XSS Scan: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+21:44:13 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Challenges/?name=Score%20Board (Type: json)
+21:44:13 [INFO]     -> Analyzing: name
+21:44:13 [INFO] [5/12] XSS Scan: GET http://localhost:4040/rest/languages
+21:44:13 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/languages (Type: json)
+21:44:13 [INFO] [6/12] XSS Scan: GET http://localhost:4040/api/Quantitys/
+21:44:13 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Quantitys/ (Type: json)
+21:44:13 [INFO] [7/12] XSS Scan: GET http://localhost:4040/rest/products/search?q=
+21:44:13 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/products/search?q= (Type: json)
+21:44:13 [INFO]     -> Analyzing: q
+21:44:13 [INFO] [8/12] XSS Scan: GET http://localhost:4040/rest/user/whoami
+21:44:13 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/user/whoami (Type: json)
+21:44:13 [INFO] [9/12] XSS Scan: GET http://localhost:4040/rest/products/24/reviews
+21:44:13 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/products/24/reviews (Type: json)
+21:44:13 [INFO]     -> Analyzing: path_id_3
+21:44:13 [INFO] [10/12] XSS Scan: GET http://localhost:4040/rest/products/42/reviews
+21:44:13 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/products/42/reviews (Type: json)
+21:44:13 [INFO]     -> Analyzing: path_id_3
+21:44:13 [INFO] [11/12] XSS Scan: GET http://localhost:4040/rest/products/3/reviews
+21:44:13 [INFO] [XSS] Scanning GET on http://localhost:4040/rest/products/3/reviews (Type: json)
+21:44:13 [INFO]     -> Analyzing: path_id_3
+21:44:14 [INFO] [12/12] XSS Scan: GET http://localhost:4040
+21:44:14 [INFO] [XSS] Scanning GET on http://localhost:4040 (Type: form)
+21:44:14 [INFO]     -> Analyzing: mat_input_0
+21:44:14 [INFO]     -> Analyzing: mat_radio_0_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_1_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_2_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_3_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_4_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_5_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_6_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_7_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_8_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_9_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_10_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_11_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_12_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_13_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_14_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_15_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_16_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_17_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_18_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_19_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_20_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_21_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_22_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_23_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_24_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_25_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_26_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_27_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_28_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_29_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_30_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_31_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_32_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_33_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_34_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_35_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_36_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_37_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_38_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_39_input
+21:44:14 [INFO]     -> Analyzing: mat_radio_40_input
+21:44:14 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040
+21:44:18 [INFO]        [+] Starting Dynamic Fragment Discovery...
+21:44:33 [INFO] ✅ Found 2 vulnerabilities!

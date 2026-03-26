@@ -349,26 +349,41 @@ class ProjectMemberService:
         
     async def get_members_by_schedule_id(self, db: AsyncSession, schedule_id: int):
         """
-        ดึงรายชื่อ email สมาชิกทุกคนที่เกี่ยวข้องกับ Schedule ID นี้ 
-        เพื่อใช้แจ้งเตือนเมื่อถึงกำหนดเวลาสแกน หรือสแกนเสร็จสิ้น
+        ดึงอีเมล Owner และ Members โดยใช้ project_id ที่อยู่ใน Schedule (Optimized)
         """
-        query = (
+        # 1. Query ส่วนที่ 1: ดึงเฉพาะ Owner จากตาราง Project (เชื่อมผ่าน Schedule.project_id)
+        owner_query = (
+            sa.select(
+                Project.user_email,
+                Project.id.label("project_id"),
+                Project.name.label("project_name")
+            )
+            .select_from(Schedule)
+            .join(Project, Schedule.project_id == Project.id)
+            .where(Schedule.id == schedule_id)
+        )
+
+        # 2. Query ส่วนที่ 2: ดึงเฉพาะ Member จากตาราง ProjectMember
+        member_query = (
             sa.select(
                 ProjectMember.user_email,
                 Project.id.label("project_id"),
-                Project.name.label("project_name") # แถมชื่อโปรเจกต์ไปให้ด้วยสำหรับทำ Noti
+                Project.name.label("project_name")
             )
+            .select_from(Schedule)
+            .join(Project, Schedule.project_id == Project.id)
+            .join(ProjectMember, Project.id == ProjectMember.project_id)
             .where(
                 Schedule.id == schedule_id,
                 ProjectMember.status == InviteStatus.JOINED
             )
         )
 
-        result = await db.execute(query)
-        rows = result.all()
-        
-        # คืนค่าเป็น List ของข้อมูลสมาชิกที่เกี่ยวข้อง
-        return rows
+        # 3. รวมทั้งสอง Query เข้าด้วยกันด้วย UNION (ลบตัวซ้ำอัตโนมัติ)
+        final_query = sa.union(owner_query, member_query)
+
+        result = await db.execute(final_query)
+        return result.all()
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 project_member_service = ProjectMemberService()

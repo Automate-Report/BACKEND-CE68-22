@@ -293,12 +293,12 @@ class JobService:
         # เลือก Worker ที่ Score น้อยที่สุด (ว่างสุด หรือคิวสั้นสุดเมื่อเทียบกับกำลังเครื่อง)
         best_w, best_score = min(worker_scores, key=lambda x: x[1])
 
-        if best_score >= 70:
+        if best_score >= 0.7:
             await notification_service.create_notification(
                 db=db,
                 user_email=user_id,
                 type=NotiType.WARNING,
-                message=f"Worker {best_w.name} is running at {best_score}% capacity. System might be slow.",
+                message=f"Worker {best_w.name} is running at {best_score*100}% capacity. System might be slow.",
                 link=f'/projects/{project_id}/workers/{best_w.id}'
             )
             print(f"⚠️ Warning: Best worker {best_w.name} has high load ({best_score}%)")
@@ -379,8 +379,6 @@ class JobService:
                     db=db
                 )
 
-                print(new_job)
-
                 if schedule_data.attack_type == ScheduleAttackType.SQLI:
                     attack_type = "sql_injection"
                 elif schedule_data.attack_type == ScheduleAttackType.XSS:
@@ -410,9 +408,9 @@ class JobService:
                 new_noti = await notification_service.create_notification(
                     db=db,
                     user_email=user_id,
-                    type=NotiType.INFO if score > 0 else NotiType.SUCCESS,
+                    type=NotiType.WARNING if score > 0 else NotiType.SUCCESS,
                     message=display_message,
-                    link=f"/jobs/{new_job["id"]}"
+                    link=f"/projects/{schedule_data.project_id}/workers/{best_worker.id}"
                 )
 
                 print(f"📢 Notification: {display_message}")
