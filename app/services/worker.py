@@ -325,7 +325,6 @@ class WorkerService:
 
         self._save_json(workers)
 
-
     async def verify_worker(self, req: VerifyRequest, db: AsyncSession):
         query = sa.select(Worker).where(Worker.id == req.worker_id)
         result = await db.execute(query)
@@ -535,7 +534,7 @@ class WorkerService:
             await db.commit()
             await db.refresh(worker) # This ensures all DB-generated fields are loaded
 
-            return True
+            return worker.thread_number
         except Exception as e:
             await db.rollback()
             # Log the error so you can see it in the terminal
@@ -562,9 +561,10 @@ class WorkerService:
 
             hidden_payload = {
                 "WORKER_ID": worker_id,
+                "WORKER_NAME": worker_db.name,
                 "NUMBER_OF_THREADS": worker_db.thread_number,
                 "BACKEND_URL": "http://127.0.0.1:8000",
-                "REDIS_URL": settings.JOBS_REDIS_URL,
+                "REDIS_URL": settings.JOBS_REDIS_URL
             }
 
             EMBEDED_KEY = settings.EMBEDED_KEY.encode()

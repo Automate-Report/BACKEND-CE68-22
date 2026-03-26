@@ -43,7 +43,10 @@ async def heartbeat(
         # กรณีนี้ยากที่จะเกิด ถ้า Token ผ่านแล้ว แต่เผื่อไว้
         raise HTTPException(status_code=404, detail="Worker not found")
         
-    return {"status": "ok", "timestamp": datetime.utcnow()}
+    return {
+        "status": "ok", 
+        "timestamp": datetime.utcnow()
+    }
 
 @router.post("/{project_id}")
 async def create_worker(
