@@ -190,7 +190,18 @@ class GenerateReport:
 
         return pdf_path, docx_path
 
+
     async def gen_report(self) -> tuple[Path, Path]:
-        """✅ Async wrapper — called from FastAPI, non-blocking, works on all OS."""
+        """✅ ป้องกันการยกเลิก Task แม้ Request จะหลุดไปก่อน"""
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(_executor, self.gen_report_sync)
+        
+        # ใช้ shield เพื่อบอกว่าห้ามยกเลิกงานนี้
+        # และใช้ try-except เพื่อจัดการ Log กรณีเกิดปัญหา
+        try:
+            # สร้าง Coroutine สำหรับรันงานใน Executor
+            task = loop.run_in_executor(_executor, self.gen_report_sync)
+            return await asyncio.shield(task)
+        except asyncio.CancelledError:
+            # ถ้าโดน Cancel จริงๆ (เช่น Server Shutdown) ให้ Log ไว้
+            print("📢 Report generation was shielded but still cancelled by system shutdown.")
+            raise

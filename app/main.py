@@ -3,6 +3,7 @@ import asyncio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
+from concurrent.futures import ThreadPoolExecutor
 
 from contextlib import asynccontextmanager
 
@@ -29,6 +30,8 @@ from app.api.endpoints import vulnerabilities
 from app.api.endpoints import reports
 from app.api.endpoints import invitation
 from app.api.endpoints import user
+
+_executor = ThreadPoolExecutor(max_workers=5)
 
 # --- Lifespan Management ---
 @asynccontextmanager
