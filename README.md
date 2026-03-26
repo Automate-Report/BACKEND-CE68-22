@@ -5,3 +5,5 @@
 pip install -r requirements.txt
 การ run ใช้ uvicorn
 ช่วงแรก ๆ ทำ dummy data ที่ฝั่ง backend ก่อน
+
+uvicorn app.main:app --reload --host 0.0.0.0
