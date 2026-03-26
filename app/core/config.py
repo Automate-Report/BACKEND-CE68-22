@@ -23,10 +23,10 @@ class Settings(BaseSettings):
     EMBEDED_KEY: str
 
     # MinIO Settings
-    MINIO_ENDPOINT: str
-    MINIO_ACCESS_KEY: str
-    MINIO_SECRET_KEY: str
-    MINIO_SECURE: bool = False
+    # MINIO_ENDPOINT: str
+    # MINIO_ACCESS_KEY: str
+    # MINIO_SECRET_KEY: str
+    # MINIO_SECURE: bool = False
 
     MINIO_REPORT_BUCKET: str
     MINIO_LOGS_BUCKET: str 
