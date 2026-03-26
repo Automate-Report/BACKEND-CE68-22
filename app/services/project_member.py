@@ -10,6 +10,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.project_members import ProjectMember, InviteStatus, ProjectRole
 from app.models.projects import Project
 from app.models.users import User
+from app.models.assets import Asset
+from app.models.schedules import Schedule
+from app.models.jobs import Job
 
 class ProjectMemberService:
 
@@ -343,6 +346,29 @@ class ProjectMemberService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Could not remove member from project"
             )
+        
+    async def get_members_by_schedule_id(self, db: AsyncSession, schedule_id: int):
+        """
+        ดึงรายชื่อ email สมาชิกทุกคนที่เกี่ยวข้องกับ Schedule ID นี้ 
+        เพื่อใช้แจ้งเตือนเมื่อถึงกำหนดเวลาสแกน หรือสแกนเสร็จสิ้น
+        """
+        query = (
+            sa.select(
+                ProjectMember.user_email,
+                Project.id.label("project_id"),
+                Project.name.label("project_name") # แถมชื่อโปรเจกต์ไปให้ด้วยสำหรับทำ Noti
+            )
+            .where(
+                Schedule.id == schedule_id,
+                ProjectMember.status == InviteStatus.JOINED
+            )
+        )
+
+        result = await db.execute(query)
+        rows = result.all()
+        
+        # คืนค่าเป็น List ของข้อมูลสมาชิกที่เกี่ยวข้อง
+        return rows
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 project_member_service = ProjectMemberService()

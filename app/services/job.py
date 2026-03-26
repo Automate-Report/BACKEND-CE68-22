@@ -296,7 +296,6 @@ class JobService:
         return best_w, best_score
 
     async def dispatch_job(self, session, schedule_data: Schedule):
-        print(schedule_data)
         async with session() as db:
             try:
                 print(f"DEBUG: Starting dispatch for {schedule_data.id}")
@@ -325,8 +324,6 @@ class JobService:
                     db=db,
                     project_id=schedule_data.project_id
                 )
-
-                print(best_worker)
 
                 user_id = schedule_data.created_by
 
