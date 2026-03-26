@@ -29,6 +29,13 @@ class MinIOClient:
             return True
         except S3Error as e:
             raise Exception(f"Failed to download file: {e}")
+        
+    def download_file_as_bytes(self, bucket_name: str, object_name: str) -> bytes:
+        """Download a file from MinIO and return its content as bytes"""
+        try:
+            return self.client.get_object(bucket_name, object_name)
+        except S3Error as e:
+            raise Exception(f"Failed to download file: {e}")
 
     def delete_file(self, bucket_name: str, object_name: str):
         """Delete a file from MinIO"""

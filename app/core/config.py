@@ -28,6 +28,10 @@ class Settings(BaseSettings):
     MINIO_SECRET_KEY: str
     MINIO_SECURE: bool = False
 
+    MINIO_REPORT_BUCKET: str
+    MINIO_LOGS_BUCKET: str 
+    MINIO_PROFILE_BUCKET: str
+
     class Config:
         env_file = ".env"
 

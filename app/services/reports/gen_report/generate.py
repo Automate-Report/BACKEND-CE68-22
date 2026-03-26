@@ -14,6 +14,10 @@ from app.services.reports.gen_report.pdf_components import (
     sec5_conclusion, appendix1, appendix2,
 )
 
+from minio import Minio
+from app.services.minio import minio_service
+from app.core.config import settings
+
 ANCHORS = {
     "sec1": "§ANCHOR§SEC1§",
     "sec2": "§ANCHOR§SEC2§",
@@ -145,6 +149,15 @@ class GenerateReport:
 
             browser.close()
 
+            # Upload the generated PDF to MinIO
+            minio_service.upload_file(
+                bucket_name=settings.MINIO_REPORT_BUCKET,
+                object_name=f"{self.context.report_id}/{self.context.report_name}.pdf",
+                file_path=output_path,
+                content_type="application/pdf"
+            )
+
+
         print(f"✅ PDF saved → {output_path}")
 
     def gen_report_sync(self) -> tuple[Path, Path]:
@@ -158,7 +171,22 @@ class GenerateReport:
         cv = Converter(str(pdf_path))
         cv.convert(str(docx_path))
         cv.close()
+
+        # Upload the generated DOCX to MinIO
+        minio_service.upload_file(
+            bucket_name=settings.MINIO_REPORT_BUCKET,
+            object_name=f"{self.context.report_id}/{self.context.report_name}.docx",
+            file_path=docx_path,
+            content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+
         print(f"✅ DOCX saved → {docx_path}")
+        
+        pdf_path.unlink()
+        docx_path.unlink()
+
+        pdf_path = f"{self.context.report_id}/{self.context.report_name}.pdf"
+        docx_path = f"{self.context.report_id}/{self.context.report_name}.docx"
 
         return pdf_path, docx_path
 
