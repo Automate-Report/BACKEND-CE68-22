@@ -21,6 +21,9 @@ from app.core.config import settings
 from app.schemas.worker import WorkerCreate, VerifyRequest, HeartBeatPayload
 from app.services.access_key import access_key_service
 
+from minio import Minio
+from app.core.config import settings
+from app.services.minio import minio_service
 
 class WorkerService:
     
@@ -588,43 +591,46 @@ class WorkerService:
             f = Fernet(EMBEDDED_KEY) # สร้างตัวเข้ารหัส
             encrypted_payload = f.encrypt(json_bytes) # เข้ารหัส
 
-            # Path ของ Worker
-            TEMPLATE_DIR = "app/static/bin/Pest10Worker" 
-            # ชื่อไฟล์ exe 
-            TARGET_EXE_NAME = "Pest10.exe"
+            TEMPLATE_BUCKET = "worker-templates"
+            TEMPLATE_PREFIX = "Pest10Worker/"
+            TARGET_EXE_NAME = "Pest10Worker.exe"
+            dest_folder_name = f"Pest10_{worker_db.name}"
 
             # --- ส่วนที่แก้ไข: สร้าง ZIP File ในหน่วยความจำ ---
             zip_buffer = io.BytesIO()
 
-            dest_folder_name = f"Pest10_{worker_db.name}"
-
             with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
-            
-                # วนลูปอ่านทุกไฟล์ใน Folder Template
-                for root, dirs, files in os.walk(TEMPLATE_DIR):
-                    for filename in files:
-                        # Path เต็มของไฟล์ในเครื่อง Server
-                        abs_path = os.path.join(root, filename)
-                        
-                        # Path สัมพัทธ์ (Relative) เพื่อใช้จัดโครงสร้างใน Zip
-                        # เช่น ถ้าไฟล์อยู่ template/internal/lib.dll -> rel_path จะเป็น internal/lib.dll
-                        rel_path = os.path.relpath(abs_path, TEMPLATE_DIR)
-                        
-                        # Path ปลายทางใน Zip (เอาชื่อโฟลเดอร์ worker มานำหน้า)
-                        zip_arcname = os.path.join(dest_folder_name, rel_path)
 
-                        # --- จุดสำคัญ: เช็คว่าเป็นไฟล์ exe หลักหรือไม่ ---
-                        if filename == TARGET_EXE_NAME:
-                            # ถ้าใช่: อ่านมา + ฝัง payload + เขียนลง zip (writestr)
-                            with open(abs_path, "rb") as f_exe:
-                                exe_data = f_exe.read()
-                            
-                            final_exe_data = exe_data + DELIMITER + encrypted_payload #ฉีดข้อมูล worker_id + backend_url
-                            zf.writestr(zip_arcname, final_exe_data)
-                        
-                        else:
-                            # ถ้าไม่ใช่ (เป็นพวก dll, _internal): จับยัดลง zip เลย (write)
-                            zf.write(abs_path, arcname=zip_arcname)
+                # ดึงรายชื่อไฟล์ทั้งหมดจาก MinIO แทน os.walk
+                objects = minio_service.list_objects(
+                    TEMPLATE_BUCKET,
+                    prefix=TEMPLATE_PREFIX,
+                    recursive=True
+                )
+
+                for obj in objects:
+                    # ข้าม folder object
+                    if obj.object_name.endswith("/"):
+                        continue
+
+                    # "Pest10Worker/Pest10Worker.exe" → "Pest10Worker.exe"
+                    # "Pest10Worker/_internal/lib.dll" → "_internal/lib.dll"
+                    rel_path = obj.object_name[len(TEMPLATE_PREFIX):]
+                    zip_arcname = os.path.join(dest_folder_name, rel_path)
+                    filename = os.path.basename(obj.object_name)
+
+                    # ดึงไฟล์จาก MinIO
+                    response = minio_service.get_object(TEMPLATE_BUCKET, obj.object_name)
+                    file_data = response.read()
+                    response.close()
+                    response.release_conn()
+
+                    if filename == TARGET_EXE_NAME:
+                        print(f"[DEBUG] Injecting into: {filename}")
+                        final_exe_data = file_data + DELIMITER + encrypted_payload
+                        zf.writestr(zip_arcname, final_exe_data)
+                    else:
+                        zf.writestr(zip_arcname, file_data)
 
             # 4. ส่งไฟล์กลับ
             zip_buffer.seek(0)

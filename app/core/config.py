@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     MINIO_LOGS_BUCKET: str 
     MINIO_PROFILE_BUCKET: str
     MINIO_EVIDENCE_BUCKET: str
+    MINIO_WORKER_BUCKER: str
 
     class Config:
         env_file = ".env"
