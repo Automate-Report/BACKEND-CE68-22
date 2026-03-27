@@ -50,7 +50,7 @@ class UserService:
             existing_user = result.scalar_one_or_none()
 
             if existing_user:
-                return "Email already in use"
+                return "Used"
 
             # 2. Find current user and update email
             query = sa.select(User).where(User.email == user_old_email)
@@ -82,7 +82,7 @@ class UserService:
 
             # 2. Check if old password matches
             if user.password != passwordform.old_password:
-                return "Old password is incorrect"
+                return "Incorrect"
 
             # 3. Replace with new password
             user.password = passwordform.new_password
