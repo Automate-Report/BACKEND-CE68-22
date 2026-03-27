@@ -76,10 +76,10 @@ def sec1_executive_summary(context) -> str:
         status_cls = a['status'].lower().replace(' ', '-')
         asset_rows += f"""
       <tr>
-        <td>{a['asset_id']}</td>
+        <td>{a['asset_related']}</td>
         <td>{a['asset_name']}</td>
         <td>{a['target']}</td>
-        <td>{a['hc_cnt']}</td>
+        <td>{a["hc_cnt"]}</td>
         <td><span class="badge {status_cls}">{a['status']}</span></td>
       </tr>"""
 

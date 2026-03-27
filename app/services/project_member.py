@@ -10,6 +10,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.project_members import ProjectMember, InviteStatus, ProjectRole
 from app.models.projects import Project
 from app.models.users import User
+from app.models.assets import Asset
+from app.models.schedules import Schedule
+from app.models.jobs import Job
 
 class ProjectMemberService:
 
@@ -343,6 +346,44 @@ class ProjectMemberService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Could not remove member from project"
             )
+        
+    async def get_members_by_schedule_id(self, db: AsyncSession, schedule_id: int):
+        """
+        ดึงอีเมล Owner และ Members โดยใช้ project_id ที่อยู่ใน Schedule (Optimized)
+        """
+        # 1. Query ส่วนที่ 1: ดึงเฉพาะ Owner จากตาราง Project (เชื่อมผ่าน Schedule.project_id)
+        owner_query = (
+            sa.select(
+                Project.user_email,
+                Project.id.label("project_id"),
+                Project.name.label("project_name")
+            )
+            .select_from(Schedule)
+            .join(Project, Schedule.project_id == Project.id)
+            .where(Schedule.id == schedule_id)
+        )
+
+        # 2. Query ส่วนที่ 2: ดึงเฉพาะ Member จากตาราง ProjectMember
+        member_query = (
+            sa.select(
+                ProjectMember.user_email,
+                Project.id.label("project_id"),
+                Project.name.label("project_name")
+            )
+            .select_from(Schedule)
+            .join(Project, Schedule.project_id == Project.id)
+            .join(ProjectMember, Project.id == ProjectMember.project_id)
+            .where(
+                Schedule.id == schedule_id,
+                ProjectMember.status == InviteStatus.JOINED
+            )
+        )
+
+        # 3. รวมทั้งสอง Query เข้าด้วยกันด้วย UNION (ลบตัวซ้ำอัตโนมัติ)
+        final_query = sa.union(owner_query, member_query)
+
+        result = await db.execute(final_query)
+        return result.all()
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 project_member_service = ProjectMemberService()
