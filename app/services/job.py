@@ -2,15 +2,12 @@ import math
 import secrets
 import string
 
-from datetime import datetime, timedelta, timezone
-from typing import List
+from datetime import datetime
 from fastapi import HTTPException
 
 from app.core.redis import QUEUE_KEY, redis_jobs
 from app.services.asset import asset_service
-from app.services.worker import worker_service
 from app.services.notification import notification_service
-from app.services.vulnerability import vuln_service
 
 from app.schemas.job import JobWorkerPayload, SummaryInfoByWorker
 
@@ -379,6 +376,8 @@ class JobService:
                     db=db
                 )
 
+                print(new_job)
+
                 if schedule_data.attack_type == ScheduleAttackType.SQLI:
                     attack_type = "sql_injection"
                 elif schedule_data.attack_type == ScheduleAttackType.XSS:
@@ -393,14 +392,16 @@ class JobService:
                 # 5. ส่งงานเข้า Redis Queue เฉพาะตัว
                 payload = JobWorkerPayload(
                     job_id=new_job["id"],
+                    name=new_job["name"],
                     target_url=asset.target,
                     attack_type=attack_type,
                     credential={
                         "username": credential.username if credential else None,
                         "password": credential.password if credential else None
                     },
-                    thread_number=best_worker.thread_numbber
+                    thread_number=best_worker.thread_number
                 )
+
                 
                 queue_name = f"{QUEUE_KEY}:{best_worker.id}"
                 await redis_jobs.rpush(queue_name, payload.model_dump_json())

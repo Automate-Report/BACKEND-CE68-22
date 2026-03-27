@@ -4,6 +4,7 @@ from datetime import datetime
 
 class JobWorkerPayload(BaseModel):
     job_id: int
+    name: str
     target_url: str
     attack_type: str
     credential: Optional[dict] = None
@@ -40,6 +41,6 @@ class GetJobByWorker(BaseModel):
     schedule_name: str
     attack_type: str
     status: str
-    started_at: datetime
+    started_at: Optional[datetime] = None
     finished_at: Optional[datetime] = None
     vuln_count: int

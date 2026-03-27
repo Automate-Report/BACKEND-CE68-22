@@ -306,7 +306,11 @@ class WorkerService:
         access_key_id = worker_db.access_key_id
         if access_key_id:
             # ตรวจสอบว่า delete_access_key_by_id ต้องใช้ await หรือไม่
-            await access_key_service.delete_access_key_by_id(db, access_key_id)
+            await access_key_service.delete_access_key_by_id(
+                db=db, 
+                id=access_key_id
+            )
+                
                 
         # อัปเดตใน DB เพื่อให้ข้อมูล Sync กัน
         query = sa.update(Worker).where(Worker.id == worker_id).values(
@@ -385,6 +389,12 @@ class WorkerService:
         result = await db.execute(query)
         worker = result.scalar_one_or_none()
 
+        if not worker:
+            raise HTTPException(status_code=404, detail="Worker not found")
+        
+        if worker.owner is not None and worker.owner != user_id:
+            raise HTTPException(status_code=403, detail="Worker already owned by another user")
+
         worker.owner = user_id
 
         try:
@@ -411,8 +421,7 @@ class WorkerService:
         if not row:
             raise HTTPException(status_code=404, detail="Worker ID not found")
 
-        target_worker = row[0]
-        access_key = row[1]
+        target_worker, access_key = row
 
         
         if not target_worker.owner:
@@ -431,16 +440,20 @@ class WorkerService:
         target_worker.last_heartbeat = sa.sql.func.now()
 
         try:
-            await db.commit()
+            await db.flush()
+            
  
             token = jwt.encode(
                 {
                     "sub": str(req.worker_id),
+                    "iat": datetime.now(timezone.utc),
                     "exp": datetime.utcnow() + timedelta(minutes=30)
                 },
                 access_key,
                 algorithm="HS256"
             )
+
+            await db.commit()
 
             return {
                 "status": "success",
@@ -537,7 +550,7 @@ class WorkerService:
     
     async def download_worker(self, worker_id: int, user_id: str, db: AsyncSession):
         """Service: download Worker"""
-        query = sa.select(Worker).where(Worker.id == worker_id)
+        query = sa.select(Worker).where(Worker.id == worker_id).with_for_update()
         result = await db.execute(query)
         worker_db = result.scalar_one_or_none()
 
@@ -552,6 +565,12 @@ class WorkerService:
         try:
             await db.commit()
             await db.refresh(worker_db)
+        except Exception as e:
+            await db.rollback()
+            print(f"Error claiming worker: {e}")
+            raise HTTPException(status_code=500, detail="Failed to assign worker")
+
+        try:
 
             hidden_payload = {
                 "WORKER_ID": worker_id,
@@ -561,16 +580,16 @@ class WorkerService:
                 "REDIS_URL": settings.JOBS_REDIS_URL
             }
 
-            EMBEDED_KEY = settings.EMBEDED_KEY.encode()
+            EMBEDDED_KEY = settings.EMBEDED_KEY.encode()
             DELIMITER = b"|||HIDDEN_DATA|||"
 
 
             json_bytes = json.dumps(hidden_payload).encode() # worker_id + backend_url
-            f = Fernet(EMBEDED_KEY) # สร้างตัวเข้ารหัส
+            f = Fernet(EMBEDDED_KEY) # สร้างตัวเข้ารหัส
             encrypted_payload = f.encrypt(json_bytes) # เข้ารหัส
 
             # Path ของ Worker
-            TEMPLATE_DIR = "app/static/bin/SecurityWorker" 
+            TEMPLATE_DIR = "app/static/bin/Pest10Worker" 
             # ชื่อไฟล์ exe 
             TARGET_EXE_NAME = "Pest10.exe"
 
@@ -619,10 +638,8 @@ class WorkerService:
             )
 
         except Exception as e:
-            await db.rollback()
-            print(f"Error claiming worker: {e}")
-            raise HTTPException(status_code=500, detail="Failed to assign worker")
-        
+            print(f"Error creating worker package: {e}")
+            raise HTTPException(status_code=500, detail="Failed to create worker package")
 
 
 worker_service = WorkerService()

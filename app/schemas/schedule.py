@@ -11,7 +11,7 @@ class ScheduleItem(BaseModel):
     attack_type: str
     is_active: bool
     start_date: datetime
-    end_date: datetime
+    end_date: Optional[datetime] = None
     created_at: datetime
     updated_at: datetime
 
