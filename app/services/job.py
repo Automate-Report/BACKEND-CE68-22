@@ -398,7 +398,8 @@ class JobService:
                     credential={
                         "username": credential.username if credential else None,
                         "password": credential.password if credential else None
-                    }
+                    },
+                    thread_number=best_worker.thread_numbber
                 )
                 
                 queue_name = f"{QUEUE_KEY}:{best_worker.id}"
