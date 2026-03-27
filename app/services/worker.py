@@ -303,27 +303,21 @@ class WorkerService:
                 status_code=403, 
                 detail="Access denied: You do not have permission to manage this worker"
             )
-        for worker in workers:
-            if worker["id"] == worker_id:
-                is_worker_owner = (worker.get("owner") == user_id)
-                if not (is_system_owner or is_worker_owner):
-                    raise HTTPException(
-                        status_code=403, 
-                        detail="Access denied: You do not have permission to manage this worker"
-                    )
-                access_key_id = worker.get("access_key_id")
-                if access_key_id:
-                    access_key_service.delete_access_key_by_id(access_key_id)
-                key = access_key_service.create_access_key()
-                worker["isActive"] = False
-                worker["hostname"] = None
-                worker["internal_ip"] = None
-                worker["last_heartbeat"] = None
-                worker["owner"] = None
-                worker["status"] = "NOT_ACTIVATE"
-                worker["access_key_id"] = key.get("id")
+        access_key_id = worker_db.access_key_id
+        if access_key_id:
+            # ตรวจสอบว่า delete_access_key_by_id ต้องใช้ await หรือไม่
+            await access_key_service.delete_access_key_by_id(db, access_key_id)
+                
+        # อัปเดตใน DB เพื่อให้ข้อมูล Sync กัน
+        query = sa.update(Worker).where(Worker.id == worker_id).values(
+            status="NOT_ACTIVATE",
+            owner=None,
+            is_active=False
+        )
+        await db.execute(query)
+        await db.commit()
 
-        self._save_json(workers)
+        return {"message": f"Worker {worker_id} disconnected and reset successfully"}
 
     async def verify_worker(self, req: VerifyRequest, db: AsyncSession):
         query = sa.select(Worker).where(Worker.id == req.worker_id)
