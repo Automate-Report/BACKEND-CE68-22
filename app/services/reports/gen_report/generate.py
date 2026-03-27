@@ -47,11 +47,6 @@ class GenerateReport:
         self.context.high_cnt     = sc.get("HIGH", 0)
         self.context.medium_cnt   = sc.get("MEDIUM", 0)
         self.context.low_cnt      = sc.get("LOW", 0)
-        # for v in self.context.vulns:
-        #     if v["severity"] in ["CRITICAL", "HIGH"]:
-        #         for a in self.context.assets:
-        #             if a["asset_id"] == v["asset_related"]:
-        #                 a["hc_cnt"] += 1
 
     def _build_html(self,page_nums: dict, include_anchors: bool = True) -> tuple[str, str]:
         content  = sec_cover(self.context)
