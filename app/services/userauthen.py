@@ -97,7 +97,7 @@ class UserAuthenService:
         except Exception as e:
             await db.rollback()
             print(f"DEBUG ERROR: {e}")
-            raise HTTPException(status_code=500, detail="Could not create project")
+            raise HTTPException(status_code=500, detail="Could not create User")
 
         return create_access_token(email, firstname, lastname)
     
