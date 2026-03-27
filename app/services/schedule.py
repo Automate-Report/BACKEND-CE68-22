@@ -96,7 +96,7 @@ class ScheduleService:
             "project_id": schedule.project_id,
             "asset_id": schedule.asset_id,
             "cron_expression": schedule.cron_expression,
-            "attack_type": schedule.cron_expression.lower(),
+            "attack_type": schedule.attack_type,
             "is_active": schedule.is_active,
             "start_date": schedule.start_date,
             "end_date": schedule.end_date,

@@ -114,7 +114,6 @@ async def create_report(
             "description": lib.description,
             "asset_id": v.asset_id,
             "asset_name": asset.name,
-            "asset_related": asset.name,
             "assigned_to": v.assigned_to,
             "verified_by": v.verified_by,
             "evidence": {
@@ -156,7 +155,7 @@ async def create_report(
         user_id=user["sub"],
         db=db
     )
-    print(report_record)
+
     # เรียก Service สร้างรายงาน
     background_tasks.add_task(
         pen_test_report_service.start_generate_process, 
