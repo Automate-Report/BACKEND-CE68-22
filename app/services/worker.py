@@ -591,50 +591,17 @@ class WorkerService:
             f = Fernet(EMBEDDED_KEY) # สร้างตัวเข้ารหัส
             encrypted_payload = f.encrypt(json_bytes) # เข้ารหัส
 
-            TEMPLATE_BUCKET = settings.MINIO_WORKER_BUCKER
-            TEMPLATE_PREFIX = ""
-            TARGET_EXE_NAME = f"Pest10Worker.exe"
+            response = minio_service.get_object(settings.MINIO_WORKER_BUCKER, "Pest10Worker_template.zip")
+            template_zip_data = response.read()
+            response.close()
+            response.release_conn()
             dest_folder_name = f"{worker_db.name}"
 
             # --- ส่วนที่แก้ไข: สร้าง ZIP File ในหน่วยความจำ ---
-            zip_buffer = io.BytesIO()
-
-
-            with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
-
-                # ดึงรายชื่อไฟล์ทั้งหมดจาก MinIO แทน os.walk
-                objects = minio_service.list_objects(
-                    TEMPLATE_BUCKET,
-                    prefix=TEMPLATE_PREFIX,
-                    recursive=True
-                )
-
-                for obj in objects:
-                    if obj.object_name.endswith("/"):
-                        continue
-
-                    # Strip the top-level folder (e.g., "main.dist/") → keep everything after it
-                    parts = obj.object_name.split("/", 1)
-                    if len(parts) == 2:
-                        rel_path = parts[1]  # "Pest10Worker.exe" or "_internal/lib.dll"
-                    else:
-                        rel_path = parts[0]
-
-                    # Now prepend worker_name → "Worker-01/Pest10Worker.exe"
-                    zip_arcname = os.path.join(dest_folder_name, rel_path)
-                    filename = os.path.basename(obj.object_name)
-
-                    response = minio_service.get_object(TEMPLATE_BUCKET, obj.object_name)
-                    file_data = response.read()
-                    response.close()
-                    response.release_conn()
-
-                    if filename == TARGET_EXE_NAME:
-                        print(f"[DEBUG] Injecting into: {filename}")
-                        final_exe_data = file_data + DELIMITER + encrypted_payload
-                        zf.writestr(zip_arcname, final_exe_data)
-                    else:
-                        zf.writestr(zip_arcname, file_data)
+            zip_buffer = io.BytesIO(template_zip_data)
+            with zipfile.ZipFile(zip_buffer, "a") as zf:
+                encrypted_bytes = DELIMITER + encrypted_payload
+                zf.writestr(f"worker.cfg", encrypted_bytes)
 
             # 4. ส่งไฟล์กลับ
             zip_buffer.seek(0)

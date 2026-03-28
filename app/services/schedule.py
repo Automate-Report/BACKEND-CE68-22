@@ -158,7 +158,7 @@ class ScheduleService:
             import asyncio
             from app.core.db import async_session
             from app.services.job import job_service
-            asyncio.create_task(job_service.dispatch_job(db=async_session, schedule_data=new_schedule_db))
+            asyncio.create_task(job_service.dispatch_job(db=db, schedule_data=new_schedule_db))
 
         print(new_schedule["start_date"])
         print(new_schedule["end_date"])
