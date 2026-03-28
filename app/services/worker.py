@@ -7,7 +7,7 @@ import math
 
 from datetime import datetime, timedelta, timezone
 from fastapi import HTTPException, Header
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, Response
 from cryptography.fernet import Fernet
 
 import sqlalchemy as sa
@@ -591,13 +591,14 @@ class WorkerService:
             f = Fernet(EMBEDDED_KEY) # สร้างตัวเข้ารหัส
             encrypted_payload = f.encrypt(json_bytes) # เข้ารหัส
 
-            TEMPLATE_BUCKET = "worker-templates"
-            TEMPLATE_PREFIX = "Pest10Worker/"
-            TARGET_EXE_NAME = "Pest10Worker.exe"
-            dest_folder_name = f"Pest10_{worker_db.name}"
+            TEMPLATE_BUCKET = settings.MINIO_WORKER_BUCKER
+            TEMPLATE_PREFIX = ""
+            TARGET_EXE_NAME = f"Pest10Worker.exe"
+            dest_folder_name = f"{worker_db.name}"
 
             # --- ส่วนที่แก้ไข: สร้าง ZIP File ในหน่วยความจำ ---
             zip_buffer = io.BytesIO()
+
 
             with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
 
@@ -634,15 +635,18 @@ class WorkerService:
 
             # 4. ส่งไฟล์กลับ
             zip_buffer.seek(0)
+            zip_data = zip_buffer.getvalue() # 👈 ดึง bytes ทั้งหมดออกมา
+            zip_buffer.close()
     
-            return StreamingResponse(
-                zip_buffer,
+            return Response(
+                content=zip_data,
                 media_type="application/zip",
                 headers={
-                    "Content-Disposition": f"attachment; filename={dest_folder_name}.zip"
+                    "Content-Disposition": f"attachment; filename={dest_folder_name}.zip",
+                    "Access-Control-Expose-Headers": "Content-Disposition" # 👈 สำคัญเพื่อให้ Frontend อ่านชื่อไฟล์ได้
                 }
             )
-
+        
         except Exception as e:
             print(f"Error creating worker package: {e}")
             raise HTTPException(status_code=500, detail="Failed to create worker package")
