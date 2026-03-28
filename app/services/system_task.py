@@ -29,7 +29,7 @@ async def system_schedule_task():
                     # สร้าง Job + ส่ง Redis
                     success = await job_service.dispatch_job(
                         schedule_data=schedule, 
-                        session=async_session
+                        session=db
                     )
                     if not success:
                         continue
@@ -37,9 +37,9 @@ async def system_schedule_task():
                     # ตรวจสอบเงื่อนไข Deactivate
                     cron_exp = schedule.cron_expression
                     is_not_repeat = (cron_exp == "Not Repeat")
+                    end_date_str = schedule.end_date
                     
                     is_expired = False
-                    end_date_str = schedule.end_date
                     if end_date_str:
                         try:
                             # ทำให้เป็น Aware Datetime ทั้งคู่
@@ -55,6 +55,7 @@ async def system_schedule_task():
                             schedule_id=schedule_id,
                             db=db
                         )
+                        await db.commit()
                         print(f"🔒 [System Task] Deactivated: {schedule_id}")
 
                 # Watchdog...

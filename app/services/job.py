@@ -302,8 +302,8 @@ class JobService:
 
         return best_w, best_score
 
-    async def dispatch_job(self, session, schedule_data: Schedule):
-        async with session() as db:
+    async def dispatch_job(self, db: AsyncSession, schedule_data: Schedule):
+
             try:
                 print(f"DEBUG: Starting dispatch for {schedule_data.id}")
                 schedule_id = schedule_data.id

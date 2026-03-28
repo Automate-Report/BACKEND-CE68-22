@@ -610,17 +610,20 @@ class WorkerService:
                 )
 
                 for obj in objects:
-                    # ข้าม folder object
                     if obj.object_name.endswith("/"):
                         continue
 
-                    # "Pest10Worker/Pest10Worker.exe" → "Pest10Worker.exe"
-                    # "Pest10Worker/_internal/lib.dll" → "_internal/lib.dll"
-                    rel_path = obj.object_name[len(TEMPLATE_PREFIX):]
+                    # Strip the top-level folder (e.g., "main.dist/") → keep everything after it
+                    parts = obj.object_name.split("/", 1)
+                    if len(parts) == 2:
+                        rel_path = parts[1]  # "Pest10Worker.exe" or "_internal/lib.dll"
+                    else:
+                        rel_path = parts[0]
+
+                    # Now prepend worker_name → "Worker-01/Pest10Worker.exe"
                     zip_arcname = os.path.join(dest_folder_name, rel_path)
                     filename = os.path.basename(obj.object_name)
 
-                    # ดึงไฟล์จาก MinIO
                     response = minio_service.get_object(TEMPLATE_BUCKET, obj.object_name)
                     file_data = response.read()
                     response.close()
