@@ -207,6 +207,7 @@ class ScheduleService:
             return None
         
         try:
+            
             # 2. Delete using the session
             await db.delete(schedule)
             
