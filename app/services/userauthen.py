@@ -77,17 +77,14 @@ class UserAuthenService:
                 return create_access_token(email, firstname, lastname)                
         
         # create new user + login, if google_id not found in DB
-        new_user = {
-            "firstname": firstname,
-            "lastname": lastname,
-            "email": email,
-            "password": None,
-            "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat(),
-            "session_token": None,
-            "google_id": google_id,
-            "picture": picture
-        }
+        new_user = User(
+            first_name = firstname,
+            last_name = lastname,
+            email = email,
+            password = None,
+            google_id = google_id,
+            picture_path = picture,
+        )
 
         try:
             db.add(new_user)

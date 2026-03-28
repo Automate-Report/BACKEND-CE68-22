@@ -7,4 +7,4 @@ class PasswordPayload(BaseModel):
 class InfoPayload(BaseModel):
     firstname: str
     lastname: str
-    # bio: str
+    bio: str

@@ -34,42 +34,14 @@ class UserService:
                 "firstname" : user.first_name,
                 "lastname" : user.last_name,
                 "email" : user.email,
-                "picture" : user.picture_path
-                # "bio" : user.bio
+                "picture" : user.picture_path,
+                "bio" : user.bio
             }
 
         except Exception as e:
             print(f"❌ Error checking user existence: {e}")
             return False
     
-    async def edit_email(self, user_new_email:str, user_old_email:str, db: AsyncSession):
-        try:
-            # 1. Check if new email is already taken
-            check_query = sa.select(User).where(User.email == user_new_email)
-            result = await db.execute(check_query)
-            existing_user = result.scalar_one_or_none()
-
-            if existing_user:
-                return "Used"
-
-            # 2. Find current user and update email
-            query = sa.select(User).where(User.email == user_old_email)
-            result = await db.execute(query)
-            user = result.scalar_one_or_none()
-
-            if not user:
-                raise HTTPException(status_code=404, detail="User not found")
-
-            user.email = user_new_email
-            await db.commit()
-
-            return "Email updated successfully"
-
-        except Exception as e:
-            await db.rollback()
-            print(f"❌ Error updating email: {e}")
-            return "Failed to update email"
-
     async def edit_password(self, passwordform: PasswordPayload, user_email:str, db: AsyncSession):
         try:
             # 1. Find user by email
@@ -108,7 +80,7 @@ class UserService:
             # 2. Replace info
             user.first_name = infoForm.firstname
             user.last_name = infoForm.lastname
-            #user.bio = infoForm.bio
+            user.bio = infoForm.bio
 
             await db.commit()
             return "Password updated successfully"

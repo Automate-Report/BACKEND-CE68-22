@@ -48,7 +48,7 @@ async def update_email(
     user = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    status_message = await user_service.edit_email(user_new_email, user["sub"], db)
+    status_message = await user_service.edit_email(user_new_email=user_new_email, user_old_email=user["sub"], db=db)
     return {"message": status_message}
 
 # PUT edit user password
@@ -68,5 +68,5 @@ async def update_info(
     user = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    status_message = await user_service.edit_password(infoForm, user["sub"], db)
+    status_message = await user_service.edit_info(infoForm, user["sub"], db)
     return {"message": status_message}

@@ -39,7 +39,8 @@ class ProjectMemberService:
                 User.first_name,
                 User.last_name,
                 ProjectMember.role,
-                ProjectMember.joined_at
+                ProjectMember.joined_at,
+                User.picture_path
             )
             .join(ProjectMember, User.email == ProjectMember.user_email)
             .where(
@@ -52,13 +53,14 @@ class ProjectMemberService:
         rows = result.all()
 
         all_matches = []
-        for email, f_name, l_name, role, joined_at in rows:
+        for email, f_name, l_name, role, joined_at, picture_path in rows:
             user_info = UserInfo(
                 email=email,
                 firstname=f_name,
                 lastname=l_name,
                 role=role.value,  # ดึงค่าจาก Enum
-                joinned_at=joined_at # ระวังชื่อตัวแปรใน Schema (joinned_at)
+                joinned_at=joined_at, # ระวังชื่อตัวแปรใน Schema (joinned_at)
+                picture=picture_path
             )
             all_matches.append(user_info)
 
