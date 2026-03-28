@@ -28,8 +28,8 @@ async def system_schedule_task():
                 for schedule in due_schedules:
                     # สร้าง Job + ส่ง Redis
                     success = await job_service.dispatch_job(
-                        schedule_data=schedule, 
-                        session=db
+                        db=db,
+                        schedule_data=schedule
                     )
                     if not success:
                         continue
@@ -42,10 +42,21 @@ async def system_schedule_task():
                     is_expired = False
                     if end_date_str:
                         try:
-                            # ทำให้เป็น Aware Datetime ทั้งคู่
-                            end_date = datetime.fromisoformat(end_date_str.replace("Z", "+00:00"))
-                            if datetime.now(timezone.utc) >= end_date:
+                            if isinstance(end_date_str, datetime):
+                                end_date = end_date_str
+                            else:
+                                # 2. ถ้าเป็น String ให้จัดการตามมาตรฐาน ISO
+                                # .replace("Z", "+00:00") จะพังถ้า end_date_str ไม่ใช่ String
+                                end_date = datetime.fromisoformat(str(end_date_str).replace("Z", "+00:00"))
+
+                            # 3. ทำให้เป็น Aware Datetime (UTC) เสมอ เพื่อการเปรียบเทียบที่แม่นยำ
+                            if end_date.tzinfo is None:
+                                end_date = end_date.replace(tzinfo=timezone.utc)
+
+                            # 4. เปรียบเทียบกับเวลาปัจจุบัน
+                            if datetime.now(timezone.utc) > end_date:
                                 is_expired = True
+                                
                         except Exception as e:
                             print(f"⚠️ Date parsing error: {e}")
 

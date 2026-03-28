@@ -1,4 +1,6 @@
 import math
+import zoneinfo
+
 from datetime import datetime, timedelta, timezone
 from typing import List
 from app.schemas.schedule import ScheduleCreate
@@ -156,7 +158,11 @@ class ScheduleService:
             import asyncio
             from app.core.db import async_session
             from app.services.job import job_service
-            asyncio.create_task(job_service.dispatch_job(schedule_data=new_schedule_db, session=async_session))
+            asyncio.create_task(job_service.dispatch_job(db=async_session, schedule_data=new_schedule_db))
+
+        print(new_schedule["start_date"])
+        print(new_schedule["end_date"])
+        print(new_schedule["created_at"])
 
         # Only return non-sensitive info
         return {
@@ -236,31 +242,34 @@ class ScheduleService:
 
         due_schedules = []
         for sch in schedules:
-            # ป้องกันการรันซ้ำในนาทีเดียวกัน (ถ้าเพิ่งรันไปตอนต้นนาที ไม่ต้องรันอีก)
             if sch.last_run_date and sch.last_run_date.replace(second=0, microsecond=0) == now_truncated:
                 continue
 
-            # --- กรณีที่ 1: รันครั้งเดียว (Not Repeat) ---
+            is_due = False
             if sch.cron_expression == "Not Repeat":
-                # ถ้านาทีนี้ >= start_date และยังไม่เคยรันเลย ให้รันได้
                 if not sch.last_run_date:
-                    due_schedules.append(sch)
-                continue
+                    is_due = True
+            else:
+                expressions = [e.strip() for e in sch.cron_expression.split("Z") if e.strip()]
+                for expr in expressions:
+                    tz_thai = zoneinfo.ZoneInfo("Asia/Bangkok")
 
-            # --- กรณีที่ 2: รันตาม Cron ---
-            expressions = [e.strip() for e in sch.cron_expression.split("Z") if e.strip()]
-            for expr in expressions:
-                try:
-                    # เช็กว่ารอบที่ควรจะรันล่าสุด (prev) คือนาทีปัจจุบันหรือไม่
-                    it = croniter(expr, now_truncated + timedelta(seconds=1))
-                    prev_run = it.get_prev(datetime)
-                    
-                    if prev_run == now_truncated:
-                        due_schedules.append(sch)
-                        break 
-                except Exception:
-                    continue
+                    now_local = now_truncated.astimezone(tz_thai)
+                    try:
+                        it = croniter(expr, now_local + timedelta(seconds=1))
+                        if it.get_prev(datetime) == now_local:
+                            is_due = True
+                            break
+                    except Exception: continue
 
+            if is_due:
+                # ✅ [สำคัญมาก] อัปเดตเวลา Last Run ทันทีเพื่อกัน Loop ถัดไปดึงซ้ำ
+                sch.last_run_date = now 
+                due_schedules.append(sch)
+
+        if due_schedules:
+            await db.commit() # บันทึกเวลา Last Run ลง DB
+        
         return due_schedules
     
     async def deactivate_schedule(self, schedule_id: int, db: AsyncSession):
