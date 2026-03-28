@@ -45,7 +45,8 @@ async def heartbeat(
         
     return {
         "status": "ok", 
-        "timestamp": datetime.utcnow()
+        "timestamp": datetime.utcnow(),
+        "worker_threadnumber": result
     }
 
 @router.post("/{project_id}")

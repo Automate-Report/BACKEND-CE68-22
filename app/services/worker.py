@@ -643,7 +643,7 @@ class WorkerService:
                 media_type="application/zip",
                 headers={
                     "Content-Disposition": f"attachment; filename={dest_folder_name}.zip",
-                    "Access-Control-Expose-Headers": "Content-Disposition" # 👈 สำคัญเพื่อให้ Frontend อ่านชื่อไฟล์ได้
+                    "Access-Control-Expose-Headers": "Content-Disposition"
                 }
             )
         
