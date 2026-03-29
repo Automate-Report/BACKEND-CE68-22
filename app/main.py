@@ -72,6 +72,8 @@ origins = [
     "http://127.0.0.1:3000",
     "http://10.60.1.214:3000",
     "http://10.66.1.226:3000",
+    "http://10.240.68.65:3000",
+    "http://ad14eb44-0070-4ec8-8a76-6d204c46ade0.cloud.ce.kmitl.ac.th:3000",
 ]
 
 app.add_middleware(
