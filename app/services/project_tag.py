@@ -73,7 +73,7 @@ class ProjectTagService:
         if not project_tag:
             return False
 
-        db.delete(project_tag)
+        await db.delete(project_tag)
         await db.commit()
         return True
     

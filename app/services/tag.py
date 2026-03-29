@@ -62,7 +62,7 @@ class TagService:
         if not tag:
             return False
 
-        db.delete(tag)
+        await db.delete(tag)
         await db.commit()
         return True
         
