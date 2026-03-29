@@ -16,12 +16,13 @@ class User(Base):
     __tablename__ = "users"
     first_name: Mapped[str] = mapped_column(sa.String(255))
     last_name: Mapped[str] = mapped_column(sa.String(255))
+    bio: Mapped[Optional[str]] = mapped_column(sa.String(255))
     email: Mapped[str] = mapped_column(EmailType, index=True, primary_key=True)
-    password:Mapped[str] = mapped_column(sa.String(255))
+    password:Mapped[Optional[str]] = mapped_column(sa.String(255))
     google_id:Mapped[Optional[str]] = mapped_column(sa.String(255)) #DOO IEK TEE
     picture_path:Mapped[Optional[str]] = mapped_column(sa.String(255))
     created_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
     updated_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now(), onupdate=sa.sql.func.now())
- 
+
     def __repr__(self) -> str:
         return f"User(first={self.first_name!r}, last={self.last_name!r}, email={self.email!r})"
