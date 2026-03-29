@@ -62,8 +62,8 @@ app = FastAPI(
     title="CE68-22 Backend API",
     description="API for Project (Master-Agent Architecture)",
     version="1.0.0",
-    lifespan=lifespan
-
+    lifespan=lifespan,
+    root_path="/api"
 )
 
 # 2. ตั้งค่า CORS (สำคัญมาก! เพื่อให้ Next.js คุยกับ FastAPI ได้)
