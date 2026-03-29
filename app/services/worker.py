@@ -591,7 +591,7 @@ class WorkerService:
             f = Fernet(EMBEDDED_KEY) # สร้างตัวเข้ารหัส
             encrypted_payload = f.encrypt(json_bytes) # เข้ารหัส
 
-            response = minio_service.get_object(settings.MINIO_WORKER_BUCKER, "Pest10Worker_template.zip")
+            response = minio_service.get_object(settings.MINIO_WORKER_BUCKER, "Pest10Woker_template.zip")
             template_zip_data = response.read()
             response.close()
             response.release_conn()
