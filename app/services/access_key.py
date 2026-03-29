@@ -51,7 +51,7 @@ class AccessKeyService:
         if not access_key:
             return False
         
-        db.delete(access_key)
+        await db.delete(access_key)
         await db.commit()
         return True
    
