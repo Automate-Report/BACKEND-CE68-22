@@ -173,3 +173,17 @@ async def change_vulnerability_verify(
         db=db
     )
     return {"message": "Vulnerability verify updated successfully"}
+
+# GET your vuln (assigned vuln)
+@router.get("/assigned_issue")
+async def get_assigned_issue(
+    user = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    
+    vulnList = await vuln_service.get_assigned_issue(
+        user_id=user["sub"],
+        db=db
+    )
+    
+    return vulnList
