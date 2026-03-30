@@ -11,7 +11,7 @@ class AssetType(enum.Enum):
 class Asset(Base):
     __tablename__ = "assets"
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
-    project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id")) #======================================FK ULID
+    project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id", ondelete="CASCADE")) #======================================FK ULID
     name:Mapped[str] = mapped_column(sa.String(255))
     description:Mapped[str] = mapped_column(sa.Text, nullable=True)
     target:Mapped[str] = mapped_column(sa.String(255))
