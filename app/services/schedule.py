@@ -108,13 +108,8 @@ class ScheduleService:
     
     
     async def create_schedule(self, schedule_input: ScheduleCreate, user_id: str, db: AsyncSession):
-        is_immediate = schedule_input.cron_expression in ["Not Repeat", "now", ""]
+        is_immediate = schedule_input.cron_expression in ["Not Repeat"]
         now = datetime.now(timezone.utc)
-
-        if schedule_input.cron_expression == "Not Repeat":
-            end_date = None
-        else:
-            end_date = schedule_input.end_date
         
         new_schedule_db = Schedule(
             name = schedule_input.name,
@@ -124,7 +119,7 @@ class ScheduleService:
             attack_type = schedule_input.atk_type.upper(),
             is_active = True,
             start_date = schedule_input.start_date or now,
-            end_date = end_date,
+            end_date = schedule_input.end_date,
             created_by = user_id,
             last_run_date = now if is_immediate else None
         )

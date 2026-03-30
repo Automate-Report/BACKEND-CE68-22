@@ -82,12 +82,22 @@ async def run_watchdog(db: AsyncSession):
         .where(
             Schedule.is_active == True,
             sa.or_(
-                sa.and_(Schedule.end_date != None, Schedule.end_date < now),
-                sa.and_(Schedule.cron_expression == "Not Repeat", Schedule.last_run_date != None)
+                # Recurring schedule: หมดอายุตาม end_date
+                sa.and_(
+                    Schedule.cron_expression != "Not Repeat",
+                    Schedule.end_date != None,
+                    Schedule.end_date < now
+                ),
+                # One-time schedule: รันไปแล้ว
+                sa.and_(
+                    Schedule.cron_expression == "Not Repeat",
+                    Schedule.last_run_date != None
+                )
             )
         )
         .values(is_active=False)
     )
+    
     cleanup_result = await db.execute(schedule_cleanup_query)
     if cleanup_result.rowcount > 0:
         print(f"🕵️ [Watchdog] Deactivated {cleanup_result.rowcount} expired schedules.")
