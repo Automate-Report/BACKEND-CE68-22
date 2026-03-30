@@ -23,6 +23,7 @@ class Settings(BaseSettings):
 
     EMBEDED_KEY: str
     JOB_KEY: str
+    AES_KEY: str
 
     # MinIO Settings
     MINIO_ENDPOINT: str
