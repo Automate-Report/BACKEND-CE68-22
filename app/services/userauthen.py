@@ -40,7 +40,6 @@ class UserAuthenService:
         result = await db.execute(query)
         user = result.scalar_one_or_none()
         plain_password = decrypt_password(loginRequest.password)
-        print(user)
         if user and verify_password(plain_password, user.password):
             return create_access_token(loginRequest.email, user.first_name, user.last_name)
         # Check all but user not found
