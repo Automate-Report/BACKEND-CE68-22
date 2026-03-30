@@ -15,7 +15,7 @@ class ReportStatus(enum.Enum):
 class Report(Base):
     __tablename__ = "reports"
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
-    project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id")) #======================================FK ULID
+    project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id", ondelete="CASCADE")) #======================================FK ULID
     created_by:Mapped[str] = mapped_column(sa.ForeignKey("users.email")) #======================================FK ULID
     report_name:Mapped[str] = mapped_column(sa.String(255))
     asset_name:Mapped[str] = mapped_column(sa.Text)

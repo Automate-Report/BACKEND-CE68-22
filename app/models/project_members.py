@@ -17,7 +17,7 @@ class InviteStatus(enum.Enum):
 class ProjectMember(Base):
     __tablename__ = "project_members"
 
-    project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id"), primary_key=True)#====================ULID
+    project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id", ondelete="CASCADE"), primary_key=True)#====================ULID
     user_email:Mapped[str] = mapped_column(sa.ForeignKey("users.email"), primary_key=True)
     role:Mapped[ProjectRole] = mapped_column(sa.Enum(ProjectRole))
     status:Mapped[InviteStatus] = mapped_column(sa.Enum(InviteStatus), default=InviteStatus.INVITED)

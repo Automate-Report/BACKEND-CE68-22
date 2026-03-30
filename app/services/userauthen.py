@@ -11,6 +11,8 @@ from app.schemas.userauthen import LoginRequest, UserCreate
 from app.core.redis import redis_client
 from app.core.jwt import create_access_token
 from app.core.config import settings
+from app.core.security import get_password_hash, verify_password
+from app.core.crypto import decrypt_password
 
 class UserAuthenService:
     
@@ -37,8 +39,9 @@ class UserAuthenService:
         query = sa.select(User).where(User.email == loginRequest.email)
         result = await db.execute(query)
         user = result.scalar_one_or_none()
+        plain_password = decrypt_password(loginRequest.password)
         print(user)
-        if user and user.password == loginRequest.password:
+        if user and verify_password(plain_password, user.password):
             return create_access_token(loginRequest.email, user.first_name, user.last_name)
         # Check all but user not found
         raise HTTPException(status_code=401, detail="Invalid email or password")
@@ -107,11 +110,12 @@ class UserAuthenService:
         if existing_user:
             raise HTTPException(status_code=400, detail="Email already registered")
         else:
+            plain_password = decrypt_password(createUser.password)
             new_user = User(
                 first_name = createUser.firstName,
                 last_name = createUser.lastName,
                 email = createUser.email,
-                password = createUser.password,
+                password = get_password_hash(plain_password),
                 google_id = None,
                 picture_path = None,
             )
