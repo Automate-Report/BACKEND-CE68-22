@@ -4,6 +4,9 @@ from datetime import datetime, timedelta
 from typing import Optional, Union, Any
 from jose import jwt, JWTError
 from app.core.config import settings 
+from passlib.context import CryptContext
+import hashlib
+import base64
 # สมมติว่า config.py คุณมี settings.SECRET_KEY, settings.ALGORITHM
 
 def create_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
@@ -41,4 +44,19 @@ def decode_access_token(token: str) -> Optional[dict]:
 def generate_access_key() -> str:
     """สร้าง Access Key แบบสุ่ม"""
     return secrets.token_urlsafe(32)
-    
+
+#PAssword hashing
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def _prehash(password: str) -> str:
+    """SHA-256 pre-hash to bypass bcrypt's 72-byte limit."""
+    digest = hashlib.sha256(password.encode()).digest()
+    return base64.b64encode(digest).decode()  # base64 keeps it bcrypt-safe
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(_prehash(plain_password), hashed_password)
+
+def get_password_hash(password: str) -> str:
+    prehashed = _prehash(password)
+    print(f"DEBUG pre-hash length: {len(prehashed)}")
+    return pwd_context.hash(_prehash(password))

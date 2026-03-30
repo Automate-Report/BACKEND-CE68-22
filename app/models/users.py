@@ -19,7 +19,7 @@ class User(Base):
     bio: Mapped[Optional[str]] = mapped_column(sa.String(255))
     email: Mapped[str] = mapped_column(EmailType, index=True, primary_key=True)
     password:Mapped[Optional[str]] = mapped_column(sa.String(255))
-    google_id:Mapped[Optional[str]] = mapped_column(sa.String(255)) #DOO IEK TEE
+    google_id:Mapped[Optional[str]] = mapped_column(sa.String(255))
     picture_path:Mapped[Optional[str]] = mapped_column(sa.String(255))
     created_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
     updated_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now(), onupdate=sa.sql.func.now())
