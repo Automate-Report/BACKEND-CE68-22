@@ -1,5 +1,4 @@
 import json
-import os
 import io
 import zipfile
 import jwt
@@ -251,7 +250,12 @@ class WorkerService:
     
     async def update_worker(self, worker_id: int, worker_in: WorkerCreate, user_id: str, role: str, db: AsyncSession):
         """Service: อัปเดต Worker"""
-        query = sa.select(Worker, User.first_name, User.last_name).join(User, Worker.owner == User.email, isouter=True).where(Worker.id == worker_id)
+        # 1. ดึงข้อมูลพร้อม Join User (Owner)
+        query = (
+            sa.select(Worker, User.first_name, User.last_name)
+            .join(User, Worker.owner == User.email, isouter=True)
+            .where(Worker.id == worker_id)
+        )
         result = await db.execute(query)
         row = result.first()
 
@@ -259,27 +263,53 @@ class WorkerService:
             return None
         
         worker_db = row[0]
-        first_name = row[1]
-        last_name = row[2]
+        fn, ln = row[1], row[2]
         
-        if worker_db.owner != user_id and role == "pentester":
+        # 2. RBAC Check (เฉพาะ Pentester ที่เป็นเจ้าของถึงจะแก้ได้)
+        if role == "pentester" and worker_db.owner != user_id:
             raise HTTPException(status_code=403, detail="Worker does not belong to the user")
         
+        # 3. อัปเดตข้อมูล
         worker_db.name = worker_in.name
         worker_db.thread_number = worker_in.thread_number
 
         try:
             await db.commit()
-            await db.refresh(worker_db) # This ensures all DB-generated fields are loaded
+            # 💡 เทคนิค: ไม่ต้องสั่ง refresh ก็ได้ถ้าเราไม่ได้ต้องการค่าที่ DB เจนให้ใหม่ (เช่น serial id) 
+            # เพราะเรามีค่าอยู่ใน worker_db แล้ว
+            
+            # 4. สร้าง Dictionary ขากลับแบบปลอดภัย
+            worker_dict = {
+                "id": worker_db.id,
+                "project_id": worker_db.project_id,
+                "access_key_id": worker_db.access_key_id,
+                "owner": worker_db.owner,
+                "thread_number": worker_db.thread_number,
+                "current_load": worker_db.current_load,
+                "name": worker_db.name,
+                "hostname": worker_db.hostname,
+                "internal_ip": worker_db.internal_ip,
+                "status": worker_db.status,
+                "is_active": worker_db.is_active,
+                "created_at": worker_db.created_at,
+                "updated_at": worker_db.updated_at,
+                "last_heartbeat": worker_db.last_heartbeat,
+            }
 
-            worker_dict = row[0].__dict__.copy()
-            worker_dict.pop('_sa_instance_state', None) # Clean up internal SA state
-            worker_dict["owner_name"] = f"{first_name} {last_name}"
+            # 5. จัดการชื่อเจ้าของให้สวยงาม
+            if fn and ln:
+                worker_dict["owner_name"] = f"{fn} {ln}"
+            else:
+                worker_dict["owner_name"] = worker_db.owner if worker_db.owner else "No Owner"
+
+            # 6. เติมสถานะพิเศษ (ถ้ามี)
+            worker_dict = self._enrich_worker_status(worker_dict)
+            
             return worker_dict
+
         except Exception as e:
             await db.rollback()
-            # Log the error so you can see it in the terminal
-            print(f"Database Error: {e}") 
+            print(f"❌ Database Error during update: {e}") 
             raise HTTPException(status_code=500, detail="Internal Server Error")
     
     async def get_summary_info(self, project_id: int, db: AsyncSession):
