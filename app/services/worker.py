@@ -421,6 +421,8 @@ class WorkerService:
             # ตรวจสอบว่าในฟังก์ชันนี้ไม่มีการสั่ง db.commit() หรือ db.flush() นะครับ
             await access_key_service.delete_access_key_by_id(db=db, id=target_key_id)
 
+        worker_db.access_key_id = await access_key_service.create_access_key(db=db).id
+
         try:
             await db.commit()
         except Exception as e:
