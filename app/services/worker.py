@@ -639,7 +639,7 @@ class WorkerService:
                 "WORKER_NAME": worker_db.name,
                 "NUMBER_OF_THREADS": worker_db.thread_number,
                 "BACKEND_URL": settings.BACKEND_HOST,
-                "REDIS_URL": settings.JOBS_REDIS_URL
+                "JOB_KEY": settings.JOB_KEY,
             }
 
             EMBEDDED_KEY = settings.EMBEDED_KEY.encode()
