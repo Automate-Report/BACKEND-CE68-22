@@ -579,7 +579,7 @@ class WorkerService:
                 "WORKER_ID": worker_id,
                 "WORKER_NAME": worker_db.name,
                 "NUMBER_OF_THREADS": worker_db.thread_number,
-                "BACKEND_URL": "http://127.0.0.1:8000",
+                "BACKEND_URL": settings.BACKEND_HOST,
                 "REDIS_URL": settings.JOBS_REDIS_URL
             }
 

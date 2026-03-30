@@ -1,11 +1,12 @@
 from pydantic_settings import BaseSettings
     
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "Corporate Agent"
+    PROJECT_NAME: str = "Pest10"
     ACCESS_TOKEN_EXPIRE_MINUTES: int 
     DATABASE_URL: str
     BACKLIST_REDIS_URL: str
     JOBS_REDIS_URL: str
+    BACKEND_HOST: str
 
     # Authentication Settings
     SECRET_KEY: str 
