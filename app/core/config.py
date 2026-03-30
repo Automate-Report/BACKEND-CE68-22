@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     SESSION_SECRET_KEY: str
 
     EMBEDED_KEY: str
+    JOB_KEY: str
 
     # MinIO Settings
     MINIO_ENDPOINT: str

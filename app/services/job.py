@@ -5,6 +5,7 @@ import json
 
 from datetime import datetime
 from fastapi import HTTPException
+from cryptography.fernet import Fernet
 
 from app.core.redis import QUEUE_KEY, redis_jobs
 from app.services.asset import asset_service
@@ -15,6 +16,7 @@ from app.schemas.job import JobWorkerPayload, SummaryInfoByWorker
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import JOB_KEY
 from app.models.jobs import Job, JobStatus
 from app.models.workers import Worker, WorkerStatus
 from app.models.vulnerabilities import Vulnerability
@@ -23,6 +25,7 @@ from app.models.notifications import NotiType
 
 
 class JobService:
+    cipher_suite = Fernet(JOB_KEY.encode())
 
     def _generate_job_name(self, length=12):
         alphabet = string.ascii_letters + string.digits
@@ -388,6 +391,15 @@ class JobService:
 
                 from app.services.asset_credential import asset_credential_service
                 credential = await asset_credential_service.get_credential_by_asset_id(asset.id, db)
+                
+                raw_username = credential.username if credential else None
+                raw_password = credential.password if credential else None
+                encrypted_password = None
+
+                if raw_password or raw_username:
+                    # 2. Encrypt: String -> Bytes -> Encrypt -> String (เพื่อส่ง JSON)
+                    encrypted_username = self.cipher_suite.encrypt(raw_username.encode()).decode()
+                    encrypted_password = self.cipher_suite.encrypt(raw_password.encode()).decode()
             
 
                 # 5. ส่งงานเข้า Redis Queue เฉพาะตัว
@@ -397,8 +409,8 @@ class JobService:
                     target_url=asset.target,
                     attack_type=attack_type,
                     credential={
-                        "username": credential.username if credential else None,
-                        "password": credential.password if credential else None
+                        "username": encrypted_username,
+                        "password": encrypted_password
                     },
                     thread_number=best_worker.thread_number
                 )
