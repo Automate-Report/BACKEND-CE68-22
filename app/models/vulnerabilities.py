@@ -46,9 +46,9 @@ class Vulnerability(Base):
 @sa.event.listens_for(Vulnerability.status, 'set')
 def receive_set(target: Vulnerability, value, oldvalue, initiator):
     unresolved_states = {VulnStatus.IN_PROGRESS, VulnStatus.OPEN}
-    if value == VulnStatus.FIXED and oldvalue == unresolved_states:
+    if value == VulnStatus.FIXED and oldvalue in unresolved_states:
         target.resolved_at = sa.sql.func.now()
 
-    elif value == VulnStatus.OPEN and oldvalue == VulnStatus.FIXED:
+    elif value == VulnStatus.OPEN and oldvalue in VulnStatus.FIXED:
         target.resolved_at = None
 

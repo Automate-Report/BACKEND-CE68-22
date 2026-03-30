@@ -1,5 +1,6 @@
 
 from datetime import datetime, timedelta, timezone
+import zoneinfo
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -65,26 +66,51 @@ class ProjectOverviewService:
         }
     
     async def _get_sql_trend_data(self, project_id: int, db: AsyncSession):
-        now = datetime.now(timezone.utc)
+        tz = zoneinfo.ZoneInfo("Asia/Bangkok")
+        now = datetime.now(tz)
         trend = []
         for i in range(6, -1, -1):
             target_date = (now - timedelta(days=i)).date()
+            print(target_date)
             
             # นับ Detected ในวันนั้น
-            detected = await db.execute(sa.select(sa.sql.func.count(Vulnerability.id))
+            detected_query = (
+                sa.select(sa.func.count(Vulnerability.id))
                 .join(Asset, Vulnerability.asset_id == Asset.id)
-                .where(sa.and_(Asset.project_id == project_id, sa.cast(Vulnerability.first_seen_at, sa.Date) == target_date)))
+                .where(
+                    Asset.project_id == project_id,
+                    sa.func.date(
+                        Vulnerability.first_seen_at.op('AT TIME ZONE')('UTC').op('AT TIME ZONE')('Asia/Bangkok')
+                    ) == target_date
+                )
+            )
             
-            # นับ Fixed ในวันนั้น (เช็คจาก resolved_at ที่เราทำ Event Listener ไว้)
-            fixed = await db.execute(sa.select(sa.sql.func.count(Vulnerability.id))
+            # 3. นับ Fixed: ทำแบบเดียวกันกับ resolved_at
+            fixed_query = (
+                sa.select(sa.func.count(Vulnerability.id))
                 .join(Asset, Vulnerability.asset_id == Asset.id)
-                .where(sa.and_(Asset.project_id == project_id, sa.cast(Vulnerability.resolved_at, sa.Date) == target_date)))
+                .where(
+                    Asset.project_id == project_id,
+                    sa.func.date(
+                        Vulnerability.resolved_at.op('AT TIME ZONE')('UTC').op('AT TIME ZONE')('Asia/Bangkok')
+                    ) == target_date
+                )
+            )
+
+            res_det = await db.execute(detected_query)
+            detected_count = res_det.scalar() or 0
+
+            res_fix = await db.execute(fixed_query)
+            fixed_count = res_fix.scalar() or 0    # ดึงค่าออกมาครั้งเดียว
+
+            # นำตัวแปรไปใช้ Print และ Append
+            print(f"DEBUG: {target_date} - Detected: {detected_count}, Fixed: {fixed_count}")
 
             trend.append({
                 "day": target_date.strftime("%a"),
                 "date": target_date.isoformat(),
-                "detected": detected.scalar() or 0,
-                "fixed": fixed.scalar() or 0
+                "detected": detected_count,
+                "fixed": fixed_count
             })
         return trend
 
