@@ -202,7 +202,7 @@ class ProjectService:
         if not project:
             return False
         
-        db.delete(project)
+        await db.delete(project)
         await db.commit()
         return True
 
