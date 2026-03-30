@@ -4,7 +4,7 @@ from fastapi import HTTPException
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.projects import Project #SQL Alchemy Models
-from app.models.project_members import ProjectMember, InviteStatus
+from app.models.project_members import ProjectMember, InviteStatus, ProjectRole
 from app.schemas.project import ProjectCreate
 
 from app.schemas.project import ProjectCreate
@@ -54,9 +54,10 @@ class ProjectService:
         if filter != "ALL":
             if filter == "owner":
                 query = query.where(Project.user_email == user_id)
-            else:
-                # กรองตาม Role (pentester/developer) จากตาราง ProjectMember
-                query = query.where(ProjectMember.role == filter)
+            elif filter == "pentester":
+                query = query.where(ProjectMember.role == ProjectRole.PENTESTER)
+            elif filter == "developer":
+                query = query.where(ProjectMember.role == ProjectRole.DEVELOPER)
 
         # 3. จัดการเรื่อง Sorting
         column_to_sort = getattr(Project, sort_by if sort_by else "created_at", Project.created_at)
