@@ -8,11 +8,11 @@ DATABASE_URL = settings.DATABASE_URL
 # 1. สร้าง Async Engine
 engine = create_async_engine(
     DATABASE_URL, 
-    connect_args={
-        "server_settings": {
-            "timezone": "Asia/Bangkok"
-        }
-    },
+    # connect_args={
+    #     "server_settings": {
+    #         "timezone": "Asia/Bangkok"
+    #     }
+    # },
     echo=False
 )
 
