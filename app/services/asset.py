@@ -145,11 +145,17 @@ class AssetService:
 
         if not asset:
             return None
+        
+        
     
         asset.name = asset_in.name
         asset.description = asset_in.description
         asset.target = asset_in.target
-        asset.type = asset_in.type
+
+        if asset_in.type == "ip":
+            asset.type = AssetType.IP
+        elif asset_in.type == "url":
+            asset.type = AssetType.URL
 
         try:
             await db.commit()
