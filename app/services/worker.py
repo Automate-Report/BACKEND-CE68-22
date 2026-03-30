@@ -419,6 +419,9 @@ class WorkerService:
         query = sa.select(Worker).where(Worker.id == req.worker_id)
         result = await db.execute(query)
         worker_db = result.scalar_one_or_none()
+
+        print(f"DEBUG VERIFY: Received verify request for Worker ID {req.worker_id}")
+        print(f"DEBUG VERIFY: Access Key: {req.key}, Hostname: {req.hostname}, Internal IP: {req.internal_ip}")
         
         try:
             if worker_db.access_key_id:
