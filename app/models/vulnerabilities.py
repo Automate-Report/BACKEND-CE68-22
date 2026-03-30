@@ -25,11 +25,11 @@ class VulnVerify(enum.Enum):
 class Vulnerability(Base):
     __tablename__ = "vulnerabilities"
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
-    asset_id:Mapped[int] = mapped_column(sa.ForeignKey("assets.id")) #======================================FK ULID
-    job_id:Mapped[int] = mapped_column(sa.ForeignKey("jobs.id")) #===========================================FK ULID
-    library_id:Mapped[int] = mapped_column(sa.ForeignKey("vuln_libs.id"), nullable=True)
-    assigned_to:Mapped[str] = mapped_column(sa.ForeignKey("users.email"), nullable=True)
-    verified_by:Mapped[str] = mapped_column(sa.ForeignKey("users.email"), nullable=True)
+    asset_id:Mapped[int] = mapped_column(sa.ForeignKey("assets.id", ondelete="CASCADE")) #======================================FK ULID
+    job_id:Mapped[int] = mapped_column(sa.ForeignKey("jobs.id", ondelete="CASCADE")) #===========================================FK ULID
+    library_id:Mapped[int] = mapped_column(sa.ForeignKey("vuln_libs.id", ondelete="SET NULL"), nullable=True)
+    assigned_to:Mapped[str] = mapped_column(sa.ForeignKey("users.email", ondelete="SET NULL"), nullable=True)
+    verified_by:Mapped[str] = mapped_column(sa.ForeignKey("users.email", ondelete="SET NULL"), nullable=True)
     vuln_hash:Mapped[str] = mapped_column(sa.Text)
     target:Mapped[str] = mapped_column(sa.String(255))
     parameter:Mapped[str] = mapped_column(sa.String(255))

@@ -18,7 +18,7 @@ class NotiStatus(enum.Enum):
 class Notification(Base):
     __tablename__ = "notifications"
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
-    user_email:Mapped[str] = mapped_column(sa.ForeignKey("users.email")) #======================================FK ULID
+    user_email:Mapped[str] = mapped_column(sa.ForeignKey("users.email", ondelete="CASCADE")) #======================================FK ULID
     type:Mapped[NotiType] = mapped_column(sa.Enum(NotiType))
     message:Mapped[str] = mapped_column(sa.String(255))
     hyperlink:Mapped[str] = mapped_column(sa.String(255))

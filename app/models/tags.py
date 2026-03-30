@@ -26,7 +26,7 @@ class HexColor(sa.TypeDecorator):
 class Tag(Base):
     __tablename__ = "tags"
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#====================ULID
-    user_email: Mapped[str] = mapped_column(sa.ForeignKey("users.email"))
+    user_email: Mapped[str] = mapped_column(sa.ForeignKey("users.email", ondelete="CASCADE"))
     name:Mapped[str] = mapped_column(sa.String(255))
     text_color:Mapped[str] = mapped_column(HexColor)
     bg_color:Mapped[str] = mapped_column(HexColor)

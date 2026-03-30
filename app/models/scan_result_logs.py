@@ -13,7 +13,7 @@ class LogStatus(enum.Enum):
 class ScanResultLog(Base):
     __tablename__ = "scan_result_logs"
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
-    job_id:Mapped[int] = mapped_column(sa.ForeignKey("jobs.id")) #======================================FK ULID
+    job_id:Mapped[int] = mapped_column(sa.ForeignKey("jobs.id", ondelete="CASCADE")) #======================================FK ULID
     pentest_result:Mapped[str] = mapped_column(sa.Text)
     error_msg:Mapped[Optional[str]] = mapped_column(sa.Text, nullable=True)
     file_name:Mapped[str] = mapped_column(sa.String(255))

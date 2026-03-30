@@ -14,7 +14,7 @@ class Schedule(Base):
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================PK
     project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id", ondelete="CASCADE")) #======================================FK 
     asset_id:Mapped[int] = mapped_column(sa.ForeignKey("assets.id", ondelete="CASCADE")) #======================================FK 
-    created_by:Mapped[str] = mapped_column(sa.ForeignKey("users.email")) #======================================FK
+    created_by:Mapped[str] = mapped_column(sa.ForeignKey("users.email", ondelete="SET NULL"), nullable=True) #======================================FK
     name:Mapped[str] = mapped_column(sa.String(255))
     cron_expression:Mapped[str] = mapped_column(sa.String(255))
     attack_type:Mapped[ScheduleAttackType] = mapped_column(sa.Enum(ScheduleAttackType))

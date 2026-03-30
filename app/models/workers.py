@@ -18,7 +18,7 @@ class Worker(Base):
     id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
     project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id", ondelete="CASCADE"))
     access_key_id:Mapped[int] = mapped_column(sa.ForeignKey("access_keys.id", ondelete="SET NULL"), nullable=True)
-    owner:Mapped[Optional[str]] = mapped_column(sa.ForeignKey("users.email"), nullable=True, default=None)
+    owner:Mapped[Optional[str]] = mapped_column(sa.ForeignKey("users.email", ondelete="SET NULL"), nullable=True, default=None)
     thread_number:Mapped[int] = mapped_column(sa.Integer, default=1)
     current_load:Mapped[int] = mapped_column(sa.Integer, default=0)
     name:Mapped[str] = mapped_column(sa.VARCHAR(255))
