@@ -150,7 +150,7 @@ async def re_access_key(
     if role == "pentester" and worker.get("owner") != user["sub"]:
         raise HTTPException(status_code=403, detail="Worker does not belong to the user.")
     
-    result = await access_key_service.delete_access_key_by_id(worker.access_key_id, db)
+    result = await access_key_service.delete_access_key_by_id(worker["access_key_id"], db)
 
     key = await access_key_service.create_access_key(db)
     
