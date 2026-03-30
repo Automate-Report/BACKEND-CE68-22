@@ -1,6 +1,7 @@
 import math
 import secrets
 import string
+import json
 
 from datetime import datetime
 from fastapi import HTTPException
@@ -422,6 +423,20 @@ class JobService:
             except Exception as e:
                 await db.rollback()
                 print(f"Background Job Error: {e}")
+
+    async def pop_job(self, worker_id: int) -> dict | None:
+        """Service: Worker pulls next job from Redis via HTTP"""
+        queue_name = f"{QUEUE_KEY}:{worker_id}"
+        # Grab from the left of the list (assuming dispatch does rpush)
+        job_raw = await redis_jobs.lpop(queue_name)
+        if not job_raw:
+            return None
+            
+        try:
+            return json.loads(job_raw)
+        except json.JSONDecodeError:
+            print(f"❌ Worker {worker_id} popped invalid JSON from Redis: {job_raw}")
+            return None
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 job_service = JobService()

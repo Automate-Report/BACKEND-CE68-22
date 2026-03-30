@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 from typing import Optional
-from app.schemas.job import JobStatusPayload, JobStatusResponse, CountStatusResponse, SummaryInfoByWorker, GetJobByWorker
+from app.schemas.job import JobStatusPayload, JobStatusResponse, CountStatusResponse, SummaryInfoByWorker, GetJobByWorker, JobWorkerPayload
 from app.schemas.pagination import PaginatedResponse
 
 from app.services.job import job_service
@@ -118,3 +118,12 @@ async def get_jobs_by_worker(
     result["items"] = items
     return result
 
+@router.post("/next", response_model=Optional[JobWorkerPayload])
+async def get_next_job_for_worker(
+    current_worker: int = Depends(get_current_worker)
+):
+    """
+    Worker calls this endpoint to pop the next job from its Redis queue.
+    """
+    job = await job_service.pop_job(current_worker)
+    return job
