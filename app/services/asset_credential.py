@@ -18,14 +18,16 @@ class AssetCredentialService:
         return cred
     
     async def get_credential_by_asset_id(self, asset_id: int, db: AsyncSession):
-        query = sa.select(AssetCredential).where(AssetCredential.asset_id == asset_id)
+        query = (
+            sa.select(AssetCredential)
+            .where(AssetCredential.asset_id == asset_id)
+            .order_by(AssetCredential.created_at.desc()) # ✅ เรียงจากใหม่ไปเก่า
+            .limit(1) # ✅ เอามาแค่ใบเดียวพอ
+        )
         result = await db.execute(query)
-        cred = result.scalar_one_or_none()
-
-        if not cred:
-            return None
-            
-        return cred
+        
+        # ✅ ใช้ .scalar() จะปลอดภัยกว่า .scalar_one_or_none() เมื่อเราคุมด้วย .limit(1) แล้ว
+        return result.scalar()
 
     async def create_credential(self, credential_in: AssetCredentialCreate, db: AsyncSession) -> dict:
         """Service: สร้าง Credential ใหม่"""
