@@ -183,10 +183,20 @@ class WorkerService:
 
         if not row:
             return None
+        
+        worker_obj = row[0]
+        worker_dict = {
+            c.name: getattr(worker_obj, c.name) 
+            for c in sa.inspect(worker_obj).mapper.column_attrs
+        }
 
-        worker_dict = row[0].__dict__.copy()
-        worker_dict.pop('_sa_instance_state', None)
-        worker_dict["owner_name"] = f"{row[1]} {row[2]}"
+        if row[1] and row[2]:
+            worker_dict["owner_name"] = f"{row[1]} {row[2]}"
+        elif worker_obj.owner: # มี email เจ้าของแต่หาชื่อไม่เจอ (เผื่อไว้)
+            worker_dict["owner_name"] = worker_obj.owner
+        else:
+            worker_dict["owner_name"] = "No Owner" # กรณีหลัง Disconnect
+
         worker_dict = self._enrich_worker_status(worker_dict)
         
         return worker_dict
