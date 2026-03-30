@@ -11,10 +11,10 @@ class ScheduleAttackType(enum.Enum):
 
 class Schedule(Base):
     __tablename__ = "schedules"
-    id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
-    project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id")) #======================================FK ULID
-    asset_id:Mapped[int] = mapped_column(sa.ForeignKey("assets.id")) #======================================FK ULID
-    created_by:Mapped[str] = mapped_column(sa.ForeignKey("users.email"))
+    id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================PK
+    project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id", ondelete="CASCADE")) #======================================FK 
+    asset_id:Mapped[int] = mapped_column(sa.ForeignKey("assets.id", ondelete="CASCADE")) #======================================FK 
+    created_by:Mapped[str] = mapped_column(sa.ForeignKey("users.email", ondelete="SET NULL"), nullable=True) #======================================FK
     name:Mapped[str] = mapped_column(sa.String(255))
     cron_expression:Mapped[str] = mapped_column(sa.String(255))
     attack_type:Mapped[ScheduleAttackType] = mapped_column(sa.Enum(ScheduleAttackType))
