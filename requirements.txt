@@ -35,7 +35,6 @@ pyjwt
 croniter
 httpx
 cvss
-jwt
 cvss
 minio>=7.2.20
 playwright
