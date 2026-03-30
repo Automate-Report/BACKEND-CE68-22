@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     MINIO_EVIDENCE_BUCKET: str
     MINIO_WORKER_BUCKER: str
 
+    # Hash
+    AES_KEY: str
+
     class Config:
         env_file = ".env"
 

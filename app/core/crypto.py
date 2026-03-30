@@ -1,8 +1,9 @@
 from Crypto.Cipher import AES
 import base64
 import os
+from app.core.config import settings
 
-AES_KEY = os.getenv("AES_KEY", "").encode("utf-8")[:32].ljust(32, b"\0")
+AES_KEY = settings.AES_KEY.encode("utf-8")[:32].ljust(32, b"\0")
 
 def decrypt_password(encrypted_base64: str) -> str:
     combined = base64.b64decode(encrypted_base64)
