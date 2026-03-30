@@ -306,6 +306,7 @@ class WorkerService:
                 status_code=403, 
                 detail="Access denied: You do not have permission to manage this worker"
             )
+        
         access_key_id = worker_db.access_key_id
         if access_key_id:
             # ตรวจสอบว่า delete_access_key_by_id ต้องใช้ await หรือไม่
@@ -314,15 +315,17 @@ class WorkerService:
                 id=access_key_id
             )
                 
-                
-        # อัปเดตใน DB เพื่อให้ข้อมูล Sync กัน
-        query = sa.update(Worker).where(Worker.id == worker_id).values(
-            status="NOT_ACTIVATE",
-            owner=None,
-            is_active=False
-        )
-        await db.execute(query)
-        await db.commit()
+        worker_db.status = WorkerStatus.NOT_ACTIVATE # แนะนำให้ใช้ Enum แทน String hardcode
+        worker_db.owner = None
+        worker_db.is_active = False
+        worker_db.access_key_id = None
+
+        try:
+            await db.commit() # Commit ครั้งเดียวครอบคลุมทั้งการลบ Key และการ Reset Worker
+        except Exception as e:
+            await db.rollback()
+            print(f"DEBUG DISCONNECT ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Failed to disconnect worker")
 
         return {"message": f"Worker {worker_id} disconnected and reset successfully"}
 
