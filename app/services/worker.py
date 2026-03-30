@@ -274,26 +274,41 @@ class WorkerService:
         worker_db.thread_number = worker_in.thread_number
 
         try:
+            worker_id = worker_db.id  
+            project_id = worker_db.project_id 
+            access_key_id = worker_db.access_key_id  
+            owner = worker_db.owner  
+            thread_number = worker_db.thread_number  
+            current_load = worker_db.current_load 
+            name = worker_db.name  
+            hostname = worker_db.hostname  
+            internal_ip = worker_db.internal_ip  
+            status = worker_db.status 
+            is_active = worker_db.is_active 
+            created_at = worker_db.created_at  
+            updated_at = worker_db.updated_at 
+            last_heartbeat = worker_db.last_heartbeat  
+
             await db.commit()
             # 💡 เทคนิค: ไม่ต้องสั่ง refresh ก็ได้ถ้าเราไม่ได้ต้องการค่าที่ DB เจนให้ใหม่ (เช่น serial id) 
             # เพราะเรามีค่าอยู่ใน worker_db แล้ว
             
             # 4. สร้าง Dictionary ขากลับแบบปลอดภัย
             worker_dict = {
-                "id": worker_db.id,
-                "project_id": worker_db.project_id,
-                "access_key_id": worker_db.access_key_id,
-                "owner": worker_db.owner,
-                "thread_number": worker_db.thread_number,
-                "current_load": worker_db.current_load,
-                "name": worker_db.name,
-                "hostname": worker_db.hostname,
-                "internal_ip": worker_db.internal_ip,
-                "status": worker_db.status,
-                "is_active": worker_db.is_active,
-                "created_at": worker_db.created_at,
-                "updated_at": worker_db.updated_at,
-                "last_heartbeat": worker_db.last_heartbeat,
+                "id": worker_id,
+                "project_id": project_id,
+                "access_key_id": access_key_id,
+                "owner": owner,
+                "thread_number": thread_number,
+                "current_load": current_load,
+                "name": name,
+                "hostname": hostname,
+                "internal_ip": internal_ip,
+                "status": status,
+                "is_active": is_active,
+                "created_at": created_at,
+                "updated_at": updated_at,
+                "last_heartbeat": last_heartbeat,
             }
 
             # 5. จัดการชื่อเจ้าของให้สวยงาม
