@@ -14,5 +14,5 @@ class VulnLib(Base):
     cvss_score:Mapped[float] = mapped_column(sa.FLOAT)
     cvss_vector:Mapped[str] = mapped_column(sa.VARCHAR(255))
     severity:Mapped[str] = mapped_column(sa.VARCHAR(255))
-    description:Mapped[str] = mapped_column(sa.VARCHAR(255))
-    recommendation:Mapped[str] = mapped_column(sa.VARCHAR(255))
+    description:Mapped[str] = mapped_column(sa.TEXT)
+    recommendation:Mapped[str] = mapped_column(sa.TEXT)
