@@ -16,7 +16,7 @@ from app.schemas.job import JobWorkerPayload, SummaryInfoByWorker
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import JOB_KEY
+from app.core.config import settings
 from app.models.jobs import Job, JobStatus
 from app.models.workers import Worker, WorkerStatus
 from app.models.vulnerabilities import Vulnerability
@@ -25,7 +25,7 @@ from app.models.notifications import NotiType
 
 
 class JobService:
-    cipher_suite = Fernet(JOB_KEY.encode())
+    cipher_suite = Fernet(settings.JOB_KEY.encode())
 
     def _generate_job_name(self, length=12):
         alphabet = string.ascii_letters + string.digits
