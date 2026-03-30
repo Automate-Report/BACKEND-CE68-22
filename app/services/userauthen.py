@@ -39,8 +39,8 @@ class UserAuthenService:
         query = sa.select(User).where(User.email == loginRequest.email)
         result = await db.execute(query)
         user = result.scalar_one_or_none()
-        plain_password = decrypt_password(loginRequest.password)
-        if user and verify_password(plain_password, user.password):
+        # plain_password = decrypt_password(loginRequest.password)
+        if user and verify_password(loginRequest.password, user.password):
             return create_access_token(loginRequest.email, user.first_name, user.last_name)
         # Check all but user not found
         raise HTTPException(status_code=401, detail="Invalid email or password")
@@ -109,12 +109,12 @@ class UserAuthenService:
         if existing_user:
             raise HTTPException(status_code=400, detail="Email already registered")
         else:
-            plain_password = decrypt_password(createUser.password)
+            # plain_password = decrypt_password(createUser.password)
             new_user = User(
                 first_name = createUser.firstName,
                 last_name = createUser.lastName,
                 email = createUser.email,
-                password = get_password_hash(plain_password),
+                password = get_password_hash(createUser.password),
                 google_id = None,
                 picture_path = None,
             )
