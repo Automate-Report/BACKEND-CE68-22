@@ -395,6 +395,7 @@ class JobService:
                 raw_username = credential.username if credential else None
                 raw_password = credential.password if credential else None
                 encrypted_password = None
+                encrypted_username = None
 
                 if raw_password or raw_username:
                     # 2. Encrypt: String -> Bytes -> Encrypt -> String (เพื่อส่ง JSON)
