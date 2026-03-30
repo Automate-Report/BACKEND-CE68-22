@@ -297,7 +297,7 @@ class WorkerService:
 
         if not worker_db:
             raise HTTPException(status_code=404, detail="Worker not found")
-
+        
         is_system_owner = (role == "owner")
         is_worker_owner = (worker_db.owner == user_id)
 
@@ -307,25 +307,23 @@ class WorkerService:
                 detail="Access denied: You do not have permission to manage this worker"
             )
         
-        access_key_id = worker_db.access_key_id
-        if access_key_id:
-            # ตรวจสอบว่า delete_access_key_by_id ต้องใช้ await หรือไม่
-            await access_key_service.delete_access_key_by_id(
-                db=db, 
-                id=access_key_id
-            )
-                
-        worker_db.status = WorkerStatus.NOT_ACTIVATE # แนะนำให้ใช้ Enum แทน String hardcode
+        target_key_id = worker_db.access_key_id
+
+        worker_db.access_key_id = None 
+        worker_db.status = WorkerStatus.NOT_ACTIVATE
         worker_db.owner = None
         worker_db.is_active = False
-        worker_db.access_key_id = None
+        
+        if target_key_id:
+            # ตรวจสอบว่าในฟังก์ชันนี้ไม่มีการสั่ง db.commit() หรือ db.flush() นะครับ
+            await access_key_service.delete_access_key_by_id(db=db, id=target_key_id)
 
         try:
-            await db.commit() # Commit ครั้งเดียวครอบคลุมทั้งการลบ Key และการ Reset Worker
+            await db.commit()
         except Exception as e:
             await db.rollback()
             print(f"DEBUG DISCONNECT ERROR: {e}")
-            raise HTTPException(status_code=500, detail="Failed to disconnect worker")
+            raise HTTPException(status_code=500, detail="Failed to sync database state")
 
         return {"message": f"Worker {worker_id} disconnected and reset successfully"}
 
