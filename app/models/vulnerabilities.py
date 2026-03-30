@@ -49,6 +49,6 @@ def receive_set(target: Vulnerability, value, oldvalue, initiator):
     if value == VulnStatus.FIXED and oldvalue in unresolved_states:
         target.resolved_at = sa.sql.func.now()
 
-    elif value == VulnStatus.OPEN and oldvalue in VulnStatus.FIXED:
+    elif value == VulnStatus.OPEN and oldvalue == VulnStatus.FIXED:
         target.resolved_at = None
 
