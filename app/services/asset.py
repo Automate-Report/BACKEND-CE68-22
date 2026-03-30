@@ -152,9 +152,9 @@ class AssetService:
         asset.description = asset_in.description
         asset.target = asset_in.target
 
-        if asset_in.type == "ip":
+        if asset_in.type == "IP":
             asset.type = AssetType.IP
-        elif asset_in.type == "url":
+        elif asset_in.type == "URL":
             asset.type = AssetType.URL
 
         try:

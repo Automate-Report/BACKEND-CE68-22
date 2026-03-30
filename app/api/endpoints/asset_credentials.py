@@ -46,7 +46,7 @@ async def create_credential(
     return new_credential
 
 # PUT (Update) credentials/credential_id
-@router.put("/{credential_id}", response_model=AssetCredentialResponse)
+@router.put("/{credential_id}")
 async def update_credential(
     credential_id: int, 
     credential_in: AssetCredentialCreate,
