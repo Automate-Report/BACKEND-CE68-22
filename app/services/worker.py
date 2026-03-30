@@ -138,10 +138,39 @@ class WorkerService:
 
         # 7. Format the output
         paginated_items = []
-        for worker, fn, ln in rows:
-            worker_dict = worker.__dict__.copy() # Convert to dict
-            worker_dict.pop('_sa_instance_state', None) # Clean up internal SA state
-            worker_dict["owner_name"] = f"{fn} {ln}"
+        for row in rows:
+            # ใช้การแกะรูปแบบนี้จะปลอดภัยกว่ากรณี Row มาไม่ครบ
+            worker = row[0]
+            fn = row[1] if len(row) > 1 else None
+            ln = row[2] if len(row) > 2 else None
+            worker_dict = {
+                "id": worker.id,
+                "project_id": worker.project_id,
+                "access_key_id": worker.access_key_id,
+                "owner": worker.owner,
+                "thread_number": worker.thread_number,
+                "current_load": worker.current_load,
+                "name": worker.name,
+                "hostname": worker.hostname,
+                "internal_ip": worker.internal_ip,
+                "status": worker.status,
+                "is_active": worker.is_active,
+                "created_at": worker.created_at,
+                "updated_at": worker.updated_at,
+                "last_heartbeat": worker.last_heartbeat,
+            }
+
+            # 2. จัดการ owner_name ให้รองรับกรณี Disconnect (fn/ln เป็น None)
+            if fn and ln:
+                worker_dict["owner_name"] = f"{fn} {ln}"
+            elif worker.owner:
+                # กรณีมี Email เจ้าของแต่ Join ชื่อไม่ติด
+                worker_dict["owner_name"] = worker.owner
+            else:
+                # ✅ กรณีหลัง Disconnect (owner เป็น None)
+                worker_dict["owner_name"] = "No Owner"
+
+            # 3. เติมข้อมูลสถานะ (Enrich)
             worker_dict = self._enrich_worker_status(worker_dict)
             paginated_items.append(worker_dict)
 
@@ -177,26 +206,45 @@ class WorkerService:
     
     async def get_worker_by_id(self, worker_id: int, db: AsyncSession):
         """Service: ดึงข้อมูล 1 Worker"""
-        query = sa.select(Worker, User.first_name, User.last_name).join(User, Worker.owner == User.email, isouter=True).where(Worker.id == worker_id)
+        query = sa.select(
+            Worker, 
+            User.first_name, 
+            User.last_name
+        ).join(
+            User, Worker.owner == User.email, isouter=True
+        ).where(Worker.id == worker_id)
+        
         result = await db.execute(query)
         row = result.first()
 
         if not row:
             return None
         
-        worker_obj = row[0]
+        worker_db = row[0]
         worker_dict = {
-            c.name: getattr(worker_obj, c.name) 
-            for c in sa.inspect(worker_obj).mapper.column_attrs
+            "id": worker_db.id,
+            "project_id": worker_db.project_id,
+            "access_key_id": worker_db.access_key_id,
+            "owner": worker_db.owner,
+            "thread_number": worker_db.thread_number,
+            "current_load": worker_db.current_load,
+            "name": worker_db.name,
+            "hostname": worker_db.hostname,
+            "internal_ip": worker_db.internal_ip,
+            "status": worker_db.status,
+            "is_active": worker_db.is_active,
+            "created_at": worker_db.created_at,
+            "updated_at": worker_db.updated_at,
+            "last_heartbeat": worker_db.last_heartbeat,
         }
 
-        if row[1] and row[2]:
-            worker_dict["owner_name"] = f"{row[1]} {row[2]}"
-        elif worker_obj.owner: # มี email เจ้าของแต่หาชื่อไม่เจอ (เผื่อไว้)
-            worker_dict["owner_name"] = worker_obj.owner
+        # 3. จัดการ owner_name (รองรับกรณีเป็น None หลัง Disconnect)
+        if row.first_name and row.last_name:
+            worker_dict["owner_name"] = f"{row.first_name} {row.last_name}"
         else:
-            worker_dict["owner_name"] = "No Owner" # กรณีหลัง Disconnect
+            worker_dict["owner_name"] = "No Owner"
 
+        # 4. เติมข้อมูลสถานะ (Enrich)
         worker_dict = self._enrich_worker_status(worker_dict)
         
         return worker_dict
