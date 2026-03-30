@@ -126,7 +126,8 @@ class ProjectOverviewService:
         rows = (await db.execute(query)).all()
         
         results = []
-        now = datetime.now(timezone.utc)
+        tz = zoneinfo.ZoneInfo("Asia/Bangkok")
+        now = datetime.now(tz)
         for v, lib, asset_name in rows:
             # คำนวณ SLA ตาม Severity
             sla_map = {"CRITICAL": 24, "HIGH": 72, "MEDIUM": 168, "LOW": 720}
