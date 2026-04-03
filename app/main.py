@@ -12,6 +12,7 @@ from app.core.config import settings
 from app.models import scan_result_logs, users, access_keys, asset_credentials, assets, jobs, project_tags, projects, reports, schedules, tags, vuln_libs, vulnerabilities, workers, project_members
 
 from app.services.system_task import system_schedule_task
+from app.services.minio import minio_service
 
 # 1. Import Router ที่เราสร้างไว้
 from app.api.endpoints import projects
@@ -40,6 +41,14 @@ async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         # สร้าง Table ทั้งหมดถ้ายังไม่มี (เหมือน setup_db ของคุณ)
         await conn.run_sync(Base.metadata.create_all)
+        print("✅ Successfully connected to PostgreSQL")
+
+    # test MinIO
+    try:
+        minio_service.client.list_buckets()
+        print("✅ Successfully connected to MinIO!")
+    except Exception as e:
+        print(f"❌ Failed to connect to MinIO: {e}")
     
     # เริ่มรัน Background Task
     bg_task = asyncio.create_task(system_schedule_task())
@@ -68,11 +77,15 @@ app = FastAPI(
 
 # 2. ตั้งค่า CORS (สำคัญมาก! เพื่อให้ Next.js คุยกับ FastAPI ได้)
 origins = [
-    "http://localhost:3000",      # Next.js รันที่ port 3000
+    # For Local Development
+    "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://10.60.1.214:3000",
-    "http://10.66.1.226:3000",
-    "http://10.240.68.65:3000",
+    
+    # nginx reverse proxy
+    "http://localhost",      # Next.js รันที่ port 3000
+    "http://127.0.0.1",
+    "http://10.240.68.65",
+    "http://100.111.83.61",
     "http://ad14eb44-0070-4ec8-8a76-6d204c46ade0.cloud.ce.kmitl.ac.th",
 ]
 
