@@ -9,8 +9,11 @@ alembic>=1.10.0            # ตัวจัดการ Migration (แก้ Ta
 
 # --- Authentication & Security ---
 python-jose[cryptography]  # สร้าง/แกะ JWT Token
-passlib[bcrypt]            # Hash Password
+passlib[bcrypt]==1.7.4     # Hash Password
+bcrypt==4.0.1              # Hash Password
 python-multipart           # รับ Form Data (Login) และ Upload File
+authlib>=1.0.0             # OAuth2 Client (Google Login)
+itsdangerous>=2.1.0        # for starlette-session
 
 # --- Configuration ---
 pydantic-settings>=2.0.0   # โหลดค่าจาก .env
@@ -25,3 +28,15 @@ weasyprint                 # แปลง HTML เป็น PDF (ง่ายก
 
 # --- Utils ---
 requests                   # เผื่อใช้ยิง Notification ภายนอก (Line/Email)
+
+jose
+cryptography>=39.0.0
+pyjwt
+croniter
+httpx
+cvss
+cvss
+minio>=7.2.20
+playwright
+pdfplumber
+pdf2docx

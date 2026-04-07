@@ -1,139 +1,211 @@
-import json
-import os
-from datetime import datetime
-from typing import List, Optional
+import math
+from typing import Optional
+from fastapi import HTTPException
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.projects import Project #SQL Alchemy Models
+from app.models.project_members import ProjectMember, InviteStatus, ProjectRole
 from app.schemas.project import ProjectCreate
 
-# 1. หา Path ของไฟล์ JSON (เพื่อให้รันได้ไม่ว่าจะอยู่ folder ไหน)
-# app/services/project.py -> ขึ้นไป 3 ชั้นคือ root folder (backend)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-JSON_FILE_PATH = os.path.join(BASE_DIR, "dummy_data", "projects.json")
+from app.schemas.project import ProjectCreate
+from app.schemas.userauthen import UserInfo
+
+from app.services.project_tag import project_tag_service
+from app.services.tag import tag_service
+from app.services.userauthen import userauthen_service
+from app.services.asset import asset_service
+from app.services.vulnerability import vuln_service
 
 class ProjectService:
+    async def get_all_projects(self, user_id: str, page: int, size: int, db: AsyncSession, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
+        """Service: ดึงโปรเจกต์ที่ User เป็นเจ้าของ 'หรือ' เป็นสมาชิกที่ Join แล้ว"""
     
-    def _ensure_dummy_folder_exists(self):
-        """ตรวจสอบว่ามี folder dummy_data หรือยัง ถ้าไม่มีให้สร้าง"""
-        folder = os.path.dirname(JSON_FILE_PATH)
-        if not os.path.exists(folder):
-            os.makedirs(folder)
+        # 1. สร้าง Base Query เพื่อหาโปรเจกต์ที่เกี่ยวข้อง
+        # ใช้ Left Join กับ ProjectMember เพื่อดูว่า User คนนี้มี Role อะไรในโปรเจกต์นั้น
+        query = (
+            sa.select(
+                Project,
+                sa.case(
+                    (Project.user_email == user_id, "owner"),
+                    else_=ProjectMember.role.cast(sa.String)
+                ).label("user_role")
+            )
+            .join(
+                ProjectMember, 
+                sa.and_(
+                    ProjectMember.project_id == Project.id,
+                    ProjectMember.user_email == user_id,
+                    ProjectMember.status == InviteStatus.JOINED
+                ),
+                isouter=True # Left Join เพื่อให้โปรเจกต์ที่เราเป็น Owner ยังอยู่แม้ไม่มีใน ProjectMember
+            )
+            .where(
+                sa.or_(
+                    Project.user_email == user_id, # เคสเราเป็นเจ้าของ
+                    ProjectMember.user_email == user_id # เคสเราเป็นสมาชิกที่ Join แล้ว
+                )
+            )
+        )
 
-    def _read_json(self) -> List[dict]:
-        """อ่านข้อมูลจากไฟล์ JSON"""
-        if not os.path.exists(JSON_FILE_PATH):
-            return []
-        try:
-            with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except json.JSONDecodeError:
-            return [] # ถ้าไฟล์เสียหรือว่างเปล่า ให้คืนค่า list ว่าง
-
-    def _save_json(self, data: List[dict]):
-        """บันทึกข้อมูลลงไฟล์ JSON"""
-        self._ensure_dummy_folder_exists()
-        with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
-            # default=str ช่วยแปลง datetime เป็น string อัตโนมัติ
-            json.dump(data, f, indent=2, ensure_ascii=False, default=str)
-
-    def get_all_projects(self, user_id: int, page: int, size: int, sort_by: str = None, order: str = "asc", search: str = None, filter: str = "ALL"):
-        """Service: ดึงข้อมูลโปรเจกต์ทั้งหมดของ user นั้น"""
-        projects = self._read_json()
+        # 2. การกรอง (Search & Filter) ในระดับ SQL
+        if search:
+            query = query.where(Project.name.ilike(f"%{search}%"))
         
-        # 1. กรอง User
+        if filter != "ALL":
+            if filter == "owner":
+                query = query.where(Project.user_email == user_id)
+            elif filter == "pentester":
+                query = query.where(ProjectMember.role == ProjectRole.PENTESTER)
+            elif filter == "developer":
+                query = query.where(ProjectMember.role == ProjectRole.DEVELOPER)
+
+        # 3. จัดการเรื่อง Sorting
+        column_to_sort = getattr(Project, sort_by if sort_by else "created_at", Project.created_at)
+        query = query.order_by(column_to_sort.desc() if order == "desc" else column_to_sort.asc())
+
+        # 4. ดึงข้อมูลทั้งหมดมาจัดการต่อ (สำหรับนับ Count และนับ Asset/Vuln)
+        result = await db.execute(query)
+        rows = result.all() # [(Project, "owner"), (Project, "pentester"), ...]
+
         all_matches = []
-        for proj in projects:
-            if filter == "ALL":
-                if search:
-                    if proj["user_id"] == user_id and search in proj["name"]:
-                        all_matches.append(proj)
-                else:
-                    if proj["user_id"] == user_id:
-                        all_matches.append(proj)
-            else:
-                # ต้องกลับมาทำส่วนของ filterตอนที่รู้ว่าจะ filter อะไร
-                pass
+        for proj, role_val in rows:
+            # ดึงค่า String จาก Enum ถ้าจำเป็น
+            user_role = role_val.value.lower() if hasattr(role_val, "value") else role_val.lower()
 
-        if sort_by:
-            reverse = (order == "desc")
-            # Handle กรณี field ไม่มีอยู่จริง หรือต้องการ sort date
-            all_matches.sort(key=lambda x: x.get(sort_by, ""), reverse=reverse)
-        
-        # 2. นับจำนวนทั้งหมด (สำหรับ Pagination UI)
+            # ✅ ดึง Count ต่างๆ (แนะนำให้ทำ Subquery ในอนาคตเพื่อความเร็ว)
+            asset_cnt = await asset_service.cnt_asset_by_project_id(proj.id, db)
+            vuln_cnt = await vuln_service.get_cnt_vulns_in_project_id(proj.id, db)
+            tags = await project_tag_service.get_tags_by_project_id(proj.id, db) # ปรับให้ดึงข้อมูล tag มาเลย
+
+            all_matches.append({
+                "id": proj.id,
+                "name": proj.name,
+                "description": proj.description,
+                "role": user_role,
+                "assets_cnt": asset_cnt,
+                "vuln_cnt": vuln_cnt,
+                "tags": tags,
+                "created_at": proj.created_at,
+                "updated_at": proj.updated_at      
+            })
+
+        # 5. Pagination Logic (เหมือนเดิม)
         total_count = len(all_matches)
-            
-        # 3. คำนวณ Pagination Logic
-        import math
         total_pages = math.ceil(total_count / size)
-        
         offset = (page - 1) * size
-        
-        # --- จุดที่ต้องแก้: ตัดข้อมูล (Slicing) ---
-        # ใช้ Python Slice [start : end]
         paginated_items = all_matches[offset : offset + size]
 
         return {
-            "total": total_count,      # จำนวนทั้งหมด (เช่น 50)
+            "total": total_count,
             "page": page,
             "size": size,
             "total_pages": total_pages,
-            "items": paginated_items   # ส่งกลับเฉพาะ 10 ตัวของหน้านั้น (ไม่ใช่ทั้งหมด)
+            "items": paginated_items
         }
     
-    def get_project_by_id(self, user_id:int, project_id:int):
-        projects = self._read_json()
+    async def get_project_by_id(self, project_id:int, db: AsyncSession):
+        query = sa.select(Project).where(Project.id == project_id)
 
-        for proj in projects:
-            if proj["user_id"] == user_id and proj["id"] == project_id:
-                return proj
-            
-        return None
+        result = await db.execute(query)
 
-    def create_project(self, project_in: ProjectCreate, user_id: int) -> dict:
+        project = result.scalar_one_or_none()
+
+        if not project: return None
+
+        return project
+    
+    async def get_owner_info_by_project_id(self, project_id: int, db: AsyncSession):
+        """Get Owner Info by Project ID"""
+        query = sa.select(Project).where(
+            Project.id == project_id
+        )
+        result = await db.execute(query)
+        project = result.scalar_one_or_none()
+
+        if not project:
+            return None
+
+        user = await userauthen_service.get_user_by_id(
+            user_id=project.user_email,
+            db=db
+        )
+
+        user_info = UserInfo(
+            email=user.email,
+            firstname=user.first_name,
+            lastname=user.last_name,
+            role="owner",
+            joinned_at=project.created_at
+        )
+        return user_info
+
+    async def create_project(self, name: str, description: str, user_id: str, db: AsyncSession) -> dict:
         """Service: สร้างโปรเจกต์ใหม่"""
-        projects = self._read_json()
+        new_project_db = Project(
+            name = name,
+            user_email = user_id,
+            description = description
+        )
+
+        try:
+            db.add(new_project_db)
+            await db.commit()
+            # refresh to get the DB generated content such as created_at
+            await db.refresh(new_project_db)
+        except Exception as e:
+            await db.rollback()
+            print(f"DEBUG ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Could not create project")
         
-        # 1. จำลอง Logic Auto Increment ID
-        new_id = 1
-        if projects:
-            # เอา ID ตัวสุดท้ายมา + 1
-            new_id = projects[-1]["id"] + 1
-            
-        # 2. แปลงจาก Pydantic Schema เป็น Dict และเติมข้อมูล System (ID, Time)
         new_project = {
-            "id": new_id,
-            "name": project_in.name,
-            "description": project_in.description,
-            "user_id": user_id,
-            "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat(),
+            "id": new_project_db.id,
+            "name": new_project_db.name,
+            "description": new_project_db.description,
+            "created_at": new_project_db.created_at,
+            "updated_at": new_project_db.updated_at
         }
-        
-        # 3. บันทึก
-        projects.append(new_project)
-        self._save_json(projects)
         
         return new_project
     
-    def update_project(self, project_id: int, project_in: ProjectCreate, user_id: int) -> Optional[dict]:
+    async def update_project(self, project_id: int, project_in: ProjectCreate, user_id: str, db: AsyncSession) -> Optional[dict]:
         """Service: อัปเดตโปรเจกต์"""
-        projects = self._read_json()
-        for proj in projects:
-            if proj["id"] == project_id and proj["user_id"] == user_id:
-                proj["name"] = project_in.name
-                proj["description"] = project_in.description
-                proj["updated_at"] = datetime.now().isoformat()
-                self._save_json(projects)
-                return proj
-        return None
+        query = sa.select(Project).where(
+            Project.id == project_id,
+            Project.user_email == user_id
+        )
+        result = await db.execute(query)
+        project_db = result.scalar_one_or_none()
+
+        if not project_db:
+            return None
+        project_db.name = project_in.name
+        project_db.description = project_in.description
+
+        await db.commit()
+        await db.refresh(project_db)
+
+        returned_project = {
+            "id": project_db.id,
+            "name": project_db.name,
+            "description": project_db.description,
+            "created_at": project_db.created_at,
+            "updated_at": project_db.updated_at
+        }
+
+        return returned_project
     
-    def delete_project(self, project_id: int, user_id: int) -> bool:
+    async def delete_project(self, project_id: int, db: AsyncSession) -> bool:
         """Service: ลบโปรเจกต์"""
-        projects = self._read_json()
-        for i, proj in enumerate(projects):
-            if proj["id"] == project_id and proj["user_id"] == user_id:
-                del projects[i]
-                self._save_json(projects)
-                return True
-        return False
+        query = sa.select(Project).where(Project.id == project_id)
+        result = await db.execute(query)
+        project = result.scalar_one_or_none()
+
+        if not project:
+            return False
+        
+        await db.delete(project)
+        await db.commit()
+        return True
 
 # สร้าง Instance ไว้ให้ Router เรียกใช้
 project_service = ProjectService()

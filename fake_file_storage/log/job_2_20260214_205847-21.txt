@@ -1,0 +1,166 @@
+20:50:07 [INFO] [ScanEngine][Job 2] Starting Discovery Phase...
+20:50:07 [INFO] [Crawler] Starting Crawl on: http://testphp.vulnweb.com/search.php (Depth: 2)
+20:50:09 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/search.php (2 params)
+20:50:10 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/index.php (2 params)
+20:50:10 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/categories.php (2 params)
+20:50:48 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/userinfo.php (5 params)
+20:50:48 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/artists.php (2 params)
+20:50:53 [INFO] [Crawler] Found a way in! Session captured.
+20:50:53 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/login.php (5 params)
+20:50:53 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/cart.php (2 params)
+20:50:54 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/disclaimer.php (2 params)
+20:50:54 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/guestbook.php (4 params)
+20:50:55 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/listproducts.php (2 params)
+20:50:57 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/ (2 params)
+20:50:57 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/logout.php (2 params)
+20:50:57 [INFO] [ScanEngine][Job 2] Discovery finished. Unique targets: 12
+20:50:57 [INFO] [Orchestrator] 🍪 Passing session cookies to all scanners.
+20:50:57 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+20:50:57 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/search.php ---
+20:50:57 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:50:57 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/search.php (Type: form)
+20:50:57 [INFO]     -> Analyzing: searchFor
+20:50:58 [INFO]     -> Analyzing: goButton
+20:50:58 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:50:58 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/search.php
+20:51:01 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+20:51:06 [INFO]     -> Testing Parameter: searchFor
+20:51:06 [INFO]        [+] Found target via selector: [name='searchFor']
+20:51:08 [INFO]        [..] Alert detected! Waiting for evidence capture...
+20:51:10 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+20:51:11 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/index.php ---
+20:51:11 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:51:11 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/index.php (Type: form)
+20:51:11 [INFO]     -> Analyzing: searchFor
+20:51:11 [INFO]     -> Analyzing: goButton
+20:51:11 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:51:11 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/index.php
+20:51:13 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+20:51:19 [INFO]     -> Testing Parameter: searchFor
+20:51:19 [INFO]        [+] Found target via selector: [name='searchFor']
+20:51:21 [INFO]        [..] Alert detected! Waiting for evidence capture...
+20:51:23 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+20:51:23 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/categories.php ---
+20:51:23 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:51:23 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/categories.php (Type: form)
+20:51:23 [INFO]     -> Analyzing: searchFor
+20:51:23 [INFO]     -> Analyzing: goButton
+20:51:24 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:51:24 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/categories.php
+20:51:26 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+20:51:32 [INFO]     -> Testing Parameter: searchFor
+20:51:32 [INFO]        [+] Found target via selector: [name='searchFor']
+20:51:34 [INFO]        [..] Alert detected! Waiting for evidence capture...
+20:51:36 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+20:51:36 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/userinfo.php ---
+20:51:36 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:51:36 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/userinfo.php (Type: form)
+20:51:36 [INFO]     -> Analyzing: uname
+20:51:37 [INFO]     -> Analyzing: pass
+20:51:37 [INFO]     -> Analyzing: anonymous_input_3
+20:51:37 [INFO]     -> Analyzing: searchFor
+20:51:38 [INFO]     -> Analyzing: goButton
+20:51:38 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:51:38 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/userinfo.php
+20:51:42 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+20:51:50 [INFO]     -> Testing Parameter: uname
+20:51:50 [INFO]        [+] Found target via selector: [name='uname']
+20:54:24 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/artists.php ---
+20:54:24 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:54:24 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/artists.php (Type: form)
+20:54:24 [INFO]     -> Analyzing: searchFor
+20:54:24 [INFO]     -> Analyzing: goButton
+20:54:24 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:54:24 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/artists.php
+20:54:27 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+20:54:32 [INFO]     -> Testing Parameter: searchFor
+20:54:32 [INFO]        [+] Found target via selector: [name='searchFor']
+20:54:34 [INFO]        [..] Alert detected! Waiting for evidence capture...
+20:54:36 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+20:54:37 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/login.php ---
+20:54:37 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:54:37 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/login.php (Type: form)
+20:54:37 [INFO]     -> Analyzing: uname
+20:54:37 [INFO]     -> Analyzing: pass
+20:54:37 [INFO]     -> Analyzing: anonymous_input_3
+20:54:37 [INFO]     -> Analyzing: searchFor
+20:54:38 [INFO]     -> Analyzing: goButton
+20:54:38 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:54:38 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/login.php
+20:54:41 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+20:54:47 [INFO]     -> Testing Parameter: uname
+20:54:47 [INFO]        [+] Found target via selector: [name='uname']
+20:57:21 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/cart.php ---
+20:57:21 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:57:21 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/cart.php (Type: form)
+20:57:21 [INFO]     -> Analyzing: searchFor
+20:57:21 [INFO]     -> Analyzing: goButton
+20:57:21 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:57:21 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/cart.php
+20:57:24 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+20:57:30 [INFO]     -> Testing Parameter: searchFor
+20:57:30 [INFO]        [+] Found target via selector: [name='searchFor']
+20:57:32 [INFO]        [..] Alert detected! Waiting for evidence capture...
+20:57:34 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+20:57:34 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/disclaimer.php ---
+20:57:34 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:57:34 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/disclaimer.php (Type: form)
+20:57:34 [INFO]     -> Analyzing: searchFor
+20:57:34 [INFO]     -> Analyzing: goButton
+20:57:34 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:57:34 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/disclaimer.php
+20:57:37 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+20:57:43 [INFO]     -> Testing Parameter: searchFor
+20:57:43 [INFO]        [+] Found target via selector: [name='searchFor']
+20:57:45 [INFO]        [..] Alert detected! Waiting for evidence capture...
+20:57:47 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+20:57:47 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/guestbook.php ---
+20:57:47 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:57:47 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/guestbook.php (Type: form)
+20:57:47 [INFO]     -> Analyzing: text
+20:57:47 [INFO]     -> Analyzing: submit
+20:57:48 [INFO]     -> Analyzing: searchFor
+20:57:48 [INFO]     -> Analyzing: goButton
+20:57:48 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:57:48 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/guestbook.php
+20:57:56 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+20:58:02 [INFO]     -> Testing Parameter: text
+20:58:02 [INFO]        [+] Found target via selector: [name='text']
+20:58:04 [INFO]        [..] Alert detected! Waiting for evidence capture...
+20:58:06 [INFO]        [+] Vulnerability Recorded for text using <script>alert(1)</script>
+20:58:06 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/listproducts.php ---
+20:58:06 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:58:06 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/listproducts.php (Type: form)
+20:58:06 [INFO]     -> Analyzing: searchFor
+20:58:06 [INFO]     -> Analyzing: goButton
+20:58:06 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:58:06 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/listproducts.php
+20:58:09 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+20:58:14 [INFO]     -> Testing Parameter: searchFor
+20:58:14 [INFO]        [+] Found target via selector: [name='searchFor']
+20:58:16 [INFO]        [..] Alert detected! Waiting for evidence capture...
+20:58:18 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+20:58:19 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/ ---
+20:58:19 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:58:19 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/ (Type: form)
+20:58:19 [INFO]     -> Analyzing: searchFor
+20:58:19 [INFO]     -> Analyzing: goButton
+20:58:19 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:58:19 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/
+20:58:21 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+20:58:27 [INFO]     -> Testing Parameter: searchFor
+20:58:27 [INFO]        [+] Found target via selector: [name='searchFor']
+20:58:29 [INFO]        [..] Alert detected! Waiting for evidence capture...
+20:58:31 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+20:58:31 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/logout.php ---
+20:58:31 [INFO] [ScanEngine][Job 2] Running Reflected Scan...
+20:58:31 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/logout.php (Type: form)
+20:58:31 [INFO]     -> Analyzing: searchFor
+20:58:32 [INFO]     -> Analyzing: goButton
+20:58:32 [INFO] [ScanEngine][Job 2] Running DOM Scan...
+20:58:32 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/logout.php
+20:58:34 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+20:58:41 [INFO]     -> Testing Parameter: searchFor
+20:58:41 [INFO]        [+] Found target via selector: [name='searchFor']
+20:58:43 [INFO]        [..] Alert detected! Waiting for evidence capture...
+20:58:45 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>

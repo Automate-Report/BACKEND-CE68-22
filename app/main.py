@@ -1,19 +1,93 @@
+import asyncio
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
+from concurrent.futures import ThreadPoolExecutor
+
+from contextlib import asynccontextmanager
+
+from app.core.db import engine, Base
+from app.core.config import settings
+from app.models import scan_result_logs, users, access_keys, asset_credentials, assets, jobs, project_tags, projects, reports, schedules, tags, vuln_libs, vulnerabilities, workers, project_members
+
+from app.services.system_task import system_schedule_task
+from app.services.minio import minio_service
 
 # 1. Import Router ที่เราสร้างไว้
 from app.api.endpoints import projects
+from app.api.endpoints import auth
+from app.api.endpoints import assets
+from app.api.endpoints import asset_credentials
+from app.api.endpoints import workers
+from app.api.endpoints import access_keys
+from app.api.endpoints import pentest_log
+from app.api.endpoints import tag
+from app.api.endpoints import project_tags
+from app.api.endpoints import schedule
+from app.api.endpoints import jobs
+from app.api.endpoints import notification
+from app.api.endpoints import vulnerabilities
+from app.api.endpoints import reports
+from app.api.endpoints import invitation
+from app.api.endpoints import user
+
+_executor = ThreadPoolExecutor(max_workers=5)
+
+# --- Lifespan Management ---
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # [Startup]: ทำงานตอนเปิด Server
+    async with engine.begin() as conn:
+        # สร้าง Table ทั้งหมดถ้ายังไม่มี (เหมือน setup_db ของคุณ)
+        await conn.run_sync(Base.metadata.create_all)
+        print("✅ Successfully connected to PostgreSQL")
+
+    # test MinIO
+    try:
+        minio_service.client.list_buckets()
+        print("✅ Successfully connected to MinIO!")
+    except Exception as e:
+        print(f"❌ Failed to connect to MinIO: {e}")
+    
+    # เริ่มรัน Background Task
+    bg_task = asyncio.create_task(system_schedule_task())
+    
+    yield  # --- ช่วงที่ App รันปกติ ---
+
+    # [Shutdown]: ทำงานตอนปิด Server
+    bg_task.cancel() # ปิด Background Task
+    try:
+        await bg_task # รอให้หยุดรันตามลอจิกใน CancelledError
+    except asyncio.CancelledError:
+        pass
+        
+    await engine.dispose()
+    print("✅ System Exit.")
+
+
 
 app = FastAPI(
     title="CE68-22 Backend API",
     description="API for Project (Master-Agent Architecture)",
     version="1.0.0",
+    lifespan=lifespan,
+    root_path="/api"
 )
 
 # 2. ตั้งค่า CORS (สำคัญมาก! เพื่อให้ Next.js คุยกับ FastAPI ได้)
 origins = [
-    "http://localhost:3000",      # Next.js รันที่ port 3000
+    # For Local Development
+    "http://localhost:3000",
     "http://127.0.0.1:3000",
+    
+    # nginx reverse proxy
+    "http://localhost",      # Next.js รันที่ port 3000
+    "http://127.0.0.1",
+    "http://10.240.68.65",
+    "http://100.111.83.61",
+    "http://ad14eb44-0070-4ec8-8a76-6d204c46ade0.cloud.ce.kmitl.ac.th",
+    "http://herosuit3-pc.tail8a5063.ts.net"
 ]
 
 app.add_middleware(
@@ -22,15 +96,39 @@ app.add_middleware(
     allow_credentials=True,       # อนุญาตให้ส่ง Cookie/Token
     allow_methods=["*"],          # อนุญาตทุกท่า (GET, POST, PUT, DELETE)
     allow_headers=["*"],          # อนุญาตทุก Header
+    expose_headers=["Content-Length", "Content-Disposition"],
+)
+
+# Session (required by Authlib)
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.SESSION_SECRET_KEY,
 )
 
 # 3. ลงทะเบียน Router (เอา API Projects มาแปะเข้ากับ App หลัก)
 # prefix="/projects" แปลว่า URL จะเป็น http://localhost:8000/projects/...
 # tags=["Projects"] เอาไว้จัดหมวดหมู่ใน Swagger UI
 app.include_router(projects.router, prefix="/projects", tags=["Projects"])
+app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
+app.include_router(assets.router, prefix="/assets", tags=["Assets"])
+app.include_router(asset_credentials.router, prefix="/credentials", tags=["Credentials"])
+app.include_router(schedule.router, prefix="/schedule", tags=["Schedule"])
+app.include_router(workers.router, prefix="/workers", tags=["Workers"])
+app.include_router(access_keys.router, prefix="/access-keys", tags=["Access Keys"])
+app.include_router(pentest_log.router, prefix="/pentest-logs", tags=["Pentest Logs"])
+app.include_router(notification.router, prefix="/notification", tags=["Notification"])
+app.include_router(user.router, prefix="/user", tags=["User"])
 
+app.include_router(tag.router, prefix="/tags", tags=["Tags"])
+app.include_router(project_tags.router, prefix="/project-tags", tags=["Project Tags"])
 
+app.include_router(jobs.router, prefix="/jobs", tags=["Jobs"])
+
+app.include_router(vulnerabilities.router, prefix="/vulns", tags=["Vulnerabilities"])
+app.include_router(reports.router,prefix="/reports", tags=["Reports"])
+app.include_router(invitation.router, prefix="/invitations", tags=["Invitations"])
 # 4. Health Check Endpoint (เอาไว้ยิงเช็คว่า Server ตายหรือยัง)
+
 @app.get("/")
 def read_root():
     return {

@@ -1,0 +1,100 @@
+20:26:17 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/...
+20:26:17 [INFO] [Crawler] Starting Crawl on: http://localhost:4040/
+20:26:19 [INFO]      [+] Discovered: GET /api/Challenges ['name']
+20:26:19 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:26:19 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:26:19 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:26:19 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:26:20 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:26:53 [INFO]      [+] Discovered: GET / ['mat-input-1']
+20:26:53 [INFO]     [..] Extracting endpoints from JS files...
+20:26:53 [INFO]     [..] Triggering smart interactions to discover APIs...
+20:26:59 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:26:59 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:26:59 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:02 [INFO]      [+] Discovered: GET /contact ['mat-input-1']
+20:27:02 [INFO]     [..] Extracting endpoints from JS files...
+20:27:02 [INFO]     [..] Triggering smart interactions to discover APIs...
+20:27:05 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:05 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:05 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:08 [INFO]      [+] Discovered: GET /search ['mat-input-1']
+20:27:08 [INFO]     [..] Extracting endpoints from JS files...
+20:27:08 [INFO]     [..] Triggering smart interactions to discover APIs...
+20:27:11 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:11 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:11 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:14 [INFO]      [+] Discovered: GET /score-board ['mat-input-1']
+20:27:14 [INFO]     [..] Extracting endpoints from JS files...
+20:27:14 [INFO]     [..] Triggering smart interactions to discover APIs...
+20:27:16 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:16 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:16 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:20 [INFO]      [+] Discovered: GET /login ['mat-input-1']
+20:27:20 [INFO]     [..] Extracting endpoints from JS files...
+20:27:20 [INFO]     [..] Triggering smart interactions to discover APIs...
+20:27:22 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:22 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:22 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:25 [INFO]      [+] Discovered: GET /about ['mat-input-1']
+20:27:25 [INFO]     [..] Extracting endpoints from JS files...
+20:27:25 [INFO]     [..] Triggering smart interactions to discover APIs...
+20:27:27 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:27 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:27 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+20:27:31 [INFO]      [+] Discovered: GET /photo-wall ['mat-input-1']
+20:27:31 [INFO]     [..] Extracting endpoints from JS files...
+20:27:31 [INFO]     [..] Triggering smart interactions to discover APIs...
+20:27:33 [INFO] [ScanEngine] Discovery finished. Unique targets found: 8
+20:27:33 [INFO] --- XSS Scan on: http://localhost:4040/api/Challenges (GET) ---
+20:27:33 [INFO] [XSS] Scanning GET on http://localhost:4040/api/Challenges (Type: form)
+20:27:33 [INFO]     -> Analyzing: name
+20:27:33 [INFO] --- XSS Scan on: http://localhost:4040/ (GET) ---
+20:27:33 [INFO] [XSS] Scanning GET on http://localhost:4040/ (Type: form)
+20:27:33 [INFO]     -> Analyzing: mat-input-1
+20:27:33 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/
+20:27:37 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+20:27:37 [INFO]     -> Testing Parameter: mat-input-1
+20:27:37 [INFO]        [+] Found target via selector: #mat-input-1
+20:27:37 [INFO] --- XSS Scan on: http://localhost:4040/contact (GET) ---
+20:27:37 [INFO] [XSS] Scanning GET on http://localhost:4040/contact (Type: form)
+20:27:37 [INFO]     -> Analyzing: mat-input-1
+20:27:37 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/contact
+20:27:43 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+20:27:43 [INFO]     -> Testing Parameter: mat-input-1
+20:27:43 [INFO]        [+] Found target via selector: #mat-input-1
+20:27:44 [INFO] --- XSS Scan on: http://localhost:4040/search (GET) ---
+20:27:44 [INFO] [XSS] Scanning GET on http://localhost:4040/search (Type: form)
+20:27:44 [INFO]     -> Analyzing: mat-input-1
+20:27:44 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/search
+20:27:48 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+20:27:48 [INFO]     -> Testing Parameter: mat-input-1
+20:27:48 [INFO]        [+] Found target via selector: #mat-input-1
+20:27:48 [INFO] --- XSS Scan on: http://localhost:4040/score-board (GET) ---
+20:27:48 [INFO] [XSS] Scanning GET on http://localhost:4040/score-board (Type: form)
+20:27:48 [INFO]     -> Analyzing: mat-input-1
+20:27:48 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/score-board
+20:27:53 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+20:27:53 [INFO]     -> Testing Parameter: mat-input-1
+20:27:53 [INFO]        [+] Found target via selector: #mat-input-1
+20:27:54 [INFO] --- XSS Scan on: http://localhost:4040/login (GET) ---
+20:27:54 [INFO] [XSS] Scanning GET on http://localhost:4040/login (Type: form)
+20:27:54 [INFO]     -> Analyzing: mat-input-1
+20:27:54 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/login
+20:27:58 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+20:27:58 [INFO]     -> Testing Parameter: mat-input-1
+20:27:58 [INFO]        [+] Found target via selector: #mat-input-1
+20:27:59 [INFO] --- XSS Scan on: http://localhost:4040/about (GET) ---
+20:27:59 [INFO] [XSS] Scanning GET on http://localhost:4040/about (Type: form)
+20:27:59 [INFO]     -> Analyzing: mat-input-1
+20:27:59 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/about
+20:28:03 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+20:28:03 [INFO]     -> Testing Parameter: mat-input-1
+20:28:03 [INFO]        [+] Found target via selector: #mat-input-1
+20:28:03 [INFO] --- XSS Scan on: http://localhost:4040/photo-wall (GET) ---
+20:28:03 [INFO] [XSS] Scanning GET on http://localhost:4040/photo-wall (Type: form)
+20:28:03 [INFO]     -> Analyzing: mat-input-1
+20:28:03 [INFO] [*] Starting Advanced DOM Scan on: http://localhost:4040/photo-wall
+20:28:08 [INFO]        [+] Starting SPA-Aware Fragment Fuzzing...
+20:28:08 [INFO]     -> Testing Parameter: mat-input-1
+20:28:08 [INFO]        [+] Found target via selector: #mat-input-1

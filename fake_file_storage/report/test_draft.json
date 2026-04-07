@@ -1,0 +1,304 @@
+{
+  "report_metadata": {
+    "report_name": "test",
+    "created_at": "2026-03-07T05:35:48.135630",
+    "file_type": "json_draft"
+  },
+  "context": {
+    "project_name": "Enterprise API Shield",
+    "job_id": "JOB-202603070535",
+    "job_started_date": "01/01/2026",
+    "job_ended_date": "07/03/2026",
+    "scanner_name": "My Security Scanner",
+    "support_email": "support@example.com",
+    "total_vulns": 8,
+    "total_asset": 7,
+    "critical_cnt": 3,
+    "high_cnt": 1,
+    "medium_cnt": 3,
+    "low_cnt": 1,
+    "efficiency": "75"
+  },
+  "sections": [
+    {
+      "id": "cover",
+      "title": "หน้าปก",
+      "is_editable": true,
+      "content": [
+        {
+          "label": "โครงการ (Project):",
+          "value": "Enterprise API Shield"
+        },
+        {
+          "label": "หมายเลขเอกสาร (Job ID):",
+          "value": "JOB-202603070535"
+        },
+        {
+          "label": "วันที่ทดสอบ:",
+          "value": "01/01/2026 – 07/03/2026"
+        }
+      ]
+    },
+    {
+      "id": "executive_summary",
+      "title": "1. บทสรุปผู้บริหาร (Executive Summary)",
+      "is_editable": true,
+      "sub_sections": [
+        {
+          "id": "1.1",
+          "title": "1.1 วัตถุประสงค์และภาพรวมการดำเนินงาน",
+          "text": "การทดสอบเจาะระบบ (Penetration Testing) สำหรับโครงการ Enterprise API Shield มีวัตถุประสงค์หลักเพื่อประเมินระดับความมั่นคงปลอดภัยและค้นหาช่องโหว่เชิงรุกที่อาจส่งผลกระทบต่อการดำเนินธุรกิจ โดยอาศัยเทคโนโลยีการตรวจสอบอัตโนมัติจากระบบ My Security Scanner ดำเนินการในรูปแบบ Gray Box Testing เพื่อจำลองสถานการณ์การโจมตีจากผู้ใช้งานที่ได้รับสิทธิ์การเข้าถึงบางส่วน"
+        },
+        {
+          "id": "1.2",
+          "title": "1.2 สรุปสถานะความเสี่ยงตามระดับความรุนแรง",
+          "text": "จากากรประเมินเชิงเทคนิค ระบบตรวจพบช่องโหว่จำนวนรวมทั้งหมด 8 รายการ จากจำนวนสินทรัพย์ (Asset) ทั้งหมด 7 รายการ โดยสามารถจำแนกตามเกณฑ์ความรุนแรงตาม CVSS v3.1 ได้ ดังนี้",
+          "counts": [
+            "Critical (วิกฤต): 3 ข้อ",
+            "High (สูง): 1 ข้อ",
+            "Medium (กลาง): 3 ข้อ",
+            "Low (ต่ำ): 1 ข้อ"
+          ]
+        },
+        {
+          "id": "1.4",
+          "title": "1.4 สรุปผลการประเมินรายสินทรัพย์",
+          "description": "ตารางด้านล่างแสดงรายการสินทรัพย์ดิจิทัล (Assets) ที่อยู่ในขอบเขตการทดสอบ พร้อมสถานะการดำเนินงานปัจจุบัน:",
+          "content_type": "table",
+          "rows": [
+            {
+              "asset_id": "AS-001",
+              "asset_name": "Test Edit Asset to Delete Credential",
+              "asset_desc": "",
+              "target": "www.test.xyz",
+              "hc_cnt": 0,
+              "status": "URL"
+            },
+            {
+              "asset_id": "AS-002",
+              "asset_name": "OWASP Juice Shop",
+              "asset_desc": "",
+              "target": "http://localhost:4040/",
+              "hc_cnt": 0,
+              "status": "URL"
+            },
+            {
+              "asset_id": "AS-003",
+              "asset_name": "DVWA",
+              "asset_desc": "",
+              "target": "http://localhost:4050",
+              "hc_cnt": 0,
+              "status": "URL"
+            },
+            {
+              "asset_id": "AS-004",
+              "asset_name": "Production API Gateway",
+              "asset_desc": "",
+              "target": "https://api.enterprise.com",
+              "hc_cnt": 0,
+              "status": "URL"
+            },
+            {
+              "asset_id": "AS-005",
+              "asset_name": "Customer Database Server",
+              "asset_desc": "",
+              "target": "10.0.1.55",
+              "hc_cnt": 0,
+              "status": "IP"
+            },
+            {
+              "asset_id": "AS-006",
+              "asset_name": "Staging Web Portal",
+              "asset_desc": "",
+              "target": "https://staging.enterprise.com",
+              "hc_cnt": 0,
+              "status": "URL"
+            },
+            {
+              "asset_id": "AS-007",
+              "asset_name": "GuardianLeaks",
+              "asset_desc": "",
+              "target": "https://pentest-ground.com:81/",
+              "hc_cnt": 0,
+              "status": "URL"
+            }
+          ]
+        },
+        {
+          "id": "1.5",
+          "title": "1.5 ข้อเสนอแนะเชิงกลยุทธ์สำหรับผู้บริหาร",
+          "text": "เพื่อให้ระดับความมั่นคงปลอดภัยอยู่ในเกณฑ์มาตรฐาน องค์กรควรพิจารณาดำเนินการดังนี้:",
+          "recommendations": [
+            "ระยะสั้น: มอบหมายผู้รับผิดชอบ (Assignee) เข้าแก้ไขช่องโหว่ระดับวิกฤตและระดับสูง พร้อมทั้งทำการทดสอบซ้ำ (Re-testing) เพื่อยืนยันผลการปิดช่องโหว่",
+            "ระยะกลาง: บูรณาการระบบตรวจสอบความปลอดภัยอัตโนมัติเข้ากับวงจรการพัฒนาซอฟต์แวร์ (DevSecOps) เพื่อตรวจพบความบกพร่องตั้งแต่ระยะเริ่มต้น",
+            "ระยะยาว: พัฒนาทักษะบุคลากรด้าน Security Coding และปรับปรุงนโยบายความมั่นคงปลอดภัยสารสนเทศตามมาตรฐาน ISO/IEC 27001 หรือ NIST Framework"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "technical_findings",
+      "title": "3. รายละเอียดผลการทดสอบทางเทคนิค",
+      "is_editable": true,
+      "intro": "ข้อมูลในส่วนนี้จะแสดงรายละเอียดเชิงลึกของแต่ละช่องโหว่ที่ระบบ My Security Scanner ตรวจพบ โดยโครงสร้างของรายงานถูกออกแบบมาเพื่อรองรับกระบวนการทำงานร่วมกัน...",
+      "items": [
+        {
+          "vuln_id": "V-001",
+          "vuln_type": "SQL Injection",
+          "severity": "CRITICAL",
+          "cvss_score": 9.8,
+          "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "status": "wont_fix",
+          "dev_name": "Sompong Kean-code",
+          "tester_name": "Somying Rakdee",
+          "asset_related": "AS-002",
+          "target": "http://example.com/api/login",
+          "parameter": "username",
+          "description_from_library": "พบช่องโหว่ SQL Injection ซึ่งเกิดจากการที่แอปพลิเคชันรับค่าจากผู้ใช้ไปรวมเข้ากับ SQL Query โดยตรง ทำให้ผู้โจมตีสามารถแทรกคำสั่งเพื่อขโมยข้อมูลหรือควบคุมฐานข้อมูลได้",
+          "payload": "",
+          "curl_command": "",
+          "evidence": null,
+          "reccommendation_from_library": "1. ใช้ Prepared Statements หรือ Parameterized Queries ทุกครั้ง\n2. ตรวจสอบข้อมูลนำเข้า (Input Validation) ตามรูปแบบที่อนุญาตเท่านั้น\n3. จำกัดสิทธิ์ของผู้ใช้งานฐานข้อมูล (Least Privilege)"
+        },
+        {
+          "vuln_id": "V-002",
+          "vuln_type": "Reflected Cross-Site Scripting (XSS)",
+          "severity": "HIGH",
+          "cvss_score": 6.1,
+          "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+          "status": "wont_fix",
+          "dev_name": "Sompong Kean-code",
+          "tester_name": "Somying Rakdee",
+          "asset_related": "AS-002",
+          "target": "http://example.com/profile",
+          "parameter": "user_id",
+          "description_from_library": "พบช่องโหว่ Reflected XSS โดยแอปพลิเคชันนำข้อมูลจากพารามิเตอร์ใน URL ไปแสดงผลบนหน้าเว็บทันทีโดยไม่มีการเข้ารหัส (Encoding) ทำให้ผู้โจมตีสามารถรัน Script บนเบราว์เซอร์ของเหยื่อได้",
+          "payload": "",
+          "curl_command": "",
+          "evidence": null,
+          "reccommendation_from_library": "1. ทำ Context-Aware Output Encoding (เช่น เปลี่ยน < เป็น &lt;)\n2. ตั้งค่า HTTP Header 'Content-Security-Policy' (CSP) เพื่อจำกัดการรัน Script\n3. ใช้ Flag 'HttpOnly' สำหรับ Cookies เพื่อป้องกันการขโมย Session"
+        },
+        {
+          "vuln_id": "V-003",
+          "vuln_type": "Reflected Cross-Site Scripting (XSS)",
+          "severity": "MEDIUM",
+          "cvss_score": 6.1,
+          "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+          "status": "open",
+          "dev_name": "Somchai Jaidee",
+          "tester_name": "Somying Rakdee",
+          "asset_related": "AS-002",
+          "target": "http://localhost:4040/",
+          "parameter": "URL_FRAGMENT",
+          "description_from_library": "พบช่องโหว่ Reflected XSS โดยแอปพลิเคชันนำข้อมูลจากพารามิเตอร์ใน URL ไปแสดงผลบนหน้าเว็บทันทีโดยไม่มีการเข้ารหัส (Encoding) ทำให้ผู้โจมตีสามารถรัน Script บนเบราว์เซอร์ของเหยื่อได้",
+          "payload": "#/search?q=&lt;img src=x onerror=alert(1)&gt;",
+          "curl_command": "curl -X GET &#x27;http://localhost:4040/?URL_FRAGMENT=#/search?q=&lt;img src=x onerror=alert(1)&gt;&#x27;",
+          "evidence": "fake_file_storage/img/job_40/finding_3/evidence_505006fd781d43e9bf47a0be800bd08a.png",
+          "reccommendation_from_library": "1. ทำ Context-Aware Output Encoding (เช่น เปลี่ยน < เป็น &lt;)\n2. ตั้งค่า HTTP Header 'Content-Security-Policy' (CSP) เพื่อจำกัดการรัน Script\n3. ใช้ Flag 'HttpOnly' สำหรับ Cookies เพื่อป้องกันการขโมย Session"
+        },
+        {
+          "vuln_id": "V-004",
+          "vuln_type": "SQL Injection",
+          "severity": "CRITICAL",
+          "cvss_score": 9.8,
+          "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "status": "open",
+          "dev_name": null,
+          "tester_name": null,
+          "asset_related": "AS-004",
+          "target": "https://api.enterprise.com/v1/user/profile",
+          "parameter": "user_id",
+          "description_from_library": "พบช่องโหว่ SQL Injection ซึ่งเกิดจากการที่แอปพลิเคชันรับค่าจากผู้ใช้ไปรวมเข้ากับ SQL Query โดยตรง ทำให้ผู้โจมตีสามารถแทรกคำสั่งเพื่อขโมยข้อมูลหรือควบคุมฐานข้อมูลได้",
+          "payload": "",
+          "curl_command": "",
+          "evidence": null,
+          "reccommendation_from_library": "1. ใช้ Prepared Statements หรือ Parameterized Queries ทุกครั้ง\n2. ตรวจสอบข้อมูลนำเข้า (Input Validation) ตามรูปแบบที่อนุญาตเท่านั้น\n3. จำกัดสิทธิ์ของผู้ใช้งานฐานข้อมูล (Least Privilege)"
+        },
+        {
+          "vuln_id": "V-005",
+          "vuln_type": "Reflected Cross-Site Scripting (XSS)",
+          "severity": "MEDIUM",
+          "cvss_score": 6.1,
+          "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+          "status": "fixed",
+          "dev_name": null,
+          "tester_name": null,
+          "asset_related": "AS-004",
+          "target": "https://api.enterprise.com/v1/feedback",
+          "parameter": "comment",
+          "description_from_library": "พบช่องโหว่ Reflected XSS โดยแอปพลิเคชันนำข้อมูลจากพารามิเตอร์ใน URL ไปแสดงผลบนหน้าเว็บทันทีโดยไม่มีการเข้ารหัส (Encoding) ทำให้ผู้โจมตีสามารถรัน Script บนเบราว์เซอร์ของเหยื่อได้",
+          "payload": "",
+          "curl_command": "",
+          "evidence": null,
+          "reccommendation_from_library": "1. ทำ Context-Aware Output Encoding (เช่น เปลี่ยน < เป็น &lt;)\n2. ตั้งค่า HTTP Header 'Content-Security-Policy' (CSP) เพื่อจำกัดการรัน Script\n3. ใช้ Flag 'HttpOnly' สำหรับ Cookies เพื่อป้องกันการขโมย Session"
+        },
+        {
+          "vuln_id": "V-006",
+          "vuln_type": "SQL Injection",
+          "severity": "CRITICAL",
+          "cvss_score": 9.8,
+          "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "status": "in_progress",
+          "dev_name": null,
+          "tester_name": null,
+          "asset_related": "AS-005",
+          "target": "10.0.1.55",
+          "parameter": "db_port",
+          "description_from_library": "พบช่องโหว่ SQL Injection ซึ่งเกิดจากการที่แอปพลิเคชันรับค่าจากผู้ใช้ไปรวมเข้ากับ SQL Query โดยตรง ทำให้ผู้โจมตีสามารถแทรกคำสั่งเพื่อขโมยข้อมูลหรือควบคุมฐานข้อมูลได้",
+          "payload": "",
+          "curl_command": "",
+          "evidence": null,
+          "reccommendation_from_library": "1. ใช้ Prepared Statements หรือ Parameterized Queries ทุกครั้ง\n2. ตรวจสอบข้อมูลนำเข้า (Input Validation) ตามรูปแบบที่อนุญาตเท่านั้น\n3. จำกัดสิทธิ์ของผู้ใช้งานฐานข้อมูล (Least Privilege)"
+        },
+        {
+          "vuln_id": "V-007",
+          "vuln_type": "DOM-based Cross-Site Scripting (XSS)",
+          "severity": "LOW",
+          "cvss_score": 6.1,
+          "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+          "status": "fixed",
+          "dev_name": null,
+          "tester_name": null,
+          "asset_related": "AS-005",
+          "target": "10.0.1.55",
+          "parameter": "N/A",
+          "description_from_library": "พบช่องโหว่ DOM XSS ซึ่งเกิดจากการที่ JavaScript ฝั่ง Client รับข้อมูลจากแหล่งที่ไม่ปลอดภัย (เช่น URL fragment) แล้วนำไปใส่ในฟังก์ชันที่เป็นอันตราย (Sink) โดยไม่มีการตรวจสอบ",
+          "payload": "",
+          "curl_command": "",
+          "evidence": null,
+          "reccommendation_from_library": "1. หลีกเลี่ยงการใช้ Sink ที่อันตราย เช่น innerHTML, eval(), document.write()\n2. ใช้ Property ที่ปลอดภัยกว่า เช่น .textContent หรือ .innerText\n3. ใช้ไลบรารีช่วยทำความสะอาดข้อมูล (Sanitization) เช่น DOMPurify"
+        },
+        {
+          "vuln_id": "V-008",
+          "vuln_type": "Reflected Cross-Site Scripting (XSS)",
+          "severity": "MEDIUM",
+          "cvss_score": 6.1,
+          "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+          "status": "open",
+          "dev_name": null,
+          "tester_name": null,
+          "asset_related": "AS-006",
+          "target": "https://staging.enterprise.com/search",
+          "parameter": "q",
+          "description_from_library": "พบช่องโหว่ Reflected XSS โดยแอปพลิเคชันนำข้อมูลจากพารามิเตอร์ใน URL ไปแสดงผลบนหน้าเว็บทันทีโดยไม่มีการเข้ารหัส (Encoding) ทำให้ผู้โจมตีสามารถรัน Script บนเบราว์เซอร์ของเหยื่อได้",
+          "payload": "",
+          "curl_command": "",
+          "evidence": null,
+          "reccommendation_from_library": "1. ทำ Context-Aware Output Encoding (เช่น เปลี่ยน < เป็น &lt;)\n2. ตั้งค่า HTTP Header 'Content-Security-Policy' (CSP) เพื่อจำกัดการรัน Script\n3. ใช้ Flag 'HttpOnly' สำหรับ Cookies เพื่อป้องกันการขโมย Session"
+        }
+      ]
+    },
+    {
+      "id": "appendix_methodology",
+      "title": "ภาคผนวก 1: รายละเอียดวิธีการและขั้นตอนการตรวจประเมิน",
+      "is_editable": false,
+      "text": "วิธีการตรวจประเมินและกระบวนการทดสอบอ้างอิงตามมาตรฐานสากล OWASP Top 10:2021 และ NIST SP 800-115 โดยมีการประยุกต์ใช้เทคโนโลยี Security Worker ในรูปแบบการทำงาน 4 ขั้นตอนหลัก ดังนี้",
+      "steps": [
+        "1. การรวบรวมข้อมูล (Information Gathering)",
+        "2. การระบุและวิเคราะห์ช่องโหว่ (Vulnerability Identification)",
+        "3. การทดสอบการบุกรุกเพื่อยืนยันผล (Exploitation & Verification)",
+        "4. การวิเคราะห์ผลและจัดทำรายงาน (Analysis & Documentation)"
+      ]
+    }
+  ]
+}

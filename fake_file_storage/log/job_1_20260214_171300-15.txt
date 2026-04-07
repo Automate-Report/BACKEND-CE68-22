@@ -1,0 +1,205 @@
+17:11:24 [INFO] [ScanEngine][Job 1] Starting Discovery Phase...
+17:11:24 [INFO] [Crawler] Starting Crawl on: http://testphp.vulnweb.com/search.php (Depth: 2)
+17:11:26 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/search.php (2 params)
+17:11:26 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/userinfo.php (5 params)
+17:11:27 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/disclaimer.php (2 params)
+17:11:27 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/guestbook.php (4 params)
+17:11:27 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/login.php (5 params)
+17:11:28 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/categories.php (2 params)
+17:11:29 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/cart.php (2 params)
+17:11:29 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/index.php (2 params)
+17:11:30 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/artists.php (2 params)
+17:11:30 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/signup.php (11 params)
+17:11:30 [INFO]      [+] Target Discovered: GET http://testphp.vulnweb.com/listproducts.php (2 params)
+17:11:31 [INFO] [ScanEngine][Job 1] Discovery finished. Unique targets: 11
+17:11:31 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/search.php ---
+17:11:31 [INFO] [ScanEngine][Job 1] Running Reflected Scan...
+17:11:31 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/search.php (Type: form)
+17:11:31 [INFO]     -> Analyzing: searchFor
+17:11:32 [INFO]     -> Analyzing: goButton
+17:11:32 [INFO] [ScanEngine][Job 1] Running DOM Scan...
+17:11:32 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/search.php
+17:11:35 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+17:11:41 [INFO]     -> Testing Parameter: searchFor
+17:11:41 [INFO]        [+] Found target via selector: [name='searchFor']
+17:11:43 [INFO]        [..] Alert detected! Waiting for evidence capture...
+17:11:45 [INFO]        [+] Vulnerability Recorded for searchFor using <script>alert(1)</script>
+17:11:45 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/userinfo.php ---
+17:11:45 [INFO] [ScanEngine][Job 1] Running Reflected Scan...
+17:11:45 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/userinfo.php (Type: form)
+17:11:45 [INFO]     -> Analyzing: uname
+17:11:46 [INFO]     -> Analyzing: pass
+17:11:46 [INFO]     -> Analyzing: anonymous_input_3
+17:11:47 [INFO]     -> Analyzing: searchFor
+17:11:47 [INFO]     -> Analyzing: goButton
+17:11:47 [INFO] [ScanEngine][Job 1] Running DOM Scan...
+17:11:47 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/userinfo.php
+17:11:50 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+17:11:59 [INFO]     -> Testing Parameter: uname
+17:11:59 [INFO]        [+] Found target via selector: [name='uname']
+17:12:30 [INFO]     -> Testing Parameter: pass
+17:12:30 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:30 [INFO]     -> Testing Parameter: anonymous_input_3
+17:12:30 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:30 [INFO]     -> Testing Parameter: searchFor
+17:12:30 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:30 [INFO]     -> Testing Parameter: goButton
+17:12:30 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:30 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/disclaimer.php ---
+17:12:30 [INFO] [ScanEngine][Job 1] Running Reflected Scan...
+17:12:30 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/disclaimer.php (Type: form)
+17:12:30 [INFO]     -> Analyzing: searchFor
+17:12:30 [INFO]     -> Analyzing: goButton
+17:12:30 [INFO] [ScanEngine][Job 1] Running DOM Scan...
+17:12:30 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/disclaimer.php
+17:12:33 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+17:12:35 [INFO]     -> Testing Parameter: searchFor
+17:12:35 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:35 [INFO]     -> Testing Parameter: goButton
+17:12:35 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:35 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/guestbook.php ---
+17:12:35 [INFO] [ScanEngine][Job 1] Running Reflected Scan...
+17:12:35 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/guestbook.php (Type: form)
+17:12:35 [INFO]     -> Analyzing: text
+17:12:36 [INFO]     -> Analyzing: submit
+17:12:36 [INFO]     -> Analyzing: searchFor
+17:12:36 [INFO]     -> Analyzing: goButton
+17:12:36 [INFO] [ScanEngine][Job 1] Running DOM Scan...
+17:12:36 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/guestbook.php
+17:12:38 [ERROR]        [!] Navigation timeout, but continuing...
+17:12:38 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+17:12:38 [INFO]     -> Testing Parameter: text
+17:12:38 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:38 [INFO]     -> Testing Parameter: submit
+17:12:38 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:38 [INFO]     -> Testing Parameter: searchFor
+17:12:38 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:38 [INFO]     -> Testing Parameter: goButton
+17:12:38 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:38 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/login.php ---
+17:12:38 [INFO] [ScanEngine][Job 1] Running Reflected Scan...
+17:12:38 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/login.php (Type: form)
+17:12:38 [INFO]     -> Analyzing: uname
+17:12:39 [INFO]     -> Analyzing: pass
+17:12:39 [INFO]     -> Analyzing: anonymous_input_3
+17:12:39 [INFO]     -> Analyzing: searchFor
+17:12:39 [INFO]     -> Analyzing: goButton
+17:12:40 [INFO] [ScanEngine][Job 1] Running DOM Scan...
+17:12:40 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/login.php
+17:12:41 [ERROR]        [!] Navigation timeout, but continuing...
+17:12:41 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+17:12:41 [INFO]     -> Testing Parameter: uname
+17:12:41 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:41 [INFO]     -> Testing Parameter: pass
+17:12:41 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:41 [INFO]     -> Testing Parameter: anonymous_input_3
+17:12:41 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:41 [INFO]     -> Testing Parameter: searchFor
+17:12:41 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:41 [INFO]     -> Testing Parameter: goButton
+17:12:41 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:42 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/categories.php ---
+17:12:42 [INFO] [ScanEngine][Job 1] Running Reflected Scan...
+17:12:42 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/categories.php (Type: form)
+17:12:42 [INFO]     -> Analyzing: searchFor
+17:12:42 [INFO]     -> Analyzing: goButton
+17:12:42 [INFO] [ScanEngine][Job 1] Running DOM Scan...
+17:12:42 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/categories.php
+17:12:44 [ERROR]        [!] Navigation timeout, but continuing...
+17:12:44 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+17:12:44 [INFO]     -> Testing Parameter: searchFor
+17:12:44 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:44 [INFO]     -> Testing Parameter: goButton
+17:12:44 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:44 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/cart.php ---
+17:12:44 [INFO] [ScanEngine][Job 1] Running Reflected Scan...
+17:12:44 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/cart.php (Type: form)
+17:12:44 [INFO]     -> Analyzing: searchFor
+17:12:44 [INFO]     -> Analyzing: goButton
+17:12:44 [INFO] [ScanEngine][Job 1] Running DOM Scan...
+17:12:44 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/cart.php
+17:12:46 [ERROR]        [!] Navigation timeout, but continuing...
+17:12:46 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+17:12:46 [INFO]     -> Testing Parameter: searchFor
+17:12:46 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:46 [INFO]     -> Testing Parameter: goButton
+17:12:46 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:46 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/index.php ---
+17:12:46 [INFO] [ScanEngine][Job 1] Running Reflected Scan...
+17:12:46 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/index.php (Type: form)
+17:12:46 [INFO]     -> Analyzing: searchFor
+17:12:46 [INFO]     -> Analyzing: goButton
+17:12:46 [INFO] [ScanEngine][Job 1] Running DOM Scan...
+17:12:46 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/index.php
+17:12:48 [ERROR]        [!] Navigation timeout, but continuing...
+17:12:48 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+17:12:48 [INFO]     -> Testing Parameter: searchFor
+17:12:48 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:48 [INFO]     -> Testing Parameter: goButton
+17:12:48 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:48 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/artists.php ---
+17:12:48 [INFO] [ScanEngine][Job 1] Running Reflected Scan...
+17:12:48 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/artists.php (Type: form)
+17:12:48 [INFO]     -> Analyzing: searchFor
+17:12:48 [INFO]     -> Analyzing: goButton
+17:12:48 [INFO] [ScanEngine][Job 1] Running DOM Scan...
+17:12:48 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/artists.php
+17:12:51 [ERROR]        [!] Navigation timeout, but continuing...
+17:12:51 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+17:12:51 [INFO]     -> Testing Parameter: searchFor
+17:12:51 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:51 [INFO]     -> Testing Parameter: goButton
+17:12:51 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:51 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/signup.php ---
+17:12:51 [INFO] [ScanEngine][Job 1] Running Reflected Scan...
+17:12:51 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/signup.php (Type: form)
+17:12:51 [INFO]     -> Analyzing: uuname
+17:12:51 [INFO]     -> Analyzing: upass
+17:12:51 [INFO]     -> Analyzing: upass2
+17:12:52 [INFO]     -> Analyzing: urname
+17:12:52 [INFO]     -> Analyzing: ucc
+17:12:52 [INFO]     -> Analyzing: uemail
+17:12:52 [INFO]     -> Analyzing: uphone
+17:12:52 [INFO]     -> Analyzing: uaddress
+17:12:53 [INFO]     -> Analyzing: signup
+17:12:53 [INFO]     -> Analyzing: searchFor
+17:12:53 [INFO]     -> Analyzing: goButton
+17:12:53 [INFO] [ScanEngine][Job 1] Running DOM Scan...
+17:12:53 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/signup.php
+17:12:55 [ERROR]        [!] Navigation timeout, but continuing...
+17:12:55 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+17:12:55 [INFO]     -> Testing Parameter: uuname
+17:12:55 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:55 [INFO]     -> Testing Parameter: upass
+17:12:55 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:55 [INFO]     -> Testing Parameter: upass2
+17:12:55 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:55 [INFO]     -> Testing Parameter: urname
+17:12:55 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:55 [INFO]     -> Testing Parameter: ucc
+17:12:55 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:55 [INFO]     -> Testing Parameter: uemail
+17:12:55 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:55 [INFO]     -> Testing Parameter: uphone
+17:12:55 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:55 [INFO]     -> Testing Parameter: uaddress
+17:12:55 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:55 [INFO]     -> Testing Parameter: signup
+17:12:55 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:55 [INFO]     -> Testing Parameter: searchFor
+17:12:55 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:55 [INFO]     -> Testing Parameter: goButton
+17:12:55 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:55 [INFO] [ScanEngine] --- Analyzing: http://testphp.vulnweb.com/listproducts.php ---
+17:12:55 [INFO] [ScanEngine][Job 1] Running Reflected Scan...
+17:12:55 [INFO] [XSS] Scanning GET on http://testphp.vulnweb.com/listproducts.php (Type: form)
+17:12:55 [INFO]     -> Analyzing: searchFor
+17:12:56 [INFO]     -> Analyzing: goButton
+17:12:56 [INFO] [ScanEngine][Job 1] Running DOM Scan...
+17:12:56 [INFO] [*] Starting DOM Scan on: http://testphp.vulnweb.com/listproducts.php
+17:12:57 [ERROR]        [!] Navigation timeout, but continuing...
+17:12:57 [INFO]        [+] Starting URL Fragment Fuzzing (Source-based XSS)...
+17:12:57 [INFO]     -> Testing Parameter: searchFor
+17:12:57 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed
+17:12:57 [INFO]     -> Testing Parameter: goButton
+17:12:57 [ERROR]        [-] Fuzzing error: Locator.all: Target page, context or browser has been closed

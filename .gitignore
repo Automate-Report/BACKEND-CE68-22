@@ -1,3 +1,17 @@
+.worker_secret
+.venv/
+*.exe
+*.dll
+*.zip
+app/static/bin/
+**/chrome.dll
+**/*.exe
+**/*.dll
+.local-browsers/
+# บล็อกโฟลเดอร์ Playwright และ Browser
+**/.local-browsers/
+**/playwright/driver/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

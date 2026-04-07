@@ -1,0 +1,59 @@
+import json
+import os
+import io
+import zipfile
+
+from datetime import datetime
+from fastapi import HTTPException
+
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.access_keys import AccessKey
+
+from app.core import security
+
+
+class AccessKeyService:
+
+    async def create_access_key(self, db: AsyncSession):
+        """Service: สร้าง API Key"""
+        new_access_key_db = AccessKey(
+            key = security.generate_access_key(),
+        )
+
+        try:
+            db.add(new_access_key_db)
+            await db.commit()
+
+            await db.refresh(new_access_key_db)
+        except Exception as e:
+            await db.rollback()
+            print(f"DEBUG ERROR: {e}")
+            raise HTTPException(status_code=500, detail="Could not access key")
+
+        return new_access_key_db
+    
+    async def get_access_key_by_id(self, id: int, db: AsyncSession):
+        query = sa.select(AccessKey).where(AccessKey.id == id)
+        result = await db.execute(query)
+        access_key = result.scalar_one_or_none()
+
+        if not access_key:
+            return None
+            
+        return access_key
+    
+    async def delete_access_key_by_id(self, id: int, db: AsyncSession):
+        query = sa.select(AccessKey).where(AccessKey.id == id)
+        result = await db.execute(query)
+        access_key = result.scalar_one_or_none()
+
+        if not access_key:
+            return False
+        
+        await db.delete(access_key)
+        await db.commit()
+        return True
+   
+
+access_key_service = AccessKeyService()

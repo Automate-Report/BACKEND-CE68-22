@@ -1,0 +1,39 @@
+02:20:43 [INFO] ============================================================
+02:20:43 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+02:20:43 [INFO] ============================================================
+02:20:43 [INFO] 🔍 Testing connectivity to http://localhost:4050...
+02:20:43 [INFO] ✅ Target is reachable! (Status: 200)
+02:20:43 [INFO] [+] Starting Public Discovery...
+02:20:43 [INFO] 🚀 Starting Async Crawl: http://localhost:4050
+02:20:47 [INFO]     [..] Executing behavioral exploration...
+02:20:49 [INFO]     [!] Injected & Pressed Enter on input 0
+02:20:51 [INFO]     [!] Injected & Pressed Enter on input 1
+02:20:54 [INFO]     [+] Target Saved: GET http://localhost:4050
+02:20:55 [INFO] ============================================================
+02:20:55 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+02:20:55 [INFO] ============================================================
+02:20:56 [INFO] 🌐 Loading target page: http://localhost:4050
+02:20:56 [INFO] ✅ Page loaded successfully
+02:20:57 [INFO] 🔨 Attempting aggressive login (SQLi bypass, default creds)...
+02:20:57 [INFO] [Auth] 🛡️ Attempting Aggressive Entry at http://localhost:4050/login.php
+02:21:57 [INFO] [Auth] 🔑 Testing default credentials...
+02:21:58 [INFO] ✅ Aggressive login successful!
+02:21:58 [INFO] 🍪 Captured 2 session cookies
+02:21:58 [INFO] [+] Starting Authenticated Discovery...
+02:21:58 [INFO] 🚀 Starting Async Crawl: http://localhost:4050
+02:22:02 [INFO]     [..] Executing behavioral exploration...
+02:22:04 [INFO]     [!] Injected & Pressed Enter on input 0
+02:22:06 [INFO]     [!] Injected & Pressed Enter on input 1
+02:22:09 [INFO] ============================================================
+02:22:09 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+02:22:09 [INFO] ============================================================
+02:22:09 [INFO] 📊 Deduplication: 2 -> 1 unique targets
+02:22:09 [INFO] [ScanEngine] Syncing session state to scanners...
+02:22:09 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+02:22:09 [INFO] 💉 Running XSS scans on 1 endpoints...
+02:22:09 [INFO] [1/1] XSS Scan: GET http://localhost:4050
+02:22:09 [INFO] [XSS] Scanning GET on http://localhost:4050 (Type: form)
+02:22:09 [INFO]     -> Analyzing: username
+02:22:10 [INFO]     -> Analyzing: password
+02:22:10 [INFO]     -> Analyzing: login
+02:22:10 [INFO] ✅ No vulnerabilities found

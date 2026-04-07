@@ -1,0 +1,72 @@
+13:40:03 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+13:40:03 [INFO] [Crawler] Starting Crawl on: http://localhost:4040/#/
+13:40:05 [INFO]      [+] Discovered: GET /api/Challenges ['name']
+13:40:05 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:05 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:05 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:05 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:05 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:39 [INFO]      [+] Discovered: GET / ['mat-input-1']
+13:40:39 [INFO]     [..] Extracting endpoints from JS files...
+13:40:39 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:40:42 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:42 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:42 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:45 [INFO]      [+] Discovered: GET /search ['mat-input-1']
+13:40:45 [INFO]     [..] Extracting endpoints from JS files...
+13:40:45 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:40:47 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:47 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:47 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:50 [INFO]      [+] Discovered: GET /login ['mat-input-1']
+13:40:50 [INFO]     [..] Extracting endpoints from JS files...
+13:40:50 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:40:51 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:51 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:52 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:55 [INFO]      [+] Discovered: GET /contact ['mat-input-1']
+13:40:55 [INFO]     [..] Extracting endpoints from JS files...
+13:40:55 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:40:56 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:56 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:40:56 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:41:00 [INFO]      [+] Discovered: GET /photo-wall ['mat-input-1']
+13:41:00 [INFO]     [..] Extracting endpoints from JS files...
+13:41:00 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:41:01 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:41:01 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:41:01 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:41:04 [INFO]      [+] Discovered: GET /about ['mat-input-1']
+13:41:04 [INFO]     [..] Extracting endpoints from JS files...
+13:41:04 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:41:06 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:41:06 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:41:06 [WARNING]     [!] Potential PII Leak (Email) found in API: http://localhost:4040/rest/admin/application-configuration
+13:41:09 [INFO]      [+] Discovered: GET /score-board ['mat-input-1']
+13:41:09 [INFO]     [..] Extracting endpoints from JS files...
+13:41:09 [INFO]     [..] Triggering smart interactions to discover APIs...
+13:41:11 [INFO] [ScanEngine] Discovery finished. Unique targets found: 8
+13:41:11 [INFO] --- SQLi Scan on: http://localhost:4040/api/Challenges (GET) ---
+13:41:11 [INFO] [SQLi] Scan: GET http://localhost:4040/api/Challenges
+13:41:11 [INFO]     -> Testing Parameter: name
+13:41:15 [INFO] --- SQLi Scan on: http://localhost:4040/#/ (GET) ---
+13:41:15 [INFO] [SQLi] Scan: GET http://localhost:4040/#/
+13:41:15 [INFO]     -> Testing Parameter: mat-input-1
+13:41:16 [INFO] --- SQLi Scan on: http://localhost:4040/search (GET) ---
+13:41:16 [INFO] [SQLi] Scan: GET http://localhost:4040/search
+13:41:16 [INFO]     -> Testing Parameter: mat-input-1
+13:41:19 [INFO] --- SQLi Scan on: http://localhost:4040/login (GET) ---
+13:41:19 [INFO] [SQLi] Scan: GET http://localhost:4040/login
+13:41:19 [INFO]     -> Testing Parameter: mat-input-1
+13:41:21 [INFO] --- SQLi Scan on: http://localhost:4040/contact (GET) ---
+13:41:21 [INFO] [SQLi] Scan: GET http://localhost:4040/contact
+13:41:21 [INFO]     -> Testing Parameter: mat-input-1
+13:41:23 [INFO] --- SQLi Scan on: http://localhost:4040/photo-wall (GET) ---
+13:41:23 [INFO] [SQLi] Scan: GET http://localhost:4040/photo-wall
+13:41:23 [INFO]     -> Testing Parameter: mat-input-1
+13:41:26 [INFO] --- SQLi Scan on: http://localhost:4040/about (GET) ---
+13:41:26 [INFO] [SQLi] Scan: GET http://localhost:4040/about
+13:41:26 [INFO]     -> Testing Parameter: mat-input-1
+13:41:28 [INFO] --- SQLi Scan on: http://localhost:4040/score-board (GET) ---
+13:41:28 [INFO] [SQLi] Scan: GET http://localhost:4040/score-board
+13:41:28 [INFO]     -> Testing Parameter: mat-input-1

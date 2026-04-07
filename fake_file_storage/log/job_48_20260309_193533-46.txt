@@ -1,0 +1,33 @@
+19:34:42 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/...
+19:34:42 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+19:34:44 [INFO] [*] Visiting: http://localhost:4040/ (Depth: 0)
+19:34:45 [INFO]     [+] Target Discovered: GET http://localhost:4040/socket.io/
+19:34:45 [INFO]     [+] Target Discovered: GET http://localhost:4040/api/Challenges/
+19:34:45 [INFO]     [+] Target Discovered: POST http://localhost:4040/socket.io/
+19:34:45 [INFO]     [+] Target Discovered: GET http://localhost:4040/socket.io/
+19:34:45 [WARNING]  [!] PII Leak (Email) detected: http://localhost:4040/rest/admin/application-configuration
+19:34:46 [INFO]     [..] Triggering smart interactions...
+19:34:51 [INFO] [*] Visiting: http://localhost:4040/photo-wall (Depth: 1)
+19:34:51 [INFO]     [+] Target Discovered: GET http://localhost:4040/photo-wall/socket.io/
+19:34:52 [INFO]     [..] Triggering smart interactions...
+19:34:57 [INFO] [*] Visiting: http://localhost:4040/about (Depth: 1)
+19:34:57 [INFO]     [+] Target Discovered: GET http://localhost:4040/about/socket.io/
+19:34:58 [INFO]     [..] Triggering smart interactions...
+19:35:04 [INFO] [*] Visiting: http://localhost:4040/search (Depth: 1)
+19:35:04 [INFO]     [+] Target Discovered: GET http://localhost:4040/search/socket.io/
+19:35:05 [INFO]     [..] Triggering smart interactions...
+19:35:10 [INFO] [*] Visiting: http://localhost:4040/contact (Depth: 1)
+19:35:11 [INFO]     [+] Target Discovered: GET http://localhost:4040/contact/socket.io/
+19:35:12 [INFO]     [..] Triggering smart interactions...
+19:35:17 [WARNING]  [!] PII Leak (Email) detected: http://localhost:4040/rest/products/1/reviews
+19:35:18 [INFO] [*] Visiting: http://localhost:4040/redirect?to=https://github.com/juice-shop/juice-shop (Depth: 1)
+19:35:20 [WARNING]  [!] PII Leak (Email) detected: https://github.com/juice-shop/juice-shop/tree-commit-info
+19:35:21 [INFO]     [+] Target Discovered: GET http://localhost:4040/redirect
+19:35:21 [INFO]     [..] Triggering smart interactions...
+19:35:21 [WARNING]  [!] PII Leak (Email) detected: https://github.com/juice-shop/juice-shop/overview-files/master
+19:35:24 [ERROR] [!] Failed to process http://localhost:4040/redirect?to=https://github.com/juice-shop/juice-shop: Page.evaluate: Target page, context or browser has been closed
+19:35:24 [INFO] [*] Visiting: http://localhost:4040/login (Depth: 1)
+19:35:25 [INFO]     [+] Target Discovered: GET http://localhost:4040/login/socket.io/
+19:35:26 [INFO]     [..] Triggering smart interactions...
+19:35:31 [INFO] [ScanEngine] Discovery finished. Unique targets found: 10
+19:35:31 [ERROR] ❌ Critical Error: object NoneType can't be used in 'await' expression

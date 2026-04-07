@@ -1,0 +1,53 @@
+20:50:16 [INFO] ============================================================
+20:50:16 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+20:50:16 [INFO] ============================================================
+20:50:16 [INFO] 🔍 Testing connectivity to http://localhost:4050...
+20:50:16 [INFO] ✅ Target is reachable! (Status: 200)
+20:50:16 [INFO] [+] Starting Public Discovery...
+20:50:16 [INFO] 🚀 Starting Async Crawl: http://localhost:4050
+20:50:21 [INFO]     [..] Executing behavioral exploration...
+20:50:23 [INFO]     [!] Injected & Pressed Enter on input 0
+20:50:24 [INFO]     [!] Injected & Pressed Enter on input 1
+20:50:27 [INFO]     [+] Target Saved: GET http://localhost:4050
+20:50:28 [INFO] ============================================================
+20:50:28 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+20:50:28 [INFO] ============================================================
+20:50:29 [INFO] 🌐 Loading target page: http://localhost:4050
+20:50:30 [INFO] ✅ Page loaded successfully
+20:50:30 [INFO] [Auth] Attempting Primary Login Method...
+20:50:30 [INFO] [Auth] 🔑 Testing Job Credentials...
+20:50:32 [INFO] ✅ Standard Login successful!
+20:50:32 [INFO] 🍪 Captured 2 session cookies
+20:50:32 [INFO] ✅ [Auth Success] Current URL: http://localhost:4050/index.php
+20:50:32 [INFO] [Crawler] 🍪 External cookies set. Total: 2
+20:50:32 [INFO] ============================================================
+20:50:32 [INFO] [PHASE 3] DEEP CRAWLING WITH SESSION...
+20:50:32 [INFO] Seed URL: http://localhost:4050/index.php
+20:50:32 [INFO] ============================================================
+20:50:32 [INFO] 🚀 Starting Async Crawl: http://localhost:4050/index.php
+20:50:33 [INFO] [Crawler] 🍪 Context initialized with 2 cookies
+20:50:36 [INFO]     [..] Executing behavioral exploration...
+20:50:49 [INFO]     [+] Target Saved: GET http://localhost:4050/index.php
+20:50:50 [INFO] ============================================================
+20:50:50 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+20:50:50 [INFO] ============================================================
+20:50:50 [INFO] 📊 Deduplication: 5 -> 3 unique targets
+20:50:50 [INFO] [ScanEngine] Syncing session state to scanners...
+20:50:50 [INFO] [Requester] 🍪 Cookies injected from dictionary.
+20:50:50 [INFO] 🔓 Running SQL Injection scans on 3 endpoints...
+20:50:50 [INFO] [1/3] SQLi Scan: GET http://localhost:4050
+20:50:50 [INFO] [SQLi] Scan: GET http://localhost:4050
+20:50:50 [INFO]     -> Testing Parameter: username
+20:50:51 [INFO]     -> Testing Parameter: password
+20:50:53 [INFO]     -> Testing Parameter: login
+20:50:54 [INFO] [2/3] SQLi Scan: GET http://localhost:4050/index.php
+20:50:54 [INFO] [SQLi] Scan: GET http://localhost:4050/index.php
+20:50:54 [INFO]     -> Testing Parameter: id
+20:50:55 [INFO]     -> Testing Parameter: submit
+20:50:56 [INFO]     -> Testing Parameter: field_2
+20:50:58 [INFO]     -> Testing Parameter: field_3
+20:50:59 [INFO] [3/3] SQLi Scan: GET http://localhost:4050/vulnerabilities/sqli/
+20:50:59 [INFO] [SQLi] Scan: GET http://localhost:4050/vulnerabilities/sqli/
+20:50:59 [INFO]     -> Testing Parameter: id
+20:51:00 [INFO]     -> Testing Parameter: Submit
+20:51:01 [INFO] ✅ No vulnerabilities found

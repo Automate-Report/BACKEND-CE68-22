@@ -1,0 +1,31 @@
+import datetime
+import enum
+from typing import Optional
+import sqlalchemy as sa
+from sqlalchemy.orm import Mapped, mapped_column
+from app.core.db import Base
+
+class WorkerStatus(enum.Enum):
+    ONLINE = "online"
+    OFFLINE = "offline"
+    NOT_ACTIVATE = "not_activate"
+    AVAILABLE = "available"
+    IN_USE = "in_use"
+    UNKNOWN = "unknown"
+
+class Worker(Base):
+    __tablename__ = "workers"
+    id:Mapped[int] = mapped_column(sa.Integer, autoincrement=True, primary_key=True)#=======================ULID
+    project_id:Mapped[int] = mapped_column(sa.ForeignKey("projects.id", ondelete="CASCADE"))
+    access_key_id:Mapped[int] = mapped_column(sa.ForeignKey("access_keys.id", ondelete="SET NULL"), nullable=True)
+    owner:Mapped[Optional[str]] = mapped_column(sa.ForeignKey("users.email", ondelete="SET NULL"), nullable=True, default=None)
+    thread_number:Mapped[int] = mapped_column(sa.Integer, default=1)
+    current_load:Mapped[int] = mapped_column(sa.Integer, default=0)
+    name:Mapped[str] = mapped_column(sa.VARCHAR(255))
+    hostname:Mapped[Optional[str]] = mapped_column(sa.VARCHAR(255), nullable=True, default=None)
+    internal_ip:Mapped[Optional[str]] = mapped_column(sa.VARCHAR(255), nullable=True, default=None)
+    status:Mapped[WorkerStatus]= mapped_column(sa.Enum(WorkerStatus), default=WorkerStatus.NOT_ACTIVATE)
+    is_active:Mapped[bool] = mapped_column(sa.Boolean, default=False)
+    created_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now())
+    updated_at:Mapped[datetime.datetime] = mapped_column(sa.DateTime(timezone=True), server_default=sa.sql.func.now(), onupdate=sa.sql.func.now())
+    last_heartbeat:Mapped[Optional[datetime.datetime]] = mapped_column(sa.DateTime(timezone=True), default=None)

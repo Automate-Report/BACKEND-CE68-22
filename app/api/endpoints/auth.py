@@ -1,0 +1,120 @@
+
+from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi import APIRouter, HTTPException, Request, Depends
+
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.db import get_db  #Session ของ DB
+from app.core.google_oauth import oauth
+from app.core.config import settings
+
+from app.deps.auth import get_current_user
+
+from app.schemas.userauthen import LoginRequest, UserCreate
+
+from app.services.userauthen import userauthen_service
+
+router = APIRouter()
+
+@router.post("/login")
+async def login(data: LoginRequest, db: AsyncSession = Depends(get_db)):
+
+    auth =  await userauthen_service.authenticate_user(data,db)
+    
+    res = JSONResponse({
+        "user": auth["user"]
+    })
+    
+    res.set_cookie(
+        key="access_token",
+        value=auth["token"],
+        httponly=True,
+        secure=False,  # True = https only
+        samesite="lax",
+        max_age=3600,
+        path="/"
+    )
+    return res
+
+@router.post("/register")
+async def register(data: UserCreate, db: AsyncSession = Depends(get_db)):
+
+    new_user = await userauthen_service.create_user(data,db)
+    return new_user
+
+
+@router.post("/logout")
+async def logout(request: Request):
+    token = request.cookies.get("access_token")
+
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    userauthen_service.blacklist_token(token)
+
+    response = JSONResponse({"message": "Logged out"})
+    response.delete_cookie(
+        key="access_token",
+        path="/"
+    )
+
+    return response
+
+@router.get("/google/login")
+async def google_login(request: Request):
+    return await oauth.google.authorize_redirect(request, settings.GOOGLE_REDIRECT_URI)
+
+@router.get("/google/callback")
+async def google_callback(
+    request: Request,
+    db: AsyncSession = Depends(get_db)
+):
+    try:
+        token = await oauth.google.authorize_access_token(request)
+        user = token.get("userinfo")
+        if not user:
+            raise HTTPException(status_code=400, detail="Failed to get user info")
+
+        auth = await userauthen_service.authenticate_user_google(user, db)
+
+        res = RedirectResponse(url=settings.FRONTEND_URL)
+        res.set_cookie(
+            key="access_token",
+            value=auth["token"],
+            httponly=True,
+            secure=False,  # True = https only
+            samesite="lax",
+            max_age=3600,
+            path="/"
+        )
+        print("Google OAuth login successful for user:", auth["token"])   
+        return res
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+@router.get("/username/{user_id}")
+async def get_user_name_by_user_id(
+    user_id: str, 
+    user = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    username = await userauthen_service.get_username_by_id(user_id, db)
+
+    return username
+
+# FOR TESTING COOKIES AND TOKEN BLACKLIST, DELETE LATER
+@router.get("/me")
+async def protected(
+    user = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    user_info = await userauthen_service.get_user_by_id(user["sub"], db)
+    
+    return {
+        "message": "You are authenticated",
+        "user": user["sub"],
+        "name": f'{user_info.first_name} {user_info.last_name}'
+    }

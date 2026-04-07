@@ -1,0 +1,2 @@
+Runs before route
+ทำพวก Control access / validation 

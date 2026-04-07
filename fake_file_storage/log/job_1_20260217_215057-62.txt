@@ -1,0 +1,6 @@
+21:50:48 [INFO] [ScanEngine] Starting Discovery on http://localhost:4040/#/...
+21:50:48 [INFO] [Crawler] Starting Modern Crawl on: http://localhost:4040/#/
+21:50:55 [INFO] [ScanEngine] Discovery finished. Unique targets found: 0
+21:50:55 [WARNING] [ScanEngine] No targets found during crawling. Scanning entry point only.
+21:50:55 [INFO] --- SQLi Scan on: http://localhost:4040/#/ (GET) ---
+21:50:55 [INFO] [SQLi] Scan: GET http://localhost:4040/#/ (form)
